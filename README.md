@@ -4,7 +4,7 @@
 
 We will keep this up to date with deadlines, what needs to be done, some standard practices for all of to use, and whatever else.
   
-## Standard Practrices
+## Standard Practices
   
 Standard on what needs comments and how to format them, ie Class comments, Method comments
   

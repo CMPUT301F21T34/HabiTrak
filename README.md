@@ -9,7 +9,7 @@
   
 Standard on what needs comments and how to format them, ie Class comments, Method comments
   
-  '''java
+  ```java
   /*
    * <Class Name>
    *
@@ -17,10 +17,10 @@ Standard on what needs comments and how to format them, ie Class comments, Metho
    *
    * <Related>
    */
-  '''
+  ```
   
   
-  '''java
+  ```java
   /*
    * <Method Name>
    *
@@ -30,7 +30,7 @@ Standard on what needs comments and how to format them, ie Class comments, Metho
    *
    * <Return>
    */
-  '''
+  ```
 
 
 ## Deadlines

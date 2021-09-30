@@ -2,8 +2,8 @@
 
 ## Product Backlog
 
-1) <Insert>
-2) <Insert>
+1) (Insert)
+2) (Insert)
   
 ## Standard Practrices
   

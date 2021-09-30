@@ -1,9 +1,8 @@
 # HabiTrak
 
-## Product Backlog
+## Intro
 
-1) (Insert)
-2) (Insert)
+We will keep this up to date with deadlines, what needs to be done, some standard practices for all of to use, and whatever else.
   
 ## Standard Practrices
   
@@ -31,7 +30,11 @@ Standard on what needs comments and how to format them, ie Class comments, Metho
    * <Return>
    */
   ```
+  
+## Product Backlog
 
+1) (Insert)
+2) (Insert)
 
 ## Deadlines
 

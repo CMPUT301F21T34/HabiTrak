@@ -10,24 +10,24 @@ Standard on what needs comments and how to format them, ie Class comments, Metho
   
   ```java
   /*
-   * <Class Name>
+   * Name: <Class Name>
    *
-   * <What its for>
+   * Description: <Why>
    *
-   * <Related>
+   * Related Classes: <Class Names:Relations>
    */
   ```
   
   
   ```java
   /*
-   * <Method Name>
+   * Name: <Method/Function Name>
    *
-   * <What its for>
+   * Description: <Why>
    *
-   * <Arguments>
+   * Args: <Arg1:Type>, <Arg2:Type>
    *
-   * <Return>
+   * Returns: <Return Type>
    */
   ```
   

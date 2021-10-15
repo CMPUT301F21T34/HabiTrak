@@ -1,0 +1,10 @@
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral() // This replaces jcenter(), but not sure extent of jcenter in project
+        //jcenter() // Warning: this repository is going to shut down soon; may need to be uncommented for testing
+    }
+}
+rootProject.name = "HabitTrak"
+include ':app'

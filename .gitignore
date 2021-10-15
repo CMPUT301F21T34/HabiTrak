@@ -1,0 +1,8 @@
+ui.org
+.DS_Store
+assets*
+.idea*
+.gradle*
+app/.idea/*
+app/local.properties
+local.properties

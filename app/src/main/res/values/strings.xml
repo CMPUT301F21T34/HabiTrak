@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">HabitTrak</string>
+    <string name="habi_app_name">habiTrak</string>
+    <string name="habi_hint_username">Username</string>
+    <string name="habi_hint_password">Password</string>
+    <string name="habi_button_next">Log In</string>
 </resources>

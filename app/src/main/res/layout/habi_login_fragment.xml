@@ -25,7 +25,8 @@
             android:layout_marginTop="150dp"
             android:text="@string/habi_app_name"
             android:textSize="30sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="?android:textColorPrimary"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/username_text_input"
@@ -66,7 +67,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
                 android:text="@string/habi_button_next" />
         </RelativeLayout>
 

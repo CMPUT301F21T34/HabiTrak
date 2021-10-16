@@ -11,4 +11,9 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
     }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true); // minimizes the screen instead of going to login screen
+    }
 }

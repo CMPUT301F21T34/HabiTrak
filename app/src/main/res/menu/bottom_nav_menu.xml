@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navbar_menu_today"
+        android:title="Today"
+        android:icon="@drawable/menu_navbar_today"/>
+    <item
+        android:id="@+id/navbar_menu_habits"
+        android:title="Habits"
+        android:icon="@drawable/menu_navbar_habits"/>
+    <item
+        android:id="@+id/navbar_menu_events"
+        android:title="Events"
+        android:icon="@drawable/menu_navbar_events"/>
+    <item
+        android:id="@+id/navbar_menu_social"
+        android:title="Social"
+        android:icon="@drawable/menu_navbar_social"/>
+    <item
+        android:id="@+id/navbar_menu_profile"
+        android:title="Profile"
+        android:icon="@drawable/menu_navbar_profile"/>
+</menu>

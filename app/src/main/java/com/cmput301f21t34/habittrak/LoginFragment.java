@@ -1,5 +1,6 @@
 package com.cmput301f21t34.habittrak;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.LayoutInflater;
@@ -31,10 +32,12 @@ public class LoginFragment extends Fragment {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isPasswordValid(passwordEditText.getText(), usernameEditText.getText())) {
+                if (!isPasswordValid(passwordEditText.getText(), usernameEditText.getText())) {
                     passwordLayout.setError("Incorrect username and password");
-                } else{
+                }
+                else{
                     passwordLayout.setError(null);
+                    startHomePage(view);
 
                 }
 
@@ -54,6 +57,12 @@ public class LoginFragment extends Fragment {
         if (pass.equals("admin") && user.equals("admin")){
             passwordOk = true;
         }
+
         return passwordOk;
+    }
+
+    public void startHomePage(View view){
+        Intent intent = new Intent(getActivity(), BaseActivity.class);
+        startActivity(intent);
     }
 }

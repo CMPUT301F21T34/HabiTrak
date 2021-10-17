@@ -17,6 +17,10 @@ import com.google.android.material.textfield.TextInputLayout;
 
 public class LoginFragment extends Fragment {
 
+    public LoginFragment(){
+        // requires empty constructor class
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -60,9 +64,8 @@ public class LoginFragment extends Fragment {
      * Current Credentials: user: admin pass: admin
      * @param password password from input
      * @param username username from input
-     * @return
+     * @return passwordOk boolean if the password is valid
      */
-
     public boolean isPasswordValid(@Nullable Editable password, @Nullable Editable username){
         Boolean passwordOk = false;
         String pass = password.toString();

@@ -20,4 +20,4 @@ jobs:
         github_token: ${{ secrets.github_token }} # authorises
         reporter: github-pr-check
         level: warning # will displays warnings (code style, ect.) & erros (symantics)
-		  # Uses google coding conventions (incl javadocs)
+        # Uses google coding conventions (incl javadocs)

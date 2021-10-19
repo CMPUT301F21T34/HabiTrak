@@ -15,6 +15,16 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+
+/**
+ * LoginFragment
+ *
+ * @author Pranav
+ *
+ * Login Fragment for the app
+ *
+ * TODO: update the password validation: current username: admin password:admin
+ */
 public class LoginFragment extends Fragment {
 
     public LoginFragment(){
@@ -60,7 +70,7 @@ public class LoginFragment extends Fragment {
 
     /**
      * Password validation.
-     * NOTE: Update the function and implement proper password validation.
+     * TODO: Update the function and implement proper password validation.
      * Current Credentials: user: admin pass: admin
      * @param password password from input
      * @param username username from input
@@ -78,6 +88,7 @@ public class LoginFragment extends Fragment {
     }
 
     /**
+     * startHomePage
      * Start the base activity after logging in
      * @param view
      */

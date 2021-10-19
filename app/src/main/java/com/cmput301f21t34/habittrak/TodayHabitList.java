@@ -13,15 +13,37 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
+/**
+ * TodayHabitList
+ *
+ * customList for ListView of Today Fragment
+ * @version 1.0
+ * @since 2021-10-19
+ * @see Habit
+ */
 public class TodayHabitList extends ArrayAdapter<Habit> {
+
+    // attributes
     private ArrayList<Habit> habits;
     private Context context;
+    TextView habitName;
+    TextView habitDesc;
+    CheckBox habitBox;
 
+    // constructor
     public TodayHabitList(Context context, ArrayList<Habit> habits){
         super(context, 0, habits);
         this.habits = habits;
         this.context = context;
     }
+
+    /**
+     * Set the view of the list
+     * @param position position of the habit in the list
+     * @param convertView view to be returned
+     * @param parent ViewGroup of the list
+     * @return view
+     */
 
     @NonNull
     @Override
@@ -34,14 +56,12 @@ public class TodayHabitList extends ArrayAdapter<Habit> {
 
         Habit habit = habits.get(position);
 
-        TextView habitName = view.findViewById(R.id.today_listview_habit_name);
-        TextView habitDesc = view.findViewById(R.id.today_listview_habit_desc);
+        habitName = view.findViewById(R.id.today_listview_habit_name);
+        habitDesc = view.findViewById(R.id.today_listview_habit_desc);
 
         habitName.setText(habit.getTitle());
         habitDesc.setText(habit.getReason());
 
         return view;
-
-
     }
 }

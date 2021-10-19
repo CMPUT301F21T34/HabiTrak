@@ -12,7 +12,7 @@ import com.cmput301f21t34.habittrak.R;
 
 /**
  * A simple {@link Fragment} subclass.
-
+ * Fragment for social section
  */
 public class SocialFragment extends Fragment {
 

@@ -19,17 +19,22 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 /**
+ * TodayListFragment
  *
+ * @author Pranav
+ *
+ * Fragment for displaying habits for today
  */
 public class TodayListFragment extends Fragment {
-
+    // attributes
     ListView habitList;
     ArrayAdapter<Habit> habitAdapter;
     ArrayList<Habit> habitsData;
+
+    // constructor
     public TodayListFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,13 +43,14 @@ public class TodayListFragment extends Fragment {
         View view = inflater.inflate(R.layout.habi_today_fragment, container, false);
         habitList = view.findViewById(R.id.today_listview);
 
+        //sample data
         Calendar date = new GregorianCalendar(2021,1,31);
         Habit habit1 = new Habit("exercise dog", "some desc", date);
         Habit habit2 = new Habit("go for a walk", "some desc 2", date);
-
         habitsData = new ArrayList<>();
         habitsData.add(habit1); habitsData.add(habit2);
 
+        //connect the array adapter
         habitAdapter = new TodayHabitList(getContext(), habitsData);
         habitList.setAdapter(habitAdapter);
 

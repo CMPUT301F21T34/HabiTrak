@@ -4,7 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-
+/**
+ * MainActivity
+ *
+ * Starting point of the app
+ * TODO: figure out how to save the login state of the user
+ */
 public class MainActivity extends AppCompatActivity{
 
     @Override
@@ -21,5 +26,9 @@ public class MainActivity extends AppCompatActivity{
                     .add(R.id.login_fragment_container, new LoginFragment())
                     .commit();
         }
+
+        /*
+            Add Logic if the user is already logged in before
+         */
     }
 }

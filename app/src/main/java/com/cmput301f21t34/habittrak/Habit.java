@@ -13,7 +13,7 @@ import java.util.Comparator;
  *
  * @version 1.0
  * @since 2021-10-15
- * @see Habit_Event, User
+ * @see com.cmput301f21t34.habittrak.Habit_Event, User
  */
 public class Habit implements Comparable<Habit> {
 
@@ -34,7 +34,7 @@ public class Habit implements Comparable<Habit> {
         this.startDate = Calendar.getInstance();
     }
 
-    Habit(String title, String reason, Calendar startDate){
+    public Habit(String title, String reason, Calendar startDate){
         this.title = title; this.reason = reason;
         this.startDate = startDate;
     }

@@ -1,23 +1,23 @@
 name: java checkstyle
 
 on:
-	pull_requests:
-		paths:
-			-"**/*.java" # all java files
-			#-".github/workflows/checkstyle.yml" # this file
+  pull_requests:
+	paths:
+   	  -"**/*.java" # all java files
+	  #-".github/workflows/checkstyle.yml" # this file
 
 jobs:
-	checkstyle:
-		name: runner / checkstyle
-		runs-on: ubuntu-latest
-		steps:
-			- name: "checkout" # copies branch
-			- uses: actions/checkout@v2
+  checkstyle:
+	name: runner / checkstyle
+	runs-on: ubuntu-latest
+	steps:
+	  - name: "checkout" # copies branch
+	  - uses: actions/checkout@v2
 
-			- name: "checkstyle" # checks style
-			- uses: dbelyaeb/actions-checkstyle@master # github repo of linter being used
-			  with:
-				github_token: ${{ secrets.github_token }} # authorises
-				reporter: github-pr-check
-				level: warning # will displays warnings (code style, ect.) & erros (symantics)
-				# Uses google coding conventions (incl javadocs)
+	  - name: "checkstyle" # checks style
+	  - uses: dbelyaeb/actions-checkstyle@master # github repo of linter being used
+		with:
+		  github_token: ${{ secrets.github_token }} # authorises
+		  reporter: github-pr-check
+		  level: warning # will displays warnings (code style, ect.) & erros (symantics)
+		  # Uses google coding conventions (incl javadocs)

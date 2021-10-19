@@ -3,8 +3,8 @@ name: java checkstyle
 on:
   pull_request:
     paths:
-      #-"**/*.java" # all java files
-      -"git_actions/.github/workflows/checkstyle.yml" # this file
+      - "git_actions/.github/workflows/checkstyle.yml" # this file
+      - "**/*.java" # all java files
 
 jobs:
   checkstyle:

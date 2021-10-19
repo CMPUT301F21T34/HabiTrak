@@ -19,7 +19,16 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
         cache: gradle
+     
+    # Step 3: Check the code with Android linter
+    - name: Run Android Linter
+      run: ./gradlew lintStagingDebug
 
+    # Step 4: Run your unit tests
+    - name: Run Unit Tests
+      run: ./gradlew testStagingDebugUnitTest
+
+    
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle

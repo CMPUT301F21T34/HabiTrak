@@ -12,7 +12,7 @@ import java.util.Calendar;
  *
  * @version 1.0
  * @since 2021-10-15
- * @see
+ * @see Habit_Event, User
  */
 public class Habit {
 

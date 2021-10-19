@@ -1,7 +1,7 @@
 name: java checkstyle
 
 on:
-  pull_requests:
+  pull_request:
     paths:
       #-"**/*.java" # all java files
       -"git_actions/.github/workflows/checkstyle.yml" # this file
@@ -13,8 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: dbelyaev/actions-checkstyle@master # github repo of linter being used
-      with:
-        github_token: ${{ secrets.github_token }} # authorises
-        reporter: github-pr-check
-        level: warning # will displays warnings (code style, ect.) & erros (symantics)
-        # Uses google coding conventions (incl javadocs)
+        with:
+          github_token: ${{ secrets.github_token }} # authorises
+          reporter: github-pr-check
+          level: warning # will displays warnings (code style, ect.) & erros (symantics)
+          # Uses google coding conventions (incl javadocs)

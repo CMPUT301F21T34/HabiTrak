@@ -24,7 +24,7 @@ jobs:
     - name: Run Android Linter
       run: ./gradlew lintStagingDebug
 
-    # Step 4: Run your unit tests
+    # Step 4: Run your unit tests 
     - name: Run Unit Tests
       run: ./gradlew testStagingDebugUnitTest
 

@@ -164,6 +164,8 @@ public class Habit implements Comparable<Habit> {
 
                 habitEvents.remove(index); // removes if found
                 removed = true;
+
+                break;
             }
         }
 

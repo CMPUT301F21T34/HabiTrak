@@ -5,7 +5,7 @@ import android.location.Location;
 import java.io.File;
 import java.util.Date;
 
-public class Habit_Event {
+public class Habit_Event implements Comparable<Habit_Event> {
     private String habit_event_id;
     private String comment;
     private Habit habit;
@@ -78,5 +78,19 @@ public class Habit_Event {
 
     public void setPhotograph(File photograph) {
         this.photograph = photograph;
+    }
+
+    /**
+     * compareTo
+     *
+     * Uses Habit_Events date to compare when sorting
+     *
+     * @author Dakota Kryzanowski
+     * @param habitEvent
+     * @return int -1,0,1
+     */
+    @Override
+    public int compareTo(Habit_Event habitEvent) {
+        return this.completed_date.compareTo(habitEvent.getCompleted_date());
     }
 }

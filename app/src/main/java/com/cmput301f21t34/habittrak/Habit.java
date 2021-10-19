@@ -14,13 +14,14 @@ import java.util.Calendar;
  * @since 2021-10-15
  * @see Habit_Event, User
  */
-public class Habit {
+public class Habit implements Comparable<Habit> {
 
     // Attributes //
 
 
     private String title, reason;
     private Calendar startDate;
+    private ArrayList<Habit_Event> habitEvents = new ArrayList<Habit_Event>();
 
     // need to track which days of the week
 
@@ -120,4 +121,27 @@ public class Habit {
     }
 
 
+    public boolean addHabitEvent(Habit_Event habitEvent){
+        return habitEvents.add(habitEvent);
+    }
+
+    public Habit_Event getHabitEvent(int index){
+        return habitEvents.get(index);
+    }
+
+    public Habit_Event removeHabitEvent(int index){
+        return habitEvents.remove(index);
+    }
+
+    public boolean removeHabitEvent(Habit_Event habit){
+        return habitEvents.remove(habit);
+    }
+
+
+    @Override
+    public int compareTo(Habit habit) {
+
+        return this.startDate.getTime().compareTo(habit.getStartDate().getTime());
+
+    }
 }

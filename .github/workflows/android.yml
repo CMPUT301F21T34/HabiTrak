@@ -22,11 +22,11 @@ jobs:
      
     # Step 3: Check the code with Android linter
     - name: Run Android Linter
-      run: ./gradlew lintStagingDebug
+      run: ./gradlew lint #StagingDebug
 
     # Step 4: Run your unit tests 
     - name: Run Unit Tests
-      run: ./gradlew testStagingDebugUnitTest
+      run: ./gradlew test #StagingDebugUnitTest
 
     
     - name: Grant execute permission for gradlew

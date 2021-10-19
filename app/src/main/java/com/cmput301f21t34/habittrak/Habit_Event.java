@@ -85,7 +85,7 @@ public class Habit_Event implements Comparable<Habit_Event> {
      *
      * Uses Habit_Events date to compare when sorting
      *
-     * @author Dakota Kryzanowski
+     * @author Dakota
      * @param habitEvent
      * @return int -1,0,1
      */

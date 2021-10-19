@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: "checkstyle" # checks style
-      - uses: dbelyaeb/actions-checkstyle@master # github repo of linter being used
+      - uses: dbelyaev/actions-checkstyle@master # github repo of linter being used
       with:
         github_token: ${{ secrets.github_token }} # authorises
         reporter: github-pr-check

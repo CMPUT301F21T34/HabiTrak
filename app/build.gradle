@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.cmput301f21t34.habittrak"
-        minSdk 21 // might need to be changed to 16 for firebase
+        minSdk 24 // might need to be changed to 16 for firebase
         targetSdk 31 // might need to be changed to 29 for firebase
         versionCode 1
         versionName "1.0"

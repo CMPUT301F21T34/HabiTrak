@@ -8,16 +8,16 @@ on:
 
 jobs:
   checkstyle:
-	name: runner / checkstyle
-	runs-on: ubuntu-latest
-	steps:
-	  - name: "checkout" # copies branch
-	  - uses: actions/checkout@v2
+    name: runner / checkstyle
+    runs-on: ubuntu-latest
+    steps:
+      - name: "checkout" # copies branch
+      - uses: actions/checkout@v2
 
-	  - name: "checkstyle" # checks style
-	  - uses: dbelyaeb/actions-checkstyle@master # github repo of linter being used
-		with:
-		  github_token: ${{ secrets.github_token }} # authorises
-		  reporter: github-pr-check
-		  level: warning # will displays warnings (code style, ect.) & erros (symantics)
+      - name: "checkstyle" # checks style
+      - uses: dbelyaeb/actions-checkstyle@master # github repo of linter being used
+      with:
+        github_token: ${{ secrets.github_token }} # authorises
+        reporter: github-pr-check
+        level: warning # will displays warnings (code style, ect.) & erros (symantics)
 		  # Uses google coding conventions (incl javadocs)

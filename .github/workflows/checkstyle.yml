@@ -11,8 +11,10 @@ jobs:
     name: runner / checkstyle
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: dbelyaev/actions-checkstyle@master # github repo of linter being used
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: checkstyle
+        uses: dbelyaev/actions-checkstyle@master # github repo of linter being used
         with:
           github_token: ${{ secrets.github_token }} # authorises
           reporter: github-pr-check

@@ -71,6 +71,7 @@ public class LoginFragment extends Fragment {
     /**
      * Password validation.
      * TODO: Update the function and implement proper password validation. (Hash Checking needed)
+     * TODO: Move login validation, and checking to separate class outside frag - Dakota
      * Current Credentials: user: admin pass: admin
      * @param password password from input
      * @param username username from input

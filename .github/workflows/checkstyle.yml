@@ -21,14 +21,9 @@ jobs:
       - name: checkout # checksout repo
         uses: actions/checkout@v2
         
-      - name: install reviewdog
-        uses: reviewdog/action-setup@v1
-      - run: reviewdog -version
-      - name: Run reviewdog
-        env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          golint ./... | reviewdog -f=golint -reporter=github-check
+      #- name: install reviewdog
+      #  uses: reviewdog/action-setup@v1
+      #- run: reviewdog -version
       
       - name: checkstyle
         uses: dbelyaev/action-checkstyle@v0.3.4 # github repo of linter being used
@@ -38,8 +33,7 @@ jobs:
           github_token: ${{ secrets.github_token }} # authorises
           reporter: github-check # reports with github checks on pulls and commits
           level: warning # will displays warnings (code style, ect.) & erros (symantics)
-          paths:
-            "**/*.java"
+
       - name: Cache
         uses: actions/cache@v2.1.6
         with:

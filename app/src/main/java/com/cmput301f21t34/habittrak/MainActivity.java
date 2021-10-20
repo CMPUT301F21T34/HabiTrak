@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity{
             // get user to login
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.login_fragment_container, new LoginFragment())
+                    .add(R.id.login_fragment_container, new LoginFragment(mainUser))
                     .commit();
 
         }

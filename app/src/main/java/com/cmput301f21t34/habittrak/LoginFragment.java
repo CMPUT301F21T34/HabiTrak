@@ -15,6 +15,8 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import com.cmput301f21t34.habittrak.MainActivity;
+
 
 /**
  * LoginFragment
@@ -23,12 +25,14 @@ import com.google.android.material.textfield.TextInputLayout;
  *
  * Login Fragment for the app
  *
- * TODO: update the password validation: current username: admin password:admin
+ * TODO: update the password validation: current username: <any> password: <any>
  */
 public class LoginFragment extends Fragment {
 
-    public LoginFragment(){
-        // requires empty constructor class
+    private User mainUser;
+
+    public LoginFragment(User mainUser){
+        this.mainUser = mainUser; // Passes User object
     }
 
     @Nullable
@@ -86,6 +90,8 @@ public class LoginFragment extends Fragment {
 
         if (true) { // logic for allowing loggin in, for sake of testing is always true - Dakota
             passwordOk = true;
+            mainUser = new User("Dummy User");
+
         }
 
         return passwordOk;

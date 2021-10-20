@@ -18,14 +18,23 @@ public class User {
         this.followingList = followingList;
         this.followerReqList = followerReqList;
     }
-    User(){
-        this.username="";
-        this.habitList =new ArrayList<Habit>();
+
+    /**
+     * New empty user
+     *
+     * @author Dakota
+     * @param username username String is new users new username
+     */
+    User(String username){
+        this.username = username;
+        this.habitList = new ArrayList<Habit>();
         this.habitEventList = new ArrayList<Habit_Event>();
         this.followerList = new ArrayList<User>();
         this.followingList = new ArrayList<User>();
         this.followerReqList = new ArrayList<User>();
     }
+
+
     //getter methods
     public String getUsername() {
         return username;

@@ -182,7 +182,7 @@ public class Habit implements Comparable<Habit> {
 
         // Sorts with Habit_Event's compareTo method
         habitEvents.sort(Habit_Event::compareTo);
-        // min API 24 needed
+        // min API 24 needed, need to program own sorting else wise
 
     }
 

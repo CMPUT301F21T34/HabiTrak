@@ -19,7 +19,6 @@ public class Habit implements Comparable<Habit> {
 
     // Attributes //
 
-	// comment
 
     private String title, reason;
     private Calendar startDate;

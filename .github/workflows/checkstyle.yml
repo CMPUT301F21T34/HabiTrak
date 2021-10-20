@@ -2,12 +2,10 @@ name: java checkstyle
 
 on:
   pull_request:
-    branches: [ "*" ]
     paths:
-      #- "*/.github/workflows/checkstyle.yml" # this file
+      - "*/.github/workflows/checkstyle.yml" # this file
       - "**/*.java" # all java files
   push:
-    branches: [ "*" ]
     paths:
       - "**/*.java" # all java files
 
@@ -16,12 +14,14 @@ jobs:
     name: runner / checkstyle
     runs-on: ubuntu-latest
     steps:
-      - name: checkout
+      - name: checkout # checksout repo
         uses: actions/checkout@v2
+      - run: reviewdog -version # latest version
       - name: checkstyle
-        uses: dbelyaev/actions-checkstyle@master # github repo of linter being used
+        uses: dbelyaev/action-checkstyle@master # github repo of linter being used
         with:
+          checkstyle_version: 9.0.1
           github_token: ${{ secrets.github_token }} # authorises
-          reporter: github-pr-check
+          reporter: github-check # reports with github checks on pulls and commits
           level: warning # will displays warnings (code style, ect.) & erros (symantics)
           # Uses google coding conventions (incl javadocs)

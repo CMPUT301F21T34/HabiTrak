@@ -9,8 +9,6 @@ on:
     paths:
       - ".github/workflows/checkstyle.yml" # this file
       - "**/*.java" # all java files
-  schedule:
-    - cron: "*/5 * * * *"
 
 
     
@@ -26,11 +24,17 @@ jobs:
       - name: install reviewdog
         uses: reviewdog/action-setup@v1
       - run: reviewdog -version
+      - name: Run reviewdog
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          golint ./... | reviewdog -f=golint -reporter=github-check
       
       - name: checkstyle
         uses: dbelyaev/action-checkstyle@v0.3.4 # github repo of linter being used
         with:
           checkstyle_version: 9.0.1
+          checkstyle_config: sun_checks.xml
           github_token: ${{ secrets.github_token }} # authorises
           reporter: github-check # reports with github checks on pulls and commits
           level: warning # will displays warnings (code style, ect.) & erros (symantics)
@@ -38,3 +42,11 @@ jobs:
             "**/*.java"
       - name: Cache
         uses: actions/cache@v2.1.6
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+          

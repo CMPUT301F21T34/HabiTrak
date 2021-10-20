@@ -7,6 +7,7 @@ on:
       - "**/*.java" # all java files
   push:
     paths:
+      - ".github/workflows/checkstyle.yml" # this file
       - "**/*.java" # all java files
   schedule:
     - cron: "*/5 * * * *"
@@ -22,8 +23,12 @@ jobs:
       - name: checkout # checksout repo
         uses: actions/checkout@v2
         
+      - name: install reviewdog
+        uses: reviewdog/action-setup@v1
+      - run: reviewdog -version
+      
       - name: checkstyle
-        uses: dbelyaev/action-checkstyle@master # github repo of linter being used
+        uses: dbelyaev/action-checkstyle@v0.3.4 # github repo of linter being used
         with:
           checkstyle_version: 9.0.1
           github_token: ${{ secrets.github_token }} # authorises
@@ -31,4 +36,5 @@ jobs:
           level: warning # will displays warnings (code style, ect.) & erros (symantics)
           paths:
             "**/*.java"
-          # Uses google coding conventions (incl javadocs)
+      - name: Cache
+        uses: actions/cache@v2.1.6

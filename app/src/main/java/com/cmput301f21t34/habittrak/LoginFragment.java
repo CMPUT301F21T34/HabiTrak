@@ -70,17 +70,20 @@ public class LoginFragment extends Fragment {
 
     /**
      * Password validation.
-     * TODO: Update the function and implement proper password validation.
+     * TODO: Update the function and implement proper password validation. (Hash Checking needed)
      * Current Credentials: user: admin pass: admin
      * @param password password from input
      * @param username username from input
      * @return passwordOk boolean if the password is valid
      */
     public boolean isPasswordValid(@Nullable Editable password, @Nullable Editable username){
+
         Boolean passwordOk = false;
         String pass = password.toString();
         String user = username.toString();
-        if (pass.equals("admin") && user.equals("admin")){
+
+
+        if (true) { // logic for allowing loggin in, for sake of testing is always true - Dakota
             passwordOk = true;
         }
 

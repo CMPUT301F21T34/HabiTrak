@@ -2,7 +2,6 @@ package com.cmput301f21t34.habittrak;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Comparator;
 
 /**
  * Habit
@@ -160,7 +159,7 @@ public class Habit implements Comparable<Habit> {
         for (int index = 0; index < habitEvents.size(); index++){
 
             // checks for matching habitEventID
-            if (habitEvents.get(index).getHabit_event_id() == habitEventID){
+            if (habitEvents.get(index).getHabitEventId() == habitEventID){
 
                 habitEvents.remove(index); // removes if found
                 removed = true;

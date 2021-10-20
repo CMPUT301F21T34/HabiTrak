@@ -6,41 +6,41 @@ import java.io.File;
 import java.util.Date;
 
 public class Habit_Event implements Comparable<Habit_Event> {
-    private String habit_event_id;
+    private String habitEventId;
     private String comment;
     private Habit habit;
-    private Date completed_date;
+    private Date completedDate;
     private Location location;
     private File photograph;
     Habit_Event(){
         this.comment="";
-        this.completed_date = new Date();
+        this.completedDate = new Date();
         this.habit = new Habit();
         this.location = new Location("");
         this.photograph = new File("");
-        this.habit_event_id = "";
+        this.habitEventId = "";
 
     }
-    Habit_Event(String habit_event_id, String comment,Date date,Habit habit,Location loc, File photo){
+    Habit_Event(String habitEventId, String comment, Date date, Habit habit, Location loc, File photo){
         this.photograph = photo;
         this.location = loc;
         this.habit = habit;
         this.comment = comment;
-        this.completed_date = date;
-        this.habit_event_id = habit_event_id;
+        this.completedDate = date;
+        this.habitEventId = habitEventId;
     }
     // getter methods
 
-    public String getHabit_event_id() {
-        return habit_event_id;
+    public String getHabitEventId() {
+        return habitEventId;
     }
 
     public Habit getHabit() {
         return habit;
     }
 
-    public Date getCompleted_date() {
-        return completed_date;
+    public Date getCompletedDate() {
+        return completedDate;
     }
 
     public File getPhotograph() {
@@ -56,8 +56,8 @@ public class Habit_Event implements Comparable<Habit_Event> {
     }
     //setter methods
 
-    public void setHabit_event_id(String habit_event_id) {
-        this.habit_event_id = habit_event_id;
+    public void setHabitEventId(String habitEventId) {
+        this.habitEventId = habitEventId;
     }
 
     public void setHabit(Habit habit) {
@@ -68,8 +68,8 @@ public class Habit_Event implements Comparable<Habit_Event> {
         this.comment = comment;
     }
 
-    public void setCompleted_date(Date completed_date) {
-        this.completed_date = completed_date;
+    public void setCompletedDate(Date completedDate) {
+        this.completedDate = completedDate;
     }
 
     public void setLocation(Location location) {
@@ -91,6 +91,6 @@ public class Habit_Event implements Comparable<Habit_Event> {
      */
     @Override
     public int compareTo(Habit_Event habitEvent) {
-        return this.completed_date.compareTo(habitEvent.getCompleted_date());
+        return this.completedDate.compareTo(habitEvent.getCompletedDate());
     }
 }

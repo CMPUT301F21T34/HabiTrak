@@ -24,8 +24,9 @@ public class Habit implements Comparable<Habit> {
     private Calendar startDate;
     private ArrayList<Habit_Event> habitEvents = new ArrayList<Habit_Event>();
 
-    // need to track which days of the week
-
+    // Boolean array to track which day of the week
+    // index 0 -> Monday, index 1 -> Tuesday, .... index 6 -> Sunday
+    private ArrayList<Boolean> onDays = new ArrayList<>();
 
     // Constructors //
 
@@ -115,6 +116,30 @@ public class Habit implements Comparable<Habit> {
         this.startDate = startDate;
     }
 
+    /**
+     * getOnDays
+     *
+     * getter function for Habit to track which day of the week
+     *
+     * @author Henry
+     * @return ArrayList
+     * returns a boolean array that contains which day of the week the habit is on
+     */
+    public ArrayList<Boolean> getOnDays() {
+        return this.onDays;
+    }
+
+    /**
+     * setOnDays
+     *
+     * setter function for Habit onDays
+     *
+     * @author Henry
+     * @param onDays onDays list to change Habit onDays to
+     */
+    public void setOnDays(ArrayList<Boolean> onDays) {
+        this.onDays = onDays;
+    }
 
     /**
      * addHabitEvent
@@ -124,6 +149,7 @@ public class Habit implements Comparable<Habit> {
      * @param habitEvent Habit_Event to be added
      * @return boolean true if added
      */
+
     public boolean addHabitEvent(Habit_Event habitEvent){
         return habitEvents.add(habitEvent);
     }

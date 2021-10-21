@@ -1,27 +1,40 @@
 package com.cmput301f21t34.habittrak;
 
 import android.location.Location;
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.io.File;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
-public class Habit_Event implements Comparable<Habit_Event> {
+public class Habit_Event implements Comparable<Habit_Event>, Parcelable {
+
+    // Attributes //
+
+    // Any changes need to be implement in writeToParcel and Parcel constructor - Dakota
+
     private String habitEventId;
     private String comment;
     private Habit habit;
-    private Date completedDate;
+    private Calendar completedDate;
     private Location location;
     private File photograph;
-    Habit_Event(){
+
+
+
+    public Habit_Event(){
         this.comment="";
-        this.completedDate = new Date();
+        this.completedDate = Calendar.getInstance();
         this.habit = new Habit();
         this.location = new Location("");
         this.photograph = new File("");
         this.habitEventId = "";
 
     }
-    Habit_Event(String habitEventId, String comment, Date date, Habit habit, Location loc, File photo){
+    public Habit_Event(String habitEventId, String comment, Calendar date, Habit habit, Location loc, File photo){
         this.photograph = photo;
         this.location = loc;
         this.habit = habit;
@@ -29,7 +42,60 @@ public class Habit_Event implements Comparable<Habit_Event> {
         this.completedDate = date;
         this.habitEventId = habitEventId;
     }
+
+
+    /**
+     * Parcel Constructor Class
+     *
+     * Constructs Habit_Event from a parcel
+     * Un-does writeToParcel method
+     *
+     * @author Dakota
+     * @param parcel Parcel to construct from
+     */
+    public Habit_Event(Parcel parcel){
+
+        Bundle habitEventBundle;
+        habitEventBundle = parcel.readBundle();
+
+        this.habitEventId = habitEventBundle.getString("habitEventId");
+        this.habit = habitEventBundle.getParcelable("habit");
+        this.comment = habitEventBundle.getString("comment");
+
+        String completedDateTimeZone = habitEventBundle.getString("completedDateTimeZone");
+        if ( completedDateTimeZone != null) {
+
+            Calendar constructionCalendar = Calendar.getInstance();
+            constructionCalendar.setTimeZone(TimeZone.getTimeZone(completedDateTimeZone));
+            constructionCalendar.setTimeInMillis(habitEventBundle.getLong("completedDateTime"));
+
+            this.completedDate = constructionCalendar;
+        } else {
+
+            this.completedDate = null;
+        }
+
+        this.location = habitEventBundle.getParcelable("location");
+
+        this.photograph = new File(habitEventBundle.getString("photograph"));
+
+
+        }
+
+
     // getter methods
+
+    public static final Parcelable.Creator<Habit_Event> CREATOR = new Parcelable.Creator<Habit_Event>() {
+        @Override
+        public Habit_Event createFromParcel(Parcel in) {
+            return new Habit_Event(in);
+        }
+
+        @Override
+        public Habit_Event[] newArray(int size) {
+            return new Habit_Event[size];
+        }
+    };
 
     public String getHabitEventId() {
         return habitEventId;
@@ -39,7 +105,7 @@ public class Habit_Event implements Comparable<Habit_Event> {
         return habit;
     }
 
-    public Date getCompletedDate() {
+    public Calendar getCompletedDate() {
         return completedDate;
     }
 
@@ -68,7 +134,7 @@ public class Habit_Event implements Comparable<Habit_Event> {
         this.comment = comment;
     }
 
-    public void setCompletedDate(Date completedDate) {
+    public void setCompletedDate(Calendar completedDate) {
         this.completedDate = completedDate;
     }
 
@@ -91,6 +157,75 @@ public class Habit_Event implements Comparable<Habit_Event> {
      */
     @Override
     public int compareTo(Habit_Event habitEvent) {
-        return this.completedDate.compareTo(habitEvent.getCompletedDate());
+        return this.completedDate.compareTo(habitEvent.completedDate);
     }
+
+    // Parcelable Implementation Code  Start //
+
+    /**
+     * Code that parses Habit_Event parameters into a Parcel
+     * Needs to be updated for any changes to attributes
+     * Or new attributes added
+     *
+     * Used to pass through intents
+     *
+     * @author Dakota
+     * @see Parcelable
+     * @see Parcel
+     * @see Bundle
+     * @param out Parcel created
+     * @param flags
+     */
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+
+
+        Bundle habitEventBundle = new Bundle();
+
+        habitEventBundle.putString("habitEventId", habitEventId);
+        habitEventBundle.putString("comment", comment);
+        habitEventBundle.putParcelable("habit", habit);
+
+
+
+
+        // Handles Calendar
+        if (completedDate != null) {
+            habitEventBundle.putString("completedDateTimeZone", completedDate.getTimeZone().getID());
+            habitEventBundle.putLong("completedDateTime", completedDate.getTimeInMillis());
+
+        } else {
+            habitEventBundle.putString("completedDateTimeZone", null);
+        }
+
+        habitEventBundle.putParcelable("location", location);
+
+        // Handles photograph
+        habitEventBundle.putString("photograph", photograph.getPath());
+
+
+
+        out.writeBundle(habitEventBundle);
+    }
+
+
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+
+    private static class Creator implements Parcelable.Creator<Habit_Event> {
+        public Habit_Event createFromParcel(Parcel source) {
+            return new Habit_Event(source);
+        }
+
+        public Habit_Event[] newArray(int size) {
+            return new Habit_Event[size];
+        }
+    }
+
+    // Parcelable Implementation Code  End //
 }

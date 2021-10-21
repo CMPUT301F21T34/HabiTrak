@@ -101,13 +101,13 @@ public class User implements Parcelable {
     public void addHabit(Habit habit){
         this.habitList.add(habit);
     }
-    public void addHabit_Event(Habit_Event habitEvent){
+    public void addHabitEvent(Habit_Event habitEvent){
         this.habitEventList.add(habitEvent);
     }
     public void addFollower(User newFollower){
         this.followerList.add(newFollower);
     }
-    public void add_follower_req(User newFollowReq){
+    public void addFollowerReq(User newFollowReq){
         this.followerReqList.add(newFollowReq);
     }
     public void add_following(User newFollowing){
@@ -129,7 +129,7 @@ public class User implements Parcelable {
             return false;
         }
     }
-    public boolean removeHabit_Event(Habit_Event habitEvent){
+    public boolean removeHabitEvent(Habit_Event habitEvent){
         int index= this.habitEventList.size();
         for(int i = 0; i < this.habitEventList.size(); i++){
             if (habitEventList.get(i).getHabitEventId().equals(habitEvent.getHabitEventId())){
@@ -174,7 +174,7 @@ public class User implements Parcelable {
             return false;
         }
     }
-    public boolean removeFollower_req(User follower){
+    public boolean removeFollowerReq(User follower){
         int index = this.followerReqList.size();
         for(int i = 0; i < this.followerReqList.size(); i++){
             if(this.followerReqList.get(i).getUsername().equals(follower.getUsername())){
@@ -199,11 +199,25 @@ public class User implements Parcelable {
 
     // These implement Parcelable for being passed through an intent
 
+    /**
+     * Apart of Parcelable implementation, does nothing but is required
+     * @author Dakota
+     * @return int 0
+     */
     @Override
     public int describeContents() {
         return 0;
     }
 
+    /**
+     * writeToParcel
+     *
+     * Writes all the attributes to the parcel out
+     * @author Dakota
+     * @see "https://stackoverflow.com/questions/7042272/how-to-properly-implement-parcelable-with-an-"arraylistparcelable"
+     * @param out Parcel to be create
+     * @param flags int, idk not important but required
+     */
     @Override
     public void writeToParcel(Parcel out, int flags) {
 
@@ -215,13 +229,32 @@ public class User implements Parcelable {
         out.writeList(followerReqList);
     }
 
+    // Creates User from parcel
     public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
+        /**
+         * createFromParcel
+         *
+         * creates User from parcel
+         *
+         * @author Dakota
+         * @param in Parcel to create User from
+         * @return User from parcel
+         */
         @Override
         public User createFromParcel(Parcel in) {
 
             return new User(in);
         }
 
+        /**
+         * newArray
+         *
+         * needed for creating User from parcel but unimportant
+         *
+         * @author Dakota
+         * @param size of User[] array
+         * @return User[]
+         */
         @Override
         public User[] newArray(int size) {
 

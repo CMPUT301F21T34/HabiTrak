@@ -1,14 +1,16 @@
-package com.cmput301f21t34.habittrak.habitsscreen;
+package com.cmput301f21t34.habittrak.fragments;
 
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cmput301f21t34.habittrak.R;
+import com.cmput301f21t34.habittrak.User;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,8 +18,10 @@ import com.cmput301f21t34.habittrak.R;
  */
 public class AllHabitsFragment extends Fragment {
 
-    public AllHabitsFragment() {
-        // Required empty public constructor
+    User mainUser;
+
+    public AllHabitsFragment(User mainUser) {
+        this.mainUser = mainUser;
     }
 
 
@@ -25,6 +29,10 @@ public class AllHabitsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.habi_all_habits_fragment, container, false);
+        View view = inflater.inflate(R.layout.habi_all_habits_fragment, container, false);
+
+        Log.d("mainUser", "in AllHabitsFragment mainUser: " + mainUser.getUsername());
+
+        return view;
     }
 }

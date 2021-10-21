@@ -1,4 +1,4 @@
-package com.cmput301f21t34.habittrak.todayscreen;
+package com.cmput301f21t34.habittrak.fragments;
 
 import android.os.Bundle;
 
@@ -37,12 +37,9 @@ public class TodayListFragment extends Fragment {
     User mainUser;
 
     // constructor
-    public TodayListFragment() {
+    public TodayListFragment(User mainUser) {
 
-        // mainUser = (User) this.getArguments().getParcelable("mainUser");
-
-        // Log.d("mainUser", "mainUser username: " + mainUser.getUsername());
-        // Required empty public constructor
+        this.mainUser = mainUser;
     }
 
     @Override
@@ -51,6 +48,10 @@ public class TodayListFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.habi_today_fragment, container, false);
         habitList = view.findViewById(R.id.today_listview);
+
+
+        Log.d("mainUser", "in TodayListFragment mainUser: " + mainUser.getUsername());
+
 
         // code to execute //
 

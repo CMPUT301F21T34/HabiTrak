@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical"
-    tools:context=".todayscreen.TodayListFragment">
+    tools:context=".fragments.todayscreen.TodayListFragment">
 
 
     <ListView

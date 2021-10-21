@@ -1,55 +1,77 @@
 package com.cmput301f21t34.habittrak;
 
 
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.ArrayList;
 
 
 
 public class User implements Parcelable {
+
+    // Attributes //
+
+    // Any changes need to be implement in writeToParcel and Parcel constructor - Dakota
+
     private String username;
     ArrayList<Habit> habitList;
-    ArrayList<Habit_Event> habitEventList;
     ArrayList<User> followerList;
     ArrayList<User> followingList;
     ArrayList<User> followerReqList;
+
+    // Constructors //
 
     User(String username, ArrayList<Habit> habitList, ArrayList<Habit_Event> habitEventList,
          ArrayList<User> followerList, ArrayList<User> followingList, ArrayList<User> followerReqList){
         this.username=username;
         this.habitList = habitList;
-        this.habitEventList = habitEventList;
         this.followerList = followerList;
         this.followingList = followingList;
         this.followerReqList = followerReqList;
     }
 
     /**
-     * New empty user
+     * New User
+     *
+     * Creates a User with only a username
      *
      * @author Dakota
-     * @param username username String is new users new username
+     * @param username String is new users new username
      */
     User(String username){
         this.username = username;
+
         this.habitList = new ArrayList<Habit>();
-        this.habitEventList = new ArrayList<Habit_Event>();
         this.followerList = new ArrayList<User>();
         this.followingList = new ArrayList<User>();
         this.followerReqList = new ArrayList<User>();
     }
 
+    /**
+     * Parcel Constructor Class
+     *
+     * Constructs Habit from a parcel
+     * Un-does writeToParcel method
+     *
+     * @author Dakota
+     * @param parcel Parcel to construct from
+     */
     User(Parcel parcel){
 
-        // order matters
-        this.username = parcel.readString();
-        this.habitList = parcel.readArrayList(null);
-        this.habitEventList = parcel.readArrayList(null);
-        this.followerList = parcel.readArrayList(null);
-        this.followingList = parcel.readArrayList(null);
-        this.followerReqList = parcel.readArrayList(null);
+        Bundle userBundle;
+        userBundle = parcel.readBundle();
+
+        Log.d("UserParcelable", "Parcel Construction userName:" + userBundle.getString("username"));
+
+        this.username = userBundle.getString("username");
+        this.habitList = userBundle.getParcelableArrayList("habitList");
+        this.followerList = userBundle.getParcelableArrayList("followerList");
+        this.followingList = userBundle.getParcelableArrayList("followingList");
+        this.followerReqList = userBundle.getParcelableArrayList("followerReqList");
+
 
     }
 
@@ -61,9 +83,7 @@ public class User implements Parcelable {
     public ArrayList<Habit> getHabitList() {
         return habitList;
     }
-    public ArrayList<Habit_Event> getHabitEventList() {
-        return habitEventList;
-    }
+
     public ArrayList<User> getFollowerList() {
         return followerList;
     }
@@ -82,9 +102,6 @@ public class User implements Parcelable {
         this.habitList = habitList;
     }
 
-    public void setHabitEventList(ArrayList<Habit_Event> habitEventList) {
-        this.habitEventList = habitEventList;
-    }
 
     public void setFollowerList(ArrayList<User> followerList) {
         this.followerList = followerList;
@@ -101,16 +118,14 @@ public class User implements Parcelable {
     public void addHabit(Habit habit){
         this.habitList.add(habit);
     }
-    public void addHabitEvent(Habit_Event habitEvent){
-        this.habitEventList.add(habitEvent);
-    }
+
     public void addFollower(User newFollower){
         this.followerList.add(newFollower);
     }
     public void addFollowerReq(User newFollowReq){
         this.followerReqList.add(newFollowReq);
     }
-    public void add_following(User newFollowing){
+    public void addFollowing(User newFollowing){
         this.followingList.add(newFollowing);
     }
     // remove methods
@@ -129,21 +144,8 @@ public class User implements Parcelable {
             return false;
         }
     }
-    public boolean removeHabitEvent(Habit_Event habitEvent){
-        int index= this.habitEventList.size();
-        for(int i = 0; i < this.habitEventList.size(); i++){
-            if (habitEventList.get(i).getHabitEventId().equals(habitEvent.getHabitEventId())){
-                index = i;
-            }
-        }
-        if (index != this.habitEventList.size()){
-            this.habitEventList.remove(index);
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
+
+
     public boolean removeFollower(User follower){
         int index = this.followerList.size();
         for(int i = 0; i < this.followerList.size(); i++){
@@ -193,9 +195,8 @@ public class User implements Parcelable {
     public void replaceHabit(int index, Habit habit){
         this.habitList.set(index,habit);
     }
-    public void replaceHabit_Event(int index, Habit_Event habitEvent){
-        this.habitEventList.set(index,habitEvent);
-    }
+
+
 
     // These implement Parcelable for being passed through an intent
 
@@ -214,47 +215,42 @@ public class User implements Parcelable {
      *
      * Writes all the attributes to the parcel out
      * @author Dakota
-     * @see "https://stackoverflow.com/questions/7042272/how-to-properly-implement-parcelable-with-an-"arraylistparcelable"
+     * @see Parcelable
+     * @see Parcel
+     * @see Bundle
      * @param out Parcel to be create
      * @param flags int, idk not important but required
      */
     @Override
     public void writeToParcel(Parcel out, int flags) {
 
-        out.writeString(username);
-        out.writeList(habitList);
-        out.writeList(habitEventList);
-        out.writeList(followerList);
-        out.writeList(followingList);
-        out.writeList(followerReqList);
+        Bundle userBundle = new Bundle();
+
+
+        userBundle.putString("username", username);
+        Log.d("UserParcelable", "Parcel Writer userName:" + userBundle.getString("username"));
+
+        // requires Habit to implement Parcelable
+        userBundle.putParcelableArrayList("habitList", habitList);
+
+        // requires User to implement Parcelable (which is what this code dose)
+        userBundle.putParcelableArrayList("followerList",followerList);
+        userBundle.putParcelableArrayList("followingList",followingList);
+        userBundle.putParcelableArrayList("followerReqList",followerReqList);
+
+        out.writeBundle(userBundle); // writes bundle to parcel
+
     }
 
     // Creates User from parcel
     public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
-        /**
-         * createFromParcel
-         *
-         * creates User from parcel
-         *
-         * @author Dakota
-         * @param in Parcel to create User from
-         * @return User from parcel
-         */
+
         @Override
         public User createFromParcel(Parcel in) {
 
             return new User(in);
         }
 
-        /**
-         * newArray
-         *
-         * needed for creating User from parcel but unimportant
-         *
-         * @author Dakota
-         * @param size of User[] array
-         * @return User[]
-         */
         @Override
         public User[] newArray(int size) {
 

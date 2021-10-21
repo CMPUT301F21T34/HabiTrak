@@ -17,18 +17,21 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*
-            Start the login fragment if no saved data from previous logins.
-        */
-        if (savedInstanceState == null) {
+        User mainUser = null;
+
+        if (savedInstanceState != null) {
+            // get users credentials
+            // validate credentials with database
+            // populate mainUser
+            // move to main menu
+        } else {
+            // get user to login
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.login_fragment_container, new LoginFragment())
+                    .add(R.id.login_fragment_container, new LoginFragment(mainUser))
                     .commit();
+
         }
 
-        /*
-            Add Logic if the user is already logged in before
-         */
     }
 }

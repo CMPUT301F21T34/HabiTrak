@@ -1,8 +1,12 @@
 package com.cmput301f21t34.habittrak;
 
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Comparator;
+import java.util.TimeZone;
 
 /**
  * Habit
@@ -15,14 +19,18 @@ import java.util.Comparator;
  * @since 2021-10-15
  * @see com.cmput301f21t34.habittrak.Habit_Event, User
  */
-public class Habit implements Comparable<Habit> {
+public class Habit implements Comparable<Habit>, Parcelable {
 
     // Attributes //
+
+    // Any changes need to be implement in writeToParcel and Parcel constructor - Dakota
 
 
     private String title, reason;
     private Calendar startDate;
     private ArrayList<Habit_Event> habitEvents = new ArrayList<Habit_Event>();
+    private ArrayList<Boolean> onDays = new ArrayList<>();
+        private int daysInWeek = 7; // Amount of days in week onDays Handles
 
     // need to track which days of the week
 
@@ -34,14 +42,73 @@ public class Habit implements Comparable<Habit> {
         this.startDate = Calendar.getInstance();
     }
 
+    Habit(String title){
+        this.title = title;
+        this.reason="";
+        this.startDate = Calendar.getInstance();
+    }
+
     public Habit(String title, String reason, Calendar startDate){
         this.title = title; this.reason = reason;
         this.startDate = startDate;
     }
 
+    /**
+     * Parcel Constructor Class
+     *
+     * Constructs Habit from a parcel
+     * Un-does writeToParcel method
+     *
+     * @author Dakota
+     * @param parcel Parcel to construct from
+     */
+    public Habit(Parcel parcel) {
+        Bundle habitBundle;
+        habitBundle = parcel.readBundle();
+
+
+        this.title = habitBundle.getString("title");
+        this.reason = habitBundle.getString("reason");
+        this.habitEvents = habitBundle.getParcelableArrayList("habitEvents");
+
+        // Handles Calendar
+        String completedDateTimeZone = habitBundle.getString("startDateTimeZone");
+        if ( completedDateTimeZone != null) {
+
+            Calendar constructionCalendar = Calendar.getInstance();
+            constructionCalendar.setTimeZone(TimeZone.getTimeZone(completedDateTimeZone));
+            constructionCalendar.setTimeInMillis(habitBundle.getLong("startDateTime"));
+
+            this.startDate = constructionCalendar;
+        } else {
+            this.startDate = null;
+        }
+
+        // converts boolean[] into ArrayList<Boolean>
+        ArrayList<Boolean> constructionArrayList = new ArrayList<Boolean>();
+        boolean[] onDaysArray = habitBundle.getBooleanArray("onDaysArray"); // array to convert from
+        for (int index = 0; index < daysInWeek; index++){
+            constructionArrayList.add(onDaysArray[index]);
+
+        }
+        this.onDays = constructionArrayList;
+    }
+
 
     // Methods //
 
+
+    public static final Parcelable.Creator<Habit> CREATOR = new Parcelable.Creator<Habit>() {
+        @Override
+        public Habit createFromParcel(Parcel in) {
+            return new Habit(in);
+        }
+
+        @Override
+        public Habit[] newArray(int size) {
+            return new Habit[size];
+        }
+    };
 
     /**
      * getTitle
@@ -160,7 +227,7 @@ public class Habit implements Comparable<Habit> {
         for (int index = 0; index < habitEvents.size(); index++){
 
             // checks for matching habitEventID
-            if (habitEvents.get(index).getHabit_event_id() == habitEventID){
+            if (habitEvents.get(index).getHabitEventId() == habitEventID){
 
                 habitEvents.remove(index); // removes if found
                 removed = true;
@@ -183,7 +250,7 @@ public class Habit implements Comparable<Habit> {
 
         // Sorts with Habit_Event's compareTo method
         habitEvents.sort(Habit_Event::compareTo);
-        // min API 24 needed
+        // min API 24 needed, need to program own sorting else wise
 
     }
 
@@ -202,5 +269,64 @@ public class Habit implements Comparable<Habit> {
 
         return this.startDate.getTime().compareTo(habit.getStartDate().getTime());
 
+    }
+
+    /**
+     * Code that parses Habit parameters into a Parcel
+     * Needs to be updated for any changes to attributes
+     * Or new attributes added
+     *
+     * Used to pass through intents
+     *
+     * @author Dakota
+     * @see Parcelable
+     * @see Parcel
+     * @see Bundle
+     * @param out Parcel created
+     * @param flags
+     */
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+
+        Bundle habitBundle = new Bundle();
+
+        habitBundle.putString("title", title);
+        habitBundle.putString("reason", reason);
+
+        // Requires Habit_Events to implement parcelable
+        habitBundle.putParcelableArrayList("habitEvents", habitEvents);
+
+        // Handles Calendar
+        if (startDate != null) {
+            habitBundle.putString("startDateTimeZone", startDate.getTimeZone().getID());
+            habitBundle.putLong("startDateTime", startDate.getTimeInMillis());
+        } else {
+            habitBundle.putString("startDateTimeZone", null);
+        }
+
+        // converts ArrayList<Boolean> into boolean[]
+        boolean[] onDaysArray = new boolean[daysInWeek];
+        for (int index = 0; index < daysInWeek; index++){
+            onDaysArray[index] = onDays.get(index).booleanValue();
+        }
+            // boolean[] can be passed but not ArrayList<boolean.
+
+        habitBundle.putBooleanArray("onDaysArray", onDaysArray);
+        out.writeBundle(habitBundle);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    private static class Creator implements Parcelable.Creator<Habit> {
+        public Habit createFromParcel(Parcel in) {
+            return new Habit(in);
+        }
+
+        public Habit[] newArray(int size) {
+            return new Habit[size];
+        }
     }
 }

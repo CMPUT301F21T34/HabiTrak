@@ -1,14 +1,16 @@
-package com.cmput301f21t34.habittrak.eventscreen;
+package com.cmput301f21t34.habittrak.fragments;
 
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cmput301f21t34.habittrak.R;
+import com.cmput301f21t34.habittrak.User;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -17,8 +19,10 @@ import com.cmput301f21t34.habittrak.R;
 public class EventsFragment extends Fragment {
 
 
-    public EventsFragment() {
-        // Required empty public constructor
+    User mainUser;
+
+    public EventsFragment(User mainUser) {
+        this.mainUser = mainUser;
     }
 
 
@@ -26,6 +30,12 @@ public class EventsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.habi_events_fragment, container, false);
+        View view = inflater.inflate(R.layout.habi_events_fragment, container, false);
+
+        Log.d("mainUser", "in EventsFragment mainUser: " + mainUser.getUsername());
+
+
+
+        return view;
     }
 }

@@ -15,6 +15,8 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import com.cmput301f21t34.habittrak.MainActivity;
+
 
 /**
  * LoginFragment
@@ -23,12 +25,14 @@ import com.google.android.material.textfield.TextInputLayout;
  *
  * Login Fragment for the app
  *
- * TODO: update the password validation: current username: admin password:admin
+ * TODO: update the password validation: current username: <any> password: <any>
  */
 public class LoginFragment extends Fragment {
 
-    public LoginFragment(){
-        // requires empty constructor class
+    private User mainUser;
+
+    public LoginFragment(User mainUser){
+        this.mainUser = mainUser; // Passes User object
     }
 
     @Nullable
@@ -70,18 +74,27 @@ public class LoginFragment extends Fragment {
 
     /**
      * Password validation.
-     * TODO: Update the function and implement proper password validation.
+     * TODO: Update the function and implement proper password validation. (Hash Checking needed)
+     * TODO: Move login validation, and checking to separate class outside frag - Dakota
      * Current Credentials: user: admin pass: admin
      * @param password password from input
      * @param username username from input
      * @return passwordOk boolean if the password is valid
      */
     public boolean isPasswordValid(@Nullable Editable password, @Nullable Editable username){
+
         Boolean passwordOk = false;
         String pass = password.toString();
         String user = username.toString();
-        if (pass.equals("admin") && user.equals("admin")){
+
+
+        if (true) { // logic for allowing loggin in, for sake of testing is always true - Dakota
             passwordOk = true;
+
+            // populate user after verification
+            mainUser = new User("dummyUser");
+
+
         }
 
         return passwordOk;
@@ -94,6 +107,7 @@ public class LoginFragment extends Fragment {
      */
     public void startHomePage(View view){
         Intent intent = new Intent(getActivity(), BaseActivity.class);
+        intent.putExtra("mainUser", mainUser); // passes mainUser through intent
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         getActivity().finish();

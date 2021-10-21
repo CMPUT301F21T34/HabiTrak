@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.ListView;
 import com.cmput301f21t34.habittrak.Habit;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.TodayHabitList;
+import com.cmput301f21t34.habittrak.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -32,8 +34,14 @@ public class TodayListFragment extends Fragment {
     ArrayAdapter<Habit> habitAdapter;
     ArrayList<Habit> habitsData;
 
+    User mainUser;
+
     // constructor
     public TodayListFragment() {
+
+        // mainUser = (User) this.getArguments().getParcelable("mainUser");
+
+        // Log.d("mainUser", "mainUser username: " + mainUser.getUsername());
         // Required empty public constructor
     }
 

@@ -11,6 +11,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -42,19 +43,36 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Intent intent = getIntent();
+        User mainUser = (User) intent.getParcelableExtra("mainUser"); // Gets mainUser from intent
+
+        Log.d("mainUser", "mainUser name: " + mainUser.getUsername());
+
+        // We get the mainUser through the intent here, we need to now somehow make it
+        // Accessible between all frags. Including modifying and pass the new modified version as
+        // Parcels and Intends create new objects (not modify)
+        // - Dakota
+
         //set up toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setContentView(R.layout.activity_base);
 
 
+        Bundle mainUserBundle = new Bundle();
+        mainUserBundle.putParcelable("mainUser", mainUser);
+
 
         // setting the controller for bottom nav bar
         NavHostFragment navHostFragment = (NavHostFragment)
                 getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         NavController navController = navHostFragment.getNavController();
+
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
         NavigationUI.setupWithNavController(bottomNav, navController);
+
+        navController.setGraph(R.navigation.nav_graph, mainUserBundle);
+
 
 
     }

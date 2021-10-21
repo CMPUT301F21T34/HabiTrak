@@ -1,14 +1,21 @@
 package com.cmput301f21t34.habittrak;
 
+
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
-public class User {
+
+
+public class User implements Parcelable {
     private String username;
     ArrayList<Habit> habitList;
     ArrayList<Habit_Event> habitEventList;
     ArrayList<User> followerList;
     ArrayList<User> followingList;
     ArrayList<User> followerReqList;
+
     User(String username, ArrayList<Habit> habitList, ArrayList<Habit_Event> habitEventList,
          ArrayList<User> followerList, ArrayList<User> followingList, ArrayList<User> followerReqList){
         this.username=username;
@@ -32,6 +39,18 @@ public class User {
         this.followerList = new ArrayList<User>();
         this.followingList = new ArrayList<User>();
         this.followerReqList = new ArrayList<User>();
+    }
+
+    User(Parcel parcel){
+
+        // order matters
+        this.username = parcel.readString();
+        this.habitList = parcel.readArrayList(null);
+        this.habitEventList = parcel.readArrayList(null);
+        this.followerList = parcel.readArrayList(null);
+        this.followingList = parcel.readArrayList(null);
+        this.followerReqList = parcel.readArrayList(null);
+
     }
 
 
@@ -177,5 +196,40 @@ public class User {
     public void replaceHabit_Event(int index, Habit_Event habitEvent){
         this.habitEventList.set(index,habitEvent);
     }
+
+    // These implement Parcelable for being passed through an intent
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+
+        out.writeString(username);
+        out.writeList(habitList);
+        out.writeList(habitEventList);
+        out.writeList(followerList);
+        out.writeList(followingList);
+        out.writeList(followerReqList);
+    }
+
+    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+
+            return new User[size];
+        }
+    };
+
+
+
 }
 

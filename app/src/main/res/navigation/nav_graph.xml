@@ -9,7 +9,11 @@
         android:id="@+id/navbar_menu_today"
         android:name="com.cmput301f21t34.habittrak.todayscreen.TodayListFragment"
         android:label="Today"
-        tools:layout="@layout/habi_today_fragment" />
+        tools:layout="@layout/habi_today_fragment" >
+        <argument
+            android:name="mainUser"
+            app:argType="com.cmput301f21t34.habittrak.User" />
+    </fragment>
 
     <fragment
         android:id="@+id/navbar_menu_habits"

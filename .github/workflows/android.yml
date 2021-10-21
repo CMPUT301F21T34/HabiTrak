@@ -6,7 +6,7 @@ on:
     paths:
       "*/.github/workflows/android.yml"
   pull_request:
-    branches: [ "*" ]
+    branches: [ "**" ]
 
 jobs:
   build:

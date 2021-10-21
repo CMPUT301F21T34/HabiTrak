@@ -59,9 +59,6 @@ public class BaseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_base);
 
 
-        Bundle mainUserBundle = new Bundle();
-        mainUserBundle.putParcelable("mainUser", mainUser);
-
 
         // setting the controller for bottom nav bar
         NavHostFragment navHostFragment = (NavHostFragment)
@@ -71,7 +68,7 @@ public class BaseActivity extends AppCompatActivity {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
         NavigationUI.setupWithNavController(bottomNav, navController);
 
-        navController.setGraph(R.navigation.nav_graph, mainUserBundle);
+        
 
 
 

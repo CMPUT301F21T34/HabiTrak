@@ -29,12 +29,24 @@ public class Habit implements Comparable<Habit>, Parcelable {
     private String title, reason;
     private Calendar startDate;
     private ArrayList<Habit_Event> habitEvents = new ArrayList<Habit_Event>();
-    private ArrayList<Boolean> onDays = new ArrayList<>();
-        private int daysInWeek = 7; // Amount of days in week onDays Handles
 
     // Boolean array to track which day of the week
-    // index 0 -> Monday, index 1 -> Tuesday, .... index 6 -> Sunday
+    // index 0 -> Monday, index 1 -> Tuesday, ... index 6 -> Sunday
     private ArrayList<Boolean> onDays = new ArrayList<>();
+        private final int DAYS_IN_WEEK = 7; // Amount of days in week onDays Handles
+
+    /*
+     * Might be useful to change onDays to an boolean[DAYS_IN_WEEK] array since days are fixed
+     * and ties constant variable
+     *
+     * Might be useful to change
+     *      void setOnDays(ArrayList<Boolean>)
+     * to
+     *      void setOnDays(boolean Monday, boolean Tuesday, ... , boolean Sunday)
+     *
+     * - Dakota
+     */
+
 
     // Constructors //
 
@@ -88,7 +100,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
         // converts boolean[] into ArrayList<Boolean>
         ArrayList<Boolean> constructionArrayList = new ArrayList<Boolean>();
         boolean[] onDaysArray = habitBundle.getBooleanArray("onDaysArray"); // array to convert from
-        for (int index = 0; index < daysInWeek; index++){
+        for (int index = 0; index < DAYS_IN_WEEK; index++){
             constructionArrayList.add(onDaysArray[index]);
 
         }
@@ -331,8 +343,8 @@ public class Habit implements Comparable<Habit>, Parcelable {
         }
 
         // converts ArrayList<Boolean> into boolean[]
-        boolean[] onDaysArray = new boolean[daysInWeek];
-        for (int index = 0; index < daysInWeek; index++){
+        boolean[] onDaysArray = new boolean[DAYS_IN_WEEK];
+        for (int index = 0; index < DAYS_IN_WEEK; index++){
             onDaysArray[index] = onDays.get(index).booleanValue();
         }
             // boolean[] can be passed but not ArrayList<boolean.

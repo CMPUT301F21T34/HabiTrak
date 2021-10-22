@@ -32,27 +32,21 @@ public class Habit implements Comparable<Habit>, Parcelable {
 
     // Boolean array to track which day of the week
     // index 0 -> Monday, index 1 -> Tuesday, ... index 6 -> Sunday
-    private ArrayList<Boolean> onDays = new ArrayList<>();
-        private final int DAYS_IN_WEEK = 7; // Amount of days in week onDays Handles
+    private final int DAYS_IN_WEEK = 7;
+    private boolean[] onDays = new boolean[DAYS_IN_WEEK];
+         // Amount of days in week onDays Handles
 
-    /*
-     * Might be useful to change onDays to an boolean[DAYS_IN_WEEK] array since days are fixed
-     * and ties constant variable
-     *
-     * Might be useful to change
-     *      void setOnDays(ArrayList<Boolean>)
-     * to
-     *      void setOnDays(boolean Monday, boolean Tuesday, ... , boolean Sunday)
-     *
-     * - Dakota
-     */
+    // Enum //
+
 
 
     // Constructors //
 
     Habit(){
-        this.title = ""; this.reason="";
+        this.title = "";
+        this.reason="";
         this.startDate = Calendar.getInstance();
+        this.onDays = new boolean[]{false, false, false, false, false, false, false};
     }
 
     Habit(String title){
@@ -61,9 +55,11 @@ public class Habit implements Comparable<Habit>, Parcelable {
         this.startDate = Calendar.getInstance();
     }
 
-    public Habit(String title, String reason, Calendar startDate){
-        this.title = title; this.reason = reason;
+    public Habit(String title, String reason, Calendar startDate, boolean[] onDays){
+        this.title = title;
+        this.reason = reason;
         this.startDate = startDate;
+        this.onDays = onDays;
     }
 
     /**
@@ -97,6 +93,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
             this.startDate = null;
         }
 
+        /*
         // converts boolean[] into ArrayList<Boolean>
         ArrayList<Boolean> constructionArrayList = new ArrayList<Boolean>();
         boolean[] onDaysArray = habitBundle.getBooleanArray("onDaysArray"); // array to convert from
@@ -104,7 +101,9 @@ public class Habit implements Comparable<Habit>, Parcelable {
             constructionArrayList.add(onDaysArray[index]);
 
         }
-        this.onDays = constructionArrayList;
+
+         */
+        this.onDays = habitBundle.getBooleanArray("onDays");
     }
 
 
@@ -204,20 +203,70 @@ public class Habit implements Comparable<Habit>, Parcelable {
      * @return ArrayList
      * returns a boolean array that contains which day of the week the habit is on
      */
-    public ArrayList<Boolean> getOnDays() {
+    public boolean[] getOnDays() {
         return this.onDays;
     }
 
     /**
      * setOnDays
      *
-     * setter function for Habit onDays
+     * Set which days a habit is active
      *
-     * @author Henry
-     * @param onDays onDays list to change Habit onDays to
+     * @author Henery
+     * @author Dakota
+     *
+     * @param mon boolean Monday
+     * @param tue boolean Tuesday
+     * @param wed boolean Wednesday
+     * @param thu boolean Thursday
+     * @param fri boolean Friday
+     * @param sat boolean Saturday
+     * @param sun boolean Sunday
      */
-    public void setOnDays(ArrayList<Boolean> onDays) {
-        this.onDays = onDays;
+    public void setOnDays(boolean mon,
+                          boolean tue,
+                          boolean wed,
+                          boolean thu,
+                          boolean fri,
+                          boolean sat,
+                          boolean sun) {
+
+        this.onDays = new boolean[]{mon, tue, wed, thu, fri, sat, sun};
+    }
+
+    public boolean isOnDay(){
+        Calendar today = Calendar.getInstance(); // Gets today
+        today.setFirstDayOfWeek(Calendar.MONDAY); // Makes sure day of week starts monday
+
+       int dayOfWeek = today.get(Calendar.DAY_OF_WEEK); // Get current day of week
+
+
+
+        // switch to day of week and check if it is true
+        switch (dayOfWeek){
+            case Calendar.MONDAY:
+                return this.onDays[1];
+
+            case Calendar.TUESDAY:
+                return this.onDays[2];
+
+            case Calendar.WEDNESDAY:
+                return this.onDays[3];
+
+            case Calendar.THURSDAY:
+                return this.onDays[4];
+
+            case Calendar.FRIDAY:
+                return this.onDays[5];
+
+            case Calendar.SATURDAY:
+                return this.onDays[6];
+
+            case Calendar.SUNDAY:
+                return this.onDays[7];
+            default:
+                return false;
+        }
     }
 
     /**
@@ -342,6 +391,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
             habitBundle.putString("startDateTimeZone", null);
         }
 
+        /*
         // converts ArrayList<Boolean> into boolean[]
         boolean[] onDaysArray = new boolean[DAYS_IN_WEEK];
         for (int index = 0; index < DAYS_IN_WEEK; index++){
@@ -349,7 +399,8 @@ public class Habit implements Comparable<Habit>, Parcelable {
         }
             // boolean[] can be passed but not ArrayList<boolean.
 
-        habitBundle.putBooleanArray("onDaysArray", onDaysArray);
+         */
+        habitBundle.putBooleanArray("onDays", onDays);
         out.writeBundle(habitBundle);
     }
 

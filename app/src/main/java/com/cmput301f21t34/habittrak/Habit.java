@@ -35,6 +35,9 @@ public class Habit implements Comparable<Habit>, Parcelable {
     private ArrayList<Boolean> onDays = new ArrayList<>();
         private final int DAYS_IN_WEEK = 7; // Amount of days in week onDays Handles
 
+
+
+
     /*
      * Might be useful to change onDays to an boolean[DAYS_IN_WEEK] array since days are fixed
      * and ties constant variable
@@ -53,17 +56,24 @@ public class Habit implements Comparable<Habit>, Parcelable {
     Habit(){
         this.title = ""; this.reason="";
         this.startDate = Calendar.getInstance();
+
+
+
     }
 
     Habit(String title){
         this.title = title;
         this.reason="";
         this.startDate = Calendar.getInstance();
+
+
     }
 
     public Habit(String title, String reason, Calendar startDate){
         this.title = title; this.reason = reason;
         this.startDate = startDate;
+
+
     }
 
     /**
@@ -77,7 +87,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
      */
     public Habit(Parcel parcel) {
         Bundle habitBundle;
-        habitBundle = parcel.readBundle();
+        habitBundle = parcel.readBundle(Habit.class.getClassLoader());
 
 
         this.title = habitBundle.getString("title");
@@ -326,7 +336,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
     @Override
     public void writeToParcel(Parcel out, int flags) {
 
-        Bundle habitBundle = new Bundle();
+        Bundle habitBundle = new Bundle(Habit.class.getClassLoader());
 
         habitBundle.putString("title", title);
         habitBundle.putString("reason", reason);

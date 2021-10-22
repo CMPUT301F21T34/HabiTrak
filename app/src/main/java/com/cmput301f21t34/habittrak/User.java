@@ -62,7 +62,7 @@ public class User implements Parcelable {
     User(Parcel parcel){
 
         Bundle userBundle;
-        userBundle = parcel.readBundle();
+        userBundle = parcel.readBundle(User.class.getClassLoader());
 
         Log.d("UserParcelable", "Parcel Construction userName:" + userBundle.getString("username"));
 
@@ -224,7 +224,7 @@ public class User implements Parcelable {
     @Override
     public void writeToParcel(Parcel out, int flags) {
 
-        Bundle userBundle = new Bundle();
+        Bundle userBundle = new Bundle(this.getClass().getClassLoader());
 
 
         userBundle.putString("username", username);

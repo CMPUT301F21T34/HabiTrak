@@ -56,7 +56,7 @@ public class Habit_Event implements Comparable<Habit_Event>, Parcelable {
     public Habit_Event(Parcel parcel){
 
         Bundle habitEventBundle;
-        habitEventBundle = parcel.readBundle();
+        habitEventBundle = parcel.readBundle(Habit_Event.class.getClassLoader());
 
         this.habitEventId = habitEventBundle.getString("habitEventId");
         this.habit = habitEventBundle.getParcelable("habit");
@@ -180,7 +180,7 @@ public class Habit_Event implements Comparable<Habit_Event>, Parcelable {
     public void writeToParcel(Parcel out, int flags) {
 
 
-        Bundle habitEventBundle = new Bundle();
+        Bundle habitEventBundle = new Bundle(Habit_Event.class.getClassLoader());
 
         habitEventBundle.putString("habitEventId", habitEventId);
         habitEventBundle.putString("comment", comment);

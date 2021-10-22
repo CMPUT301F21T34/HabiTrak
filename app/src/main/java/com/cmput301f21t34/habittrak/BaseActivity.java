@@ -47,6 +47,10 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
     AllHabitsFragment allHabitsFrag;
 
 
+    public static final int RESULT_NEW_HABIT = 1000; // Custom Activity Result
+
+
+
 
 
     @Override
@@ -58,6 +62,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         this.mainUser = intent.getParcelableExtra("mainUser"); // Gets mainUser from intent
 
         Log.d("mainUser", "in BaseActivity mainUser: " + mainUser.getUsername());
+
 
         todayFrag = new TodayListFragment(mainUser);
         socialFrag = new SocialFragment(mainUser);
@@ -76,19 +81,20 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
          */
 
+        // Sets up Nav Bard
         bottomNav = findViewById(R.id.bottom_nav); // Sets Nav to bottom nav
 
         bottomNav.setOnItemSelectedListener(this);  // Sets listener to this
         bottomNav.setSelectedItemId(R.id.navbar_menu_today); // Sets inital selected item
 
-        //NavigationUI.setupWithNavController(bottomNav, navController);
 
 
         // Creates a mainUser bundle
-        Bundle mainUserBundle = new Bundle();
-        mainUserBundle.putParcelable("mainUser", mainUser);
+        //Bundle mainUserBundle = new Bundle();
+        //mainUserBundle.putParcelable("mainUser", mainUser);
 
 
+        // Adds any new habits
 
 
 
@@ -144,5 +150,18 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         }
 
         return false;
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (resultCode == RESULT_NEW_HABIT) {
+            Habit newHabit = intent.getParcelableExtra("newHabit");
+            mainUser.addHabit(newHabit);
+
+
+        }
+
+        super.onActivityResult(requestCode, resultCode, intent);
     }
 }

@@ -22,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.cmput301f21t34.habittrak.AddHabit;
+import com.cmput301f21t34.habittrak.BaseActivity;
 import com.cmput301f21t34.habittrak.Habit;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.TodayHabitList;
@@ -46,6 +47,8 @@ public class TodayListFragment extends Fragment {
     ArrayList<Habit> habitsData;
 
     User mainUser;
+
+
 
     // constructor
     public TodayListFragment(User mainUser) {
@@ -89,6 +92,49 @@ public class TodayListFragment extends Fragment {
         habitList.setAdapter(habitAdapter);
 
 
+        refreshHabitList(); // populates habit list
+
+
+
+
+        return view;
+    }
+
+    /**
+     *  Launch add habit activity for result
+     */
+    ActivityResultLauncher<Intent> addHabitActivityLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == BaseActivity.RESULT_NEW_HABIT) {
+                        Habit newHabit = result.getData().getParcelableExtra("newHabit");
+                        Log.d("newHabit", "in TodayListFrag newHabit: " + newHabit.getTitle());
+
+                        refreshHabitList(); // refresh habit list
+
+
+                    }
+                }
+
+            }
+
+    );
+
+
+
+    /**
+     * refreshHabitList
+     *
+     * refreshes the habitListView showing habits for today
+     *
+     * @author Dakota
+     */
+    public void refreshHabitList() {
+
+        Log.d("TodayListFragment", "refreshing habit list");
         // Populate today view with Today's habits.
 
         habitsData.clear(); // Make sure is clear
@@ -102,27 +148,7 @@ public class TodayListFragment extends Fragment {
             }
         }
 
-        habitsData.addAll(mainUser.getHabitList());
-
-        return view;
     }
-
-    /**
-     *  Launch add habit activity for result
-     */
-    ActivityResultLauncher<Intent> addHabitActivityLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK){
-                        Bundle args = result.getData().getBundleExtra("result");
-                        //Habit newHabit = args.getParcelable("habit");
-                        //habitsData.add(newHabit);
-                    }
-                }
-            }
-    );
 
 
 }

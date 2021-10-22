@@ -143,12 +143,13 @@ public class AddHabit extends AppCompatActivity {
     public void finishActivityWithResult(){
         String name = habitName.getText().toString();
         String reason = habitReason.getText().toString();
-        //Habit newHabit = new Habit(name, reason, calendar);
-        Bundle args = new Bundle();
-        //args.putParcelable("habit", newHabit);
+        boolean[] daysOn = new boolean[]{true, true, true, true, true, true, true};
+        Habit newHabit = new Habit(name, reason, calendar, daysOn);
+        //Bundle newHabitBundle = new Bundle();
+        //newHabitBundle.putParcelable("newHabit", newHabit);
         Intent result = new Intent();
-        result.putExtra("result", args);
-        setResult(Activity.RESULT_OK, result);
+        result.putExtra("newHabit", newHabit);
+        setResult(BaseActivity.RESULT_NEW_HABIT, result);
         this.finish();
     }
 

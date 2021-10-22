@@ -15,9 +15,9 @@ import java.util.TimeZone;
  *
  * Habit object that a user wants to track
  *
- * @version 1.0
+ * @version 1.1
  * @since 2021-10-15
- * @see com.cmput301f21t34.habittrak.Habit_Event, User
+ * @see Habit_Event
  */
 public class Habit implements Comparable<Habit>, Parcelable {
 
@@ -36,19 +36,6 @@ public class Habit implements Comparable<Habit>, Parcelable {
         private final int DAYS_IN_WEEK = 7; // Amount of days in week onDays Handles
 
 
-
-
-    /*
-     * Might be useful to change onDays to an boolean[DAYS_IN_WEEK] array since days are fixed
-     * and ties constant variable
-     *
-     * Might be useful to change
-     *      void setOnDays(ArrayList<Boolean>)
-     * to
-     *      void setOnDays(boolean Monday, boolean Tuesday, ... , boolean Sunday)
-     *
-     * - Dakota
-     */
 
 
     // Constructors //
@@ -83,6 +70,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
      * Un-does writeToParcel method
      *
      * @author Dakota
+     * @see Parcelable
      * @param parcel Parcel to construct from
      */
     public Habit(Parcel parcel) {
@@ -330,6 +318,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
      * @see Parcelable
      * @see Parcel
      * @see Bundle
+     * @see ClassLoader
      * @param out Parcel created
      * @param flags
      */

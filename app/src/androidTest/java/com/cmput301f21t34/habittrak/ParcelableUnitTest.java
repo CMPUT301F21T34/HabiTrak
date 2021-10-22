@@ -10,8 +10,24 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 
+/**
+ * Class for testing Parcelable Objects
+ *
+ * @author Dakota
+ * @version 1.0
+ * @since 2021-10-22
+ * @see android.os.Parcelable
+ * @see User
+ * @see Habit
+ * @see Habit_Event
+ */
 public class ParcelableUnitTest {
 
+    /**
+     * Tests if {@link User} is properly parceled and unpacked
+     *
+     * @author Dakota
+     */
     @Test
     public void testParcelableUser(){
 
@@ -27,12 +43,22 @@ public class ParcelableUnitTest {
 
         // Asserts Similarity
         assertEquals(testUser.getUsername(), parceledUser.getUsername());
-        assertEquals(testUser.getHabitList().get(0).getTitle(), parceledUser.getHabitList().get(0).getTitle());
-        assertEquals(testUser.getHabitList().get(1).getStartDate(), parceledUser.getHabitList().get(1).getStartDate());
+        assertEquals(testUser.getHabitList().get(0).getTitle(),
+                parceledUser.getHabitList().get(0).getTitle()); // Compares Title
+
+        // Since they are not the same object we need to compare their actual attributes
+        assertEquals(testUser.getHabitList().get(1).getStartDate(),
+                parceledUser.getHabitList().get(1).getStartDate()); // Compares Dates
 
     }
 
-    public User getTestUser(){
+    /**
+     * getTestUser
+     *
+     * helper class that creates a user for testing
+     * @return User for testing
+     */
+    private User getTestUser(){
 
         return new User("testUser",
                 getTestHabitList(),
@@ -43,7 +69,13 @@ public class ParcelableUnitTest {
 
     }
 
-    public ArrayList<Habit> getTestHabitList(){
+    /**
+     * getTestHabitList
+     *
+     * helper class that creates a habit list for testing
+     * @return ArrayList\<Habit\> for testing
+     */
+    private ArrayList<Habit> getTestHabitList(){
         ArrayList<Habit> habitList = new ArrayList<>();
         habitList.add(new Habit("hab1"));
         habitList.add(new Habit("hab2", "reason", Calendar.getInstance()));

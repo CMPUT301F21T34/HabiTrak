@@ -1,131 +1,160 @@
 package com.cmput301f21t34.habittrak;
 
-import java.lang.reflect.Array;
+
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.util.Log;
+
 import java.util.ArrayList;
 
-public class User {
+
+
+public class User implements Parcelable {
+
+    // Attributes //
+
+    // Any changes need to be implement in writeToParcel and Parcel constructor - Dakota
+
     private String username;
-    ArrayList<Habit> habit_list;
-    ArrayList<Habit_Event> habit_event_list;
-    ArrayList<User> follower_list;
-    ArrayList<User> following_list;
-    ArrayList<User> follower_req_list;
-    User(String username, ArrayList<Habit> habit_list, ArrayList<Habit_Event> habit_event_list,
-         ArrayList<User> follower_list, ArrayList<User> following_list, ArrayList<User> follower_req_list){
+    ArrayList<Habit> habitList;
+    ArrayList<User> followerList;
+    ArrayList<User> followingList;
+    ArrayList<User> followerReqList;
+
+    // Constructors //
+
+    User(String username, ArrayList<Habit> habitList, ArrayList<Habit_Event> habitEventList,
+         ArrayList<User> followerList, ArrayList<User> followingList, ArrayList<User> followerReqList){
         this.username=username;
-        this.habit_list=habit_list;
-        this.habit_event_list = habit_event_list;
-        this.follower_list = follower_list;
-        this.following_list = following_list;
-        this.follower_req_list = follower_req_list;
+        this.habitList = habitList;
+        this.followerList = followerList;
+        this.followingList = followingList;
+        this.followerReqList = followerReqList;
     }
-    User(){
-        this.username="";
-        this.habit_list=new ArrayList<Habit>();
-        this.habit_event_list = new ArrayList<Habit_Event>();
-        this.follower_list = new ArrayList<User>();
-        this.following_list = new ArrayList<User>();
-        this.follower_req_list = new ArrayList<User>();
+
+    /**
+     * New User
+     *
+     * Creates a User with only a username
+     *
+     * @author Dakota
+     * @param username String is new users new username
+     */
+    User(String username){
+        this.username = username;
+
+        this.habitList = new ArrayList<Habit>();
+        this.followerList = new ArrayList<User>();
+        this.followingList = new ArrayList<User>();
+        this.followerReqList = new ArrayList<User>();
     }
+
+    /**
+     * Parcel Constructor Class
+     *
+     * Constructs Habit from a parcel
+     * Un-does writeToParcel method
+     *
+     * @author Dakota
+     * @param parcel Parcel to construct from
+     */
+    User(Parcel parcel){
+
+        Bundle userBundle;
+        userBundle = parcel.readBundle();
+
+        Log.d("UserParcelable", "Parcel Construction userName:" + userBundle.getString("username"));
+
+        this.username = userBundle.getString("username");
+        this.habitList = userBundle.getParcelableArrayList("habitList");
+        this.followerList = userBundle.getParcelableArrayList("followerList");
+        this.followingList = userBundle.getParcelableArrayList("followingList");
+        this.followerReqList = userBundle.getParcelableArrayList("followerReqList");
+
+
+    }
+
+
     //getter methods
     public String getUsername() {
         return username;
     }
-    public ArrayList<Habit> getHabit_list() {
-        return habit_list;
+    public ArrayList<Habit> getHabitList() {
+        return habitList;
     }
-    public ArrayList<Habit_Event> getHabit_event_list() {
-        return habit_event_list;
+
+    public ArrayList<User> getFollowerList() {
+        return followerList;
     }
-    public ArrayList<User> getFollower_list() {
-        return follower_list;
+    public ArrayList<User> getFollowerReqList() {
+        return followerReqList;
     }
-    public ArrayList<User> getFollower_req_list() {
-        return follower_req_list;
-    }
-    public ArrayList<User> getFollowing_list() {
-        return following_list;
+    public ArrayList<User> getFollowingList() {
+        return followingList;
     }
     //setter methods
     public void setUsername(String username) {
         this.username = username;
     }
 
-    public void setHabit_list(ArrayList<Habit> habit_list) {
-        this.habit_list = habit_list;
+    public void setHabitList(ArrayList<Habit> habitList) {
+        this.habitList = habitList;
     }
 
-    public void setHabit_event_list(ArrayList<Habit_Event> habit_event_list) {
-        this.habit_event_list = habit_event_list;
+
+    public void setFollowerList(ArrayList<User> followerList) {
+        this.followerList = followerList;
     }
 
-    public void setFollower_list(ArrayList<User> follower_list) {
-        this.follower_list = follower_list;
+    public void setFollowingList(ArrayList<User> followingList) {
+        this.followingList = followingList;
     }
 
-    public void setFollowing_list(ArrayList<User> following_list) {
-        this.following_list = following_list;
-    }
-
-    public void setFollower_req_list(ArrayList<User> follower_req_list) {
-        this.follower_req_list = follower_req_list;
+    public void setFollowerReqList(ArrayList<User> followerReqList) {
+        this.followerReqList = followerReqList;
     }
     // add methods have to adjust the database
     public void addHabit(Habit habit){
-        this.habit_list.add(habit);
+        this.habitList.add(habit);
     }
-    public void addHabit_Event(Habit_Event habit_event){
-        this.habit_event_list.add(habit_event);
+
+    public void addFollower(User newFollower){
+        this.followerList.add(newFollower);
     }
-    public void addFollower(User new_follower){
-        this.follower_list.add(new_follower);
+    public void addFollowerReq(User newFollowReq){
+        this.followerReqList.add(newFollowReq);
     }
-    public void add_follower_req(User new_follow_req){
-        this.follower_req_list.add(new_follow_req);
-    }
-    public void add_following(User new_following){
-        this.following_list.add(new_following);
+    public void addFollowing(User newFollowing){
+        this.followingList.add(newFollowing);
     }
     // remove methods
     public boolean removeHabit(Habit habit){
-        int index= this.habit_list.size();
-        for(int i = 0; i < this.habit_list.size();i++){
-            if (habit_list.get(i).getTitle().equals(habit.getTitle())){
+        int index= this.habitList.size();
+        for(int i = 0; i < this.habitList.size(); i++){
+            if (habitList.get(i).getTitle().equals(habit.getTitle())){
                 index = i;
             }
         }
-        if (index != this.habit_list.size()){
-            this.habit_list.remove(index);
+        if (index != this.habitList.size()){
+            this.habitList.remove(index);
             return true;
         }
         else{
             return false;
         }
     }
-    public boolean removeHabit_Event(Habit_Event habit_event){
-        int index= this.habit_event_list.size();
-        for(int i = 0; i < this.habit_event_list.size();i++){
-            if (habit_event_list.get(i).getHabit_event_id().equals(habit_event.getHabit_event_id())){
-                index = i;
-            }
-        }
-        if (index != this.habit_event_list.size()){
-            this.habit_event_list.remove(index);
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
+
+
     public boolean removeFollower(User follower){
-        int index = this.follower_list.size();
-        for(int i =0; i < this.follower_list.size();i++){
-            if(this.follower_list.get(i).getUsername().equals(follower.getUsername())){
+        int index = this.followerList.size();
+        for(int i = 0; i < this.followerList.size(); i++){
+            if(this.followerList.get(i).getUsername().equals(follower.getUsername())){
                 index = i;
             }
         }
-        if(index != this.follower_list.size()){
-            this.follower_list.remove(index);
+        if(index != this.followerList.size()){
+            this.followerList.remove(index);
             return true;
         }
         else{
@@ -133,29 +162,29 @@ public class User {
         }
     }
     public boolean removeFollowing(User follower){
-        int index = this.following_list.size();
-        for(int i =0; i < this.following_list.size();i++){
-            if(this.following_list.get(i).getUsername().equals(follower.getUsername())){
+        int index = this.followingList.size();
+        for(int i = 0; i < this.followingList.size(); i++){
+            if(this.followingList.get(i).getUsername().equals(follower.getUsername())){
                 index = i;
             }
         }
-        if(index != this.following_list.size()){
-            this.following_list.remove(index);
+        if(index != this.followingList.size()){
+            this.followingList.remove(index);
             return true;
         }
         else{
             return false;
         }
     }
-    public boolean removeFollower_req(User follower){
-        int index = this.follower_req_list.size();
-        for(int i =0; i < this.follower_req_list.size();i++){
-            if(this.follower_req_list.get(i).getUsername().equals(follower.getUsername())){
+    public boolean removeFollowerReq(User follower){
+        int index = this.followerReqList.size();
+        for(int i = 0; i < this.followerReqList.size(); i++){
+            if(this.followerReqList.get(i).getUsername().equals(follower.getUsername())){
                 index = i;
             }
         }
-        if(index != this.follower_req_list.size()){
-            this.follower_req_list.remove(index);
+        if(index != this.followerReqList.size()){
+            this.followerReqList.remove(index);
             return true;
         }
         else{
@@ -164,10 +193,72 @@ public class User {
     }
     // replace methods not sure if i need it or not
     public void replaceHabit(int index, Habit habit){
-        this.habit_list.set(index,habit);
+        this.habitList.set(index,habit);
     }
-    public void replaceHabit_Event(int index, Habit_Event habit_event){
-        this.habit_event_list.set(index,habit_event);
+
+
+
+    // These implement Parcelable for being passed through an intent
+
+    /**
+     * Apart of Parcelable implementation, does nothing but is required
+     * @author Dakota
+     * @return int 0
+     */
+    @Override
+    public int describeContents() {
+        return 0;
     }
+
+    /**
+     * writeToParcel
+     *
+     * Writes all the attributes to the parcel out
+     * @author Dakota
+     * @see Parcelable
+     * @see Parcel
+     * @see Bundle
+     * @param out Parcel to be create
+     * @param flags int, idk not important but required
+     */
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+
+        Bundle userBundle = new Bundle();
+
+
+        userBundle.putString("username", username);
+        Log.d("UserParcelable", "Parcel Writer userName:" + userBundle.getString("username"));
+
+        // requires Habit to implement Parcelable
+        userBundle.putParcelableArrayList("habitList", habitList);
+
+        // requires User to implement Parcelable (which is what this code dose)
+        userBundle.putParcelableArrayList("followerList",followerList);
+        userBundle.putParcelableArrayList("followingList",followingList);
+        userBundle.putParcelableArrayList("followerReqList",followerReqList);
+
+        out.writeBundle(userBundle); // writes bundle to parcel
+
+    }
+
+    // Creates User from parcel
+    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
+
+        @Override
+        public User createFromParcel(Parcel in) {
+
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+
+            return new User[size];
+        }
+    };
+
+
+
 }
 

@@ -101,6 +101,17 @@
         android:layout_marginLeft="16dp"
         android:text="Selected Date is :"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="Frequency"/>
+
+
+    <include layout="@layout/weekdays_buttons"></include>
+
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/save_habit"
         android:layout_width="wrap_content"

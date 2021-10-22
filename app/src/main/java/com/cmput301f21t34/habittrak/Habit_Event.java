@@ -10,6 +10,18 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+/**
+ * Habit_Event
+ *
+ *
+ * @author Dakota
+ *
+ * Habit object that a user wants to track
+ *
+ * @version 1.0
+ * @since 2021-10-16
+ * @see Habit
+ */
 public class Habit_Event implements Comparable<Habit_Event>, Parcelable {
 
     // Attributes //
@@ -51,12 +63,13 @@ public class Habit_Event implements Comparable<Habit_Event>, Parcelable {
      * Un-does writeToParcel method
      *
      * @author Dakota
+     * @see Parcelable
      * @param parcel Parcel to construct from
      */
     public Habit_Event(Parcel parcel){
 
         Bundle habitEventBundle;
-        habitEventBundle = parcel.readBundle();
+        habitEventBundle = parcel.readBundle(Habit_Event.class.getClassLoader());
 
         this.habitEventId = habitEventBundle.getString("habitEventId");
         this.habit = habitEventBundle.getParcelable("habit");
@@ -180,7 +193,7 @@ public class Habit_Event implements Comparable<Habit_Event>, Parcelable {
     public void writeToParcel(Parcel out, int flags) {
 
 
-        Bundle habitEventBundle = new Bundle();
+        Bundle habitEventBundle = new Bundle(Habit_Event.class.getClassLoader());
 
         habitEventBundle.putString("habitEventId", habitEventId);
         habitEventBundle.putString("comment", comment);

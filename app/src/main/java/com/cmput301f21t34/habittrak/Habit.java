@@ -80,7 +80,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
         this.reason = habitBundle.getString("reason");
         this.habitEvents = habitBundle.getParcelableArrayList("habitEvents");
 
-        // Handles Calendar
+        // Handles Calendar //
         String completedDateTimeZone = habitBundle.getString("startDateTimeZone");
         if (completedDateTimeZone != null) {
 
@@ -93,16 +93,6 @@ public class Habit implements Comparable<Habit>, Parcelable {
             this.startDate = null;
         }
 
-        /*
-        // converts boolean[] into ArrayList<Boolean>
-        ArrayList<Boolean> constructionArrayList = new ArrayList<Boolean>();
-        boolean[] onDaysArray = habitBundle.getBooleanArray("onDaysArray"); // array to convert from
-        for (int index = 0; index < DAYS_IN_WEEK; index++){
-            constructionArrayList.add(onDaysArray[index]);
-
-        }
-
-         */
         this.onDays = habitBundle.getBooleanArray("onDays");
     }
 
@@ -405,15 +395,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
             habitBundle.putString("startDateTimeZone", null);
         }
 
-        /*
-        // converts ArrayList<Boolean> into boolean[]
-        boolean[] onDaysArray = new boolean[DAYS_IN_WEEK];
-        for (int index = 0; index < DAYS_IN_WEEK; index++){
-            onDaysArray[index] = onDays.get(index).booleanValue();
-        }
-            // boolean[] can be passed but not ArrayList<boolean.
 
-         */
         habitBundle.putBooleanArray("onDays", onDays);
         out.writeBundle(habitBundle);
     }

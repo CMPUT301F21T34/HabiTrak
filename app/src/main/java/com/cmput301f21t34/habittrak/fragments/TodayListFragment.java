@@ -99,10 +99,10 @@ public class TodayListFragment extends Fragment {
             result -> {
 
                 // Result's are not handled here but rather in BaseActivity
-                // However we need to launch the activity for results here.
-                // Can maybe add a function in Base Activity launchAddHabit()
-                // So each frag can just call it on button press rather than duplicating
-                // code in each frag. - Dakota
+                //TODO:
+                // implement public function in BaseActivity to launch
+                // AddHabitActivity and refresh views
+                // so any frag can call AddHabitActivity
 
             }
 

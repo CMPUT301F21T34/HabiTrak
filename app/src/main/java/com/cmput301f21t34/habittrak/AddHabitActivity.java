@@ -56,11 +56,11 @@ public class AddHabitActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.add_habit_toolbar);
+        Toolbar toolbar = findViewById(R.id.add_habit_toolbar);
         setSupportActionBar(toolbar);
         setContentView(R.layout.activity_add_habit);
 
-        // getting views
+        // Getting Views //
         startDate = findViewById(R.id.add_habit_selected_date);
         datePickerButton = findViewById(R.id.star_date_button);
         habitName = findViewById(R.id.habit_name_edit_text);

@@ -42,17 +42,16 @@ public class Habit implements Comparable<Habit>, Parcelable {
 
     Habit(){
         this.title = "";
-        this.reason="";
+        this.reason= "";
         this.startDate = Calendar.getInstance();
         this.onDays = new boolean[]{false, false, false, false, false, false, false};
     }
 
     Habit(String title){
         this.title = title;
-        this.reason="";
+        this.reason= "";
         this.startDate = Calendar.getInstance();
-
-
+        this.onDays = new boolean[]{false, false, false, false, false, false, false};
     }
 
     public Habit(String title, String reason, Calendar startDate, boolean[] onDays){
@@ -244,7 +243,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
 
 
         // switch to day of week and check if it is true
-        switch (dayOfWeek){
+        switch (dayOfWeek) {
             case Calendar.MONDAY:
                 return this.onDays[0];
 
@@ -325,6 +324,19 @@ public class Habit implements Comparable<Habit>, Parcelable {
         }
 
         return removed;
+    }
+
+
+    /**
+     * getHabitEvents
+     *
+     * @author Henry
+     *
+     * @return
+     * Returns the habit events array list
+     */
+    public ArrayList<Habit_Event> getHabitEvents() {
+        return this.habitEvents;
     }
 
     /**

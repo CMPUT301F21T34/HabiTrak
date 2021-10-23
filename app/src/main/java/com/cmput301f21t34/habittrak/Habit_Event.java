@@ -35,10 +35,8 @@ public class Habit_Event implements Comparable<Habit_Event>, Parcelable {
     private Location location;
     private File photograph;
 
-
-
-    public Habit_Event(){
-        this.comment="";
+    public Habit_Event() {
+        this.comment= "";
         this.completedDate = Calendar.getInstance();
         this.habit = new Habit();
         this.location = new Location("");
@@ -228,7 +226,6 @@ public class Habit_Event implements Comparable<Habit_Event>, Parcelable {
     public int describeContents() {
         return 0;
     }
-
 
     private static class Creator implements Parcelable.Creator<Habit_Event> {
         public Habit_Event createFromParcel(Parcel source) {

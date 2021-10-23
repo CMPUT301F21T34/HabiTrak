@@ -76,10 +76,10 @@ public class ParcelableUnitTest {
      * @return ArrayList\<Habit\> for testing
      */
     private ArrayList<Habit> getTestHabitList(){
+        boolean[] onDays = new boolean[]{false, false, false, false, false, false, false};
         ArrayList<Habit> habitList = new ArrayList<>();
         habitList.add(new Habit("hab1"));
-        habitList.add(new Habit("hab2", "reason", Calendar.getInstance()));
-
+        habitList.add(new Habit("hab2", "reason", Calendar.getInstance(), onDays));
 
         return  habitList;
 

@@ -86,13 +86,12 @@ public class TodayListFragment extends Fragment {
             }
         });
 
-
+        refreshHabitList(); // populates habit list
         //connect the array adapter
         habitAdapter = new TodayHabitList(getContext(), habitsData);
         habitList.setAdapter(habitAdapter);
 
 
-        refreshHabitList(); // populates habit list
 
 
 
@@ -145,6 +144,7 @@ public class TodayListFragment extends Fragment {
         for (int index = 0; index < mainUserHabits.size(); index++){
             if (mainUserHabits.get(index).isOnDay()){ // If a habit is active today add
                 habitsData.add(mainUserHabits.get(index));
+                habitAdapter.notifyDataSetChanged();
             }
         }
 

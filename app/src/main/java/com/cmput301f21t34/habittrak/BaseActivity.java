@@ -158,6 +158,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         if (resultCode == RESULT_NEW_HABIT) {
             Habit newHabit = intent.getParcelableExtra("newHabit");
             mainUser.addHabit(newHabit);
+            todayFrag.refreshHabitList();
 
 
         }

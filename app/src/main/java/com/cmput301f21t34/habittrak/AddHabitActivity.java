@@ -26,14 +26,15 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 /**
- * AddHabit
+ * AddHabitActivity
  *
  * activity for adding new habit
  *
  * @author Pranav
  */
-public class AddHabit extends AppCompatActivity {
+public class AddHabitActivity extends AppCompatActivity {
 
+    //TODO: make attribute explicity private
     TextInputEditText habitName;
     TextInputEditText habitReason;
     MaterialButton datePickerButton;
@@ -117,6 +118,8 @@ public class AddHabit extends AppCompatActivity {
                 if(!checkField(habitName.getText())){
                     habitName.setError("Input Required");
                 }
+
+                //TODO: make reason field optional
                 else if (!checkField(habitReason.getText())){
                     habitReason.setError("Input Required");
                 }

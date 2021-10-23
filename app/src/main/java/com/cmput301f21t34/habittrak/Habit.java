@@ -42,17 +42,16 @@ public class Habit implements Comparable<Habit>, Parcelable {
 
     Habit(){
         this.title = "";
-        this.reason="";
+        this.reason= "";
         this.startDate = Calendar.getInstance();
         this.onDays = new boolean[]{false, false, false, false, false, false, false};
     }
 
     Habit(String title){
         this.title = title;
-        this.reason="";
+        this.reason= "";
         this.startDate = Calendar.getInstance();
-
-
+        this.onDays = new boolean[]{false, false, false, false, false, false, false};
     }
 
     public Habit(String title, String reason, Calendar startDate, boolean[] onDays){
@@ -83,7 +82,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
 
         // Handles Calendar
         String completedDateTimeZone = habitBundle.getString("startDateTimeZone");
-        if ( completedDateTimeZone != null) {
+        if (completedDateTimeZone != null) {
 
             Calendar constructionCalendar = Calendar.getInstance();
             constructionCalendar.setTimeZone(TimeZone.getTimeZone(completedDateTimeZone));
@@ -244,27 +243,27 @@ public class Habit implements Comparable<Habit>, Parcelable {
 
 
         // switch to day of week and check if it is true
-        switch (dayOfWeek){
+        switch (dayOfWeek) {
             case Calendar.MONDAY:
-                return this.onDays[1];
+                return this.onDays[0];
 
             case Calendar.TUESDAY:
-                return this.onDays[2];
+                return this.onDays[1];
 
             case Calendar.WEDNESDAY:
-                return this.onDays[3];
+                return this.onDays[2];
 
             case Calendar.THURSDAY:
-                return this.onDays[4];
+                return this.onDays[3];
 
             case Calendar.FRIDAY:
-                return this.onDays[5];
+                return this.onDays[4];
 
             case Calendar.SATURDAY:
-                return this.onDays[6];
+                return this.onDays[5];
 
             case Calendar.SUNDAY:
-                return this.onDays[7];
+                return this.onDays[6];
             default:
                 return false;
         }
@@ -325,6 +324,19 @@ public class Habit implements Comparable<Habit>, Parcelable {
         }
 
         return removed;
+    }
+
+
+    /**
+     * getHabitEvents
+     *
+     * @author Henry
+     *
+     * @return
+     * Returns the habit events array list
+     */
+    public ArrayList<Habit_Event> getHabitEvents() {
+        return this.habitEvents;
     }
 
     /**

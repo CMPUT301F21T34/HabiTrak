@@ -7,6 +7,7 @@ import static org.junit.Assert.*;
 import android.location.Location;
 import android.os.Parcel;
 import android.util.Log;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;

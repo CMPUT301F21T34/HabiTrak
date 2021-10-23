@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".AddHabit">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/add_habit_toolbar"
+            android:minHeight="?attr/actionBarSize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:titleTextColor="@android:color/white"
+            app:title="Add Habit"
+            android:background="?attr/colorPrimary">
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:fontFamily="@font/roboto"
+        android:layout_marginTop="16dp"
+        android:text="Habit Name" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/habit_name_text_layout"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:hint="set habit name"
+        android:layout_marginTop="10dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id='@+id/habit_name_edit_text'
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto"
+            android:inputType="text"
+            android:maxLength="20"
+            android:maxLines="1" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/roboto"
+        android:text="Habit Reason" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/habit_reason_text_layout"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="set reason"
+        android:layout_marginStart="16dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id='@+id/habit_reason_edit_text'
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto"
+            android:inputType="text"
+            android:maxLength="30"
+            android:maxLines="1" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start Date"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/roboto"
+        android:layout_marginStart="16dp"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/star_date_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:text="PICK DATE"
+        app:icon="@drawable/ic_baseline_add_24"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"/>
+
+    <TextView
+        android:id="@+id/add_habit_selected_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="16dp"
+        android:text="Selected Date is :"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="Frequency"/>
+
+
+    <include layout="@layout/weekdays_buttons"></include>
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/save_habit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save Habit"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"/>
+
+</LinearLayout>

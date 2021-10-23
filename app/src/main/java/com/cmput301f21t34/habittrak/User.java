@@ -37,7 +37,7 @@ public class User implements Parcelable {
 
     User(String username, ArrayList<Habit> habitList, ArrayList<Habit_Event> habitEventList,
          ArrayList<User> followerList, ArrayList<User> followingList, ArrayList<User> followerReqList){
-        this.username=username;
+        this.username = username;
         this.habitList = habitList;
         this.followerList = followerList;
         this.followingList = followingList;
@@ -142,7 +142,7 @@ public class User implements Parcelable {
     }
     // remove methods
     public boolean removeHabit(Habit habit){
-        int index= this.habitList.size();
+        int index = this.habitList.size();
         for(int i = 0; i < this.habitList.size(); i++){
             if (habitList.get(i).getTitle().equals(habit.getTitle())){
                 index = i;

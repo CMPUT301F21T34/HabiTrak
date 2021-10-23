@@ -22,7 +22,7 @@ import java.util.GregorianCalendar;
 public class HabitTest {
     // No tests for getters or setters
     /**
-     * mockHabit()
+     * mockHabit
      *
      * @author Henry
      *
@@ -41,7 +41,7 @@ public class HabitTest {
     }
 
     /**
-     * isOnDayTest()
+     * isOnDayTest
      *
      * @author Henry
      *
@@ -63,7 +63,7 @@ public class HabitTest {
     }
 
     /**
-     * addHabitEventTest()
+     * addHabitEventTest
      *
      * @author Henry
      *
@@ -85,10 +85,14 @@ public class HabitTest {
         assertEquals(1, habit.getHabitEvents().size());
         habit.addHabitEvent(event2);
         assertEquals(2, habit.getHabitEvents().size());
+
+        // Compare added habit events
+        assertEquals(event1, habit.getHabitEvents().get(0));
+        assertEquals(event2, habit.getHabitEvents().get(1));
     }
 
     /**
-     * addHabitEventTest()
+     * addHabitEventTest
      *
      * @author Henry
      *
@@ -116,8 +120,7 @@ public class HabitTest {
         assertTrue(habit.removeHabitEvent(""));
         assertEquals(1, habit.getHabitEvents().size());
         // since event 1 is removed, event at index 0 should be event 2
-        assertEquals("173", habit.getHabitEvents().get(0).getHabitEventId()); // compare id
-        assertEquals(completeDate, habit.getHabitEvents().get(0).getCompletedDate()); // compare completeDate
+        assertEquals(event2, habit.getHabitEvents().get(0)); // compare id
         // remove by habit_event object
         assertTrue(habit.removeHabitEvent(event2));
         assertEquals(0, habit.getHabitEvents().size());

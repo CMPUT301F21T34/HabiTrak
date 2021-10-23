@@ -29,7 +29,6 @@ import java.util.Calendar;
 public class ParcelableUnitTest {
 
     // Testing Parcelability for User
-
     /**
      * Tests if {@link User} is properly parceled and unpacked
      *
@@ -93,7 +92,11 @@ public class ParcelableUnitTest {
     }
 
     // Testing Parcelability for Habit
-
+    /**
+     * Tests if {@link Habit} is properly parceled and unpacked
+     *
+     * @author Henry
+     */
     @Test
     public void testParcelableHabit(){
 
@@ -124,7 +127,11 @@ public class ParcelableUnitTest {
     }
 
     // Testing Parcelability for Habit_Event
-
+    /**
+     * Tests if {@link Habit_Event} is properly parceled and unpacked
+     *
+     * @author Henry
+     */
     @Test
     public void testParcelableHabitEvent(){
 

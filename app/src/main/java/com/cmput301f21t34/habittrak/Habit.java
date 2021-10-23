@@ -15,9 +15,9 @@ import java.util.TimeZone;
  *
  * Habit object that a user wants to track
  *
- * @version 1.0
+ * @version 1.1
  * @since 2021-10-15
- * @see com.cmput301f21t34.habittrak.Habit_Event, User
+ * @see Habit_Event
  */
 public class Habit implements Comparable<Habit>, Parcelable {
 
@@ -38,8 +38,6 @@ public class Habit implements Comparable<Habit>, Parcelable {
 
     // Enum //
 
-
-
     // Constructors //
 
     Habit(){
@@ -53,6 +51,8 @@ public class Habit implements Comparable<Habit>, Parcelable {
         this.title = title;
         this.reason="";
         this.startDate = Calendar.getInstance();
+
+
     }
 
     public Habit(String title, String reason, Calendar startDate, boolean[] onDays){
@@ -69,11 +69,12 @@ public class Habit implements Comparable<Habit>, Parcelable {
      * Un-does writeToParcel method
      *
      * @author Dakota
+     * @see Parcelable
      * @param parcel Parcel to construct from
      */
     public Habit(Parcel parcel) {
         Bundle habitBundle;
-        habitBundle = parcel.readBundle();
+        habitBundle = parcel.readBundle(Habit.class.getClassLoader());
 
 
         this.title = habitBundle.getString("title");
@@ -212,7 +213,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
      *
      * Set which days a habit is active
      *
-     * @author Henery
+     * @author Henry
      * @author Dakota
      *
      * @param mon boolean Monday
@@ -369,13 +370,14 @@ public class Habit implements Comparable<Habit>, Parcelable {
      * @see Parcelable
      * @see Parcel
      * @see Bundle
+     * @see ClassLoader
      * @param out Parcel created
      * @param flags
      */
     @Override
     public void writeToParcel(Parcel out, int flags) {
 
-        Bundle habitBundle = new Bundle();
+        Bundle habitBundle = new Bundle(Habit.class.getClassLoader());
 
         habitBundle.putString("title", title);
         habitBundle.putString("reason", reason);

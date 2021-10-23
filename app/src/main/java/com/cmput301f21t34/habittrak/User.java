@@ -9,7 +9,18 @@ import android.util.Log;
 import java.util.ArrayList;
 
 
-
+/**
+ * User
+ *
+ * @author Dakota
+ *
+ * User to kepp track of
+ *
+ * @version 1.1
+ * @since 2021-10-16
+ * @see Habit_Event
+ * @see Habit
+ */
 public class User implements Parcelable {
 
     // Attributes //
@@ -57,12 +68,13 @@ public class User implements Parcelable {
      * Un-does writeToParcel method
      *
      * @author Dakota
+     * @see Parcelable
      * @param parcel Parcel to construct from
      */
     User(Parcel parcel){
 
         Bundle userBundle;
-        userBundle = parcel.readBundle();
+        userBundle = parcel.readBundle(User.class.getClassLoader());
 
         Log.d("UserParcelable", "Parcel Construction userName:" + userBundle.getString("username"));
 
@@ -218,13 +230,14 @@ public class User implements Parcelable {
      * @see Parcelable
      * @see Parcel
      * @see Bundle
+     * @see ClassLoader
      * @param out Parcel to be create
      * @param flags int, idk not important but required
      */
     @Override
     public void writeToParcel(Parcel out, int flags) {
 
-        Bundle userBundle = new Bundle();
+        Bundle userBundle = new Bundle(this.getClass().getClassLoader());
 
 
         userBundle.putString("username", username);

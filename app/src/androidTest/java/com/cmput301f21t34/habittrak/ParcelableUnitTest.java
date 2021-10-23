@@ -129,8 +129,6 @@ public class ParcelableUnitTest {
     // Testing Parcelability for Habit_Event
     /**
      * Tests if {@link Habit_Event} is properly parceled and unpacked
-     *
-     * @author Henry
      */
     @Test
     public void testParcelableHabitEvent(){

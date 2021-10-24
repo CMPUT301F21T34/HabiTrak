@@ -126,9 +126,9 @@ public class TodayListFragment extends Fragment {
 
         ArrayList<Habit> mainUserHabits = mainUser.getHabitList(); // get HabitsList
 
-        // Itterates through all habits
+        // Iterates through all habits
         for (int index = 0; index < mainUserHabits.size(); index++){
-            if (mainUserHabits.get(index).isOnDay()){ // If a habit is active today add
+            if (mainUserHabits.get(index).isOnDay() && mainUserHabits.get(index).isHabitStart()){ // If a habit is active today add
                 habitsData.add(mainUserHabits.get(index));
                 habitAdapter.notifyDataSetChanged();
             }

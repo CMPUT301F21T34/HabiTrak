@@ -260,6 +260,28 @@ public class Habit implements Comparable<Habit>, Parcelable {
     }
 
     /**
+     * isHabitStart
+     *
+     * check if the habit is started or not
+     *
+     * @author Pranav
+     * @return boolean is habit starts today
+     */
+
+    public boolean isHabitStart(){
+        Calendar today = Calendar.getInstance();
+        today.setFirstDayOfWeek(Calendar.MONDAY);
+        boolean isStart = false;
+
+        // compareTo returns 0 if time is equal
+        // returns less than 0 if time but the calendar is less than the argument
+        if (startDate.compareTo(today) <= 0){
+            isStart = true;
+        }
+        return  isStart;
+    }
+
+    /**
      * addHabitEvent
      *
      * adds a Habit_Event object to Habit's habit events

@@ -34,7 +34,7 @@ import java.util.TimeZone;
  */
 public class AddHabitActivity extends AppCompatActivity {
 
-    //TODO: make attribute explicity private
+    //TODO: make attribute explicitly private
     TextInputEditText habitName;
     TextInputEditText habitReason;
     MaterialButton datePickerButton;

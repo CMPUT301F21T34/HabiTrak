@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/navbar_menu_today"
+    android:id="@+id/nav_graph">
+
+    <fragment
+        android:id="@+id/navbar_menu_today"
+        android:name="com.cmput301f21t34.habittrak.fragments.todayscreen.TodayListFragment"
+        android:label="Today"
+        tools:layout="@layout/habi_today_fragment" >
+        <argument
+            android:name="mainUser"
+            app:argType="com.cmput301f21t34.habittrak.User" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navbar_menu_habits"
+        android:name="com.cmput301f21t34.habittrak.fragments.habitsscreen.AllHabitsFragment"
+        android:label="Habits"
+        tools:layout="@layout/habi_all_habits_fragment" />
+
+    <fragment
+        android:id="@+id/navbar_menu_events"
+        android:name="com.cmput301f21t34.habittrak.fragments.eventscreen.EventsFragment"
+        android:label="Events"
+        tools:layout="@layout/habi_events_fragment" />
+    <fragment
+        android:id="@+id/navbar_menu_social"
+        android:name="com.cmput301f21t34.habittrak.fragments.socialscreen.SocialFragment"
+        android:label="Social"
+        tools:layout="@layout/habi_social_fragment" />
+
+    <fragment
+        android:id="@+id/navbar_menu_profile"
+        android:name="com.cmput301f21t34.habittrak.fragments.profilescreen.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/habi_profile_fragment" />
+
+</navigation>

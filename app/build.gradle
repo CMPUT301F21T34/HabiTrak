@@ -2,14 +2,14 @@ plugins {
     id 'com.android.application'
     // id 'com.google.gms.google-services' // This is for firebase; uncomment when plugin is applied
 }
-
+apply plugin: "androidx.navigation.safeargs"
 
 android {
     compileSdk 31
 
     defaultConfig {
         applicationId "com.cmput301f21t34.habittrak"
-        minSdk 21 // might need to be changed to 16 for firebase
+        minSdk 24 // might need to be changed to 16 for firebase
         targetSdk 31 // might need to be changed to 29 for firebase
         versionCode 1
         versionName "1.0"
@@ -37,16 +37,36 @@ android {
             useJUnitPlatform()
         }
     }
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
-
+    def nav_version = "2.3.5"
+    api 'com.google.android.material:material:1.5.0-alpha04'
     implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
-    testImplementation 'junit:junit:4.13.2'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.annotation:annotation:1.2.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    implementation 'commons-io:commons-io:2.6'
+
+    // navigation
+    implementation "androidx.navigation:navigation-fragment:$nav_version"
+    implementation "androidx.navigation:navigation-ui:$nav_version"
+
+    implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
+
+    // Testing Navigation
+    androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
+
+    // Jetpack Compose Integration
+    implementation "androidx.navigation:navigation-compose:2.4.0-alpha10"
 
     // dependencies for testing
     implementation fileTree(dir: 'libs', include: ['*.jar'])

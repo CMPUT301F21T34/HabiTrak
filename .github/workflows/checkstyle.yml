@@ -1,0 +1,44 @@
+name: java checkstyle
+
+on:
+  pull_request:
+    #paths: # bug, erros on pulls
+      #- ".github/workflows/checkstyle.yml" # this file
+      #- "**/*.java" # all java files
+  push:
+    paths:
+      - ".github/workflows/checkstyle.yml" # this file
+      - "**/*.java" # all java files
+
+
+    
+
+jobs:
+  checkstyle:
+    name: runner / checkstyle
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout # checks out repo
+        uses: actions/checkout@v2
+        
+      - name: Cache # caches
+        uses: actions/cache@v2.1.6
+        with:
+          path: |
+            */.gradle/caches
+            */.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      
+      - name: checkstyle
+        uses: dbelyaev/action-checkstyle@v0.3.4 # github repo of linter being used
+        with:
+          checkstyle_version: 9.0.1
+          checkstyle_config: sun_checks.xml
+          github_token: ${{ secrets.github_token }} # authorises
+          reporter: github-check # reports with github checks on pulls and commits
+          level: warning # will displays warnings (code style, ect.) & erros (symantics)
+
+      
+          

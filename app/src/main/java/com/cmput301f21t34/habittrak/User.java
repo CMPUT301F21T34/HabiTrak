@@ -28,20 +28,24 @@ public class User implements Parcelable {
     // Any changes need to be implement in writeToParcel and Parcel constructor - Dakota
 
     private String username;
+    String email;
     ArrayList<Habit> habitList;
     ArrayList<User> followerList;
     ArrayList<User> followingList;
     ArrayList<User> followerReqList;
+    String biography;
 
     // Constructors //
 
-    User(String username, ArrayList<Habit> habitList, ArrayList<Habit_Event> habitEventList,
-         ArrayList<User> followerList, ArrayList<User> followingList, ArrayList<User> followerReqList){
+    User(String username, String email, ArrayList<Habit> habitList, ArrayList<Habit_Event> habitEventList,
+         ArrayList<User> followerList, ArrayList<User> followingList, ArrayList<User> followerReqList, String biography){
         this.username = username;
+        this.email = email;
         this.habitList = habitList;
         this.followerList = followerList;
         this.followingList = followingList;
         this.followerReqList = followerReqList;
+        this.biography = biography;
     }
 
     /**
@@ -55,10 +59,12 @@ public class User implements Parcelable {
     User(String username){
         this.username = username;
 
+        this.email = "";
         this.habitList = new ArrayList<Habit>();
         this.followerList = new ArrayList<User>();
         this.followingList = new ArrayList<User>();
         this.followerReqList = new ArrayList<User>();
+        this.biography = "";
     }
 
     /**
@@ -83,6 +89,7 @@ public class User implements Parcelable {
         this.followerList = userBundle.getParcelableArrayList("followerList");
         this.followingList = userBundle.getParcelableArrayList("followingList");
         this.followerReqList = userBundle.getParcelableArrayList("followerReqList");
+        this.biography = userBundle.getString("biography");
 
 
     }
@@ -91,6 +98,9 @@ public class User implements Parcelable {
     //getter methods
     public String getUsername() {
         return username;
+    }
+    public String getEmail() {
+        return email;
     }
     public ArrayList<Habit> getHabitList() {
         return habitList;
@@ -104,6 +114,9 @@ public class User implements Parcelable {
     }
     public ArrayList<User> getFollowingList() {
         return followingList;
+    }
+    public String getBiography() {
+        return biography;
     }
     //setter methods
     public void setUsername(String username) {
@@ -125,6 +138,9 @@ public class User implements Parcelable {
 
     public void setFollowerReqList(ArrayList<User> followerReqList) {
         this.followerReqList = followerReqList;
+    }
+    public void setBiography(String biography) {
+        this.biography = biography;
     }
     // add methods have to adjust the database
     public void addHabit(Habit habit){

@@ -32,9 +32,13 @@ public class Habit implements Comparable<Habit>, Parcelable {
 
     // Boolean array to track which day of the week
     // index 0 -> Monday, index 1 -> Tuesday, ... index 6 -> Sunday
+    @Deprecated
     private final int DAYS_IN_WEEK = 7;
+    @Deprecated
     private boolean[] onDays = new boolean[DAYS_IN_WEEK];
          // Amount of days in week onDays Handles
+
+    private On_Days onDaysObj = new On_Days();
 
     // Enum //
 
@@ -191,10 +195,25 @@ public class Habit implements Comparable<Habit>, Parcelable {
      *
      * @author Henry
      * @return ArrayList
+     *
+     * @deprecated use getOnDaysObj() instead
      * returns a boolean array that contains which day of the week the habit is on
      */
     public boolean[] getOnDays() {
         return this.onDays;
+    }
+
+    /**
+     * getOnDaysOnj
+     *
+     * gets reference to Habits On_Days object
+     *
+     * @author Dakota
+     *
+     * @return On_Days object for manipulation
+     */
+    public On_Days getOnDaysObj(){
+        return this.onDaysObj;
     }
 
     /**
@@ -212,6 +231,8 @@ public class Habit implements Comparable<Habit>, Parcelable {
      * @param fri boolean Friday
      * @param sat boolean Saturday
      * @param sun boolean Sunday
+     *
+     * @deprecated Use getOnDaysObj instead and modify On_Days object
      */
     public void setOnDays(boolean mon,
                           boolean tue,
@@ -224,6 +245,15 @@ public class Habit implements Comparable<Habit>, Parcelable {
         this.onDays = new boolean[]{mon, tue, wed, thu, fri, sat, sun};
     }
 
+    /** isOnDay
+     *
+     * returns if a habit is on today
+     *
+     * @author Dakota
+     *
+     * @return boolean true if habit is on today
+     * @deprecated uses getOnDaysObj().isOnDay()
+     */
     public boolean isOnDay(){
         Calendar today = Calendar.getInstance(); // Gets today
         today.setFirstDayOfWeek(Calendar.MONDAY); // Makes sure day of week starts monday

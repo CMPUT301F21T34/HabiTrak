@@ -15,7 +15,7 @@ import java.util.TimeZone;
  *
  * Habit object that a user wants to track
  *
- * @version 1.1
+ * @version 2.0
  * @since 2021-10-15
  * @see Habit_Event
  */

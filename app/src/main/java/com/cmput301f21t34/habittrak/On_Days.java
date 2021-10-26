@@ -20,7 +20,7 @@ public class On_Days {
     private boolean mon, tue, wed, thu, fri, sat, sun; // booleans for each day of the week
 
     // gets constants from Calendar class
-    private final int MON = Calendar.MONDAY,
+    public final int MON = Calendar.MONDAY,
             TUE = Calendar.TUESDAY,
             WED = Calendar.WEDNESDAY,
             THU = Calendar.THURSDAY,
@@ -47,8 +47,8 @@ public class On_Days {
      *
      * @author Dakota
      *
-     * @throws IllegalArgumentException must use Day object
-     * @param day Day.DAY that you want to get (Ex. Day.MON)
+     * @throws IllegalArgumentException must use int constants (EX. MON)
+     * @param day int day constant that you want to get (Ex. MON))
      * @return boolean val of particular day;
      */
     public boolean get(int day){
@@ -74,8 +74,8 @@ public class On_Days {
      *
      * @author Dakota
      *
-     * @throws IllegalArgumentException must use Day object
-     * @param day Day.DAY that you want to set true (Ex. Day.MON)
+     * @throws IllegalArgumentException must use int constants (EX. MON)
+     * @param day int day constant that you want to set true (Ex. MON))
      */
     public void setTrue(int day){
 
@@ -100,8 +100,8 @@ public class On_Days {
      *
      * @author Dakota
      *
-     * @throws IllegalArgumentException must use Day object
-     * @param day Day.DAY that you want to set false (Ex. Day.MON)
+     * @throws IllegalArgumentException must use int constants (EX. MON)
+     * @param day int day constant that you want to set false (Ex. MON))
      */
     public void setFalse(int day){
 
@@ -127,7 +127,7 @@ public class On_Days {
      *
      * @author Dakota
      *
-     * @param startOfWeek the day you want for the start of the week
+     * @param startOfWeek int constant day you want for the start of the week
      * @return boolean[7] of the days
      */
     public boolean[] getAll(int startOfWeek){
@@ -145,7 +145,9 @@ public class On_Days {
             case TUE: shift++; // shift 1 to the left
                 shiftLeft(allDays, shift); // execute shift
                 break;
-            default: throw new IllegalArgumentException("must use Day enum object with On_Days.getAll()");
+            default: throw new IllegalArgumentException("must use int day constant " +
+                    "with On_Days.getAll()" +
+                    "\nEx. MONDAY");
 
         }
 
@@ -168,12 +170,56 @@ public class On_Days {
     }
 
 
-
-    public void setAll(boolean[] array, Day startOfWeek ){
+    /** setAll
+     *
+     * sets the days On_Day is on
+     *
+     * @author Dakota
+     *
+     * @param array boolean[7] array of values to set
+     * @param startOfWeek int constant day that array starts on Ex. MONDAY
+     * @throws IllegalArgumentException array boolean[] must be of boolean[7]
+     */
+    public void setAll(boolean[] array, int startOfWeek ){
 
         if (array.length != 7){
             throw new IllegalArgumentException("boolean[] argument of setAll must be of length 7");
         }
+
+        int shift = 0;
+        boolean[] allDays = new boolean[7];
+
+        // Makes sure array starts on monday for handling
+        switch (startOfWeek) {
+            case MON:
+                break; // If monday then no need to shift
+            case SUN:
+                shift++; // shift 6 to the left
+            case SAT:
+                shift++; // shift 5 to the left
+            case FRI:
+                shift++; //   .
+            case THU:
+                shift++; //   .
+            case WED:
+                shift++; //   .
+            case TUE:
+                shift++; // shift 1 to the left
+                allDays = shiftRight(array, shift); // execute shift
+                break;
+            default:
+                throw new IllegalArgumentException("must use Calendar day constant " +
+                        "with On_Days.getAll()" +
+                        "\nEx. Calendar.MONDAY.");
+        }
+
+        this.mon = allDays[0];
+        this.tue = allDays[1];
+        this.wed = allDays[2];
+        this.thu = allDays[3];
+        this.fri = allDays[4];
+        this.sat = allDays[5];
+        this.sun = allDays[6];
 
     }
 
@@ -249,6 +295,56 @@ public class On_Days {
         return array;
 
     }
+
+    /**
+     * shiftRight
+     *
+     * shifts a boolean array to the right
+     *
+     * @author Dakota
+     *
+     * @throws NullPointerException array can't be null
+     * @throws IllegalArgumentException shift can't be greater than array length
+     * @param array the array to be shifted
+     * @param shift the amount of times to shift to the right
+     * @return boolean[] shifted
+     */
+    private boolean[] shiftRight(boolean[] array, int shift){
+        // Worst case O(n^2) Best case O(n) pretty slow
+
+        if (array == null){
+            throw new NullPointerException("array passed to shiftLeft is null");
+        } else if (shift >= array.length) {
+            throw new IllegalArgumentException("shift passed to shiftLeft is greater then array length");
+        }
+
+        int maxIndex = array.length - 1;
+
+        // for each time we want to shift it
+        for (;shift > 0; shift--){
+
+            // for each pair of [index] [index - 1] swap
+            for (int index = 0; index <= maxIndex; index++){
+
+                boolean swap = array[index];
+
+                if (index == 0){ // if we are at index 0, loop back to max index
+                    array[index] = array[maxIndex];
+                    array[maxIndex] = swap;
+                } else {
+                    array[index] = array[index - 1];
+                    array[index - 1] = swap;
+                }
+
+            }
+        }
+
+        return array;
+
+    }
+
+
+
 
 
 

@@ -67,7 +67,9 @@ public class ParcelableUnitTest {
     private User getTestUser(){
 
         return new User("testUser",
+                null,
                 getTestHabitList(),
+                null,
                 null,
                 null,
                 null,

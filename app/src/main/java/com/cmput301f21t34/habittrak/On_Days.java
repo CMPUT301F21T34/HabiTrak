@@ -223,6 +223,18 @@ public class On_Days {
 
     }
 
+    /** setAll
+     *
+     * sets the days On_Day with an array starting on Monday
+     *
+     * @author Dakota
+     *
+     * @param array boolean[7] array of values to set
+     */
+    public void setAll(boolean[] array){
+        setAll(array, MON);
+    }
+
     /** isOnDay
      *
      * returns if an On_Day object is on today

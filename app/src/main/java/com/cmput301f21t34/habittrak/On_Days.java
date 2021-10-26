@@ -17,7 +17,16 @@ public class On_Days {
 
 
 
-    boolean mon, tue, wed, thu, fri, sat, sun; // booleans for each day of the week
+    private boolean mon, tue, wed, thu, fri, sat, sun; // booleans for each day of the week
+
+    // gets constants from Calendar class
+    private final int MON = Calendar.MONDAY,
+            TUE = Calendar.TUESDAY,
+            WED = Calendar.WEDNESDAY,
+            THU = Calendar.THURSDAY,
+            FRI = Calendar.FRIDAY,
+            SAT = Calendar.SATURDAY,
+            SUN = Calendar.SUNDAY;
 
 
     // initializes On_Days by default to all true
@@ -42,7 +51,7 @@ public class On_Days {
      * @param day Day.DAY that you want to get (Ex. Day.MON)
      * @return boolean val of particular day;
      */
-    public boolean get(Day day){
+    public boolean get(int day){
 
         switch (day){
             case MON: return mon;
@@ -52,7 +61,8 @@ public class On_Days {
             case FRI: return fri;
             case SAT: return sat;
             case SUN: return sun;
-            default: throw new IllegalArgumentException("must use Day enum object with On_Days.get()");
+            default: throw new IllegalArgumentException("must use Calendar int constant object " +
+                    "with On_Days.get(). \nEx. Calendar.MONDAY");
         }
 
 
@@ -67,7 +77,7 @@ public class On_Days {
      * @throws IllegalArgumentException must use Day object
      * @param day Day.DAY that you want to set true (Ex. Day.MON)
      */
-    public void setTrue(Day day){
+    public void setTrue(int day){
 
         switch (day){
             case MON: mon = true;
@@ -77,7 +87,8 @@ public class On_Days {
             case FRI: fri = true;
             case SAT: sat = true;
             case SUN: sun = true;
-            default: throw new IllegalArgumentException("must use Day enum object with setTrue()");
+            default: throw new IllegalArgumentException("must use Calendar int constant object " +
+                "with On_Days.setTrue(). \nEx. Calendar.MONDAY");
         }
 
 
@@ -92,17 +103,18 @@ public class On_Days {
      * @throws IllegalArgumentException must use Day object
      * @param day Day.DAY that you want to set false (Ex. Day.MON)
      */
-    public void setFalse(Day day){
+    public void setFalse(int day){
 
         switch (day){
-            case MON: mon = false;
-            case TUE: tue = false;
-            case WED: wed = false;
-            case THU: thu = false;
-            case FRI: fri = false;
-            case SAT: sat = false;
-            case SUN: sun = false;
-            default: throw new IllegalArgumentException("must use Day enum object with On_Days.setFalse()");
+            case MON: mon = true;
+            case TUE: tue = true;
+            case WED: wed = true;
+            case THU: thu = true;
+            case FRI: fri = true;
+            case SAT: sat = true;
+            case SUN: sun = true;
+            default: throw new IllegalArgumentException("must use Calendar int constant object " +
+                    "with On_Days.setTrue(). \nEx. Calendar.MONDAY");
         }
 
 
@@ -118,9 +130,9 @@ public class On_Days {
      * @param startOfWeek the day you want for the start of the week
      * @return boolean[7] of the days
      */
-    public boolean[] getAll(Day startOfWeek){
+    public boolean[] getAll(int startOfWeek){
 
-        boolean[] allDays = new boolean[]{get(Day.MON), get(Day.TUE), get(Day.WED), get(Day.THU), get(Day.FRI), get(Day.SAT), get(Day.SUN)};
+        boolean[] allDays = new boolean[]{get(MON), get(TUE), get(WED), get(THU), get(FRI), get(SAT), get(SUN)};
         int shift = 0;
 
         switch (startOfWeek){
@@ -151,7 +163,7 @@ public class On_Days {
      */
     public boolean[] getAll(){
 
-        return new boolean[]{get(Day.MON), get(Day.TUE), get(Day.WED), get(Day.THU), get(Day.FRI), get(Day.SAT), get(Day.SUN)};
+        return getAll(MON);
 
     }
 
@@ -162,6 +174,32 @@ public class On_Days {
         if (array.length != 7){
             throw new IllegalArgumentException("boolean[] argument of setAll must be of length 7");
         }
+
+    }
+
+    /** isOnDay
+     *
+     * returns if an On_Day object is on today
+     *
+     * @return boolean true if On_Day is on today
+     * @throws IllegalStateException impossible state to reach, default switch case.
+     */
+    public boolean isOnDay(){
+
+        int currentDayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+
+        switch (currentDayOfWeek){
+            case MON: return get(MON);
+            case TUE: return get(TUE);
+            case WED: return get(WED);
+            case THU: return get(THU);
+            case FRI: return get(FRI);
+            case SAT: return get(SAT);
+            case SUN: return get(SUN);
+            default: throw new IllegalStateException("Current day does not exist!?!");
+
+        }
+
 
     }
 

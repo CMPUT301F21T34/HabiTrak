@@ -11,6 +11,8 @@ import java.util.Calendar;
  * @version 1
  *
  */
+
+//TODO, implement parcelable
 public class On_Days {
 
 

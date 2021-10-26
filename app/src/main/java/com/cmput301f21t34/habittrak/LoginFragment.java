@@ -91,8 +91,7 @@ public class LoginFragment extends Fragment {
         if (true) { // logic for allowing loggin in, for sake of testing is always true - Dakota
             passwordOk = true;
 
-            // populate user after verification
-            mainUser = new User("dummyUser");
+
 
 
         }
@@ -107,7 +106,7 @@ public class LoginFragment extends Fragment {
      */
     public void startHomePage(View view){
         Intent intent = new Intent(getActivity(), BaseActivity.class);
-        intent.putExtra("mainUser", mainUser); // passes mainUser through intent
+
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         getActivity().finish();

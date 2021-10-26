@@ -41,7 +41,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
     //TODO: Explicitly make attributes private
     NavigationBarView bottomNav;
-    User mainUser;
+    User mainUser = new User("dummyUser"); // Creates dummy user for testing purposes
 
     TodayListFragment todayFrag;
     SocialFragment socialFrag;

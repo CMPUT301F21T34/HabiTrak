@@ -4,12 +4,14 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-import android.location.Location;
 import android.os.Parcel;
-import android.util.Log;
+
+import com.cmput301f21t34.habittrak.user.Habit;
+import com.cmput301f21t34.habittrak.user.Habit_Event;
+import com.cmput301f21t34.habittrak.user.User;
+
 import org.apache.commons.io.FileUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 

@@ -1,4 +1,4 @@
-package com.cmput301f21t34.habittrak;
+package com.cmput301f21t34.habittrak.user;
 
 import android.os.Bundle;
 import android.os.Parcel;

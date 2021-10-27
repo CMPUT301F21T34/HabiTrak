@@ -5,8 +5,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import android.location.Location;
 
+import com.cmput301f21t34.habittrak.user.Habit;
+import com.cmput301f21t34.habittrak.user.Habit_Event;
+
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 

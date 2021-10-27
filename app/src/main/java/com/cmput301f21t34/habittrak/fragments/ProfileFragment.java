@@ -13,7 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.cmput301f21t34.habittrak.R;
-import com.cmput301f21t34.habittrak.User;
+import com.cmput301f21t34.habittrak.user.User;
 
 /**
  * A simple {@link Fragment} subclass.

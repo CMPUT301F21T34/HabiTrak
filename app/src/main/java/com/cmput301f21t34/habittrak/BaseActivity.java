@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.cmput301f21t34.habittrak.user.Habit;
+import com.cmput301f21t34.habittrak.user.User;
 import com.cmput301f21t34.habittrak.fragments.AllHabitsFragment;
 import com.cmput301f21t34.habittrak.fragments.EventsFragment;
 import com.cmput301f21t34.habittrak.fragments.ProfileFragment;

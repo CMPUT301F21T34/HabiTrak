@@ -56,6 +56,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
+                android:gravity="top|left"
                 android:text="Name" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -100,9 +101,12 @@
                 android:id="@+id/editBio"
                 android:layout_width="match_parent"
                 android:layout_height="164dp"
-                android:inputType="textPersonName"
+                android:gravity="top|left"
+                android:inputType="textMultiLine"
                 android:maxLines="10"
-                android:text="Biography" />
+                android:text="Biography"
+                android:scrollHorizontally="false"
+                android:scrollbars="vertical"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 

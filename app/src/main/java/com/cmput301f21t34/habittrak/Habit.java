@@ -29,6 +29,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
     private String title, reason;
     private Calendar startDate;
     private ArrayList<Habit_Event> habitEvents = new ArrayList<Habit_Event>();
+    private boolean isPublic = false; // If other users can see this habit
 
     // Boolean array to track which day of the week
     // index 0 -> Monday, index 1 -> Tuesday, ... index 6 -> Sunday
@@ -391,9 +392,55 @@ public class Habit implements Comparable<Habit>, Parcelable {
     public void sortHabitEvents(){
 
         // Sorts with Habit_Event's compareTo method
+        // Sorts by date
         habitEvents.sort(Habit_Event::compareTo);
         // min API 24 needed, need to program own sorting else wise
 
+    }
+
+    /** makePublic
+     *
+     * makes the habit publicly visible
+     *
+     * @author Dakota
+     *
+     */
+    public void makePublic(){
+        this.isPublic = true;
+    }
+    /** makePrivate
+     *
+     * makes the habit not publicly visible
+     *
+     * @author Dakota
+     *
+     */
+    public void makePrivate(){
+        this.isPublic = false;
+    }
+
+    /** isPublic
+     *
+     * checks if the habit is public
+     *
+     * @author Dakota
+     *
+     * @return true if the habit is public, false if not
+     */
+    public boolean isPublic(){
+        return this.isPublic;
+    }
+
+    /** isPrivate
+     *
+     * checks if the habit is private
+     *
+     * @author Dakota
+     *
+     * @return true if the habit is private, false if not
+     */
+    public boolean isPrivate(){
+        return !this.isPublic;
     }
 
 

@@ -37,7 +37,7 @@ public class User implements Parcelable {
 
     // Constructors //
 
-    User(String username, String email, ArrayList<Habit> habitList, ArrayList<Habit_Event> habitEventList,
+    public User(String username, String email, ArrayList<Habit> habitList, ArrayList<Habit_Event> habitEventList,
          ArrayList<User> followerList, ArrayList<User> followingList, ArrayList<User> followerReqList, String biography){
         this.username = username;
         this.email = email;
@@ -56,7 +56,7 @@ public class User implements Parcelable {
      * @author Dakota
      * @param username String is new users new username
      */
-    User(String username){
+    public User(String username){
         this.username = username;
 
         this.email = "";
@@ -77,7 +77,7 @@ public class User implements Parcelable {
      * @see Parcelable
      * @param parcel Parcel to construct from
      */
-    User(Parcel parcel){
+    public User(Parcel parcel){
 
         Bundle userBundle;
         userBundle = parcel.readBundle(User.class.getClassLoader());

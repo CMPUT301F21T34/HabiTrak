@@ -77,7 +77,7 @@ public class User implements Parcelable {
      * @see Parcelable
      * @param parcel Parcel to construct from
      */
-    User(Parcel parcel){
+    public User(Parcel parcel){
 
         Bundle userBundle;
         userBundle = parcel.readBundle(User.class.getClassLoader());

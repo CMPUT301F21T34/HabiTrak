@@ -120,8 +120,11 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, profileFrag).commit();
                 return true;
             case R.id.navbar_menu_social:
-                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, socialFrag).commit();
-                return true;
+                Intent intent = new Intent(getBaseContext(), SocialActivity.class);
+                intent.putExtra("mainUser", mainUser); // passes mainUser through intent
+                startActivity(intent);
+                bottomNav.setSelectedItemId(R.id.navbar_menu_today);
+                return false;
         }
 
         return false;

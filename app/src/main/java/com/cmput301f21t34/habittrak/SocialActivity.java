@@ -42,7 +42,6 @@ public class SocialActivity extends AppCompatActivity {
         socialTab.addTab(socialTab.newTab().setText("Following"));
         socialTab.addTab(socialTab.newTab().setText("Requests"));
         socialTab.addTab(socialTab.newTab().setText("Search"));
-
         socialTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

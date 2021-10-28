@@ -7,8 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.compose.ui.viewinterop.ViewFactoryHolder;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -51,6 +53,7 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
             habitName = (TextView) view.findViewById(R.id.today_listview_habit_name);
             habitDesc = (TextView) view.findViewById(R.id.today_listview_habit_desc);
             checkBox = (CheckBox) view.findViewById(R.id.today_listview_checkbox);
+
         }
 
         public TextView getHabitDesc() {

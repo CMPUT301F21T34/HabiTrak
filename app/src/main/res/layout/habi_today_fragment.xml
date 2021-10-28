@@ -6,14 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical"
-    tools:context=".fragments.TodayListFragment">
-
+    tools:context=".fragments.TodayListFragment"
+    android:background="?attr/colorOnPrimary"
+    android:foreground="?attr/selectableItemBackground">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/today_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/today_add_habit_button"/>
+        app:layout_constraintBottom_toTopOf="@id/today_add_habit_button" />
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -31,7 +32,5 @@
         app:layout_constraintEnd_toEndOf="parent">
 
     </com.google.android.material.floatingactionbutton.FloatingActionButton>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

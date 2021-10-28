@@ -1,6 +1,7 @@
 package com.cmput301f21t34.habittrak;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,14 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
          */
         public ViewHolder(View view) {
             super(view);
+
             // Define click listener for the ViewHolder's View
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d("TodayHabitRecyclerAdapter", "Element" + getAdapterPosition() + "clicked");
+                }
+            });
 
             habitName = (TextView) view.findViewById(R.id.today_listview_habit_name);
             habitDesc = (TextView) view.findViewById(R.id.today_listview_habit_desc);

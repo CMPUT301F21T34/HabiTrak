@@ -6,16 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical"
-    tools:context=".fragments.todayscreen.TodayListFragment">
+    tools:context=".fragments.TodayListFragment">
 
-
-    <ListView
-        android:id="@+id/today_listview"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/today_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/today_add_habit_button"/>
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/today_add_habit_button"
@@ -26,13 +25,13 @@
         android:layout_gravity="bottom|center"
         app:srcCompat="@android:drawable/ic_input_add"
 
-        app:layout_constraintTop_toBottomOf="@id/today_listview"
+        app:layout_constraintTop_toBottomOf="@id/today_recycler_view"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-
-        >
+        app:layout_constraintEnd_toEndOf="parent">
 
     </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,18 +6,18 @@ import android.os.Bundle;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import com.cmput301f21t34.habittrak.AddHabitActivity;
 import com.cmput301f21t34.habittrak.Habit;
 import com.cmput301f21t34.habittrak.R;
-import com.cmput301f21t34.habittrak.TodayHabitList;
+import com.cmput301f21t34.habittrak.TodayHabitRecyclerAdapter;
 import com.cmput301f21t34.habittrak.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -34,11 +34,11 @@ import java.util.GregorianCalendar;
  */
 public class TodayListFragment extends Fragment {
     // attributes
-    ListView habitList;
-    ArrayAdapter<Habit> habitAdapter;
     ArrayList<Habit> habitsData;
-
+    TodayHabitRecyclerAdapter adapter;
     User mainUser;
+    RecyclerView recyclerView;
+    RecyclerView.LayoutManager layoutManager;
 
 
 
@@ -53,7 +53,7 @@ public class TodayListFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.habi_today_fragment, container, false);
-        habitList = view.findViewById(R.id.today_listview);
+
 
 
         Log.d("mainUser", "in TodayListFragment mainUser: " + mainUser.getUsername());
@@ -79,11 +79,14 @@ public class TodayListFragment extends Fragment {
         });
 
         refreshHabitList(); // populates habit list
-        //connect the array adapter
-        habitAdapter = new TodayHabitList(getContext(), habitsData);
-        habitList.setAdapter(habitAdapter);
 
-
+        // setup recycler view
+        recyclerView = view.findViewById(R.id.today_recycler_view);
+        layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new TodayHabitRecyclerAdapter(habitsData);
+        recyclerView.setAdapter(adapter);
+        Log.d("Habits Size", Integer.toString(habitsData.size()));
 
 
 
@@ -130,7 +133,8 @@ public class TodayListFragment extends Fragment {
         for (int index = 0; index < mainUserHabits.size(); index++){
             if (mainUserHabits.get(index).isOnDay() && mainUserHabits.get(index).isHabitStart()){ // If a habit is active today add
                 habitsData.add(mainUserHabits.get(index));
-                habitAdapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
+                Log.d("Habits Size", Integer.toString(habitsData.size()));
             }
         }
 

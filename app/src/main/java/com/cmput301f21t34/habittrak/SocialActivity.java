@@ -22,6 +22,16 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * SocialActivity
+ *
+ * @author Pranav
+ *
+ * Hold the Social Activity fragments
+ *
+ * @version 1.0
+ * @since 2021-10-27
+ */
 public class SocialActivity extends AppCompatActivity {
 
     TabLayout socialTab;
@@ -31,17 +41,23 @@ public class SocialActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_social);
-        socialTab = findViewById(R.id.social_tab_layout);
 
+        // setting views
+        socialTab = findViewById(R.id.social_tab_layout);
+        viewPager = findViewById(R.id.social_view_pager);
+
+        // setting up the adapter
         FragmentManager fm = getSupportFragmentManager();
         ViewStateAdapter viewStateAdapter = new ViewStateAdapter(fm, getLifecycle());
-        viewPager = findViewById(R.id.social_view_pager);
         viewPager.setAdapter(viewStateAdapter);
 
+        // setting up tabs in tabLayout
         socialTab.addTab(socialTab.newTab().setText("Followers"));
         socialTab.addTab(socialTab.newTab().setText("Following"));
         socialTab.addTab(socialTab.newTab().setText("Requests"));
         socialTab.addTab(socialTab.newTab().setText("Search"));
+
+        // tab listener
         socialTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -59,7 +75,7 @@ public class SocialActivity extends AppCompatActivity {
             }
         });
 
-
+        // setting view pager slider
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
@@ -69,6 +85,12 @@ public class SocialActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * ViewStateAdapter
+     *
+     * Adapter for the view pager
+     * @author Pranav
+     */
     private class ViewStateAdapter extends FragmentStateAdapter {
 
         public ViewStateAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
@@ -78,7 +100,6 @@ public class SocialActivity extends AppCompatActivity {
         @NonNull
         @Override
         public Fragment createFragment(int position) {
-            // Hardcoded in this order, you'll want to use lists and make sure the titles match
             if (position == 0) {
                 return new FollowersFragment();
             }

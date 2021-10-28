@@ -30,6 +30,7 @@ public class User implements Parcelable {
     private String username;
     String email;
     ArrayList<Habit> habitList;
+    //ToDo: arraylists cant store users
     ArrayList<User> followerList;
     ArrayList<User> followingList;
     ArrayList<User> followerReqList;

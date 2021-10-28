@@ -6,144 +6,175 @@
     android:id="@+id/profileLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.profilescreen.ProfileFragment">
+    tools:context=".fragments.ProfileFragment">
 
-    <RelativeLayout
+    <TextView
+        android:id="@+id/profile_title"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="64dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="128dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="User Profile"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/nameHeader"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+    </TextView>
 
-        <TextView
-            android:id="@+id/profile_title"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:text="User Profile"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="32sp"
-            android:textStyle="bold">
+    <TextView
+        android:id="@+id/nameHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="4dp"
+        android:text="Username:"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/editUserBorder"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_title">
 
-        </TextView>
+    </TextView>
 
-        <TextView
-            android:id="@+id/nameHeader"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/profile_title"
-            android:text="Username:"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:textStyle="bold">
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/editUserBorder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nameHeader"
+        android:layout_margin="4dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/emailHeader"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nameHeader">
 
-        </TextView>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/editUserBorder"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/nameHeader"
-            android:layout_margin="4dp">
-
-            <EditText
-                android:id="@+id/editUsername"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:gravity="top|left"
-                android:text="Name" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <TextView
-            android:id="@+id/emailHeader"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/editUserBorder"
-            android:text="Email:"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:gravity="top|left"
+            android:inputType="textPersonName"
+            android:text="Name" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:id="@+id/userEmail"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_below="@id/emailHeader"
-            android:text="user_email"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
+    <TextView
+        android:id="@+id/emailHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="Email:"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/userEmail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editUserBorder" />
 
-        <TextView
-            android:id="@+id/bioHeader"
+    <TextView
+        android:id="@+id/userEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="user_email"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/bioHeader"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emailHeader" />
+
+    <TextView
+        android:id="@+id/bioHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="4dp"
+        android:text="Biography:"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/editBioBorder"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userEmail" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/editBioBorder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bioHeader">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editBio"
             android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:gravity="top|left"
+            android:inputType="textMultiLine"
+            android:scrollHorizontally="false"
+            android:text="Biography" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="64dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/deleter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editBioBorder">
+
+        <Button
+            android:id="@+id/confirmer"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/userEmail"
-            android:text="Biography:"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:layout_weight="1"
+            android:text="Save Changes" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/editBioBorder"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/logout"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/bioHeader"
-            android:layout_margin="4dp">
+            android:layout_weight="1"
+            android:text="Log Out" />
+    </LinearLayout>
 
-            <EditText
-                android:id="@+id/editBio"
-                android:layout_width="match_parent"
-                android:layout_height="164dp"
-                android:gravity="top|left"
-                android:inputType="textMultiLine"
-                android:maxLines="10"
-                android:text="Biography"
-                android:scrollHorizontally="false"
-                android:scrollbars="vertical"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/editBioBorder"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/confirmer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Save Changes"
-                style="?android:attr/buttonBarButtonStyle" />
-
-            <Button
-                android:id="@+id/logout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Log Out"
-                style="?android:attr/buttonBarButtonStyle" />
-        </LinearLayout>
-
-
-    </RelativeLayout>
 
     <Button
         android:id="@+id/deleter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="64dp"
         android:layout_marginBottom="16dp"
         android:text="Delete Account"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

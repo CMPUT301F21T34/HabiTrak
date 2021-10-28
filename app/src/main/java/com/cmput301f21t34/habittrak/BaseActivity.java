@@ -64,9 +64,9 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         setContentView(R.layout.activity_base);
 
         // Gets Intents //
-        Intent intent = getIntent();
+        //Intent intent = getIntent();
 
-        this.mainUser = intent.getParcelableExtra("mainUser"); // Gets mainUser from intent
+        //this.mainUser = intent.getParcelableExtra("mainUser"); // Gets mainUser from intent
 
         Log.d("mainUser", "in BaseActivity mainUser: " + mainUser.getUsername());
 

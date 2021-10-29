@@ -20,7 +20,7 @@ import java.util.ArrayList;
  */
 public class Habit_List extends ArrayList<Habit> {
 
-    public Habit_List(){
+    Habit_List(){
         super();
     }
 
@@ -75,7 +75,7 @@ public class Habit_List extends ArrayList<Habit> {
 
         boolean success;
         success = super.add(habit); // Calls super add
-       habit.setIndex(this.size()); // Sets habit index to last index
+       habit.setIndex(this.size() - 1); // Sets habit index to last index
 
        return success;
     }

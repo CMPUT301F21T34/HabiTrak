@@ -16,7 +16,7 @@ import java.util.ArrayList;
  *
  * User to kepp track of
  *
- * @version 1.1
+ * @version 1.3
  * @since 2021-10-16
  * @see Habit_Event
  * @see Habit
@@ -29,7 +29,7 @@ public class User extends Database_Pointer implements Parcelable {
 
     private String username;
 
-    ArrayList<Habit> habitList;
+    Habit_List habitList; // Habit_List extends ArrayList<Habit>
 
     ArrayList<Database_Pointer> followerList;
     ArrayList<Database_Pointer> followingList;
@@ -39,7 +39,7 @@ public class User extends Database_Pointer implements Parcelable {
 
     // Constructors //
 
-    public User(String username, String email, ArrayList<Habit> habitList, ArrayList<Habit_Event> habitEventList,
+    public User(String username, String email, Habit_List habitList, ArrayList<Habit_Event> habitEventList,
          ArrayList<Database_Pointer> followerList, ArrayList<Database_Pointer> followingList, ArrayList<Database_Pointer> followerReqList, String biography){
         super(email);
         this.username = username;
@@ -61,7 +61,7 @@ public class User extends Database_Pointer implements Parcelable {
         super("dummyEmail");
         this.username = "dummyUser";
 
-        this.habitList = new ArrayList<Habit>();
+        this.habitList = new Habit_List();
         this.followerList = new ArrayList<Database_Pointer>();
         this.followingList = new ArrayList<Database_Pointer>();
         this.followerReqList = new ArrayList<Database_Pointer>();
@@ -106,7 +106,7 @@ public class User extends Database_Pointer implements Parcelable {
         return username;
     }
 
-    public ArrayList<Habit> getHabitList() {
+    public Habit_List getHabitList() {
         return habitList;
     }
 
@@ -124,17 +124,18 @@ public class User extends Database_Pointer implements Parcelable {
     }
 
 
-    // Database can modify these //
+    // Database can modify these methods below //
 
     public void setUsername(String username) {
         this.username = username;
     }
 
-    public void setHabitList(ArrayList<Habit> habitList) {
+    public void setHabitList(Habit_List habitList) {
         this.habitList = habitList;
     }
 
 
+        // Might not want to allow these //
     public void setFollowerList(ArrayList<Database_Pointer> followerList) {
         this.followerList = followerList;
     }
@@ -146,12 +147,29 @@ public class User extends Database_Pointer implements Parcelable {
     public void setFollowerReqList(ArrayList<Database_Pointer> followerReqList) {
         this.followerReqList = followerReqList;
     }
+
+
+
     public void setBiography(String biography) {
         this.biography = biography;
     }
     // add methods have to adjust the database
+
+
     public void addHabit(Habit habit){
         this.habitList.add(habit);
+    }
+
+    public void removeHabit(Habit habit){
+        this.habitList.remove(habit);
+    }
+
+    public void removeHabit(int index){
+        this.habitList.remove(index);
+    }
+
+    public Habit getHabit(int index){
+        return this.habitList.get(index);
     }
 
 
@@ -172,22 +190,7 @@ public class User extends Database_Pointer implements Parcelable {
 
 
 
-    // remove methods
-    public boolean removeHabit(Habit habit){
-        int index = this.habitList.size();
-        for(int i = 0; i < this.habitList.size(); i++){
-            if (habitList.get(i).getTitle().equals(habit.getTitle())){
-                index = i;
-            }
-        }
-        if (index != this.habitList.size()){
-            this.habitList.remove(index);
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
+
 
 
 

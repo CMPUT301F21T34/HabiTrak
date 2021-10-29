@@ -37,7 +37,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
     @Deprecated
     private final int DAYS_IN_WEEK = 7;
     @Deprecated
-    private boolean[] onDays = new boolean[DAYS_IN_WEEK];
+    //private boolean[] onDays = new boolean[DAYS_IN_WEEK];
          // Amount of days in week onDays Handles
 
     private On_Days onDaysObj = new On_Days();
@@ -50,21 +50,28 @@ public class Habit implements Comparable<Habit>, Parcelable {
         this.title = "";
         this.reason= "";
         this.startDate = Calendar.getInstance();
-        this.onDays = new boolean[]{false, false, false, false, false, false, false};
+        this.getOnDaysObj().setAll(
+                new boolean[]{false, false, false, false, false, false, false}
+        );
     }
 
     Habit(String title){
         this.title = title;
         this.reason= "";
         this.startDate = Calendar.getInstance();
-        this.onDays = new boolean[]{false, false, false, false, false, false, false};
+        this.getOnDaysObj().setAll(
+                new boolean[]{false, false, false, false, false, false, false}
+        );
     }
 
-    public Habit(String title, String reason, Calendar startDate, boolean[] onDays){
+    public Habit(String title, String reason, Calendar startDate){
         this.title = title;
         this.reason = reason;
         this.startDate = startDate;
-        this.onDays = onDays;
+        this.getOnDaysObj().setAll(
+                new boolean[]{false, false, false, false, false, false, false}
+        );
+
     }
 
     /**
@@ -99,7 +106,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
             this.startDate = null;
         }
 
-        this.onDays = habitBundle.getBooleanArray("onDays");
+
     }
 
 
@@ -208,9 +215,9 @@ public class Habit implements Comparable<Habit>, Parcelable {
      * @deprecated use getOnDaysObj() instead
      * returns a boolean array that contains which day of the week the habit is on
      */
-    public boolean[] getOnDays() {
-        return this.onDays;
-    }
+    //public boolean[] getOnDays() {
+    //    return this.onDays;
+    //}
 
     /**
      * getOnDaysOnj
@@ -244,6 +251,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
      *
      * @deprecated Use getOnDaysObj instead and modify On_Days object
      */
+    /*
     public void setOnDays(boolean mon,
                           boolean tue,
                           boolean wed,
@@ -255,6 +263,8 @@ public class Habit implements Comparable<Habit>, Parcelable {
         this.onDays = new boolean[]{mon, tue, wed, thu, fri, sat, sun};
     }
 
+     */
+
     /** isOnDay
      *
      * returns if a habit is on today
@@ -264,6 +274,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
      * @return boolean true if habit is on today
      * @deprecated uses getOnDaysObj().isOnDay()
      */
+    /*
     public boolean isOnDay(){
         Calendar today = Calendar.getInstance(); // Gets today
         today.setFirstDayOfWeek(Calendar.MONDAY); // Makes sure day of week starts monday
@@ -298,6 +309,8 @@ public class Habit implements Comparable<Habit>, Parcelable {
                 return false;
         }
     }
+
+     */
 
     /**
      * isHabitStart
@@ -509,7 +522,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
         }
 
 
-        habitBundle.putBooleanArray("onDays", onDays);
+        //habitBundle.putBooleanArray("onDays", onDays);
         out.writeBundle(habitBundle);
     }
 

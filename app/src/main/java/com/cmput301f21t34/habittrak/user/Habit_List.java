@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * @see ArrayList
  * @see Habit
  */
-public class Habit_List extends ArrayList<Habit> {
+class Habit_List extends ArrayList<Habit> {
 
     Habit_List(){
         super();

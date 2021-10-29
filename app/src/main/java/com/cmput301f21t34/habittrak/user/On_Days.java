@@ -13,7 +13,7 @@ import java.util.Calendar;
  */
 
 //TODO, implement parcelable
-public class On_Days {
+class On_Days {
 
 
 

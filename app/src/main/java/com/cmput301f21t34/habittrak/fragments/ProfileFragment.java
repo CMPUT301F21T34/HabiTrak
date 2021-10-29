@@ -77,6 +77,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
      * TODO:delete account and log out functionality
      *
      * @author Aron Rajabi
+     * @param view the view we are currently on
      */
     @Override
     public void onClick(View view) {
@@ -95,6 +96,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                 if (!oldBio.equals(newBio)){
                     mainUser.setBiography(newBio);
                 }
+                break;
+            case R.id.logout:
+                break;
+            case R.id.deleter:
                 break;
         }
     }

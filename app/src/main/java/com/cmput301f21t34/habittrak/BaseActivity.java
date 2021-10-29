@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.cmput301f21t34.habittrak.fragments.AllHabitsFragment;
 import com.cmput301f21t34.habittrak.fragments.EventsFragment;
@@ -15,6 +16,7 @@ import com.cmput301f21t34.habittrak.fragments.SocialFragment;
 import com.cmput301f21t34.habittrak.fragments.TodayListFragment;
 
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationBarView;
 
 //TODO: Rename BaseActivity to a more suitable name
@@ -49,6 +51,8 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
     EventsFragment eventsFrag;
     AllHabitsFragment allHabitsFrag;
 
+    MaterialButton addHabitButton;
+
 
     public static final int RESULT_NEW_HABIT = 1000; // Custom Activity Result
 
@@ -65,7 +69,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         Intent intent = getIntent();
 
         this.mainUser = intent.getParcelableExtra("mainUser"); // Gets mainUser from intent
-
+        addHabitButton = findViewById(R.id.base_add_habit_button);
         Log.d("mainUser", "in BaseActivity mainUser: " + mainUser.getUsername());
 
 
@@ -108,18 +112,23 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
         switch (item.getItemId()) {
             case R.id.navbar_menu_today:
+                addHabitButton.setVisibility(View.VISIBLE);
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, todayFrag).commit();
                 return true;
             case R.id.navbar_menu_events:
+                addHabitButton.setVisibility(View.INVISIBLE);
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, eventsFrag).commit();
                 return true;
             case R.id.navbar_menu_habits:
+                addHabitButton.setVisibility(View.VISIBLE);
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, allHabitsFrag).commit();
                 return true;
             case R.id.navbar_menu_profile:
+                addHabitButton.setVisibility(View.INVISIBLE);
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, profileFrag).commit();
                 return true;
             case R.id.navbar_menu_social:
+                addHabitButton.setVisibility(View.INVISIBLE);
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, socialFrag).commit();
                 return true;
         }

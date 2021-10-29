@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 public class Follow_List {
 
-    private Follow mainUser;
-    private ArrayList<Follow> followerList = new ArrayList<>();
-    private ArrayList<Follow> followingList = new ArrayList<>();
+    private Database_Pointer mainUser;
+    private ArrayList<Database_Pointer> followerList = new ArrayList<>();
+    private ArrayList<Database_Pointer> followingList = new ArrayList<>();
 
     // Gets which user this list belongs to
     Follow_List(String mainUserID){
-        this.mainUser = new Follow(mainUserID);
+        this.mainUser = new Database_Pointer(mainUserID);
     }
 
 
@@ -20,9 +20,9 @@ public class Follow_List {
      * follow/request to follow a particular user
      *
      * @author Dakota
-     * @param following Follow Object user that you are trying to follow
+     * @param following Database_Pointer Object user that you are trying to follow
      */
-    public void addFollowing(Follow following){
+    public void addFollowing(Database_Pointer following){
 
         this.followingList.add(following);
 
@@ -40,16 +40,16 @@ public class Follow_List {
      * unfollow a particular user
      *
      * @author Dakota
-     * @param following Follow Object user that you are trying to unfollow
+     * @param following Database_Pointer Object user that you are trying to unfollow
      */
-    public boolean removeFollowing(Follow following){
+    public boolean removeFollowing(Database_Pointer following){
 
         boolean removed;
 
-        removed = this.followingList.removeIf(follow -> {
+        removed = this.followingList.removeIf(databasePointer -> {
 
-            // Compares the getID() attribute of Follow object for removal
-            if (follow.getID() == following.getID()){
+            // Compares the getID() attribute of Database_Pointer object for removal
+            if (databasePointer.getEmail() == following.getEmail()){
 
                 // TODO: remove mainUser from following's followerList
                 // TODO: remove following from mainUser's followingList
@@ -73,15 +73,15 @@ public class Follow_List {
      * Usage example is blocking a user
      *
      * @author Dakota
-     * @param follower Follow Object of follower you want to force to unfollow
+     * @param follower Database_Pointer Object of follower you want to force to unfollow
      * @return boolean true if removed, false if the user couldn't be found
      */
-    public boolean removeFollower(Follow follower){
+    public boolean removeFollower(Database_Pointer follower){
 
         boolean removed;
 
-        removed = this.followerList.removeIf(follow -> {
-            if (follow.getID() == follower.getID()){
+        removed = this.followerList.removeIf(databasePointer -> {
+            if (databasePointer.getEmail() == follower.getEmail()){
 
                 // TODO: remove mainUser from follower's followingList
                 // TODO: remove follower from mainUser's followerList

@@ -3,6 +3,7 @@ package com.cmput301f21t34.habittrak;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.cmput301f21t34.habittrak.user.Database_Pointer;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.Habit_Event;
 import com.cmput301f21t34.habittrak.user.User;
@@ -91,6 +92,7 @@ public class UserTest {
     @Test
     public void addFollowerTest() {
         User user = mockUser();
+
 
         // Add new follower then check size
         assertEquals(0, user.getFollowerList().size());

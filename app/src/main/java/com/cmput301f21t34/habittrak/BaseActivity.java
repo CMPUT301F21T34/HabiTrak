@@ -43,7 +43,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
     //TODO: Explicitly make attributes private
     NavigationBarView bottomNav;
-    User mainUser = new User("dummyUser"); // Creates dummy user for testing purposes
+    User mainUser = new User(); // Creates dummy user for testing purposes
 
     TodayListFragment todayFrag;
     SocialFragment socialFrag;
@@ -66,7 +66,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         // Gets Intents //
         Intent intent = getIntent();
 
-        this.mainUser = intent.getParcelableExtra("mainUser"); // Gets mainUser from intent
+        //this.mainUser = intent.getParcelableExtra("mainUser"); // Gets mainUser from intent
 
         Log.d("mainUser", "in BaseActivity mainUser: " + mainUser.getUsername());
 

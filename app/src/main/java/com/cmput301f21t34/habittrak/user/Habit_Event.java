@@ -1,4 +1,4 @@
-package com.cmput301f21t34.habittrak;
+package com.cmput301f21t34.habittrak.user;
 
 import android.location.Location;
 import android.os.Bundle;
@@ -7,7 +7,6 @@ import android.os.Parcelable;
 
 import java.io.File;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
 
 /**

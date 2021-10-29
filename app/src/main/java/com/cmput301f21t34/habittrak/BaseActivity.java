@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.cmput301f21t34.habittrak.user.Habit;
+import com.cmput301f21t34.habittrak.user.User;
 import com.cmput301f21t34.habittrak.fragments.AllHabitsFragment;
 import com.cmput301f21t34.habittrak.fragments.EventsFragment;
 import com.cmput301f21t34.habittrak.fragments.ProfileFragment;
@@ -16,6 +18,8 @@ import com.cmput301f21t34.habittrak.fragments.TodayListFragment;
 
 
 import com.google.android.material.navigation.NavigationBarView;
+
+//TODO: Rename BaseActivity to a more suitable name
 
 /**
  * BaseActivity
@@ -37,8 +41,9 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
      */
 
 
+    //TODO: Explicitly make attributes private
     NavigationBarView bottomNav;
-    User mainUser;
+    User mainUser = new User(); // Creates dummy user for testing purposes
 
     TodayListFragment todayFrag;
     SocialFragment socialFrag;
@@ -58,12 +63,15 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
 
-        Intent intent = getIntent();
-        this.mainUser = intent.getParcelableExtra("mainUser"); // Gets mainUser from intent
+        // Gets Intents //
+        //Intent intent = getIntent();
+
+        //this.mainUser = intent.getParcelableExtra("mainUser"); // Gets mainUser from intent
 
         Log.d("mainUser", "in BaseActivity mainUser: " + mainUser.getUsername());
 
 
+        // Initializes Fragments //
         todayFrag = new TodayListFragment(mainUser);
         socialFrag = new SocialFragment(mainUser);
         profileFrag = new ProfileFragment(mainUser);
@@ -72,45 +80,14 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
 
 
-        //set up toolbar
-        /*
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        setContentView(R.layout.activity_base);
-
-
-         */
-
-        // Sets up Nav Bard
-        bottomNav = findViewById(R.id.bottom_nav); // Sets Nav to bottom nav
-
-        bottomNav.setOnItemSelectedListener(this);  // Sets listener to this
-        bottomNav.setSelectedItemId(R.id.navbar_menu_today); // Sets inital selected item
-
-
-
-        // Creates a mainUser bundle
-        //Bundle mainUserBundle = new Bundle();
-        //mainUserBundle.putParcelable("mainUser", mainUser);
-
-
-        // Adds any new habits
+        // Sets up Nav Bar //
+        bottomNav = findViewById(R.id.bottom_nav); // Sets Nav to bottom nav res
+        bottomNav.setOnItemSelectedListener(this);  // Sets listener to this class
+        bottomNav.setSelectedItemId(R.id.navbar_menu_today); // Sets initial selected item
 
 
 
 
-
-
-
-        /*
-        // setting the controller for bottom nav bar
-        NavHostFragment navHostFragment = (NavHostFragment) // NavHostFragment extends Fragment, it is what holds each fragment
-                getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment); // nav_host_frag is activity_main.xml is what hosts each frag
-        NavController navController = navHostFragment.getNavController();
-        navController.setGraph(R.id.nav_graph, mainUserBundle);
-
-
-         */
 
 
         
@@ -153,11 +130,16 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
     }
 
 
+    //TODO:
+    // implement public function in BaseActivity to handle
+    // launching AddHabitActivity and refreshing views
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (resultCode == RESULT_NEW_HABIT) {
             Habit newHabit = intent.getParcelableExtra("newHabit");
             mainUser.addHabit(newHabit);
+            todayFrag.refreshHabitList(); // refresh view
 
 
         }

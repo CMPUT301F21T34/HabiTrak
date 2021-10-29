@@ -1,18 +1,11 @@
 package com.cmput301f21t34.habittrak.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentResultListener;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,12 +14,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.cmput301f21t34.habittrak.AddHabit;
-import com.cmput301f21t34.habittrak.BaseActivity;
-import com.cmput301f21t34.habittrak.Habit;
+import com.cmput301f21t34.habittrak.AddHabitActivity;
+import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.TodayHabitList;
-import com.cmput301f21t34.habittrak.User;
+import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -81,18 +73,17 @@ public class TodayListFragment extends Fragment {
         addHabitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), AddHabit.class);
+                Intent intent = new Intent(view.getContext(), AddHabitActivity.class);
                 addHabitActivityLauncher.launch(intent);
             }
         });
 
-
+        refreshHabitList(); // populates habit list
         //connect the array adapter
         habitAdapter = new TodayHabitList(getContext(), habitsData);
         habitList.setAdapter(habitAdapter);
 
 
-        refreshHabitList(); // populates habit list
 
 
 
@@ -105,19 +96,13 @@ public class TodayListFragment extends Fragment {
      */
     ActivityResultLauncher<Intent> addHabitActivityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
+            result -> {
 
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == BaseActivity.RESULT_NEW_HABIT) {
-                        Habit newHabit = result.getData().getParcelableExtra("newHabit");
-                        Log.d("newHabit", "in TodayListFrag newHabit: " + newHabit.getTitle());
-
-                        refreshHabitList(); // refresh habit list
-
-
-                    }
-                }
+                // Result's are not handled here but rather in BaseActivity
+                //TODO:
+                // implement public function in BaseActivity to launch
+                // AddHabitActivity and refresh views
+                // so any frag can call AddHabitActivity
 
             }
 
@@ -141,10 +126,11 @@ public class TodayListFragment extends Fragment {
 
         ArrayList<Habit> mainUserHabits = mainUser.getHabitList(); // get HabitsList
 
-        // Itterates through all habits
+        // Iterates through all habits
         for (int index = 0; index < mainUserHabits.size(); index++){
-            if (mainUserHabits.get(index).isOnDay()){ // If a habit is active today add
+            if (mainUserHabits.get(index).isOnDay() && mainUserHabits.get(index).isHabitStart()){ // If a habit is active today add
                 habitsData.add(mainUserHabits.get(index));
+                habitAdapter.notifyDataSetChanged();
             }
         }
 

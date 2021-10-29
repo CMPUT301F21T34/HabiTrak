@@ -1,4 +1,4 @@
-package com.cmput301f21t34.habittrak;
+package com.cmput301f21t34.habittrak.user;
 
 import android.os.Bundle;
 import android.os.Parcel;
@@ -15,7 +15,7 @@ import java.util.TimeZone;
  *
  * Habit object that a user wants to track
  *
- * @version 1.1
+ * @version 2.0
  * @since 2021-10-15
  * @see Habit_Event
  */
@@ -29,12 +29,17 @@ public class Habit implements Comparable<Habit>, Parcelable {
     private String title, reason;
     private Calendar startDate;
     private ArrayList<Habit_Event> habitEvents = new ArrayList<Habit_Event>();
+    private boolean isPublic = false; // If other users can see this habit
 
     // Boolean array to track which day of the week
     // index 0 -> Monday, index 1 -> Tuesday, ... index 6 -> Sunday
+    @Deprecated
     private final int DAYS_IN_WEEK = 7;
+    @Deprecated
     private boolean[] onDays = new boolean[DAYS_IN_WEEK];
          // Amount of days in week onDays Handles
+
+    private On_Days onDaysObj = new On_Days();
 
     // Enum //
 
@@ -80,7 +85,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
         this.reason = habitBundle.getString("reason");
         this.habitEvents = habitBundle.getParcelableArrayList("habitEvents");
 
-        // Handles Calendar
+        // Handles Calendar //
         String completedDateTimeZone = habitBundle.getString("startDateTimeZone");
         if (completedDateTimeZone != null) {
 
@@ -93,16 +98,6 @@ public class Habit implements Comparable<Habit>, Parcelable {
             this.startDate = null;
         }
 
-        /*
-        // converts boolean[] into ArrayList<Boolean>
-        ArrayList<Boolean> constructionArrayList = new ArrayList<Boolean>();
-        boolean[] onDaysArray = habitBundle.getBooleanArray("onDaysArray"); // array to convert from
-        for (int index = 0; index < DAYS_IN_WEEK; index++){
-            constructionArrayList.add(onDaysArray[index]);
-
-        }
-
-         */
         this.onDays = habitBundle.getBooleanArray("onDays");
     }
 
@@ -201,10 +196,25 @@ public class Habit implements Comparable<Habit>, Parcelable {
      *
      * @author Henry
      * @return ArrayList
+     *
+     * @deprecated use getOnDaysObj() instead
      * returns a boolean array that contains which day of the week the habit is on
      */
     public boolean[] getOnDays() {
         return this.onDays;
+    }
+
+    /**
+     * getOnDaysOnj
+     *
+     * gets reference to Habits On_Days object
+     *
+     * @author Dakota
+     *
+     * @return On_Days object for manipulation
+     */
+    public On_Days getOnDaysObj(){
+        return this.onDaysObj;
     }
 
     /**
@@ -222,6 +232,8 @@ public class Habit implements Comparable<Habit>, Parcelable {
      * @param fri boolean Friday
      * @param sat boolean Saturday
      * @param sun boolean Sunday
+     *
+     * @deprecated Use getOnDaysObj instead and modify On_Days object
      */
     public void setOnDays(boolean mon,
                           boolean tue,
@@ -234,6 +246,15 @@ public class Habit implements Comparable<Habit>, Parcelable {
         this.onDays = new boolean[]{mon, tue, wed, thu, fri, sat, sun};
     }
 
+    /** isOnDay
+     *
+     * returns if a habit is on today
+     *
+     * @author Dakota
+     *
+     * @return boolean true if habit is on today
+     * @deprecated uses getOnDaysObj().isOnDay()
+     */
     public boolean isOnDay(){
         Calendar today = Calendar.getInstance(); // Gets today
         today.setFirstDayOfWeek(Calendar.MONDAY); // Makes sure day of week starts monday
@@ -267,6 +288,28 @@ public class Habit implements Comparable<Habit>, Parcelable {
             default:
                 return false;
         }
+    }
+
+    /**
+     * isHabitStart
+     *
+     * check if the habit is started or not
+     *
+     * @author Pranav
+     * @return boolean is habit starts today
+     */
+
+    public boolean isHabitStart(){
+        Calendar today = Calendar.getInstance();
+        today.setFirstDayOfWeek(Calendar.MONDAY);
+        boolean isStart = false;
+
+        // compareTo returns 0 if time is equal
+        // returns less than 0 if time but the calendar is less than the argument
+        if (startDate.compareTo(today) <= 0){
+            isStart = true;
+        }
+        return  isStart;
     }
 
     /**
@@ -349,9 +392,55 @@ public class Habit implements Comparable<Habit>, Parcelable {
     public void sortHabitEvents(){
 
         // Sorts with Habit_Event's compareTo method
+        // Sorts by date
         habitEvents.sort(Habit_Event::compareTo);
         // min API 24 needed, need to program own sorting else wise
 
+    }
+
+    /** makePublic
+     *
+     * makes the habit publicly visible
+     *
+     * @author Dakota
+     *
+     */
+    public void makePublic(){
+        this.isPublic = true;
+    }
+    /** makePrivate
+     *
+     * makes the habit not publicly visible
+     *
+     * @author Dakota
+     *
+     */
+    public void makePrivate(){
+        this.isPublic = false;
+    }
+
+    /** isPublic
+     *
+     * checks if the habit is public
+     *
+     * @author Dakota
+     *
+     * @return true if the habit is public, false if not
+     */
+    public boolean isPublic(){
+        return this.isPublic;
+    }
+
+    /** isPrivate
+     *
+     * checks if the habit is private
+     *
+     * @author Dakota
+     *
+     * @return true if the habit is private, false if not
+     */
+    public boolean isPrivate(){
+        return !this.isPublic;
     }
 
 
@@ -405,15 +494,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
             habitBundle.putString("startDateTimeZone", null);
         }
 
-        /*
-        // converts ArrayList<Boolean> into boolean[]
-        boolean[] onDaysArray = new boolean[DAYS_IN_WEEK];
-        for (int index = 0; index < DAYS_IN_WEEK; index++){
-            onDaysArray[index] = onDays.get(index).booleanValue();
-        }
-            // boolean[] can be passed but not ArrayList<boolean.
 
-         */
         habitBundle.putBooleanArray("onDays", onDays);
         out.writeBundle(habitBundle);
     }

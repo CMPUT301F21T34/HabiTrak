@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.cmput301f21t34.habittrak.user.Habit;
+
 import java.util.ArrayList;
 
 /**

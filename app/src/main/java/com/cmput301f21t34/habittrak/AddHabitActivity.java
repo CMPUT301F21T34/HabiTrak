@@ -3,9 +3,7 @@ package com.cmput301f21t34.habittrak;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,25 +13,26 @@ import android.view.View;
 import android.widget.TextView;
 
 
+import com.cmput301f21t34.habittrak.user.Habit;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
 /**
- * AddHabit
+ * AddHabitActivity
  *
  * activity for adding new habit
  *
  * @author Pranav
  */
-public class AddHabit extends AppCompatActivity {
+public class AddHabitActivity extends AppCompatActivity {
 
+    //TODO: make attribute explicitly private
     TextInputEditText habitName;
     TextInputEditText habitReason;
     MaterialButton datePickerButton;
@@ -55,11 +54,11 @@ public class AddHabit extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.add_habit_toolbar);
+        Toolbar toolbar = findViewById(R.id.add_habit_toolbar);
         setSupportActionBar(toolbar);
         setContentView(R.layout.activity_add_habit);
 
-        // getting views
+        // Getting Views //
         startDate = findViewById(R.id.add_habit_selected_date);
         datePickerButton = findViewById(R.id.star_date_button);
         habitName = findViewById(R.id.habit_name_edit_text);
@@ -117,6 +116,8 @@ public class AddHabit extends AppCompatActivity {
                 if(!checkField(habitName.getText())){
                     habitName.setError("Input Required");
                 }
+
+                //TODO: make reason field optional
                 else if (!checkField(habitReason.getText())){
                     habitReason.setError("Input Required");
                 }

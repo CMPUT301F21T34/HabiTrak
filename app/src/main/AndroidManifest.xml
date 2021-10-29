@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HabitTrak">
         <activity
-            android:name=".AddHabit"
+            android:name=".AddHabitActivity"
             android:exported="true" />
         <activity
             android:name=".BaseActivity"

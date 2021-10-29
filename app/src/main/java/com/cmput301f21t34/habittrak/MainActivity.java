@@ -4,7 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import com.cmput301f21t34.habittrak.user.User;
 
 /**
  * MainActivity

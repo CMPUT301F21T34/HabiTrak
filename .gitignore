@@ -6,3 +6,4 @@ assets*
 app/.idea/*
 app/local.properties
 local.properties
+google-services.json

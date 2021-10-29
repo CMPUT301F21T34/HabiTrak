@@ -46,7 +46,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
 
     // Constructors //
 
-    Habit(){
+    public Habit(){
         this.title = "";
         this.reason= "";
         this.startDate = Calendar.getInstance();

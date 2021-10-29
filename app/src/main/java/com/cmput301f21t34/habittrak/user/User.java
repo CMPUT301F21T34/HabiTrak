@@ -30,9 +30,11 @@ public class User extends Database_Pointer implements Parcelable {
     private String username;
 
     ArrayList<Habit> habitList;
+
     ArrayList<Database_Pointer> followerList;
     ArrayList<Database_Pointer> followingList;
     ArrayList<Database_Pointer> followerReqList;
+
     String biography;
 
     // Constructors //

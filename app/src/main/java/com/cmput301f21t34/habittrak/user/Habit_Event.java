@@ -27,13 +27,17 @@ public class Habit_Event implements Comparable<Habit_Event>, Parcelable {
 
     // Any changes need to be implement in writeToParcel and Parcel constructor - Dakota
 
-    private String habitEventId;
+    @Deprecated
+    private String habitEventId; // Not sure if this is needed
     private String comment;
-    private Habit habit;
+    @Deprecated
+    private Habit habit; // Not sure if this is needed since Habit_Events must belong in a Habit
     private Calendar completedDate;
     private Location location;
     private File photograph;
 
+    // redundant constructor
+    @Deprecated
     public Habit_Event() {
         this.comment= "";
         this.completedDate = Calendar.getInstance();

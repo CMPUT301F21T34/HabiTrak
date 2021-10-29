@@ -1,5 +1,7 @@
 package com.cmput301f21t34.habittrak;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -89,7 +91,13 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
 
 
-
+        addHabitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), AddHabitActivity.class);
+                addHabitActivityLauncher.launch(intent);
+            }
+        });
 
 
         
@@ -137,20 +145,21 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
     }
 
 
-    //TODO:
-    // implement public function in BaseActivity to handle
-    // launching AddHabitActivity and refreshing views
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (resultCode == RESULT_NEW_HABIT) {
             Habit newHabit = intent.getParcelableExtra("newHabit");
             mainUser.addHabit(newHabit);
-            todayFrag.refreshHabitList(); // refresh view
-
-
+            todayFrag.refreshList(newHabit);
         }
 
         super.onActivityResult(requestCode, resultCode, intent);
     }
+    ActivityResultLauncher<Intent> addHabitActivityLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+            }
+    );
+
+
 }

@@ -73,17 +73,8 @@ public class TodayListFragment extends Fragment {
         habitsData = new ArrayList<>();
         habitsData.add(habit1); habitsData.add(habit2);
 
-        // Button for adding habit - Dakota
-        final FloatingActionButton addHabitButton = view.findViewById(R.id.today_add_habit_button);
-        addHabitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), AddHabitActivity.class);
-                addHabitActivityLauncher.launch(intent);
-            }
-        });
 
-        refreshHabitList(); // populates habit list
+        addHabitList(); // populates habit list
 
         // setup recycler view
         recyclerView = view.findViewById(R.id.today_recycler_view);
@@ -97,7 +88,7 @@ public class TodayListFragment extends Fragment {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
-        // TODO: redo refereshHabiList as it changes the position of the habits back to the original position
+
 
 
 
@@ -145,32 +136,13 @@ public class TodayListFragment extends Fragment {
     };
 
     /**
-     *  Launch add habit activity for result
-     */
-    ActivityResultLauncher<Intent> addHabitActivityLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-
-                // Result's are not handled here but rather in BaseActivity
-                //TODO:
-                // implement public function in BaseActivity to launch
-                // AddHabitActivity and refresh views
-                // so any frag can call AddHabitActivity
-
-            }
-
-    );
-
-
-
-    /**
      * refreshHabitList
      *
      * refreshes the habitListView showing habits for today
      *
      * @author Dakota
      */
-    public void refreshHabitList() {
+    public void addHabitList() {
 
         Log.d("TodayListFragment", "refreshing habit list");
         // Populate today view with Today's habits.
@@ -188,6 +160,14 @@ public class TodayListFragment extends Fragment {
             }
         }
 
+    }
+
+    public void refreshList(Habit newHabit){
+        if (newHabit.isOnDay() && newHabit.isHabitStart()) {
+            habitsData.add(newHabit);
+            adapter.notifyItemInserted(habitsData.size() - 1);
+            Log.d("Habits Size", Integer.toString(habitsData.size()));
+        }
     }
 
 

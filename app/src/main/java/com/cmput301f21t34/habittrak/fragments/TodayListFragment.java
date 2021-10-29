@@ -18,6 +18,7 @@ import com.cmput301f21t34.habittrak.AddHabitActivity;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.TodayHabitList;
+import com.cmput301f21t34.habittrak.user.On_Days;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -63,8 +64,11 @@ public class TodayListFragment extends Fragment {
 
         // sample data
         Calendar date = new GregorianCalendar(2021,1,31);
-        Habit habit1 = new Habit("exercise dog", "some desc", date, new boolean[]{true, true, true, true, true, true, true});
-        Habit habit2 = new Habit("go for a walk", "some desc 2", date, new boolean[]{true, true, true, true, true, true, true});
+        Habit habit1 = new Habit("exercise dog", "some desc", date);
+            habit1.getOnDaysObj().setTrue(Calendar.MONDAY);
+            habit1.getOnDaysObj().setTrue(Calendar.FRIDAY);
+        Habit habit2 = new Habit("go for a walk", "some desc 2", date);
+            habit2.getOnDaysObj().setAll(new boolean[]{true, true, true, true, true, true, true});
         habitsData = new ArrayList<>();
         habitsData.add(habit1); habitsData.add(habit2);
 
@@ -128,7 +132,7 @@ public class TodayListFragment extends Fragment {
 
         // Iterates through all habits
         for (int index = 0; index < mainUserHabits.size(); index++){
-            if (mainUserHabits.get(index).isOnDay() && mainUserHabits.get(index).isHabitStart()){ // If a habit is active today add
+            if (mainUserHabits.get(index).getOnDaysObj().isOnDay() && mainUserHabits.get(index).isHabitStart()){ // If a habit is active today add
                 habitsData.add(mainUserHabits.get(index));
                 habitAdapter.notifyDataSetChanged();
             }

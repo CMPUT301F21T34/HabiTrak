@@ -26,6 +26,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
     // Any changes need to be implement in writeToParcel and Parcel constructor - Dakota
 
 
+    private int index = 0;
     private String title, reason;
     private Calendar startDate;
     private ArrayList<Habit_Event> habitEvents = new ArrayList<Habit_Event>();
@@ -189,6 +190,13 @@ public class Habit implements Comparable<Habit>, Parcelable {
         this.startDate = startDate;
     }
 
+    public int getIndex(){
+        return this.index;
+    }
+    public void setIndex(int index){
+        this.index = index;
+    }
+
     /**
      * getOnDays
      *
@@ -216,6 +224,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
     public On_Days getOnDaysObj(){
         return this.onDaysObj;
     }
+
 
     /**
      * setOnDays
@@ -447,7 +456,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
     /**
      * compareTo
      *
-     * Uses Habit startDate for comparison in sorting
+     * Uses Habit index for comparison in sorting
      *
      * @author Dakota
      * @param habit Habit object to compare to
@@ -456,7 +465,12 @@ public class Habit implements Comparable<Habit>, Parcelable {
     @Override
     public int compareTo(Habit habit) {
 
-        return this.startDate.getTime().compareTo(habit.getStartDate().getTime());
+        if (this.getIndex() > habit.getIndex()){
+            return 1;
+        } else if (this.getIndex() < habit.getIndex()){
+            return -1;
+        }
+        return 0;
 
     }
 

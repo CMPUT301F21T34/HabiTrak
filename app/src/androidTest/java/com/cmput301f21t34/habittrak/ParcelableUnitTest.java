@@ -75,6 +75,9 @@ public class ParcelableUnitTest {
                 null,
                 null,
                 null,
+                null,
+                null,
+                null,
                 null);
 
     }

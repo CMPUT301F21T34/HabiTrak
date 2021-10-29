@@ -45,14 +45,14 @@ public class Habit implements Comparable<Habit>, Parcelable {
 
     // Constructors //
 
-    Habit(){
+    public Habit(){
         this.title = "";
         this.reason= "";
         this.startDate = Calendar.getInstance();
         this.onDays = new boolean[]{false, false, false, false, false, false, false};
     }
 
-    Habit(String title){
+    public Habit(String title){
         this.title = title;
         this.reason= "";
         this.startDate = Calendar.getInstance();

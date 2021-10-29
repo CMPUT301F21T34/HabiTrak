@@ -18,6 +18,9 @@ public class Database_Pointer {
     public Database_Pointer(String email){
        this.email = email;
     }
+    public Database_Pointer(User user){
+        this.email = user.getEmail();
+    }
 
 
     /**

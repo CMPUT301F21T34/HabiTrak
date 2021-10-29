@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
 /**
  * MainActivity
  *
@@ -32,6 +34,6 @@ public class MainActivity extends AppCompatActivity{
                     .commit();
 
         }
-
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
     }
 }

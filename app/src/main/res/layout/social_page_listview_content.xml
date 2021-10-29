@@ -24,6 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toStartOf="@+id/social_menu"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:text="Follow" />
 
@@ -31,7 +32,7 @@
             android:id="@+id/social_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:layout_alignParentEnd="true"
             android:background="@drawable/social_more_options_menu_icon"/>
 

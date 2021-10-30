@@ -11,10 +11,12 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * @author Tauseef Nafee Fattah
@@ -24,10 +26,10 @@ import java.util.ArrayList;
  * Implemented the getter methods only the setters methods will be implemented soon
  */
 
-public class DatabaseManager{
-    private FirebaseDatabase database;
+public class DatabaseManager {
+    private FirebaseFirestore database;
     private ChildEventListener childEventListener;
-    boolean userExists;
+    private boolean userExists;
     String username;
     ArrayList<Habit> returnHabitList;
     ArrayList<Database_Pointer> returnFollowerList;
@@ -39,8 +41,8 @@ public class DatabaseManager{
 
 
 
-    public DatabaseManager(){
-        database = FirebaseDatabase.getInstance();
+    public DatabaseManager() {
+        database = FirebaseFirestore.getInstance();
         username = "";
         ArrayList<Habit> returnHabitList = new ArrayList<Habit>();
         ArrayList<Database_Pointer> returnFollowerList = new ArrayList<Database_Pointer>();
@@ -50,12 +52,20 @@ public class DatabaseManager{
         ArrayList<Database_Pointer> returnBlockList = new ArrayList<Database_Pointer>();
         ArrayList<Database_Pointer> returnBlockedByList = new ArrayList<Database_Pointer>();
     }
+
+    public boolean validCredentials() {
+        final CollectionReference collectionReference = database.collection("users");
+
+        return false;
+    }
     /**
      * createNewUser
      * returns 0 if it is successful or 1 if it is not
      *
      */
-    public int createNewUser(String user_email,String password){
+    public int createNewUser(String user_email,String password) {
+        HashMap<String, String> data = new HashMap<>();
+
         return 0;
     }
 
@@ -64,7 +74,8 @@ public class DatabaseManager{
      * @param user_email
      * @return boolean
      */
-    public boolean ifUserExist(String user_email){
+    /*
+    public boolean ifUserExist(String user_email) {
         userExists = false;
         // better to do it in createUser
         DatabaseReference usersReference = database.getReference("users");
@@ -81,7 +92,7 @@ public class DatabaseManager{
         });
 
         return userExists;
-    }
+    }*/
 
     /**
      * getUser
@@ -89,8 +100,8 @@ public class DatabaseManager{
      * @param user_email
      * @return User
      */
-
-    public User getUser(String user_email){
+    /*
+    public User getUser(String user_email) {
 
         User user = new User();
         user.setUsername(getUserName(user_email));
@@ -100,9 +111,9 @@ public class DatabaseManager{
         user.setFollowerReqList(getFollowReqList(user_email));
         user.setBlockList(getBlockList(user_email));
         user.setBlockByList(getBlockedByList(user_email));
-        
+
         return user;
-    }
+    }*/
 
     /**
      * getUserName
@@ -110,7 +121,8 @@ public class DatabaseManager{
      * @param user_email
      * @return username (string)
      */
-    public String getUserName(String user_email){
+    /*
+    public String getUserName(String user_email) {
         DatabaseReference usersReference = database.getReference("users");
         username = "";
         usersReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -129,7 +141,7 @@ public class DatabaseManager{
             }
         });
         return username;
-    }
+    }*/
 
     /**
      * getHabitList
@@ -137,7 +149,8 @@ public class DatabaseManager{
      * @param user_email
      * @return habitList
      */
-    public ArrayList<Habit> getHabitList(String user_email){
+    /*
+    public ArrayList<Habit> getHabitList(String user_email) {
         DatabaseReference usersReference = database.getReference("users");
         // returns empty list if no habit exists
         returnHabitList.clear();
@@ -146,9 +159,9 @@ public class DatabaseManager{
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                for(DataSnapshot ds: snapshot.getChildren()){
-                    if(ds.child("userInfo").child("email").getValue(String.class).equals(user_email)){
-                        for(DataSnapshot dataSnapshot: ds.child("Habits").getChildren()){
+                for(DataSnapshot ds: snapshot.getChildren()) {
+                    if (ds.child("userInfo").child("email").getValue(String.class).equals(user_email)) {
+                        for (DataSnapshot dataSnapshot: ds.child("Habits").getChildren()) {
                             returnHabitList.add(dataSnapshot.getValue(Habit.class));
                         }
                     }
@@ -160,7 +173,7 @@ public class DatabaseManager{
         });
 
         return returnHabitList;
-    }
+    }*/
 
     /**
      * getFollowerList
@@ -168,7 +181,8 @@ public class DatabaseManager{
      * @param user_email
      * @return Follower list
      */
-    public ArrayList<Database_Pointer> getFollowerList(String user_email){
+    /*
+    public ArrayList<Database_Pointer> getFollowerList(String user_email) {
         DatabaseReference usersReference = database.getReference("users");
         // returns empty list if no habit exists
         returnFollowerList.clear();
@@ -178,7 +192,7 @@ public class DatabaseManager{
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 for(DataSnapshot ds: snapshot.getChildren()){
-                    if(ds.child("userInfo").child("email").getValue(String.class).equals(user_email)){
+                    if(ds.child("userInfo").child("email").getValue(String.class).equals(user_email)) {
                         for(DataSnapshot dataSnapshot: ds.child("Followers").getChildren()){
                             returnFollowerList.add(new Database_Pointer(dataSnapshot.getValue(String.class)));
                         }
@@ -191,7 +205,7 @@ public class DatabaseManager{
         });
 
         return returnFollowerList;
-    }
+    }*/
 
     /**
      * getFollowingList
@@ -199,7 +213,8 @@ public class DatabaseManager{
      * @param user_email
      * @return Following list
      */
-    public ArrayList<Database_Pointer> getFollowingList(String user_email){
+    /*
+    public ArrayList<Database_Pointer> getFollowingList(String user_email ){
         DatabaseReference usersReference = database.getReference("users");
         // returns empty list if no habit exists
         returnFollowingList.clear();
@@ -222,7 +237,7 @@ public class DatabaseManager{
         });
 
         return returnFollowingList;
-    }
+    }*/
 
     /**
      * getFollowReqList
@@ -234,7 +249,8 @@ public class DatabaseManager{
      * @param user_email
      * @return follow req list
      */
-    public ArrayList<Database_Pointer> getFollowReqList(String user_email){
+    /*
+    public ArrayList<Database_Pointer> getFollowReqList(String user_email) {
         DatabaseReference usersReference = database.getReference("users");
         // returns empty list if no habit exists
         returnFollowReqList.clear();
@@ -244,7 +260,7 @@ public class DatabaseManager{
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 for(DataSnapshot ds: snapshot.getChildren()){
-                    if(ds.child("userInfo").child("email").getValue(String.class).equals(user_email)){
+                    if(ds.child("userInfo").child("email").getValue(String.class).equals(user_email)) {
                         for(DataSnapshot dataSnapshot: ds.child("FollowReqs").getChildren()){
                             returnFollowReqList.add(new Database_Pointer(dataSnapshot.getValue(String.class)));
                         }
@@ -257,7 +273,7 @@ public class DatabaseManager{
         });
 
         return returnFollowReqList;
-    }
+    }*/
 
     /**
      * getFollowRequestedList
@@ -269,8 +285,8 @@ public class DatabaseManager{
      * @param user_email
      * @return
      */
-
-    public ArrayList<Database_Pointer> getFollowRequestedList(String user_email){
+    /*
+    public ArrayList<Database_Pointer> getFollowRequestedList(String user_email) {
         DatabaseReference usersReference = database.getReference("users");
         // returns empty list if no habit exists
         returnFollowRequestedList.clear();
@@ -280,7 +296,7 @@ public class DatabaseManager{
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 for(DataSnapshot ds: snapshot.getChildren()){
-                    if(ds.child("userInfo").child("email").getValue(String.class).equals(user_email)){
+                    if(ds.child("userInfo").child("email").getValue(String.class).equals(user_email)) {
                         for(DataSnapshot dataSnapshot: ds.child("FollowRequesteds").getChildren()){
                             returnFollowRequestedList.add(new Database_Pointer(dataSnapshot.getValue(String.class)));
                         }
@@ -293,7 +309,7 @@ public class DatabaseManager{
         });
 
         return returnFollowRequestedList;
-    }
+    }*/
 
     /**
      * getBlockList
@@ -305,7 +321,8 @@ public class DatabaseManager{
      * @param user_email
      * @return
      */
-    public ArrayList<Database_Pointer> getBlockList(String user_email){
+    /*
+    public ArrayList<Database_Pointer> getBlockList(String user_email) {
         DatabaseReference usersReference = database.getReference("users");
         // returns empty list if no habit exists
         returnBlockList.clear();
@@ -315,7 +332,7 @@ public class DatabaseManager{
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 for(DataSnapshot ds: snapshot.getChildren()){
-                    if(ds.child("userInfo").child("email").getValue(String.class).equals(user_email)){
+                    if(ds.child("userInfo").child("email").getValue(String.class).equals(user_email)) {
                         for(DataSnapshot dataSnapshot: ds.child("BlockList").getChildren()){
                             returnBlockList.add(new Database_Pointer(dataSnapshot.getValue(String.class)));
                         }
@@ -328,7 +345,7 @@ public class DatabaseManager{
         });
 
         return returnBlockList;
-    }
+    }*/
 
     /**
      * getBlockedByList
@@ -340,7 +357,8 @@ public class DatabaseManager{
      * @param user_email
      * @return
      */
-    public ArrayList<Database_Pointer> getBlockedByList(String user_email){
+    /*
+    public ArrayList<Database_Pointer> getBlockedByList(String user_email) {
         DatabaseReference usersReference = database.getReference("users");
         // returns empty list if no habit exists
         returnBlockedByList.clear();
@@ -350,7 +368,7 @@ public class DatabaseManager{
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 for(DataSnapshot ds: snapshot.getChildren()){
-                    if(ds.child("userInfo").child("email").getValue(String.class).equals(user_email)){
+                    if(ds.child("userInfo").child("email").getValue(String.class).equals(user_email)) {
                         for(DataSnapshot dataSnapshot: ds.child("BlockedByList").getChildren()){
                             returnBlockedByList.add(new Database_Pointer(dataSnapshot.getValue(String.class)));
                         }
@@ -363,7 +381,7 @@ public class DatabaseManager{
         });
 
         return returnBlockedByList;
-    }
+    }*/
     /**
      * setHabitListDb
      * sets the habit list in the database
@@ -373,7 +391,10 @@ public class DatabaseManager{
      * @param givenHabitId
      * @param habitEventList
      */
-    public void setHabitListDb(String user_email, ArrayList<Habit> habitList, String givenHabitId, ArrayList<Habit> habitEventList){
+    /*
+    public void setHabitListDb(String user_email, ArrayList<Habit> habitList, String givenHabitId,
+                               ArrayList<Habit> habitEventList) {
         DatabaseReference usersReference = database.getReference("users");
     }
+    */
 }

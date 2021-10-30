@@ -28,27 +28,29 @@ public class User extends Database_Pointer implements Parcelable {
     // Any changes need to be implement in writeToParcel and Parcel constructor - Dakota
 
     private String username;
+    private String password;
 
-    ArrayList<Habit> habitList;
+    private ArrayList<Habit> habitList;
 
-    ArrayList<Database_Pointer> followerList;
-    ArrayList<Database_Pointer> followingList;
-    ArrayList<Database_Pointer> followerReqList;
-    ArrayList<Database_Pointer> followerRequestedList;
-    ArrayList<Database_Pointer> blockList;
-    ArrayList<Database_Pointer> blockByList;
+    private ArrayList<Database_Pointer> followerList;
+    private ArrayList<Database_Pointer> followingList;
+    private ArrayList<Database_Pointer> followerReqList;
+    private ArrayList<Database_Pointer> followerRequestedList;
+    private ArrayList<Database_Pointer> blockList;
+    private ArrayList<Database_Pointer> blockByList;
 
     String biography;
 
     // Constructors //
 
-    public User(String username, String email, ArrayList<Habit> habitList, ArrayList<Habit_Event> habitEventList,
+    public User(String username, String password, String email, ArrayList<Habit> habitList, ArrayList<Habit_Event> habitEventList,
                 ArrayList<Database_Pointer> followerList, ArrayList<Database_Pointer> followingList, ArrayList<Database_Pointer> followerReqList,
                 ArrayList<Database_Pointer> followerRequestedList, ArrayList<Database_Pointer> blockList, ArrayList<Database_Pointer> blockByList,
                 String biography){
 
         super(email);
         this.username = username;
+        this.password = password;
         this.habitList = habitList;
         this.followerList = followerList;
         this.followingList = followingList;
@@ -69,7 +71,7 @@ public class User extends Database_Pointer implements Parcelable {
     public User(){
         super("dummyEmail");
         this.username = "dummyUser";
-
+        this.password = "123456789";
         this.habitList = new ArrayList<Habit>();
         this.followerList = new ArrayList<Database_Pointer>();
         this.followingList = new ArrayList<Database_Pointer>();
@@ -80,6 +82,26 @@ public class User extends Database_Pointer implements Parcelable {
         this.biography = "";
     }
 
+    /**
+     * New User
+     *
+     * Creates a new User object with only an email
+     * @param email
+     */
+    public User(String email){
+        super(email);
+        this.username = "dummyUser" + email;
+        this.password = "123456789";
+
+        this.habitList = new ArrayList<Habit>();
+        this.followerList = new ArrayList<Database_Pointer>();
+        this.followingList = new ArrayList<Database_Pointer>();
+        this.followerReqList = new ArrayList<Database_Pointer>();
+        this.followerRequestedList = new ArrayList<Database_Pointer>();
+        this.blockList = new ArrayList<Database_Pointer>();
+        this.blockByList = new ArrayList<Database_Pointer>();
+        this.biography = "";
+    }
     /**
      * Parcel Constructor Class
      *
@@ -117,6 +139,9 @@ public class User extends Database_Pointer implements Parcelable {
     public String getUsername() {
         return username;
     }
+    public String getPassword() {
+        return password;
+    }
 
     public ArrayList<Habit> getHabitList() {
         return habitList;
@@ -149,6 +174,10 @@ public class User extends Database_Pointer implements Parcelable {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void setHabitList(ArrayList<Habit> habitList) {

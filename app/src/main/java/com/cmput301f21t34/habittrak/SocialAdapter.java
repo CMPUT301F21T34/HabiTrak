@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 
@@ -26,27 +27,27 @@ import java.util.ArrayList;
  */
 public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder>{
 
-    private ArrayList<User> profiles;
+    private final ArrayList<User> profiles;
+    private final ClickListener listener;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public interface ClickListener{
+        void menuButtonOnClick(View view, int position);
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private final TextView username;
         private final MaterialButton mainButton;
         private final ImageButton menuButton;
         private final TextView userBio;
+        private ClickListener listenerRef;
 
         public ViewHolder(View view){
             super(view);
-
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.d("SocialAdapter", "Element " + getAdapterPosition() + " clicked");
-                }
-            });
             username  = (TextView) view.findViewById(R.id.username_social_page);
             mainButton = (MaterialButton) view.findViewById(R.id.social_main_button);
             menuButton = (ImageButton) view.findViewById(R.id.social_menu);
             userBio = (TextView) view.findViewById(R.id.social_user_bio);
+            menuButton.setOnClickListener(this);
         }
 
 
@@ -65,10 +66,21 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         public TextView getUserBio() {
             return userBio;
         }
+
+        @Override
+        public void onClick(View view) {
+            if (listenerRef != null){
+                listenerRef.menuButtonOnClick(view, getAdapterPosition());
+            }
+
+        }
     }
 
-    public SocialAdapter(ArrayList<User> users){
+
+
+    public SocialAdapter(ArrayList<User> users, ClickListener listener){
         this.profiles = users;
+        this.listener = listener;
     }
 
     @NonNull
@@ -86,6 +98,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         User user = profiles.get(position);
         holder.getUsername().setText(user.getUsername());
         holder.getUserBio().setText(user.getUsername());
+        holder.listenerRef = this.listener;
     }
 
     @Override

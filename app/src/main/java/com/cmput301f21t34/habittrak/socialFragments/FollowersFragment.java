@@ -6,9 +6,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.SocialAdapter;
@@ -22,6 +25,7 @@ public class FollowersFragment extends Fragment {
     SocialAdapter socialAdapter;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
+    ImageButton imageButton;
 
     public FollowersFragment() {
         // Required empty public constructor
@@ -39,21 +43,34 @@ public class FollowersFragment extends Fragment {
 
 
         // Sample Data
-        /*
+
         User sample1 = new User("hello123");
         User sample2 = new User("another User");
         ArrayList<User> userArrayList = new ArrayList<>();
         userArrayList.add(sample1);
-        userArrayList.add(sample2); */
+        userArrayList.add(sample2);
 
         // setting up recycler view
         recyclerView = view.findViewById(R.id.followers_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        //socialAdapter = new SocialAdapter(userArrayList);
+        socialAdapter = new SocialAdapter(userArrayList, new SocialAdapter.ClickListener() {
+            @Override
+            public void menuButtonOnClick(View view, int position) {
+                Log.d("Menu", "Clicked " + Integer.toString(position));
+                showMenu(view);
+            }
+        });
         recyclerView.setAdapter(socialAdapter);
 
 
         return view;
+    }
+
+    public void showMenu(View view) {
+        PopupMenu menu = new PopupMenu(getContext(), view);
+        menu.getMenuInflater().inflate(R.menu.social_popup_menu, menu.getMenu());
+        Log.d("image Button", "menu button clicked");
+        menu.show();
     }
 }

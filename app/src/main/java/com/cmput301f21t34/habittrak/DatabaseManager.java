@@ -1,10 +1,15 @@
 package com.cmput301f21t34.habittrak;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.cmput301f21t34.habittrak.user.Database_Pointer;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.ChildEventListener;
@@ -13,10 +18,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * @author Tauseef Nafee Fattah
@@ -29,8 +39,11 @@ import java.util.HashMap;
 public class DatabaseManager {
     private FirebaseFirestore database;
     private ChildEventListener childEventListener;
-    private boolean userExists;
+    private boolean isUnique = true;
+    private boolean validCredentials = false;
+    private User userToReturn;
     String username;
+    String password;
     ArrayList<Habit> returnHabitList;
     ArrayList<Database_Pointer> returnFollowerList;
     ArrayList<Database_Pointer> returnFollowingList;
@@ -39,11 +52,11 @@ public class DatabaseManager {
     ArrayList<Database_Pointer> returnBlockList;
     ArrayList<Database_Pointer> returnBlockedByList;
 
-
-
     public DatabaseManager() {
         database = FirebaseFirestore.getInstance();
+
         username = "";
+        password = "";
         ArrayList<Habit> returnHabitList = new ArrayList<Habit>();
         ArrayList<Database_Pointer> returnFollowerList = new ArrayList<Database_Pointer>();
         ArrayList<Database_Pointer> returnFollowingList = new ArrayList<Database_Pointer>();
@@ -51,69 +64,150 @@ public class DatabaseManager {
         ArrayList<Database_Pointer> returnFollowRequestedList = new ArrayList<Database_Pointer>();
         ArrayList<Database_Pointer> returnBlockList = new ArrayList<Database_Pointer>();
         ArrayList<Database_Pointer> returnBlockedByList = new ArrayList<Database_Pointer>();
+
+        //
     }
 
-    public boolean validCredentials() {
+    /**
+     * validCredentials
+     *
+     * checks if given password matches the actual password of an email
+     *
+     * @author Henry
+     * @param email
+     * @param password
+     * @return
+     * returns true if credentials match, false otherwise
+     */
+    public boolean validCredentials(String email, String password) {
+
+        String TAG = "ValidCredentials";
+
         final CollectionReference collectionReference = database.collection("users");
+        DocumentReference docRef = collectionReference.document(email);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot exists");
+                        if (document.getData().get("Password").equals(password)) {
+                            validCredentials = true;
+                        }
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+        return validCredentials;
+    }
+
+    /**
+     * Checks to see if the user with the provided email already exists
+     *
+     * @author Henry
+     * @param email
+     * @return boolean
+     */
+
+    public boolean userUnique(String email) {
+
+        String TAG = "UniqueUser";
+
+        database.collection("users")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                if (document.getId().equals(email)) {
+                                    isUnique = false;
+                                }
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+        return isUnique;
+    }
+
+    /**
+     * createNewUser
+     *
+     * @author Henry
+     * returns true if it is successful or false if it is not
+     */
+    public boolean createNewUser(String user_email, String username, String password) {
+
+        if (userUnique(user_email)) {
+            final CollectionReference collectionReference = database.collection("users");
+
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("Password", password);
+            data.put("Username", username);
+            data.put("habitList", new ArrayList<Habit>());
+            data.put("followerList", new ArrayList<Database_Pointer>());
+            data.put("followingList", new ArrayList<Database_Pointer>());
+            data.put("followReqList", new ArrayList<Database_Pointer>());
+            data.put("followRequestedList", new ArrayList<Database_Pointer>());
+            data.put("blockList", new ArrayList<Database_Pointer>());
+            data.put("blockedByList", new ArrayList<Database_Pointer>());
+
+            collectionReference
+                    .document(user_email)
+                    .set(data);
+
+            return true;
+        }
 
         return false;
     }
-    /**
-     * createNewUser
-     * returns 0 if it is successful or 1 if it is not
-     *
-     */
-    public int createNewUser(String user_email,String password) {
-        HashMap<String, String> data = new HashMap<>();
-
-        return 0;
-    }
-
-    /**
-     * Checks to see if the user with the provided email already exists (not sure if we need it but just in case
-     * @param user_email
-     * @return boolean
-     */
-    /*
-    public boolean ifUserExist(String user_email) {
-        userExists = false;
-        // better to do it in createUser
-        DatabaseReference usersReference = database.getReference("users");
-        DatabaseReference userReference = usersReference.child(user_email);
-
-        userReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                userExists = true;
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-
-        return userExists;
-    }*/
 
     /**
      * getUser
+     *
+     * @author Tauseef
+     * @author Henry
+     *
      * returns the user with the provided email
-     * @param user_email
+     * @param email
      * @return User
      */
-    /*
-    public User getUser(String user_email) {
+    // TODO: DO NOT USE THIS CLASS. It currently returns a dummy user BEFORE data is read from firestore
+    public User getUser(String email) {
 
-        User user = new User();
-        user.setUsername(getUserName(user_email));
-        user.setHabitList(getHabitList(user_email));
-        user.setFollowerList(getFollowerList(user_email));
-        user.setFollowingList(getFollowingList(user_email));
-        user.setFollowerReqList(getFollowReqList(user_email));
-        user.setBlockList(getBlockList(user_email));
-        user.setBlockByList(getBlockedByList(user_email));
+        String TAG = "User";
+        userToReturn = new User();
 
-        return user;
-    }*/
+        final CollectionReference collectionReference = database.collection("users");
+
+        DocumentReference docRef = collectionReference.document(email);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot exists");
+                        userToReturn = document.toObject(User.class);
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+        Log.d(TAG, userToReturn.getUsername());
+
+        return userToReturn;
+    }
 
     /**
      * getUserName

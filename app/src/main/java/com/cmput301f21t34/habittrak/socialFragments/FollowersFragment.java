@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -19,7 +20,7 @@ import com.cmput301f21t34.habittrak.User;
 
 import java.util.ArrayList;
 
-
+//TODO: Add functions for Blocking and Removing Followers
 public class FollowersFragment extends Fragment {
 
     SocialAdapter socialAdapter;
@@ -41,7 +42,6 @@ public class FollowersFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.habi_followers_fragment, container, false);
 
-
         // Sample Data
 
         User sample1 = new User("hello123");
@@ -60,7 +60,7 @@ public class FollowersFragment extends Fragment {
                 Log.d("Menu", "Clicked " + Integer.toString(position));
                 showMenu(view);
             }
-        });
+        }, false);
         recyclerView.setAdapter(socialAdapter);
 
 

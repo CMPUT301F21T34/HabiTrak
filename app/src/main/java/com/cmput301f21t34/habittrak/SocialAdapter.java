@@ -19,7 +19,7 @@ import com.google.android.material.button.MaterialButton;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-
+//TODO: Send menu options in the adapter itself
 /**
  * SocialAdapter
  *
@@ -29,6 +29,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
 
     private final ArrayList<User> profiles;
     private final ClickListener listener;
+    private final boolean buttonVisibility;
 
     public interface ClickListener{
         void menuButtonOnClick(View view, int position);
@@ -74,13 +75,23 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
             }
 
         }
+
+        public void makeButtonVisible(){
+            mainButton.setVisibility(View.VISIBLE);
+        }
+
+        public void makeButtonInvisible(){
+            mainButton.setVisibility(View.INVISIBLE);
+        }
+
     }
 
 
 
-    public SocialAdapter(ArrayList<User> users, ClickListener listener){
+    public SocialAdapter(ArrayList<User> users, ClickListener listener, boolean visible){
         this.profiles = users;
         this.listener = listener;
+        this.buttonVisibility = visible;
     }
 
     @NonNull
@@ -99,10 +110,24 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         holder.getUsername().setText(user.getUsername());
         holder.getUserBio().setText(user.getUsername());
         holder.listenerRef = this.listener;
+        if (buttonVisibility){
+            holder.makeButtonVisible();
+        }
+        else {
+            holder.makeButtonInvisible();
+        }
+
     }
 
     @Override
     public int getItemCount() {
         return profiles.size();
     }
+
+    public void ButtonVisibility(boolean visible){
+        if (visible){
+
+        }
+    }
+
 }

@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity{
 
         }*/
         DatabaseManager db = new DatabaseManager();
-        db.createNewUser("dummy@gmail.com", "okayge", "12345","");
+        db.createNewUser("dummy@gmail.com", "Hello", "12345","");
         User check = db.getUser("dummy@gmail.com");
         Log.d("Check", check.getUsername());
     }

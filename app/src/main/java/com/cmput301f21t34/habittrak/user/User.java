@@ -37,7 +37,7 @@ public class User extends Database_Pointer implements Parcelable {
     private ArrayList<Database_Pointer> followerReqList;
     private ArrayList<Database_Pointer> followerRequestedList;
     private ArrayList<Database_Pointer> blockList;
-    private ArrayList<Database_Pointer> blockByList;
+    private ArrayList<Database_Pointer> blockedByList;
 
     String biography;
 
@@ -45,7 +45,7 @@ public class User extends Database_Pointer implements Parcelable {
 
     public User(String username, String password, String email, ArrayList<Habit> habitList, ArrayList<Habit_Event> habitEventList,
                 ArrayList<Database_Pointer> followerList, ArrayList<Database_Pointer> followingList, ArrayList<Database_Pointer> followerReqList,
-                ArrayList<Database_Pointer> followerRequestedList, ArrayList<Database_Pointer> blockList, ArrayList<Database_Pointer> blockByList,
+                ArrayList<Database_Pointer> followerRequestedList, ArrayList<Database_Pointer> blockList, ArrayList<Database_Pointer> blockedByList,
                 String biography){
 
         super(email);
@@ -57,7 +57,7 @@ public class User extends Database_Pointer implements Parcelable {
         this.followerReqList = followerReqList;
         this.followerRequestedList = followerRequestedList;
         this.blockList = blockList;
-        this.blockByList = blockByList;
+        this.blockedByList = blockedByList;
         this.biography = biography;
     }
 
@@ -78,7 +78,7 @@ public class User extends Database_Pointer implements Parcelable {
         this.followerReqList = new ArrayList<Database_Pointer>();
         this.followerRequestedList = new ArrayList<Database_Pointer>();
         this.blockList = new ArrayList<Database_Pointer>();
-        this.blockByList = new ArrayList<Database_Pointer>();
+        this.blockedByList = new ArrayList<Database_Pointer>();
         this.biography = "";
     }
 
@@ -99,7 +99,7 @@ public class User extends Database_Pointer implements Parcelable {
         this.followerReqList = new ArrayList<Database_Pointer>();
         this.followerRequestedList = new ArrayList<Database_Pointer>();
         this.blockList = new ArrayList<Database_Pointer>();
-        this.blockByList = new ArrayList<Database_Pointer>();
+        this.blockedByList = new ArrayList<Database_Pointer>();
         this.biography = "";
     }
     /**
@@ -202,8 +202,8 @@ public class User extends Database_Pointer implements Parcelable {
     public void setBlockList(ArrayList<Database_Pointer> blockList) {
         this.blockList = blockList;
     }
-    public void setBlockByList(ArrayList<Database_Pointer> blockByList) {
-        this.blockByList = blockByList;
+    public void setBlockedByList(ArrayList<Database_Pointer> blockedByList) {
+        this.blockedByList = blockedByList;
     }
     public void setBiography(String biography) {
         this.biography = biography;

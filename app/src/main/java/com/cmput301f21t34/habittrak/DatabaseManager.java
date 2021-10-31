@@ -38,34 +38,24 @@ import java.util.concurrent.CountDownLatch;
 
 public class DatabaseManager {
     private FirebaseFirestore database;
-    private ChildEventListener childEventListener;
-    private boolean isUnique = true;
-    private boolean validCredentials = false;
+    private boolean isUnique;
+    private boolean validCredentials;
     private User userToReturn;
     String username;
     String password;
-    ArrayList<Habit> returnHabitList;
-    ArrayList<Database_Pointer> returnFollowerList;
-    ArrayList<Database_Pointer> returnFollowingList;
-    ArrayList<Database_Pointer> returnFollowReqList;
-    ArrayList<Database_Pointer> returnFollowRequestedList;
-    ArrayList<Database_Pointer> returnBlockList;
-    ArrayList<Database_Pointer> returnBlockedByList;
+    String emailToReturn;
+    private ArrayList<User> users;
+
 
     public DatabaseManager() {
         database = FirebaseFirestore.getInstance();
 
         username = "";
         password = "";
-        ArrayList<Habit> returnHabitList = new ArrayList<Habit>();
-        ArrayList<Database_Pointer> returnFollowerList = new ArrayList<Database_Pointer>();
-        ArrayList<Database_Pointer> returnFollowingList = new ArrayList<Database_Pointer>();
-        ArrayList<Database_Pointer> returnFollowReqList = new ArrayList<Database_Pointer>();
-        ArrayList<Database_Pointer> returnFollowRequestedList = new ArrayList<Database_Pointer>();
-        ArrayList<Database_Pointer> returnBlockList = new ArrayList<Database_Pointer>();
-        ArrayList<Database_Pointer> returnBlockedByList = new ArrayList<Database_Pointer>();
-
-        //
+        emailToReturn = "";
+        userToReturn = new User();
+        isUnique = true;
+        validCredentials = false;
     }
 
     /**
@@ -145,7 +135,10 @@ public class DatabaseManager {
      */
     public boolean createNewUser(String user_email, String username, String password) {
 
+        String TAG = "Unique";
+
         if (userUnique(user_email)) {
+            Log.d(TAG, "Unique");
             final CollectionReference collectionReference = database.collection("users");
 
             HashMap<String, Object> data = new HashMap<>();
@@ -165,8 +158,44 @@ public class DatabaseManager {
 
             return true;
         }
-
+        Log.d(TAG, "Not unique");
         return false;
+    }
+
+    public interface MyCallback {
+        void onCallback(User user);
+    }
+
+    public void readData(MyCallback myCallback) {
+
+        String TAG = "onComplete()";
+
+        final CollectionReference collectionReference = database.collection("users");
+        collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    User user = new User();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        if (document.getId().equals(emailToReturn)) {
+                            user.setUsername(document.get("Username").toString());
+                            user.setPassword(document.get("Password").toString());
+                            user.setHabitList((ArrayList<Habit>) document.get("habitList"));
+                            user.setFollowerList((ArrayList<Database_Pointer>) document.get("followerList"));
+                            user.setFollowingList((ArrayList<Database_Pointer>) document.get("followingList"));
+                            user.setFollowerReqList((ArrayList<Database_Pointer>) document.get("followReqList"));
+                            user.setFollowerRequestedList((ArrayList<Database_Pointer>) document.get("followRequestedList"));
+                            user.setBlockList((ArrayList<Database_Pointer>) document.get("blockList"));
+                            user.setBlockedByList((ArrayList<Database_Pointer>) document.get("blockedByList"));
+                            Log.d(TAG, user.getUsername());
+
+                        }
+                    }
+                    Log.d("outside", user.getUsername());
+                    myCallback.onCallback(user);
+                }
+            }
+        });
     }
 
     /**
@@ -183,29 +212,16 @@ public class DatabaseManager {
     public User getUser(String email) {
 
         String TAG = "User";
-        userToReturn = new User();
+        emailToReturn = email;
 
-        final CollectionReference collectionReference = database.collection("users");
-
-        DocumentReference docRef = collectionReference.document(email);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        readData(new MyCallback() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d(TAG, "DocumentSnapshot exists");
-                        userToReturn = document.toObject(User.class);
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
+            public void onCallback(User user) {
+                Log.d("getUser", user.getUsername());
             }
         });
-        Log.d(TAG, userToReturn.getUsername());
 
+        Log.d(TAG, userToReturn.getUsername());
         return userToReturn;
     }
 

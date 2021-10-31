@@ -21,6 +21,7 @@ import com.google.android.material.textfield.TextInputLayout;
  * LoginFragment
  *
  * @author Pranav
+ * @author Henry
  *
  * Login Fragment for the app
  *

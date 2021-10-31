@@ -8,6 +8,7 @@ import com.cmput301f21t34.habittrak.user.Database_Pointer;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,12 +40,12 @@ import java.util.concurrent.CountDownLatch;
 
 public class DatabaseManager {
     private FirebaseFirestore database;
-    private boolean isUnique;
-    String username;
-    String password;
+    private ArrayList<Database_Pointer> userList;
 
     public DatabaseManager() {
         database = FirebaseFirestore.getInstance();
+        userList = new ArrayList<Database_Pointer>();
+
     }
 
     /**
@@ -94,14 +95,12 @@ public class DatabaseManager {
 
         boolean isUnique = false;
 
-        String TAG = "uniqueUser";
-
         final CollectionReference collectionReference = database.collection("users");
 
         try {
             DocumentReference docref = collectionReference.document(email);
             Task<DocumentSnapshot> task = docref.get();
-            while (!task.isComplete()) ;
+            while (!task.isComplete());
             DocumentSnapshot document = task.getResult();
             if (!document.exists()) {
                 isUnique = true;
@@ -120,11 +119,11 @@ public class DatabaseManager {
      * @author Henry
      * returns true if it is successful or false if it is not
      */
-    public boolean createNewUser(String user_email, String username, String password, String biography) {
+    public boolean createNewUser(String email, String username, String password, String biography) {
 
         String TAG = "Unique";
 
-        if (isUnique(user_email)) {
+        if (isUnique(email)) {
             Log.d(TAG, "Unique");
             final CollectionReference collectionReference = database.collection("users");
 
@@ -141,7 +140,7 @@ public class DatabaseManager {
             data.put("blockedByList", new ArrayList<Database_Pointer>());
 
             collectionReference
-                    .document(user_email)
+                    .document(email)
                     .set(data);
 
             return true;
@@ -150,6 +149,34 @@ public class DatabaseManager {
         return false;
     }
 
+    /**
+     * deleteUser
+     *
+     * @author Henry
+     * returns true if it is successful or false if it is not
+     */
+    public boolean deleteUser(String email) {
+
+        String TAG = "Delete";
+        if (!isUnique(email)) {
+            database.collection("users").document(email)
+                    .delete()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error deleting document", e);
+                        }
+                    });
+            return true;
+        }
+        return false;
+    }
 
 
     /**

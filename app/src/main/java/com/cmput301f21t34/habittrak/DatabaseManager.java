@@ -25,6 +25,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 
@@ -44,7 +45,7 @@ public class DatabaseManager {
     String username;
     String password;
     String emailToReturn;
-    private ArrayList<User> users;
+
 
 
     public DatabaseManager() {
@@ -133,7 +134,7 @@ public class DatabaseManager {
      * @author Henry
      * returns true if it is successful or false if it is not
      */
-    public boolean createNewUser(String user_email, String username, String password) {
+    public boolean createNewUser(String user_email, String username, String password, String biography) {
 
         String TAG = "Unique";
 
@@ -144,6 +145,7 @@ public class DatabaseManager {
             HashMap<String, Object> data = new HashMap<>();
             data.put("Password", password);
             data.put("Username", username);
+            data.put("Biography",biography);
             data.put("habitList", new ArrayList<Habit>());
             data.put("followerList", new ArrayList<Database_Pointer>());
             data.put("followingList", new ArrayList<Database_Pointer>());
@@ -162,41 +164,7 @@ public class DatabaseManager {
         return false;
     }
 
-    public interface MyCallback {
-        void onCallback(User user);
-    }
 
-    public void readData(MyCallback myCallback) {
-
-        String TAG = "onComplete()";
-
-        final CollectionReference collectionReference = database.collection("users");
-        collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    User user = new User();
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        if (document.getId().equals(emailToReturn)) {
-                            user.setUsername(document.get("Username").toString());
-                            user.setPassword(document.get("Password").toString());
-                            user.setHabitList((ArrayList<Habit>) document.get("habitList"));
-                            user.setFollowerList((ArrayList<Database_Pointer>) document.get("followerList"));
-                            user.setFollowingList((ArrayList<Database_Pointer>) document.get("followingList"));
-                            user.setFollowerReqList((ArrayList<Database_Pointer>) document.get("followReqList"));
-                            user.setFollowerRequestedList((ArrayList<Database_Pointer>) document.get("followRequestedList"));
-                            user.setBlockList((ArrayList<Database_Pointer>) document.get("blockList"));
-                            user.setBlockedByList((ArrayList<Database_Pointer>) document.get("blockedByList"));
-                            Log.d(TAG, user.getUsername());
-
-                        }
-                    }
-                    Log.d("outside", user.getUsername());
-                    myCallback.onCallback(user);
-                }
-            }
-        });
-    }
 
     /**
      * getUser
@@ -210,19 +178,97 @@ public class DatabaseManager {
      */
     // TODO: DO NOT USE THIS CLASS. It currently returns a dummy user BEFORE data is read from firestore
     public User getUser(String email) {
-
-        String TAG = "User";
-        emailToReturn = email;
-
-        readData(new MyCallback() {
-            @Override
-            public void onCallback(User user) {
-                Log.d("getUser", user.getUsername());
+        User user;
+        ArrayList<Habit> habitList;
+        ArrayList<Database_Pointer>followerList;
+        ArrayList<Database_Pointer>followingList;
+        ArrayList<Database_Pointer>followReqList;
+        ArrayList<Database_Pointer>followerReqList;
+        ArrayList<Database_Pointer>blockList;
+        ArrayList<Database_Pointer>blockedByList;
+        try{
+            DocumentReference docref = database.collection("users").document(email);
+            Task<DocumentSnapshot> task = docref.get();
+            while(!task.isComplete());
+            DocumentSnapshot document = task.getResult();
+            // getting the lists
+            Collection<Habit> habitList_collection = (ArrayList<Habit>) document.get("habitList");
+            if (habitList_collection == null)
+            {
+                habitList = new ArrayList<Habit>();
             }
-        });
+            else{
+                habitList = new ArrayList<Habit>(habitList_collection);
+            }
+            Collection<Database_Pointer> followerListCollection = (ArrayList<Database_Pointer>) document.get("followerList");
+            if (followerListCollection == null)
+            {
+                followerList = new ArrayList<Database_Pointer>();
+            }
+            else{
+                followerList = new ArrayList<Database_Pointer>(followerListCollection);
+            }
+            Collection<Database_Pointer> followingListCollection = (ArrayList<Database_Pointer>) document.get("followingList");
+            if(followingListCollection == null)
+            {
+                followingList = new ArrayList<Database_Pointer>();
+            }
+            else{
+                followingList = new ArrayList<Database_Pointer>(followingListCollection);
+            }
+            Collection<Database_Pointer> blockListCollection = (ArrayList<Database_Pointer>) document.get("blockList");
+            if(blockListCollection == null)
+            {
+                blockList = new ArrayList<Database_Pointer>();
+            }
+            else{
+                blockList = new ArrayList<Database_Pointer>(blockListCollection);
+            }
+            Collection<Database_Pointer> blockedByListCollection = (ArrayList<Database_Pointer>) document.get("blockedByList");
+            if(blockedByListCollection == null)
+            {
+                blockedByList = new ArrayList<Database_Pointer>();
+            }
+            else{
+                blockedByList = new ArrayList<Database_Pointer>(blockedByListCollection);
+            }
+            Collection<Database_Pointer> followReqListCollection = (ArrayList<Database_Pointer>) document.get("followReqList");
+            if(followReqListCollection == null)
+            {
+                followReqList = new ArrayList<Database_Pointer>();
+            }
+            else{
+                followReqList = new ArrayList<Database_Pointer>(followReqListCollection);
+            }
+            Collection<Database_Pointer> followerReqListCollection = (ArrayList<Database_Pointer>) document.get("followRequestedList");
+            if(followerReqListCollection == null)
+            {
+                followerReqList = new ArrayList<Database_Pointer>();
+            }
+            else{
+                followerReqList = new ArrayList<Database_Pointer>(followerReqListCollection);
+            }
+            // getting the string variables
+            String name = (String) document.get("Username");
+            String password = (String) document.get("Password");
+            String bio = (String) document.get("Biography");
+            user = new User(email);
 
-        Log.d(TAG, userToReturn.getUsername());
-        return userToReturn;
+            user.setPassword(password);
+            user.setUsername(name);
+            user.setHabitList(habitList);
+            user.setFollowerList(followerList);
+            user.setFollowingList(followingList);
+            user.setBlockList(blockList);
+            user.setBlockedByList(blockedByList);
+            user.setFollowerReqList(followReqList);
+            user.setFollowerRequestedList(followerReqList);
+
+            return user;
+        }
+        catch (Exception ignored){}
+        user = new User();
+        return  user;
     }
 
     /**
@@ -507,4 +553,46 @@ public class DatabaseManager {
         DatabaseReference usersReference = database.getReference("users");
     }
     */
+    /**
+     * addfollower
+     * email2 is now a follower of email1 (so add email2 to the follower list of email1 and add email1 to the following list of email2)
+     * @param email1
+     * @param email2
+     */
+
+    //public void addfollower(String email1, String email2){}
+    /**
+     * addfollow req
+     * email1 asked to follow email2 (so add email2 to the followerReq list of email1 and add email1 to the followerRequested list of email2)
+     * followerRequested list means the people that asked to follow the user
+     * followerReq list means the people that the user requested to follow
+     * @param email1
+     * @param email2
+     */
+
+    //public void addFollowerReq(String email1, String email2){}
+    /**
+     * addtoblocklist
+     * email2 is now blocked by email1 (so add email2 to the block list of email1 and add email1 to the blockedby list of email2)
+     * @param email1
+     * @param email2
+     */
+
+    //public void addBlockList(String email1, String email2){}
+    // change username and password and for habit just update
+    /**
+     * changePassword
+     * @param email
+     * @param password
+     */
+    //public void changePassword(String email, String password)
+
+    /**
+     * changeUserName
+     * @param email
+     * @param username
+     */
+    //public void changeUsername(String email, String username)
+
+
 }

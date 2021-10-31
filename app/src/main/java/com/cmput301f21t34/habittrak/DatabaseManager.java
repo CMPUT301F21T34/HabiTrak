@@ -40,18 +40,11 @@ import java.util.concurrent.CountDownLatch;
 public class DatabaseManager {
     private FirebaseFirestore database;
     private boolean isUnique;
-    private boolean validCredentials;
-
     String username;
     String password;
 
     public DatabaseManager() {
         database = FirebaseFirestore.getInstance();
-
-        username = "";
-        password = "";
-        isUnique = true;
-        validCredentials = false;
     }
 
     /**
@@ -67,28 +60,25 @@ public class DatabaseManager {
      */
     public boolean validCredentials(String email, String password) {
 
+        boolean validCredentials = false;
+
         String TAG = "ValidCredentials";
 
         final CollectionReference collectionReference = database.collection("users");
-        DocumentReference docRef = collectionReference.document(email);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d(TAG, "DocumentSnapshot exists");
-                        if (document.getData().get("Password").equals(password)) {
-                            validCredentials = true;
-                        }
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
+
+        try {
+            DocumentReference docref = collectionReference.document(email);
+            Task<DocumentSnapshot> task = docref.get();
+            while (!task.isComplete()) ;
+            DocumentSnapshot document = task.getResult();
+            if (document.getData() != null) {
+                if (document.get("Password").equals(password)) {
+                    validCredentials = true;
                 }
             }
-        });
+        }
+        catch (Exception ignored) {}
+
         return validCredentials;
     }
 
@@ -100,26 +90,27 @@ public class DatabaseManager {
      * @return boolean
      */
 
-    public boolean userUnique(String email) {
+    public boolean isUnique(String email) {
 
-        String TAG = "UniqueUser";
+        boolean isUnique = false;
 
-        database.collection("users")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                if (document.getId().equals(email)) {
-                                    isUnique = false;
-                                }
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
+        String TAG = "uniqueUser";
+
+        final CollectionReference collectionReference = database.collection("users");
+
+        try {
+            DocumentReference docref = collectionReference.document(email);
+            Task<DocumentSnapshot> task = docref.get();
+            while (!task.isComplete()) ;
+            DocumentSnapshot document = task.getResult();
+            if (!document.exists()) {
+                isUnique = true;
+                return isUnique;
+            }
+        }
+
+        catch (Exception ignored) {}
+
         return isUnique;
     }
 
@@ -133,7 +124,7 @@ public class DatabaseManager {
 
         String TAG = "Unique";
 
-        if (userUnique(user_email)) {
+        if (isUnique(user_email)) {
             Log.d(TAG, "Unique");
             final CollectionReference collectionReference = database.collection("users");
 

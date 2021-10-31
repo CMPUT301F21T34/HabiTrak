@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        /*
 
         User mainUser = null;
 
@@ -44,11 +43,6 @@ public class MainActivity extends AppCompatActivity{
                     .add(R.id.login_fragment_container, new LoginFragment(mainUser))
                     .commit();
 
-        }*/
-        DatabaseManager db = new DatabaseManager();
-        db.createNewUser("dummy@gmail.com", "Hello", "12345","");
-        User check = db.getUser("dummy@gmail.com");
-        Log.d("Check", check.getUsername());
+        }
     }
-
 }

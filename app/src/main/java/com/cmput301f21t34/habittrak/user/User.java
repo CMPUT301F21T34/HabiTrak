@@ -6,6 +6,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
@@ -21,7 +22,7 @@ import java.util.ArrayList;
  * @see Habit_Event
  * @see Habit
  */
-public class User extends Database_Pointer implements Parcelable {
+public class User extends Database_Pointer implements Serializable {
 
     // Attributes //
 
@@ -264,10 +265,11 @@ public class User extends Database_Pointer implements Parcelable {
      * @author Dakota
      * @return int 0
      */
+    /*
     @Override
     public int describeContents() {
         return 0;
-    }
+    }*/
 
     /**
      * writeToParcel
@@ -281,6 +283,7 @@ public class User extends Database_Pointer implements Parcelable {
      * @param out Parcel to be create
      * @param flags int, idk not important but required
      */
+    /*
     @Override
     public void writeToParcel(Parcel out, int flags) {
 
@@ -294,16 +297,17 @@ public class User extends Database_Pointer implements Parcelable {
         userBundle.putParcelableArrayList("habitList", habitList);
 
         // requires User to implement Parcelable (which is what this code dose)
-        /* Broken
+        // Broken
         userBundle.putParcelableArrayList("followerList", (ArrayList<? extends Parcelable>) followerList);
         userBundle.putParcelableArrayList("followingList", (ArrayList<? extends Parcelable>) followingList);
         userBundle.putParcelableArrayList("followerReqList", (ArrayList<? extends Parcelable>) followerReqList);
-         */
+
         out.writeBundle(userBundle); // writes bundle to parcel
 
     }
 
     // Creates User from parcel
+
     public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
 
         @Override
@@ -317,6 +321,6 @@ public class User extends Database_Pointer implements Parcelable {
 
             return new User[size];
         }
-    };
+    };*/
 }
 

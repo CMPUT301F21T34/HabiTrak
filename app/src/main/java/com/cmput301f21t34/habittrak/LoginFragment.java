@@ -52,19 +52,22 @@ public class LoginFragment extends Fragment {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isPasswordValid(passwordEditText.getText(), usernameEditText.getText())) {
-                    passwordLayout.setError("Incorrect password");
-                    usernameLayout.setError("Incorrect username");
+
+                passwordLayout.setError(null);
+                usernameLayout.setError(null);
+
+                if (!userExists(usernameEditText.getText())) {
+                    usernameLayout.setError("This email does not exist!");
                 }
-                else{
+                else if (!isPasswordValid(passwordEditText.getText(), usernameEditText.getText())) {
+                    passwordLayout.setError("Incorrect password!");
+                }
+                else {
                     passwordLayout.setError(null);
                     usernameLayout.setError(null);
-                    startHomePage(view);
-
+                    User currentUser = getUser(usernameEditText.getText());
+                    startHomePage(view, currentUser);
                 }
-
-
-
             }
         });
 
@@ -81,22 +84,45 @@ public class LoginFragment extends Fragment {
      * @param username username from input
      * @return passwordOk boolean if the password is valid
      */
-    public boolean isPasswordValid(@Nullable Editable password, @Nullable Editable username){
+    public boolean isPasswordValid(@Nullable Editable password, @Nullable Editable username) {
 
-        Boolean passwordOk = false;
+        DatabaseManager db = new DatabaseManager();
+
         String pass = password.toString();
         String user = username.toString();
 
+        return db.validCredentials(user, pass);
+    }
 
-        if (true) { // logic for allowing loggin in, for sake of testing is always true - Dakota
-            passwordOk = true;
+    /**
+     * userExists
+     * Checks if the given username exists in the database
+     *
+     * @param username username from input
+     * @return true if there is such a username, false otherwise
+     */
+    public boolean userExists(@Nullable Editable username) {
 
+        DatabaseManager db = new DatabaseManager();
 
+        String user = username.toString();
 
+        boolean isInDatabase = !db.isUnique(user);
+        return isInDatabase;
+    }
 
-        }
+    /**
+     * getUser
+     * Returns a User object for the given username
+     * @param username username from input
+     * @return
+     */
+    public User getUser(@Nullable Editable username) {
 
-        return passwordOk;
+        DatabaseManager db = new DatabaseManager();
+
+        String user = username.toString();
+        return db.getUser(user);
     }
 
     /**
@@ -104,9 +130,9 @@ public class LoginFragment extends Fragment {
      * Start the base activity after logging in
      * @param view
      */
-    public void startHomePage(View view){
+    public void startHomePage(View view, User currentUser){
         Intent intent = new Intent(getActivity(), BaseActivity.class);
-
+        intent.putExtra("user", currentUser);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         getActivity().finish();

@@ -236,17 +236,17 @@ public class DatabaseManager {
                 ArrayList<HashMap<String, String>> followingListMap = (ArrayList<HashMap<String, String>>) document.get("followingList");
                 followingList = toPointerList(followingListMap);
 
-                ArrayList<HashMap<String, String>> blockListMap = (ArrayList<HashMap<String, String>>) document.get("blockList");
-                blockList = toPointerList((blockListMap));
-
-                ArrayList<HashMap<String, String>> blockedByListMap = (ArrayList<HashMap<String, String>>) document.get("blockedByList");
-                blockedByList = toPointerList((blockListMap));
-
                 ArrayList<HashMap<String, String>> followReqListMap = (ArrayList<HashMap<String, String>>) document.get("followReqList");
                 followReqList = toPointerList((followReqListMap));
 
                 ArrayList<HashMap<String, String>> followRequestedListMap = (ArrayList<HashMap<String, String>>) document.get("followRequestedList");
                 followRequestedList = toPointerList((followRequestedListMap));
+
+                ArrayList<HashMap<String, String>> blockListMap = (ArrayList<HashMap<String, String>>) document.get("blockList");
+                blockList = toPointerList((blockListMap));
+
+                ArrayList<HashMap<String, String>> blockedByListMap = (ArrayList<HashMap<String, String>>) document.get("blockedByList");
+                blockedByList = toPointerList((blockedByListMap));
 
                 name = (String) document.get("Username");
                 password = (String) document.get("Password");
@@ -279,7 +279,6 @@ public class DatabaseManager {
      * @param email
      * @return username (string)
      */
-
     public String getUserName(String email) {
 
         String name = "";
@@ -371,7 +370,8 @@ public class DatabaseManager {
             DocumentSnapshot document = task.getResult();
 
             if (document.getData() != null) {
-                returnFollowerList = (ArrayList<Database_Pointer>) document.get("followerList");
+                ArrayList<HashMap<String, String>> followerListMap = (ArrayList<HashMap<String, String>>) document.get("followerList");
+                returnFollowerList = toPointerList(followerListMap);
             }
         }
         catch (Exception ignored){}
@@ -398,7 +398,8 @@ public class DatabaseManager {
             DocumentSnapshot document = task.getResult();
 
             if (document.getData() != null) {
-                returnFollowingList = (ArrayList<Database_Pointer>) document.get("followingList");
+                ArrayList<HashMap<String, String>> followingListMap = (ArrayList<HashMap<String, String>>) document.get("followingList");
+                returnFollowingList = toPointerList(followingListMap);
             }
         }
         catch (Exception ignored){}
@@ -428,7 +429,8 @@ public class DatabaseManager {
             DocumentSnapshot document = task.getResult();
 
             if (document.getData() != null) {
-                returnFollowReqList = (ArrayList<Database_Pointer>) document.get("followReqList");
+                ArrayList<HashMap<String, String>> followReqListMap = (ArrayList<HashMap<String, String>>) document.get("followReqList");
+                returnFollowReqList = toPointerList((followReqListMap));
             }
         }
         catch (Exception ignored){}
@@ -459,7 +461,8 @@ public class DatabaseManager {
             DocumentSnapshot document = task.getResult();
 
             if (document.getData() != null) {
-                returnFollowRequestedList = (ArrayList<Database_Pointer>) document.get("followRequestedList");
+                ArrayList<HashMap<String, String>> followRequestedListMap = (ArrayList<HashMap<String, String>>) document.get("followRequestedList");
+                returnFollowRequestedList = toPointerList((followRequestedListMap));
             }
         }
         catch (Exception ignored){}
@@ -490,7 +493,8 @@ public class DatabaseManager {
             DocumentSnapshot document = task.getResult();
 
             if (document.getData() != null) {
-                returnBlockList = (ArrayList<Database_Pointer>) document.get("blockList");
+                ArrayList<HashMap<String, String>> blockListMap = (ArrayList<HashMap<String, String>>) document.get("blockList");
+                returnBlockList = toPointerList((blockListMap));
             }
         }
         catch (Exception ignored){}
@@ -520,7 +524,8 @@ public class DatabaseManager {
             DocumentSnapshot document = task.getResult();
 
             if (document.getData() != null) {
-                returnBlockedByList = (ArrayList<Database_Pointer>) document.get("blockedByList");
+                ArrayList<HashMap<String, String>> blockedByListMap = (ArrayList<HashMap<String, String>>) document.get("blockedByList");
+                returnBlockedByList = toPointerList((blockedByListMap));
             }
         }
         catch (Exception ignored){}

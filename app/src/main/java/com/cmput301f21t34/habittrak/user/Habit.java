@@ -32,14 +32,6 @@ public class Habit implements Comparable<Habit>, Parcelable {
     private ArrayList<Habit_Event> habitEvents = new ArrayList<Habit_Event>();
     private boolean isPublic = false; // If other users can see this habit
 
-    // Boolean array to track which day of the week
-    // index 0 -> Monday, index 1 -> Tuesday, ... index 6 -> Sunday
-    @Deprecated
-    private final int DAYS_IN_WEEK = 7;
-    @Deprecated
-    //private boolean[] onDays = new boolean[DAYS_IN_WEEK];
-         // Amount of days in week onDays Handles
-
     private On_Days onDaysObj = new On_Days();
 
     // Enum //
@@ -55,7 +47,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
         );
     }
 
-    Habit(String title){
+    public Habit(String title){
         this.title = title;
         this.reason= "";
         this.startDate = Calendar.getInstance();
@@ -105,6 +97,10 @@ public class Habit implements Comparable<Habit>, Parcelable {
         } else {
             this.startDate = null;
         }
+
+        this.isPublic = habitBundle.getBoolean("isPublic");
+
+        this.onDaysObj = habitBundle.getParcelable("onDaysObj");
 
 
     }
@@ -499,11 +495,20 @@ public class Habit implements Comparable<Habit>, Parcelable {
      * @see Parcel
      * @see Bundle
      * @see ClassLoader
-     * @param out Parcel created
+     * @param parcel Parcel created
      * @param flags
      */
     @Override
-    public void writeToParcel(Parcel out, int flags) {
+    public void writeToParcel(Parcel parcel, int flags) {
+
+        /*
+        private int index = 0;
+    private String title, reason;
+    private Calendar startDate;
+    private ArrayList<Habit_Event> habitEvents = new ArrayList<Habit_Event>();
+    private boolean isPublic = false;
+     private On_Days onDaysObj = new On_Days();
+         */
 
         Bundle habitBundle = new Bundle(Habit.class.getClassLoader());
 
@@ -521,9 +526,11 @@ public class Habit implements Comparable<Habit>, Parcelable {
             habitBundle.putString("startDateTimeZone", null);
         }
 
+        habitBundle.putParcelable("onDaysObj", onDaysObj);
 
-        //habitBundle.putBooleanArray("onDays", onDays);
-        out.writeBundle(habitBundle);
+        habitBundle.putBoolean("isPublic", isPublic);
+
+        parcel.writeBundle(habitBundle);
     }
 
     @Override

@@ -17,7 +17,7 @@ import java.util.TimeZone;
  *
  * Habit object that a user wants to track
  *
- * @version 1.0
+ * @version 2.0
  * @since 2021-10-16
  * @see Habit
  */
@@ -41,19 +41,15 @@ public class Habit_Event implements Comparable<Habit_Event>, Parcelable {
     public Habit_Event() {
         this.comment= "";
         this.completedDate = Calendar.getInstance();
-        this.habit = new Habit();
         this.location = new Location("");
         this.photograph = new File("");
-        this.habitEventId = "";
 
     }
     public Habit_Event(String habitEventId, String comment, Calendar date, Habit habit, Location loc, File photo){
         this.photograph = photo;
         this.location = loc;
-        this.habit = habit;
         this.comment = comment;
         this.completedDate = date;
-        this.habitEventId = habitEventId;
     }
 
 
@@ -72,8 +68,7 @@ public class Habit_Event implements Comparable<Habit_Event>, Parcelable {
         Bundle habitEventBundle;
         habitEventBundle = parcel.readBundle(Habit_Event.class.getClassLoader());
 
-        this.habitEventId = habitEventBundle.getString("habitEventId");
-        this.habit = habitEventBundle.getParcelable("habit");
+
         this.comment = habitEventBundle.getString("comment");
 
         String completedDateTimeZone = habitEventBundle.getString("completedDateTimeZone");
@@ -187,18 +182,16 @@ public class Habit_Event implements Comparable<Habit_Event>, Parcelable {
      * @see Parcelable
      * @see Parcel
      * @see Bundle
-     * @param out Parcel created
+     * @param parcel Parcel created
      * @param flags
      */
     @Override
-    public void writeToParcel(Parcel out, int flags) {
+    public void writeToParcel(Parcel parcel, int flags) {
 
 
         Bundle habitEventBundle = new Bundle(Habit_Event.class.getClassLoader());
 
-        habitEventBundle.putString("habitEventId", habitEventId);
         habitEventBundle.putString("comment", comment);
-        habitEventBundle.putParcelable("habit", habit);
 
 
 
@@ -219,7 +212,7 @@ public class Habit_Event implements Comparable<Habit_Event>, Parcelable {
 
 
 
-        out.writeBundle(habitEventBundle);
+        parcel.writeBundle(habitEventBundle);
     }
 
 

@@ -1,8 +1,9 @@
 package com.cmput301f21t34.habittrak.user;
 
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
-
-import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
@@ -18,11 +19,25 @@ import java.util.ArrayList;
  * @see ArrayList
  * @see Habit
  */
-class Habit_List extends ArrayList<Habit> {
+class Habit_List extends ArrayList<Habit> implements Parcelable {
 
     Habit_List(){
         super();
     }
+
+    protected Habit_List(Parcel parcel) {
+
+        // Gets the bundle
+        Bundle habitListBundle = parcel.readBundle(Habit_List.class.getClassLoader());
+
+        // Gets the arraylist
+        ArrayList<Habit> habitArrayList = habitListBundle.getParcelableArrayList("habitList");
+
+        // Adds all in the array list to this
+        this.addAll(habitArrayList);
+
+    }
+
 
     public void saveOrder(){
         int size = this.size();
@@ -119,5 +134,33 @@ class Habit_List extends ArrayList<Habit> {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+
+        // Casts Habit_List to ArrayList for parceling
+        Habit_List habitList = this;
+
+        Bundle habitListBundle = new Bundle(this.getClass().getClassLoader());
+        habitListBundle.putParcelableArrayList("habitList", habitList);
+
+        parcel.writeBundle(habitListBundle);
+
+    }
+
+    public static final Creator<Habit_List> CREATOR = new Creator<Habit_List>() {
+        @Override
+        public Habit_List createFromParcel(Parcel in) {
+            return new Habit_List(in);
+        }
+
+        @Override
+        public Habit_List[] newArray(int size) {
+            return new Habit_List[size];
+        }
+    };
 }

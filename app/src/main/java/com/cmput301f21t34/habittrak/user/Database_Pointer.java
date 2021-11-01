@@ -1,5 +1,8 @@
 package com.cmput301f21t34.habittrak.user;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Database_Pointer
  *
@@ -11,7 +14,7 @@ package com.cmput301f21t34.habittrak.user;
  * @since 2021-10-27
  * @see User
  */
-public class Database_Pointer {
+public class Database_Pointer implements Parcelable {
 
     private final String email; // id can only be assigned once
 
@@ -23,10 +26,16 @@ public class Database_Pointer {
     }
 
 
+    protected Database_Pointer(Parcel parcel) {
+        email = parcel.readString();
+    }
+
+
+
     /**
-     * getID
+     * getEmail
      *
-     * gets the id of the follow object
+     * gets the email of the follow object
      *
      * @author Dakota
      * @return String id of a particular user
@@ -35,14 +44,28 @@ public class Database_Pointer {
         return this.email;
     }
 
-    /**
-     * isApproved
-     *
-     * gets is a user is approved or not
-     *
-     * @author Dakota
-     * @return boolean true if user is approved, false if not
-     */
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeString(email);
+    }
+
+    public static final Creator<Database_Pointer> CREATOR = new Creator<Database_Pointer>() {
+        @Override
+        public Database_Pointer createFromParcel(Parcel in) {
+            return new Database_Pointer(in);
+        }
+
+        @Override
+        public Database_Pointer[] newArray(int size) {
+            return new Database_Pointer[size];
+        }
+    };
 
 
 }

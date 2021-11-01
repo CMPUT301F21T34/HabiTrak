@@ -73,7 +73,6 @@ public class SearchFragment extends Fragment {
     public void showMenu(View view, int userPosition) {
         PopupMenu menu = new PopupMenu(getContext(), view);
         menu.getMenuInflater().inflate(R.menu.social_popup_menu, menu.getMenu());
-        menu.getMenu().add("Remove");
         menu.getMenu().add("Block");
         Log.d("image Button", "menu button clicked");
         menu.show();

@@ -41,5 +41,30 @@ public class Database_Pointer {
      * @return boolean true if user is approved, false if not
      */
 
+    /**
+     * custom hashCode() and equals() for Database_Pointer
+     *
+     * Reference: https://stackoverflow.com/a/17801750
+     * @return
+     */
+    @Override
+    public int hashCode() {
+        return email.hashCode();
+    }
 
+    // equals Implementation
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Database_Pointer other = (Database_Pointer) obj;
+        if (email != other.getEmail())
+            return false;
+        return true;
+    }
 }

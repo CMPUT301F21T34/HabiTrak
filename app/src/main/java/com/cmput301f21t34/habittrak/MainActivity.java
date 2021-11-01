@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        /*
         User mainUser = null;
 
         if (savedInstanceState != null) {
@@ -45,6 +45,11 @@ public class MainActivity extends AppCompatActivity{
                     .beginTransaction()
                     .add(R.id.login_fragment_container, new LoginFragment(mainUser))
                     .commit();
-        }
+        }*/
+        DatabaseManager db = new DatabaseManager();
+        db.createNewUser("dummy@gmail.com", "dummy", "1234", "biobio");
+        db.createNewUser("pog@gmail.com", "pog", "12345", "bio");
+        User user = db.getUser("dummy@gmail.com");
+        db.addFollower(user, new Database_Pointer("pog@gmail.com"));
     }
 }

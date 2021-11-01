@@ -22,13 +22,17 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -286,7 +290,7 @@ public class DatabaseManager {
     /**
      * getUserName
      * gets the user bio of the provided email
-     * 
+     *
      * @author Tauseef
      * @param email
      * @return
@@ -527,13 +531,72 @@ public class DatabaseManager {
     }
     */
     /**
-     * addfollower
-     * email2 is now a follower of email1 (so add email2 to the follower list of email1 and add email1 to the following list of email2)
-     * @param email1
-     * @param email2
+     * addFollower
+     * email is now a follower of user (so add email to the follower list of user and add user to the following list of email2)
+     * @param user
+     * @param toBeAdded
      */
 
-    //public void addfollower(User user1, String email2){}
+    public void addFollower(User user, Database_Pointer toBeAdded) {
+        // Update user
+        DocumentReference userRef = database.collection("users").document(user.getEmail());
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        ArrayList<Database_Pointer> followerList = new ArrayList<>();
+                        followerList = (ArrayList<Database_Pointer>) document.get("followerList");
+                        // Updates only if follower is not already in the list
+                        if (!followerList.contains(toBeAdded)) {
+                            Log.d("Contains", "does not");
+                            List<String> fieldsToUpdate = new ArrayList<>();
+                            fieldsToUpdate.add("followerList");
+
+                            followerList.add(toBeAdded);
+
+                            HashMap<String, Object> data = new HashMap<>();
+                            data.put("followerList", followerList);
+                            userRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
+                        }
+                    }
+                } else {
+                    Log.d("Task", "get failed with ", task.getException());
+                }
+            }
+        });
+
+        // Update toBeAdded
+        DocumentReference addedRef = database.collection("users").document(toBeAdded.getEmail());
+        addedRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        ArrayList<Database_Pointer> followingList = new ArrayList<>();
+                        followingList = (ArrayList<Database_Pointer>) document.get("followingList");
+                        Database_Pointer following = new Database_Pointer(user.getEmail());
+                        // Updates only if following is not already in the list
+                        if (!followingList.contains(following)) {
+                            Log.d("Contains", "does not");
+                            List<String> fieldsToUpdate = new ArrayList<>();
+                            fieldsToUpdate.add("followingList");
+
+                            followingList.add(following);
+
+                            HashMap<String, Object> data = new HashMap<>();
+                            data.put("followingList", followingList);
+                            addedRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
+                        }
+                    }
+                } else {
+                    Log.d("Task", "get failed with ", task.getException());
+                }
+            }
+        });
+    }
     /**
      * addfollow req
      * email1 asked to follow email2 (so add email2 to the followerReq list of email1 and add email1 to the followerRequested list of email2)

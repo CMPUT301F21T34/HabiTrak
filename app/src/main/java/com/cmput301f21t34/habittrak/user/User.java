@@ -143,6 +143,7 @@ public class User extends Database_Pointer implements Serializable {
     public String getPassword() {
         return password;
     }
+    public String getEmail() { return super.getEmail(); }
 
     public ArrayList<Habit> getHabitList() {
         return habitList;
@@ -322,5 +323,6 @@ public class User extends Database_Pointer implements Serializable {
             return new User[size];
         }
     };*/
+
 }
 

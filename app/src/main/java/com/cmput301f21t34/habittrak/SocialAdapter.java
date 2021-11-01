@@ -24,6 +24,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
     private final ArrayList<User> profiles;
     private final ClickListener listener;
     private final boolean buttonVisibility;
+    private final String buttonText;
 
     public interface ClickListener{
         void menuButtonOnClick(View view, int position);
@@ -79,14 +80,17 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
             mainButton.setVisibility(View.INVISIBLE);
         }
 
+        public void setButtonText(String text){mainButton.setText(text);}
+
     }
 
 
 
-    public SocialAdapter(ArrayList<User> users, ClickListener listener, boolean visible){
+    public SocialAdapter(ArrayList<User> users, ClickListener listener, boolean visible, String buttonText){
         this.profiles = users;
         this.listener = listener;
         this.buttonVisibility = visible;
+        this.buttonText = buttonText;
     }
 
     @NonNull
@@ -105,6 +109,8 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         holder.getUsername().setText(user.getUsername());
         holder.getUserBio().setText(user.getUsername());
         holder.listenerRef = this.listener;
+        holder.setButtonText(buttonText);
+
         if (buttonVisibility){
             holder.makeButtonVisible();
         }

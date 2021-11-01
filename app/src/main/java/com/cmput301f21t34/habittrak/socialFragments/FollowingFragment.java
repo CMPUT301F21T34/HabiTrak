@@ -62,7 +62,7 @@ public class FollowingFragment extends Fragment {
             public void mainButtonOnClick(View view, int position) {
                 // empty button not used.
             }
-        }, false);
+        }, false, "null");
         recyclerView.setAdapter(socialAdapter);
 
         return view;

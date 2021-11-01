@@ -1,5 +1,6 @@
 package com.cmput301f21t34.habittrak;
 
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -45,7 +46,6 @@ public class DatabaseManager {
     public DatabaseManager() {
         database = FirebaseFirestore.getInstance();
         userList = new ArrayList<Database_Pointer>();
-
     }
 
     /**
@@ -79,6 +79,24 @@ public class DatabaseManager {
         catch (Exception ignored) {}
 
         return validCredentials;
+    }
+
+    public ArrayList<Database_Pointer> getAllUsers() {
+
+        ArrayList<Database_Pointer> users = new ArrayList<>();
+
+        try {
+            Task<QuerySnapshot> task = database.collection("users").get();
+
+            while (!task.isComplete()) ;
+
+            for (QueryDocumentSnapshot document : task.getResult()) {
+                users.add(new Database_Pointer(document.getId().toString()));
+            }
+        }
+        catch (Exception ignored) {}
+
+        return users;
     }
 
     /**
@@ -128,7 +146,7 @@ public class DatabaseManager {
             HashMap<String, Object> data = new HashMap<>();
             data.put("Password", password);
             data.put("Username", username);
-            data.put("Biography",biography);
+            data.put("Biography", biography);
             data.put("habitList", new ArrayList<Habit>());
             data.put("followerList", new ArrayList<Database_Pointer>());
             data.put("followingList", new ArrayList<Database_Pointer>());
@@ -187,7 +205,6 @@ public class DatabaseManager {
      * @param email
      * @return User
      */
-    // TODO: DO NOT USE THIS CLASS. It currently returns a dummy user BEFORE data is read from firestore
     public User getUser(String email) {
         User user;
 
@@ -242,12 +259,16 @@ public class DatabaseManager {
     /**
      * getUserName
      * gets the user name of the provided email
+     *
+     * @author Tauseef
      * @param email
      * @return username (string)
      */
 
     public String getUserName(String email) {
+
         String name = "";
+
         try {
             DocumentReference docref = database.collection("users").document(email);
             Task<DocumentSnapshot> task = docref.get();
@@ -261,8 +282,19 @@ public class DatabaseManager {
         catch (Exception ignored){}
         return name;
     }
+
+    /**
+     * getUserName
+     * gets the user bio of the provided email
+     * 
+     * @author Tauseef
+     * @param email
+     * @return
+     */
     public String getUserBio(String email) {
+
         String bio = "";
+
         try {
             DocumentReference docref = database.collection("users").document(email);
             Task<DocumentSnapshot> task = docref.get();
@@ -280,12 +312,16 @@ public class DatabaseManager {
     /**
      * getHabitList
      * gets the habit list of the provided user email
+     *
+     * @author Tauseef
      * @param email
      * @return habitList
      */
 
     public ArrayList<Habit> getHabitList(String email) {
+
         ArrayList<Habit> returnHabitList = new ArrayList<Habit>();
+
         try {
             DocumentReference docref = database.collection("users").document(email);
             Task<DocumentSnapshot> task = docref.get();
@@ -303,12 +339,16 @@ public class DatabaseManager {
     /**
      * getFollowerList
      * gets the follower list of the provided email
+     *
+     * @author Tauseef
      * @param email
      * @return Follower list
      */
 
     public ArrayList<Database_Pointer> getFollowerList(String email) {
+
         ArrayList<Database_Pointer> returnFollowerList = new ArrayList<Database_Pointer>();
+
         try {
             DocumentReference docref = database.collection("users").document(email);
             Task<DocumentSnapshot> task = docref.get();
@@ -326,12 +366,16 @@ public class DatabaseManager {
     /**
      * getFollowingList
      * gets the following list of the provided email
+     *
+     * @author Tauseef
      * @param email
      * @return Following list
      */
 
     public ArrayList<Database_Pointer> getFollowingList(String email ){
+
         ArrayList<Database_Pointer> returnFollowingList = new ArrayList<Database_Pointer>();
+
         try {
             DocumentReference docref = database.collection("users").document(email);
             Task<DocumentSnapshot> task = docref.get();
@@ -352,13 +396,16 @@ public class DatabaseManager {
      * the main user(the one with the id) has requested to follow)
      * Example: user 1 has requested to follow user 2 and user 3 then this function will return user 2 and user 3
      * the input is user 1 email
-     * *** I can change this function to do the opposite if needed
+     *
+     * @author Tauseef
      * @param email
      * @return follow req list
      */
 
     public ArrayList<Database_Pointer> getFollowReqList(String email) {
+
         ArrayList<Database_Pointer> returnFollowReqList = new ArrayList<Database_Pointer>();
+
         try {
             DocumentReference docref = database.collection("users").document(email);
             Task<DocumentSnapshot> task = docref.get();
@@ -380,13 +427,16 @@ public class DatabaseManager {
      * that have requested to follow the main user(the one with the id)
      * Example: user 2 and user 3 has requested to follow user 1 then this function will return user 2 and user 3
      * the input is user 1 email
-     * I can change this function to do the opposite if needed
+     *
+     * @author Tauseef
      * @param email
      * @return
      */
 
     public ArrayList<Database_Pointer> getFollowRequestedList(String email) {
+
         ArrayList<Database_Pointer> returnFollowRequestedList = new ArrayList<Database_Pointer>();
+
         try {
             DocumentReference docref = database.collection("users").document(email);
             Task<DocumentSnapshot> task = docref.get();
@@ -408,13 +458,16 @@ public class DatabaseManager {
      * that the user have blocked
      * Example: user 2 and user 3 has been blocked by user 1 then this function will return user 2 and user 3
      * the input is user 1 email
-     * I can change this function to do the opposite if needed
+     *
+     * @author Tauseef
      * @param email
      * @return
      */
 
     public ArrayList<Database_Pointer> getBlockList(String email) {
+
         ArrayList<Database_Pointer> returnBlockList = new ArrayList<Database_Pointer>();
+
         try {
             DocumentReference docref = database.collection("users").document(email);
             Task<DocumentSnapshot> task = docref.get();
@@ -435,13 +488,16 @@ public class DatabaseManager {
      * that have requested to follow the main user(the one with the id)
      * Example: user 2 and user 3 has requested to follow user 1 then this function will return user 2 and user 3
      * the input is user 1 email
-     * I can change this function to do the opposite if needed
+     *
+     * @author Tauseef
      * @param email
      * @return
      */
 
     public ArrayList<Database_Pointer> getBlockedByList(String email) {
+
         ArrayList<Database_Pointer> returnBlockedByList = new ArrayList<Database_Pointer>();
+
         try {
             DocumentReference docref = database.collection("users").document(email);
             Task<DocumentSnapshot> task = docref.get();

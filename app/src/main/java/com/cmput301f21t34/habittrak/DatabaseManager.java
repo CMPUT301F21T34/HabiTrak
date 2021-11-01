@@ -242,126 +242,109 @@ public class DatabaseManager {
     /**
      * getUserName
      * gets the user name of the provided email
-     * @param user_email
+     * @param email
      * @return username (string)
      */
-    /*
-    public String getUserName(String user_email) {
-        DatabaseReference usersReference = database.getReference("users");
-        username = "";
-        usersReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot ds: snapshot.getChildren()){
-                    if (ds.child("userInfo").child("email").getValue(String.class).equals(user_email)){
-                        username = ds.child("userInfo").child("name").getValue(String.class);
-                    }
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+    public String getUserName(String email) {
+        String name = "";
+        try {
+            DocumentReference docref = database.collection("users").document(email);
+            Task<DocumentSnapshot> task = docref.get();
+            while (!task.isComplete()) ;
+            DocumentSnapshot document = task.getResult();
 
+            if (document.getData() != null) {
+                name = (String) document.get("Username");
             }
-        });
-        return username;
-    }*/
+        }
+        catch (Exception ignored){}
+        return name;
+    }
+    public String getUserBio(String email) {
+        String bio = "";
+        try {
+            DocumentReference docref = database.collection("users").document(email);
+            Task<DocumentSnapshot> task = docref.get();
+            while (!task.isComplete()) ;
+            DocumentSnapshot document = task.getResult();
+
+            if (document.getData() != null) {
+                bio = (String) document.get("Biography");
+            }
+        }
+        catch (Exception ignored){}
+        return bio;
+    }
 
     /**
      * getHabitList
      * gets the habit list of the provided user email
-     * @param user_email
+     * @param email
      * @return habitList
      */
-    /*
-    public ArrayList<Habit> getHabitList(String user_email) {
-        DatabaseReference usersReference = database.getReference("users");
-        // returns empty list if no habit exists
-        returnHabitList.clear();
 
-        usersReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+    public ArrayList<Habit> getHabitList(String email) {
+        ArrayList<Habit> returnHabitList = new ArrayList<Habit>();
+        try {
+            DocumentReference docref = database.collection("users").document(email);
+            Task<DocumentSnapshot> task = docref.get();
+            while (!task.isComplete()) ;
+            DocumentSnapshot document = task.getResult();
 
-                for(DataSnapshot ds: snapshot.getChildren()) {
-                    if (ds.child("userInfo").child("email").getValue(String.class).equals(user_email)) {
-                        for (DataSnapshot dataSnapshot: ds.child("Habits").getChildren()) {
-                            returnHabitList.add(dataSnapshot.getValue(Habit.class));
-                        }
-                    }
-                }
+            if (document.getData() != null) {
+                returnHabitList = (ArrayList<Habit>) document.get("habitList");
             }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-
+        }
+        catch (Exception ignored){}
         return returnHabitList;
-    }*/
+    }
 
     /**
      * getFollowerList
      * gets the follower list of the provided email
-     * @param user_email
+     * @param email
      * @return Follower list
      */
-    /*
-    public ArrayList<Database_Pointer> getFollowerList(String user_email) {
-        DatabaseReference usersReference = database.getReference("users");
-        // returns empty list if no habit exists
-        returnFollowerList.clear();
 
-        usersReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+    public ArrayList<Database_Pointer> getFollowerList(String email) {
+        ArrayList<Database_Pointer> returnFollowerList = new ArrayList<Database_Pointer>();
+        try {
+            DocumentReference docref = database.collection("users").document(email);
+            Task<DocumentSnapshot> task = docref.get();
+            while (!task.isComplete()) ;
+            DocumentSnapshot document = task.getResult();
 
-                for(DataSnapshot ds: snapshot.getChildren()){
-                    if(ds.child("userInfo").child("email").getValue(String.class).equals(user_email)) {
-                        for(DataSnapshot dataSnapshot: ds.child("Followers").getChildren()){
-                            returnFollowerList.add(new Database_Pointer(dataSnapshot.getValue(String.class)));
-                        }
-                    }
-                }
+            if (document.getData() != null) {
+                returnFollowerList = (ArrayList<Database_Pointer>) document.get("followerList");
             }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-
+        }
+        catch (Exception ignored){}
         return returnFollowerList;
-    }*/
+    }
 
     /**
      * getFollowingList
      * gets the following list of the provided email
-     * @param user_email
+     * @param email
      * @return Following list
      */
-    /*
-    public ArrayList<Database_Pointer> getFollowingList(String user_email ){
-        DatabaseReference usersReference = database.getReference("users");
-        // returns empty list if no habit exists
-        returnFollowingList.clear();
 
-        usersReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+    public ArrayList<Database_Pointer> getFollowingList(String email ){
+        ArrayList<Database_Pointer> returnFollowingList = new ArrayList<Database_Pointer>();
+        try {
+            DocumentReference docref = database.collection("users").document(email);
+            Task<DocumentSnapshot> task = docref.get();
+            while (!task.isComplete()) ;
+            DocumentSnapshot document = task.getResult();
 
-                for(DataSnapshot ds: snapshot.getChildren()){
-                    if(ds.child("userInfo").child("email").getValue(String.class).equals(user_email)){
-                        for(DataSnapshot dataSnapshot: ds.child("Followings").getChildren()){
-                            returnFollowingList.add(new Database_Pointer(dataSnapshot.getValue(String.class)));
-                        }
-                    }
-                }
+            if (document.getData() != null) {
+                returnFollowingList = (ArrayList<Database_Pointer>) document.get("followingList");
             }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-
+        }
+        catch (Exception ignored){}
         return returnFollowingList;
-    }*/
+        }
 
     /**
      * getFollowReqList
@@ -370,34 +353,26 @@ public class DatabaseManager {
      * Example: user 1 has requested to follow user 2 and user 3 then this function will return user 2 and user 3
      * the input is user 1 email
      * *** I can change this function to do the opposite if needed
-     * @param user_email
+     * @param email
      * @return follow req list
      */
-    /*
-    public ArrayList<Database_Pointer> getFollowReqList(String user_email) {
-        DatabaseReference usersReference = database.getReference("users");
-        // returns empty list if no habit exists
-        returnFollowReqList.clear();
 
-        usersReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+    public ArrayList<Database_Pointer> getFollowReqList(String email) {
+        ArrayList<Database_Pointer> returnFollowReqList = new ArrayList<Database_Pointer>();
+        try {
+            DocumentReference docref = database.collection("users").document(email);
+            Task<DocumentSnapshot> task = docref.get();
+            while (!task.isComplete()) ;
+            DocumentSnapshot document = task.getResult();
 
-                for(DataSnapshot ds: snapshot.getChildren()){
-                    if(ds.child("userInfo").child("email").getValue(String.class).equals(user_email)) {
-                        for(DataSnapshot dataSnapshot: ds.child("FollowReqs").getChildren()){
-                            returnFollowReqList.add(new Database_Pointer(dataSnapshot.getValue(String.class)));
-                        }
-                    }
-                }
+            if (document.getData() != null) {
+                returnFollowReqList = (ArrayList<Database_Pointer>) document.get("followReqList");
             }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-
+        }
+        catch (Exception ignored){}
         return returnFollowReqList;
-    }*/
+        }
+
 
     /**
      * getFollowRequestedList
@@ -406,34 +381,26 @@ public class DatabaseManager {
      * Example: user 2 and user 3 has requested to follow user 1 then this function will return user 2 and user 3
      * the input is user 1 email
      * I can change this function to do the opposite if needed
-     * @param user_email
+     * @param email
      * @return
      */
-    /*
-    public ArrayList<Database_Pointer> getFollowRequestedList(String user_email) {
-        DatabaseReference usersReference = database.getReference("users");
-        // returns empty list if no habit exists
-        returnFollowRequestedList.clear();
 
-        usersReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+    public ArrayList<Database_Pointer> getFollowRequestedList(String email) {
+        ArrayList<Database_Pointer> returnFollowRequestedList = new ArrayList<Database_Pointer>();
+        try {
+            DocumentReference docref = database.collection("users").document(email);
+            Task<DocumentSnapshot> task = docref.get();
+            while (!task.isComplete()) ;
+            DocumentSnapshot document = task.getResult();
 
-                for(DataSnapshot ds: snapshot.getChildren()){
-                    if(ds.child("userInfo").child("email").getValue(String.class).equals(user_email)) {
-                        for(DataSnapshot dataSnapshot: ds.child("FollowRequesteds").getChildren()){
-                            returnFollowRequestedList.add(new Database_Pointer(dataSnapshot.getValue(String.class)));
-                        }
-                    }
-                }
+            if (document.getData() != null) {
+                returnFollowRequestedList = (ArrayList<Database_Pointer>) document.get("followRequestedList");
             }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-
+        }
+        catch (Exception ignored){}
         return returnFollowRequestedList;
-    }*/
+    }
+
 
     /**
      * getBlockList
@@ -442,34 +409,25 @@ public class DatabaseManager {
      * Example: user 2 and user 3 has been blocked by user 1 then this function will return user 2 and user 3
      * the input is user 1 email
      * I can change this function to do the opposite if needed
-     * @param user_email
+     * @param email
      * @return
      */
-    /*
-    public ArrayList<Database_Pointer> getBlockList(String user_email) {
-        DatabaseReference usersReference = database.getReference("users");
-        // returns empty list if no habit exists
-        returnBlockList.clear();
 
-        usersReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+    public ArrayList<Database_Pointer> getBlockList(String email) {
+        ArrayList<Database_Pointer> returnBlockList = new ArrayList<Database_Pointer>();
+        try {
+            DocumentReference docref = database.collection("users").document(email);
+            Task<DocumentSnapshot> task = docref.get();
+            while (!task.isComplete()) ;
+            DocumentSnapshot document = task.getResult();
 
-                for(DataSnapshot ds: snapshot.getChildren()){
-                    if(ds.child("userInfo").child("email").getValue(String.class).equals(user_email)) {
-                        for(DataSnapshot dataSnapshot: ds.child("BlockList").getChildren()){
-                            returnBlockList.add(new Database_Pointer(dataSnapshot.getValue(String.class)));
-                        }
-                    }
-                }
+            if (document.getData() != null) {
+                returnBlockList = (ArrayList<Database_Pointer>) document.get("blockList");
             }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-
+        }
+        catch (Exception ignored){}
         return returnBlockList;
-    }*/
+    }
 
     /**
      * getBlockedByList
@@ -478,34 +436,25 @@ public class DatabaseManager {
      * Example: user 2 and user 3 has requested to follow user 1 then this function will return user 2 and user 3
      * the input is user 1 email
      * I can change this function to do the opposite if needed
-     * @param user_email
+     * @param email
      * @return
      */
-    /*
-    public ArrayList<Database_Pointer> getBlockedByList(String user_email) {
-        DatabaseReference usersReference = database.getReference("users");
-        // returns empty list if no habit exists
-        returnBlockedByList.clear();
 
-        usersReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+    public ArrayList<Database_Pointer> getBlockedByList(String email) {
+        ArrayList<Database_Pointer> returnBlockedByList = new ArrayList<Database_Pointer>();
+        try {
+            DocumentReference docref = database.collection("users").document(email);
+            Task<DocumentSnapshot> task = docref.get();
+            while (!task.isComplete()) ;
+            DocumentSnapshot document = task.getResult();
 
-                for(DataSnapshot ds: snapshot.getChildren()){
-                    if(ds.child("userInfo").child("email").getValue(String.class).equals(user_email)) {
-                        for(DataSnapshot dataSnapshot: ds.child("BlockedByList").getChildren()){
-                            returnBlockedByList.add(new Database_Pointer(dataSnapshot.getValue(String.class)));
-                        }
-                    }
-                }
+            if (document.getData() != null) {
+                returnBlockedByList = (ArrayList<Database_Pointer>) document.get("blockedByList");
             }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-
+        }
+        catch (Exception ignored){}
         return returnBlockedByList;
-    }*/
+    }
     /**
      * setHabitListDb
      * sets the habit list in the database
@@ -528,7 +477,7 @@ public class DatabaseManager {
      * @param email2
      */
 
-    //public void addfollower(String email1, String email2){}
+    //public void addfollower(User user1, String email2){}
     /**
      * addfollow req
      * email1 asked to follow email2 (so add email2 to the followerReq list of email1 and add email1 to the followerRequested list of email2)

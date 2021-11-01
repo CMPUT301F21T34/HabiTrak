@@ -58,7 +58,12 @@ public class FollowersFragment extends Fragment {
             @Override
             public void menuButtonOnClick(View view, int position) {
                 Log.d("Menu", "Clicked " + Integer.toString(position));
-                showMenu(view);
+                showMenu(view, position);
+            }
+
+            @Override
+            public void mainButtonOnClick(View view, int position) {
+                // empty button not used.
             }
         }, false);
         recyclerView.setAdapter(socialAdapter);
@@ -67,10 +72,23 @@ public class FollowersFragment extends Fragment {
         return view;
     }
 
-    public void showMenu(View view) {
+    public void showMenu(View view, int userPosition) {
         PopupMenu menu = new PopupMenu(getContext(), view);
         menu.getMenuInflater().inflate(R.menu.social_popup_menu, menu.getMenu());
+        menu.getMenu().add("Remove");
+        menu.getMenu().add("Block");
         Log.d("image Button", "menu button clicked");
         menu.show();
+
+
+        menu.setOnMenuItemClickListener(menuItem -> {
+            if (menuItem.getTitle().equals("Remove")){
+                Log.d("MenuItem", "Remove Clicked");
+            }
+            else{
+                Log.d("MenuItem", "Block Clicked");
+            }
+            return true;
+        });
     }
 }

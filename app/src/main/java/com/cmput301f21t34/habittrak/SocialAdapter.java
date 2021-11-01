@@ -1,22 +1,16 @@
 package com.cmput301f21t34.habittrak;
 
-import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 //TODO: Send menu options in the adapter itself
@@ -33,6 +27,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
 
     public interface ClickListener{
         void menuButtonOnClick(View view, int position);
+        void mainButtonOnClick(View view, int position);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -124,10 +119,5 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         return profiles.size();
     }
 
-    public void ButtonVisibility(boolean visible){
-        if (visible){
-
-        }
-    }
 
 }

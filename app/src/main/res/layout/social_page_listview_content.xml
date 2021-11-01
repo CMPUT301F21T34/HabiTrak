@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_toStartOf="@+id/social_menu"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="16dp"
             android:text="Follow" />
 
         <ImageButton

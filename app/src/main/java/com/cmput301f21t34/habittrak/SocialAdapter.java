@@ -45,6 +45,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
             menuButton = (ImageButton) view.findViewById(R.id.social_menu);
             userBio = (TextView) view.findViewById(R.id.social_user_bio);
             menuButton.setOnClickListener(this);
+            mainButton.setOnClickListener(this);
         }
 
 
@@ -67,10 +68,15 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         @Override
         public void onClick(View view) {
             if (listenerRef != null){
-                listenerRef.menuButtonOnClick(view, getAdapterPosition());
+                if (view.getId() == R.id.social_main_button) {
+                    listenerRef.mainButtonOnClick(view, getAdapterPosition());
+                }
+                else if (view.getId() == R.id.social_menu) {
+                    listenerRef.menuButtonOnClick(view, getAdapterPosition());
+                }
             }
-
         }
+
 
         public void makeButtonVisible(){
             mainButton.setVisibility(View.VISIBLE);

@@ -1,5 +1,8 @@
 package com.cmput301f21t34.habittrak.user;
 
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import java.util.Calendar;
@@ -14,8 +17,8 @@ import java.util.Calendar;
  *
  */
 
-//TODO, implement parcelable
-public class On_Days {
+
+public class On_Days implements Parcelable {
 
 
 
@@ -42,6 +45,21 @@ public class On_Days {
         this.sun = true;
     }
 
+    // Constructing from a parcel
+    On_Days(Parcel parcel){
+
+        Bundle onDaysBundle = parcel.readBundle(this.getClass().getClassLoader()); // get bundle
+        boolean[] onDays = onDaysBundle.getBooleanArray("onDays");
+
+        this.mon = onDays[0];
+        this.tue = onDays[1];
+        this.wed = onDays[2];
+        this.thu = onDays[3];
+        this.fri = onDays[4];
+        this.sat = onDays[5];
+        this.sun = onDays[6];
+
+    }
 
     /** get
      *
@@ -355,10 +373,36 @@ public class On_Days {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
 
+        Bundle onDaysBundle = new Bundle(this.getClass().getClassLoader()); // Create a new bundle
+        onDaysBundle.putBooleanArray // Writes the vals as a bool array
+                ("onDays",new boolean[]{mon, tue, wed, thu, fri, sat, sun});
+        parcel.writeBundle(onDaysBundle); // Writes to parcel
 
+    }
 
+    // Creates User from parcel
+    public static final Parcelable.Creator<On_Days> CREATOR = new Parcelable.Creator<On_Days>() {
+
+        @Override
+        public On_Days createFromParcel(Parcel in) {
+
+            return new On_Days(in);
+        }
+
+        @Override
+        public On_Days[] newArray(int size) {
+
+            return new On_Days[size];
+        }
+    };
 }
 
 

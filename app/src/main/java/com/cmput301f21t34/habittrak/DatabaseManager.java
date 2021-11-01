@@ -62,9 +62,7 @@ public class DatabaseManager {
     public boolean validCredentials(String email, String password) {
 
         boolean validCredentials = false;
-
-        String TAG = "ValidCredentials";
-
+        
         final CollectionReference collectionReference = database.collection("users");
 
         try {

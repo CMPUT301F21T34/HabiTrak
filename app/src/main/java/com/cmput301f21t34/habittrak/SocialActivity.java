@@ -1,7 +1,9 @@
 package com.cmput301f21t34.habittrak;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -41,6 +43,12 @@ public class SocialActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_social);
+
+        // add back button to toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.social_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         // setting views
         socialTab = findViewById(R.id.social_tab_layout);
@@ -122,4 +130,9 @@ public class SocialActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 }

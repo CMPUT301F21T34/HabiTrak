@@ -47,9 +47,10 @@ public class MainActivity extends AppCompatActivity{
                     .commit();
         }*/
         DatabaseManager db = new DatabaseManager();
-        db.createNewUser("dummy@gmail.com", "dummy", "1234", "biobio");
-        db.createNewUser("pog@gmail.com", "pog", "12345", "bio");
-        User user = db.getUser("dummy@gmail.com");
-        db.addFollower(user, new Database_Pointer("pog@gmail.com"));
+        User user = db.getUser("pog@gmail.com");
+        String TAG ="Checkchek";
+
+        Log.d(TAG,user.getUsername());
+        Log.d(TAG,user.getFollowingList().get(1).getEmail());
     }
 }

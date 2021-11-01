@@ -45,11 +45,9 @@ import java.util.concurrent.CountDownLatch;
 
 public class DatabaseManager {
     private FirebaseFirestore database;
-    private ArrayList<Database_Pointer> userList;
 
     public DatabaseManager() {
         database = FirebaseFirestore.getInstance();
-        userList = new ArrayList<Database_Pointer>();
     }
 
     /**
@@ -230,13 +228,26 @@ public class DatabaseManager {
             DocumentSnapshot document = task.getResult();
 
             if (document.getData() != null) {
-                habitList = (ArrayList<Habit>) document.get("habitList");
-                followerList = (ArrayList<Database_Pointer>) document.get("followerList");
-                followingList = (ArrayList<Database_Pointer>) document.get("followingList");
-                blockList = (ArrayList<Database_Pointer>) document.get("blockList");
-                blockedByList = (ArrayList<Database_Pointer>) document.get("blockedByList");
-                followReqList = (ArrayList<Database_Pointer>) document.get("followReqList");
-                followRequestedList= (ArrayList<Database_Pointer>) document.get("followRequestedList");
+                Log.d("getData", "not null");
+                // ArrayList<Map<Integer, Habit>> habitListMap = (ArrayList<Map<Integer, Habit>>) document.get("habitList");
+                ArrayList<HashMap<String, String>> followerListMap = (ArrayList<HashMap<String, String>>) document.get("followerList");
+                followerList = toPointerList(followerListMap);
+
+                ArrayList<HashMap<String, String>> followingListMap = (ArrayList<HashMap<String, String>>) document.get("followingList");
+                followingList = toPointerList(followingListMap);
+
+                ArrayList<HashMap<String, String>> blockListMap = (ArrayList<HashMap<String, String>>) document.get("blockList");
+                blockList = toPointerList((blockListMap));
+
+                ArrayList<HashMap<String, String>> blockedByListMap = (ArrayList<HashMap<String, String>>) document.get("blockedByList");
+                blockedByList = toPointerList((blockListMap));
+
+                ArrayList<HashMap<String, String>> followReqListMap = (ArrayList<HashMap<String, String>>) document.get("followReqList");
+                followReqList = toPointerList((followReqListMap));
+
+                ArrayList<HashMap<String, String>> followRequestedListMap = (ArrayList<HashMap<String, String>>) document.get("followRequestedList");
+                followRequestedList = toPointerList((followRequestedListMap));
+
                 name = (String) document.get("Username");
                 password = (String) document.get("Password");
                 bio = (String) document.get("Biography");
@@ -625,10 +636,16 @@ public class DatabaseManager {
 
     /**
      * changeUserName
-     * @param email
-     * @param username
      */
     //public void changeUsername(String email, String username)
 
-
+    public ArrayList<Database_Pointer> toPointerList(ArrayList<HashMap<String, String>> listOfMap) {
+        ArrayList<Database_Pointer> pointerList = new ArrayList<>();
+        for (int i = 0; i < listOfMap.size(); i++) {
+            String email = listOfMap.get(i).get("email");
+            Database_Pointer dp = new Database_Pointer(email);
+            pointerList.add(dp);
+        }
+        return pointerList;
+    }
 }

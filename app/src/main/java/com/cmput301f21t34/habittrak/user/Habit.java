@@ -396,6 +396,50 @@ public class Habit implements Comparable<Habit>, Parcelable {
     }
 
     /**
+     * hashCode
+     *
+     * returns an int hash of this object based on its title and reason
+     * for hashing and comparison
+     *
+     * @author Dakota
+     * @return int Hash
+     */
+    @Override
+    public int hashCode(){
+        return this.title.hashCode() * this.reason.hashCode();
+    }
+
+    /**
+     * equals
+     *
+     * Compares an object with this Habit to see if they are equal
+     * They are equal if they are both Habit classes, with the same title and reason
+     *
+     * @author Dakota
+     * @param object Object to compare
+     * @return boolean true if they are equal, false elsewise
+     */
+    @Override
+    public boolean equals(Object object){
+
+        if (object.getClass() == Habit.class){
+            Habit habit = (Habit) object;
+            String comparable = this.title + this.reason;
+            String comparison = habit.title + habit.reason;
+
+            if (comparable == comparison){
+                return true;
+            }
+        }
+
+
+        return false;
+
+    }
+
+
+
+    /**
      * Code that parses Habit parameters into a Parcel
      * Needs to be updated for any changes to attributes
      * Or new attributes added

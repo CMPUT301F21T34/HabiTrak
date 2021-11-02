@@ -10,6 +10,7 @@ import android.os.Parcel;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.Habit_Event;
 import com.cmput301f21t34.habittrak.user.Habit_List;
+import com.cmput301f21t34.habittrak.user.On_Days;
 import com.cmput301f21t34.habittrak.user.User;
 
 import org.apache.commons.io.FileUtils;
@@ -174,6 +175,23 @@ public class ParcelableUnitTest {
         Habit_List parceledHabitList = new Habit_List(testParcel);
 
         assertEquals(habitList.get(0).getTitle(), parceledHabitList.get(0).getTitle());
+
+
+    }
+
+    @Test
+    public void testParcelableOnDays(){
+
+        On_Days onDays = new On_Days();
+        onDays.setAll(new boolean[]{true, false, true, false, true, true, true});
+
+        Parcel testParcel = Parcel.obtain();
+        onDays.writeToParcel(testParcel, 0);
+        testParcel.setDataPosition(0);
+
+        On_Days parceledOnDays = new On_Days(testParcel);
+
+        assertEquals(onDays.getAll()[1], parceledOnDays.getAll()[1]);
 
 
     }

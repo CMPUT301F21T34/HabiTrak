@@ -3,6 +3,7 @@ package com.cmput301f21t34.habittrak.user;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -421,13 +422,14 @@ public class Habit implements Comparable<Habit>, Parcelable {
      */
     @Override
     public boolean equals(Object object){
+        String TAG = "HabitEquals";
+
+        Log.d(TAG, "entered equals");
 
         if (object.getClass() == Habit.class){
-            Habit habit = (Habit) object;
-            String comparable = this.title + this.reason;
-            String comparison = habit.title + habit.reason;
 
-            if (comparable == comparison){
+            if( ( ((Habit) object).getTitle() == this.getTitle() )
+                    && ( ((Habit) object).getReason() == this.getReason() ) ){
                 return true;
             }
         }

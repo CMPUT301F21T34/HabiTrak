@@ -143,7 +143,7 @@ public class Habit_List extends ArrayList<Habit> implements Parcelable {
     public void writeToParcel(Parcel parcel, int flags) {
 
         // Casts Habit_List to ArrayList for parceling
-        Habit_List habitList = this;
+        ArrayList<Habit> habitList = this;
 
         Bundle habitListBundle = new Bundle(this.getClass().getClassLoader());
         habitListBundle.putParcelableArrayList("habitList", habitList);

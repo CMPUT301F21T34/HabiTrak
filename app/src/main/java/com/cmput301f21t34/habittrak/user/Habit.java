@@ -200,20 +200,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
         this.index = index;
     }
 
-    /**
-     * getOnDays
-     *
-     * getter function for Habit to track which day of the week
-     *
-     * @author Henry
-     * @return ArrayList
-     *
-     * @deprecated use getOnDaysObj() instead
-     * returns a boolean array that contains which day of the week the habit is on
-     */
-    //public boolean[] getOnDays() {
-    //    return this.onDays;
-    //}
+
 
     /**
      * getOnDaysOnj
@@ -229,84 +216,9 @@ public class Habit implements Comparable<Habit>, Parcelable {
     }
 
 
-    /**
-     * setOnDays
-     *
-     * Set which days a habit is active
-     *
-     * @author Henry
-     * @author Dakota
-     *
-     * @param mon boolean Monday
-     * @param tue boolean Tuesday
-     * @param wed boolean Wednesday
-     * @param thu boolean Thursday
-     * @param fri boolean Friday
-     * @param sat boolean Saturday
-     * @param sun boolean Sunday
-     *
-     * @deprecated Use getOnDaysObj instead and modify On_Days object
-     */
-    /*
-    public void setOnDays(boolean mon,
-                          boolean tue,
-                          boolean wed,
-                          boolean thu,
-                          boolean fri,
-                          boolean sat,
-                          boolean sun) {
-
-        this.onDays = new boolean[]{mon, tue, wed, thu, fri, sat, sun};
-    }
-
-     */
-
-    /** isOnDay
-     *
-     * returns if a habit is on today
-     *
-     * @author Dakota
-     *
-     * @return boolean true if habit is on today
-     * @deprecated uses getOnDaysObj().isOnDay()
-     */
-    /*
-    public boolean isOnDay(){
-        Calendar today = Calendar.getInstance(); // Gets today
-        today.setFirstDayOfWeek(Calendar.MONDAY); // Makes sure day of week starts monday
-
-       int dayOfWeek = today.get(Calendar.DAY_OF_WEEK); // Get current day of week
 
 
 
-        // switch to day of week and check if it is true
-        switch (dayOfWeek) {
-            case Calendar.MONDAY:
-                return this.onDays[0];
-
-            case Calendar.TUESDAY:
-                return this.onDays[1];
-
-            case Calendar.WEDNESDAY:
-                return this.onDays[2];
-
-            case Calendar.THURSDAY:
-                return this.onDays[3];
-
-            case Calendar.FRIDAY:
-                return this.onDays[4];
-
-            case Calendar.SATURDAY:
-                return this.onDays[5];
-
-            case Calendar.SUNDAY:
-                return this.onDays[6];
-            default:
-                return false;
-        }
-    }
-
-     */
 
     /**
      * isHabitStart
@@ -500,15 +412,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
      */
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
-
-        /*
-        private int index = 0;
-    private String title, reason;
-    private Calendar startDate;
-    private ArrayList<Habit_Event> habitEvents = new ArrayList<Habit_Event>();
-    private boolean isPublic = false;
-     private On_Days onDaysObj = new On_Days();
-         */
+        
 
         Bundle habitBundle = new Bundle(Habit.class.getClassLoader());
 

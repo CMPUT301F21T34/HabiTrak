@@ -3,6 +3,7 @@ package com.cmput301f21t34.habittrak;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Calendar;
+import java.util.TimeZone;
 import java.util.GregorianCalendar;
 
 
@@ -53,7 +55,7 @@ public class LoginFragment extends Fragment {
 
         // Test Data //
 
-        Calendar date = new GregorianCalendar(2021,1,31);
+        Calendar date = Calendar.getInstance();
         Habit habit1 = new Habit("exercise dog", "some desc", date);
         habit1.getOnDaysObj().setTrue(Calendar.MONDAY);
         habit1.getOnDaysObj().setTrue(Calendar.FRIDAY);

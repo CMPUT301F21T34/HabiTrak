@@ -166,13 +166,18 @@ public class User implements Parcelable {
         this.habitList.add(habit);
     }
 
-    public void removeHabit(Habit habit){
-        this.habitList.remove(habit);
+    /**
+     * removeHabit
+     *
+     * removes a given habit from the habitList
+     *
+     * @param habit Habit to remove
+     * @return boolean true if succeeded, false else wise
+     */
+    public boolean removeHabit(Habit habit){
+        return this.habitList.remove(habit);
     }
 
-    public void removeHabit(int index){
-        this.habitList.remove(index);
-    }
 
     public Habit getHabit(int index){
         return this.habitList.get(index);

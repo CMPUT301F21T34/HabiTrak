@@ -13,7 +13,6 @@ import com.cmput301f21t34.habittrak.user.Habit_List;
 import com.cmput301f21t34.habittrak.user.On_Days;
 import com.cmput301f21t34.habittrak.user.User;
 
-import org.apache.commons.io.FileUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -162,22 +161,7 @@ public class ParcelableUnitTest {
         assertEquals(testHabitEvent.getComment(), parceledHabitEvent.getComment());
         assertEquals(testHabitEvent.getCompletedDate(), parceledHabitEvent.getCompletedDate());
     }
-
-    @Test @Ignore
-    public void testParcelableHabitList(){
-
-        Habit_List habitList = getTestHabitList();
-
-        Parcel testParcel = Parcel.obtain();
-        //habitList.writeToParcel(testParcel, 0);
-        testParcel.setDataPosition(0);
-
-        Habit_List parceledHabitList = new Habit_List(testParcel);
-
-        assertEquals(habitList.get(0).getTitle(), parceledHabitList.get(0).getTitle());
-
-
-    }
+    
 
     @Test
     public void testParcelableOnDays(){

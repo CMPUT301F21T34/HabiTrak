@@ -21,7 +21,7 @@ import java.util.ArrayList;
  */
 public class Habit_List extends ArrayList<Habit> implements Parcelable {
 
-    Habit_List(){
+    public Habit_List(){
         super();
     }
 

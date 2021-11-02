@@ -15,6 +15,7 @@ import android.widget.PopupMenu;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.SocialAdapter;
 import com.cmput301f21t34.habittrak.User;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 
@@ -60,9 +61,9 @@ public class FollowingFragment extends Fragment {
 
             @Override
             public void mainButtonOnClick(View view, int position) {
-                // empty button not used.
+                ButtonClicked(view, position);
             }
-        }, false, "null");
+        }, true, "Unfollow");
         recyclerView.setAdapter(socialAdapter);
 
         return view;
@@ -85,6 +86,11 @@ public class FollowingFragment extends Fragment {
             }
             return true;
         });
+    }
+
+    public void ButtonClicked(View view, int userPosition){
+        MaterialButton button = view.findViewById(R.id.social_main_button);
+        Log.d("ListButton",  "Clicked");
     }
 
 }

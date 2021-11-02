@@ -532,23 +532,36 @@ public class DatabaseManager {
         return returnBlockedByList;
     }
     /**
-     * setHabitListDb
-     * sets the habit list in the database
-     * have 2 implementations (one is directly changing entire habit list another is changing habit events individually)
-     * @param user_email
-     * @param habitList
-     * @param givenHabitId
-     * @param habitEventList
+     * updateHabitNamePassword
+     * @author Tauseef
+     * @param user
+     * updates the habit name and password
      */
-    /*
-    public void setHabitListDb(String user_email, ArrayList<Habit> habitList, String givenHabitId,
-                               ArrayList<Habit> habitEventList) {
-        DatabaseReference usersReference = database.getReference("users");
+
+    public void updateHabitNamePassword(User user){
+        final CollectionReference collectionReference = database.collection("users");
+
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("Password", user.getPassword());
+        data.put("Username", user.getUsername());
+        data.put("Biography", user.getBiography());
+        data.put("habitList", user.getHabitList());
+        data.put("followerList", user.getFollowerList());
+        data.put("followingList", user.getFollowingList());
+        data.put("followReqList", user.getFollowerReqList());
+        data.put("followRequestedList", user.getFollowerRequestedList());
+        data.put("blockList", user.getBlockList());
+        data.put("blockedByList", user.getBlockByList());
+
+        collectionReference
+                .document(user.getEmail())
+                .set(data);
     }
-    */
+
     /**
      * addFollower
      * email is now a follower of user (so add email to the follower list of user and add user to the following list of email2)
+     * @author Henry
      * @param user
      * @param toBeAdded
      */
@@ -647,6 +660,7 @@ public class DatabaseManager {
      * email1 asked to follow email2 (so add email2 to the followerReq list of email1 and add email1 to the followerRequested list of email2)
      * followerRequested list means the people that asked to follow the user
      * followerReq list means the people that the user requested to follow
+     * @author Tauseef
      * @param user
      * @param toBeAdded
      */
@@ -741,6 +755,7 @@ public class DatabaseManager {
     /**
      * addtoblocklist
      * email2 is now blocked by email1 (so add email2 to the block list of email1 and add email1 to the blockedby list of email2)
+     * @author Tauseef
      * @param user
      * @param toBeAdded
      */
@@ -832,18 +847,13 @@ public class DatabaseManager {
             }
         });
     }
-    // change username and password and for habit just update
-    /**
-     * changePassword
-     * @param email
-     * @param password
-     */
-    //public void changePassword(String email, String password)
 
     /**
-     * changeUserName
+     * Converts an ArrayList<HashMap<String, String>> listOfMap to an ArrayList<Database_Pointer>
+     * @author henry
+     * @param listOfMap
+     * @return
      */
-    //public void changeUsername(String email, String username)
 
     public ArrayList<Database_Pointer> toPointerList(ArrayList<HashMap<String, String>> listOfMap) {
         ArrayList<Database_Pointer> pointerList = new ArrayList<>();

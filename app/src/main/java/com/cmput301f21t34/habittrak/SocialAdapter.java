@@ -9,41 +9,44 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 
 //TODO: Send menu options in the adapter itself
+
 /**
  * SocialAdapter
- *
+ * <p>
  * Custom list for users on the social page
  */
-public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder>{
+public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder> {
 
     private final ArrayList<User> profiles;
     private final ClickListener listener;
     private final boolean buttonVisibility;
     private final String buttonText;
 
-    public interface ClickListener{
+    public interface ClickListener {
         void menuButtonOnClick(View view, int position);
+
         void mainButtonOnClick(View view, int position);
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView username;
         private final MaterialButton mainButton;
         private final ImageButton menuButton;
         private final TextView userBio;
         private ClickListener listenerRef;
 
-        public ViewHolder(View view){
+        public ViewHolder(View view) {
             super(view);
-            username  = (TextView) view.findViewById(R.id.username_social_page);
-            mainButton = (MaterialButton) view.findViewById(R.id.social_main_button);
-            menuButton = (ImageButton) view.findViewById(R.id.social_menu);
-            userBio = (TextView) view.findViewById(R.id.social_user_bio);
+            username = view.findViewById(R.id.username_social_page);
+            mainButton = view.findViewById(R.id.social_main_button);
+            menuButton = view.findViewById(R.id.social_menu);
+            userBio = view.findViewById(R.id.social_user_bio);
             menuButton.setOnClickListener(this);
             mainButton.setOnClickListener(this);
         }
@@ -67,32 +70,32 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
 
         @Override
         public void onClick(View view) {
-            if (listenerRef != null){
+            if (listenerRef != null) {
                 if (view.getId() == R.id.social_main_button) {
                     listenerRef.mainButtonOnClick(view, getAdapterPosition());
-                }
-                else if (view.getId() == R.id.social_menu) {
+                } else if (view.getId() == R.id.social_menu) {
                     listenerRef.menuButtonOnClick(view, getAdapterPosition());
                 }
             }
         }
 
 
-        public void makeButtonVisible(){
+        public void makeButtonVisible() {
             mainButton.setVisibility(View.VISIBLE);
         }
 
-        public void makeButtonInvisible(){
+        public void makeButtonInvisible() {
             mainButton.setVisibility(View.INVISIBLE);
         }
 
-        public void setButtonText(String text){mainButton.setText(text);}
+        public void setButtonText(String text) {
+            mainButton.setText(text);
+        }
 
     }
 
 
-
-    public SocialAdapter(ArrayList<User> users, ClickListener listener, boolean visible, String buttonText){
+    public SocialAdapter(ArrayList<User> users, ClickListener listener, boolean visible, String buttonText) {
         this.profiles = users;
         this.listener = listener;
         this.buttonVisibility = visible;
@@ -117,10 +120,9 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         holder.listenerRef = this.listener;
         holder.setButtonText(buttonText);
 
-        if (buttonVisibility){
+        if (buttonVisibility) {
             holder.makeButtonVisible();
-        }
-        else {
+        } else {
             holder.makeButtonInvisible();
         }
 

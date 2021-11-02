@@ -1,22 +1,20 @@
 package com.cmput301f21t34.habittrak.socialFragments;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.SocialAdapter;
-import com.cmput301f21t34.habittrak.User;
+import com.cmput301f21t34.habittrak.user.User;
 
 import java.util.ArrayList;
 
@@ -43,7 +41,6 @@ public class FollowersFragment extends Fragment {
         View view = inflater.inflate(R.layout.habi_followers_fragment, container, false);
 
         // Sample Data
-
         User sample1 = new User("hello123");
         User sample2 = new User("another User");
         ArrayList<User> userArrayList = new ArrayList<>();
@@ -57,7 +54,7 @@ public class FollowersFragment extends Fragment {
         socialAdapter = new SocialAdapter(userArrayList, new SocialAdapter.ClickListener() {
             @Override
             public void menuButtonOnClick(View view, int position) {
-                Log.d("Menu", "Clicked " + Integer.toString(position));
+                Log.d("Menu", "Clicked " + position);
                 showMenu(view, position);
             }
 
@@ -82,10 +79,9 @@ public class FollowersFragment extends Fragment {
 
 
         menu.setOnMenuItemClickListener(menuItem -> {
-            if (menuItem.getTitle().equals("Remove")){
+            if (menuItem.getTitle().equals("Remove")) {
                 Log.d("MenuItem", "Remove Clicked");
-            }
-            else{
+            } else {
                 Log.d("MenuItem", "Block Clicked");
             }
             return true;

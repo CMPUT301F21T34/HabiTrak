@@ -14,7 +14,7 @@ import android.widget.PopupMenu;
 
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.SocialAdapter;
-import com.cmput301f21t34.habittrak.User;
+import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
@@ -59,7 +59,7 @@ public class RequestsFragment extends Fragment {
         socialAdapter = new SocialAdapter(userArrayList, new SocialAdapter.ClickListener() {
             @Override
             public void menuButtonOnClick(View view, int position) {
-                Log.d("Menu", "Clicked " + Integer.toString(position));
+                Log.d("Menu", "Clicked " + position);
                 showMenu(view, position);
             }
 
@@ -84,19 +84,18 @@ public class RequestsFragment extends Fragment {
 
 
         menu.setOnMenuItemClickListener(menuItem -> {
-            if (menuItem.getTitle().equals("Remove")){
+            if (menuItem.getTitle().equals("Remove")) {
                 Log.d("MenuItem", "Remove Clicked");
-            }
-            else{
+            } else {
                 Log.d("MenuItem", "Block Clicked");
             }
             return true;
         });
     }
 
-    public void ButtonClicked(View view, int userPosition){
+    public void ButtonClicked(View view, int userPosition) {
         MaterialButton button = view.findViewById(R.id.social_main_button);
-        Log.d("ListButton",  "Clicked");
+        Log.d("ListButton", "Clicked");
     }
 
 }

@@ -14,7 +14,7 @@ import android.widget.PopupMenu;
 
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.SocialAdapter;
-import com.cmput301f21t34.habittrak.User;
+import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
@@ -40,7 +40,6 @@ public class FollowingFragment extends Fragment {
         View view = inflater.inflate(R.layout.habi_following_fragment, container, false);
 
         // Sample Data
-
         User sample1 = new User("hello123");
         User sample2 = new User("another User");
         ArrayList<User> userArrayList = new ArrayList<>();
@@ -48,14 +47,13 @@ public class FollowingFragment extends Fragment {
         userArrayList.add(sample2);
 
         // set up recycler view
-
         recyclerView = view.findViewById(R.id.following_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         socialAdapter = new SocialAdapter(userArrayList, new SocialAdapter.ClickListener() {
             @Override
             public void menuButtonOnClick(View view, int position) {
-                Log.d("Menu", "Clicked " + Integer.toString(position));
+                Log.d("Menu", "Clicked " + position);
                 showMenu(view, position);
             }
 
@@ -69,7 +67,7 @@ public class FollowingFragment extends Fragment {
         return view;
     }
 
-    public void showMenu(View view, int userPosition){
+    public void showMenu(View view, int userPosition) {
         PopupMenu menu = new PopupMenu(getContext(), view);
         menu.getMenuInflater().inflate(R.menu.social_popup_menu, menu.getMenu());
         menu.getMenu().add("Remove");
@@ -78,19 +76,18 @@ public class FollowingFragment extends Fragment {
 
 
         menu.setOnMenuItemClickListener(menuItem -> {
-            if (menuItem.getTitle().equals("Remove")){
+            if (menuItem.getTitle().equals("Remove")) {
                 Log.d("MenuItem", "Remove Clicked");
-            }
-            else{
+            } else {
                 Log.d("MenuItem", "Block Clicked");
             }
             return true;
         });
     }
 
-    public void ButtonClicked(View view, int userPosition){
+    public void ButtonClicked(View view, int userPosition) {
         MaterialButton button = view.findViewById(R.id.social_main_button);
-        Log.d("ListButton",  "Clicked");
+        Log.d("ListButton", "Clicked");
     }
 
 }

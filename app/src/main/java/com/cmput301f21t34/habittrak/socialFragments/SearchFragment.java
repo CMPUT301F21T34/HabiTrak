@@ -15,11 +15,9 @@ import android.widget.SearchView;
 
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.SocialAdapter;
-import com.cmput301f21t34.habittrak.User;
 
+import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 
@@ -46,7 +44,6 @@ public class SearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.habi_search_fragment, container, false);
 
         // Sample Data
-
         User sample1 = new User("hello123");
         User sample2 = new User("another User");
         ArrayList<User> userArrayList = new ArrayList<>();
@@ -60,7 +57,7 @@ public class SearchFragment extends Fragment {
         socialAdapter = new SocialAdapter(userArrayList, new SocialAdapter.ClickListener() {
             @Override
             public void menuButtonOnClick(View view, int position) {
-                Log.d("Menu", "Clicked " + Integer.toString(position));
+                Log.d("Menu", "Clicked " + position);
                 showMenu(view, position);
             }
 
@@ -70,7 +67,8 @@ public class SearchFragment extends Fragment {
             }
         }, true, "Follow");
         recyclerView.setAdapter(socialAdapter);
-        
+
+        // TODO search stuff
         SearchView searchBox = view.findViewById(R.id.social_search_box);
 
         return view;
@@ -82,7 +80,6 @@ public class SearchFragment extends Fragment {
         menu.getMenu().add("Block");
         Log.d("image Button", "menu button clicked");
         menu.show();
-
 
         menu.setOnMenuItemClickListener(menuItem -> {
             if (menuItem.getTitle().equals("Remove")) {
@@ -98,6 +95,5 @@ public class SearchFragment extends Fragment {
         MaterialButton button = view.findViewById(R.id.social_main_button);
         Log.d("ListButton", "Clicked");
     }
-
 
 }

@@ -412,7 +412,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
      */
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
-        
+
 
         Bundle habitBundle = new Bundle(Habit.class.getClassLoader());
 

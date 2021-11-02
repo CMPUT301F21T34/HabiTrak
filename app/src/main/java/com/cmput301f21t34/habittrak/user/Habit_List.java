@@ -19,7 +19,7 @@ import java.util.ArrayList;
  * @see ArrayList
  * @see Habit
  */
-class Habit_List extends ArrayList<Habit> implements Parcelable {
+public class Habit_List extends ArrayList<Habit> implements Parcelable {
 
     Habit_List(){
         super();

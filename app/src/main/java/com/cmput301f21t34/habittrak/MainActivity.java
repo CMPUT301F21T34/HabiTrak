@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        User mainUser = null;
+        User mainUser = new User();
 
         if (savedInstanceState != null) {
             // get users credentials

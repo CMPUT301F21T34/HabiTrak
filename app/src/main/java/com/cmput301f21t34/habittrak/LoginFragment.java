@@ -11,10 +11,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 
 /**
@@ -46,6 +50,19 @@ public class LoginFragment extends Fragment {
         TextInputLayout passwordLayout = view.findViewById(R.id.password_text_input);
         TextInputEditText passwordEditText = view.findViewById(R.id.password_edit_text);
         MaterialButton loginButton = view.findViewById(R.id.login_button);
+
+        // Test Data //
+
+        Calendar date = new GregorianCalendar(2021,1,31);
+        Habit habit1 = new Habit("exercise dog", "some desc", date);
+        habit1.getOnDaysObj().setTrue(Calendar.MONDAY);
+        habit1.getOnDaysObj().setTrue(Calendar.FRIDAY);
+        Habit habit2 = new Habit("go for a walk", "some desc 2", date);
+        habit2.getOnDaysObj().setAll(new boolean[]{true, true, true, true, true, true, true});
+
+        mainUser.addHabit(habit1); mainUser.addHabit(habit2);
+
+        // End Test Data //
 
         // Password validator
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -106,7 +123,9 @@ public class LoginFragment extends Fragment {
     public void startHomePage(View view){
         Intent intent = new Intent(getActivity(), BaseActivity.class);
 
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                .putExtra("mainUser", mainUser);
         startActivity(intent);
         getActivity().finish();
     }

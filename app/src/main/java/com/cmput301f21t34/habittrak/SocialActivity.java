@@ -108,19 +108,16 @@ public class SocialActivity extends AppCompatActivity {
         @NonNull
         @Override
         public Fragment createFragment(int position) {
-            if (position == 0) {
-                return new FollowersFragment();
+            switch (position) {
+                case 0:
+                    return new FollowersFragment();
+                case 1:
+                    return new FollowingFragment();
+                case 2:
+                    return new RequestsFragment();
+                default:
+                    return new SearchFragment();
             }
-
-            if (position == 1) {
-                return new FollowingFragment();
-            }
-
-            if (position == 2) {
-                return new RequestsFragment();
-            }
-
-            return new SearchFragment();
         }
 
         @Override

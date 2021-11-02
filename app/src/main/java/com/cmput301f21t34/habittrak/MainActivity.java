@@ -50,9 +50,9 @@ public class MainActivity extends AppCompatActivity{
         User user = db.getUser("pog@gmail.com");
         //db.createNewUser("okayge@gmail.com","okayge","abc1234&","i am okayge");
         String TAG ="Checkchek";
-        db.addFollower(user,new Database_Pointer("okayge@gmail.com"));
-        db.addFollowerReq(user,new Database_Pointer("okayge@gmail.com"));
-        db.addBlock(user,new Database_Pointer("okayge@gmail.com"));
+        db.updateFollower(user,new Database_Pointer("okayge@gmail.com"),false);
+        db.updateFollowerReq(user,new Database_Pointer("okayge@gmail.com"),false);
+        db.updateBlock(user,new Database_Pointer("okayge@gmail.com"),false);
         Log.d(TAG,user.getUsername());
         Log.d(TAG,user.getFollowingList().get(0).getEmail());
         Log.d(TAG,db.getFollowerList(user.getEmail()).get(0).getEmail());
@@ -62,6 +62,10 @@ public class MainActivity extends AppCompatActivity{
         Log.d(TAG,db.getFollowReqList(user.getEmail()).get(0).getEmail());
 
         Log.d(TAG,db.getFollowRequestedList("okayge@gmail.com").get(0).getEmail());
+
+        db.updateFollower(user,new Database_Pointer("okayge@gmail.com"),true);
+        db.updateFollowerReq(user,new Database_Pointer("okayge@gmail.com"),true);
+        db.updateBlock(user,new Database_Pointer("okayge@gmail.com"),true);
 
     }
 }

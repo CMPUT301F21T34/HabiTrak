@@ -37,7 +37,6 @@ public class Habit_Event implements Comparable<Habit_Event>, Parcelable {
     private File photograph;
 
     // redundant constructor
-    @Deprecated
     public Habit_Event() {
         this.comment= "";
         this.completedDate = Calendar.getInstance();

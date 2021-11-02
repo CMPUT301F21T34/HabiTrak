@@ -94,7 +94,7 @@ public class User implements Parcelable {
 
         this.username = userBundle.getString("username");
         this.email = userBundle.getString("email");
-        this.habitList = userBundle.getParcelable("habitList");
+        this.habitList = new Habit_List(userBundle.getParcelableArrayList("habitList"));
         this.followerList = userBundle.getParcelableArrayList("followerList");
         this.followingList = userBundle.getParcelableArrayList("followingList");
         this.followerReqList = userBundle.getParcelableArrayList("followerReqList");
@@ -264,7 +264,7 @@ public class User implements Parcelable {
         userBundle.putString("email", this.getEmail());
 
         // requires Habit to implement Parcelable
-        userBundle.putParcelable("habitList", habitList);
+        userBundle.putParcelableArrayList("habitList", (ArrayList<Habit>)habitList);
 
 
         userBundle.putParcelableArrayList("followerList", followerList);

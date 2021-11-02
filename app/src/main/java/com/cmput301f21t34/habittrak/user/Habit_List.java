@@ -19,13 +19,17 @@ import java.util.ArrayList;
  * @see ArrayList
  * @see Habit
  */
-public class Habit_List extends ArrayList<Habit> implements Parcelable {
+public class Habit_List extends ArrayList<Habit> {//implements Parcelable {
 
     public Habit_List(){
         super();
     }
 
-    protected Habit_List(Parcel parcel) {
+    public Habit_List(ArrayList<Habit> arrayList){
+        this.addAll(arrayList);
+    }
+
+    public Habit_List(Parcel parcel) {
 
         // Gets the bundle
         Bundle habitListBundle = parcel.readBundle(Habit_List.class.getClassLoader());
@@ -133,6 +137,7 @@ public class Habit_List extends ArrayList<Habit> implements Parcelable {
 
     }
 
+    /*
 
     @Override
     public int describeContents() {
@@ -163,4 +168,6 @@ public class Habit_List extends ArrayList<Habit> implements Parcelable {
             return new Habit_List[size];
         }
     };
+
+     */
 }

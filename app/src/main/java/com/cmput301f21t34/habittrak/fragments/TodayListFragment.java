@@ -18,6 +18,7 @@ import com.cmput301f21t34.habittrak.AddHabitActivity;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.TodayHabitList;
+import com.cmput301f21t34.habittrak.user.Habit_List;
 import com.cmput301f21t34.habittrak.user.On_Days;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -37,7 +38,7 @@ public class TodayListFragment extends Fragment {
     // attributes
     ListView habitList;
     ArrayAdapter<Habit> habitAdapter;
-    ArrayList<Habit> habitsData;
+    Habit_List habitsData;
 
     User mainUser;
 
@@ -69,7 +70,7 @@ public class TodayListFragment extends Fragment {
             habit1.getOnDaysObj().setTrue(Calendar.FRIDAY);
         Habit habit2 = new Habit("go for a walk", "some desc 2", date);
             habit2.getOnDaysObj().setAll(new boolean[]{true, true, true, true, true, true, true});
-        habitsData = new ArrayList<>();
+        habitsData = new Habit_List();
         habitsData.add(habit1); habitsData.add(habit2);
 
         // Button for adding habit - Dakota

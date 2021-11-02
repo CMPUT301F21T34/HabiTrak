@@ -11,11 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
+import android.widget.SearchView;
 
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.SocialAdapter;
 import com.cmput301f21t34.habittrak.User;
+
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 
@@ -39,7 +43,7 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =inflater.inflate(R.layout.habi_search_fragment, container, false);
+        View view = inflater.inflate(R.layout.habi_search_fragment, container, false);
 
         // Sample Data
 
@@ -66,6 +70,8 @@ public class SearchFragment extends Fragment {
             }
         }, true, "Follow");
         recyclerView.setAdapter(socialAdapter);
+        
+        SearchView searchBox = view.findViewById(R.id.social_search_box);
 
         return view;
     }
@@ -79,19 +85,18 @@ public class SearchFragment extends Fragment {
 
 
         menu.setOnMenuItemClickListener(menuItem -> {
-            if (menuItem.getTitle().equals("Remove")){
+            if (menuItem.getTitle().equals("Remove")) {
                 Log.d("MenuItem", "Remove Clicked");
-            }
-            else{
+            } else {
                 Log.d("MenuItem", "Block Clicked");
             }
             return true;
         });
     }
 
-    public void ButtonClicked(View view, int userPosition){
+    public void ButtonClicked(View view, int userPosition) {
         MaterialButton button = view.findViewById(R.id.social_main_button);
-        Log.d("ListButton",  "Clicked");
+        Log.d("ListButton", "Clicked");
     }
 
 

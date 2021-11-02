@@ -5,9 +5,22 @@
     android:layout_height="match_parent"
     tools:context=".socialFragments.SearchFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/search_recycler_view"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <SearchView
+            android:id="@+id/social_search_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/search_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp" />
+
+    </LinearLayout>
 
 </FrameLayout>

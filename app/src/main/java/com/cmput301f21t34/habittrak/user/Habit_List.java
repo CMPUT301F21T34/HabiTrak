@@ -55,10 +55,17 @@ public class Habit_List extends ArrayList<Habit> {
     public void saveOrder(int start){
         int size = this.size();
 
-        for (int index = start; index < size; index++){
-            this.get(index).setIndex(index);
-        }
+        // Makes sure list isn't empty
+        if (size > 0) {
+            // Makes sure our index is in bounds
+            if (start < 0) {
+                start = 0;
+            }
 
+            for (int index = start; index < size; index++) {
+                this.get(index).setIndex(index);
+            }
+        }
     }
 
     public void reOrder(){

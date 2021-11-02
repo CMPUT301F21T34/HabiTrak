@@ -52,6 +52,9 @@ public class LoginFragment extends Fragment {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // BYPASS LOGIN FOR NOW
+                startHomePage(view, getUser(usernameEditText.getText()));
+                // BYPASS LOGIN FOR NOW
 
                 passwordLayout.setError(null);
                 usernameLayout.setError(null);

@@ -35,7 +35,7 @@ public class On_Days implements Parcelable {
 
 
     // initializes On_Days by default to all true
-    On_Days(){
+    public On_Days(){
         this.mon = true;
         this.tue = true;
         this.wed = true;
@@ -46,7 +46,7 @@ public class On_Days implements Parcelable {
     }
 
     // Constructing from a parcel
-    On_Days(Parcel parcel){
+    public On_Days(Parcel parcel){
 
         Bundle onDaysBundle = parcel.readBundle(this.getClass().getClassLoader()); // get bundle
         boolean[] onDays = onDaysBundle.getBooleanArray("onDays");
@@ -210,7 +210,7 @@ public class On_Days implements Parcelable {
         }
 
         int shift = 0;
-        boolean[] allDays = new boolean[7];
+        boolean[] allDays = array;
 
         // Makes sure array starts on monday for handling
         switch (startOfWeek) {

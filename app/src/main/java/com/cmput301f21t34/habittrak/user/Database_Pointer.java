@@ -67,4 +67,7 @@ public class Database_Pointer {
             return false;
         return true;
     }
+    public boolean Equals(Database_Pointer dp){
+        return this.getEmail().equals(dp.getEmail());
+    }
 }

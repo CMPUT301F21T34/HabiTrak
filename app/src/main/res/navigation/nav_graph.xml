@@ -10,9 +10,6 @@
         android:name="com.cmput301f21t34.habittrak.fragments.todayscreen.TodayListFragment"
         android:label="Today"
         tools:layout="@layout/habi_today_fragment" >
-        <argument
-            android:name="mainUser"
-            app:argType="com.cmput301f21t34.habittrak.User" />
     </fragment>
 
     <fragment

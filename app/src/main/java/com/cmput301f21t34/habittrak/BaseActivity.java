@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.cmput301f21t34.habittrak.user.Habit;
+import com.cmput301f21t34.habittrak.user.User;
 import com.cmput301f21t34.habittrak.fragments.AllHabitsFragment;
 import com.cmput301f21t34.habittrak.fragments.EventsFragment;
 import com.cmput301f21t34.habittrak.fragments.ProfileFragment;
@@ -40,7 +42,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
     //TODO: Explicitly make attributes private
     NavigationBarView bottomNav;
-    User mainUser;
+    User mainUser = new User(); // Creates dummy user for testing purposes
 
     TodayListFragment todayFrag;
     ProfileFragment profileFrag;
@@ -60,9 +62,9 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         setContentView(R.layout.activity_base);
 
         // Gets Intents //
-        Intent intent = getIntent();
+        //Intent intent = getIntent();
 
-        this.mainUser = intent.getParcelableExtra("mainUser"); // Gets mainUser from intent
+        //this.mainUser = intent.getParcelableExtra("mainUser"); // Gets mainUser from intent
 
         Log.d("mainUser", "in BaseActivity mainUser: " + mainUser.getUsername());
 

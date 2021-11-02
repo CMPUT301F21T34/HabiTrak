@@ -1,4 +1,4 @@
-package com.cmput301f21t34.habittrak;
+package com.cmput301f21t34.habittrak.user;
 
 
 import android.os.Bundle;
@@ -6,6 +6,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
@@ -21,27 +22,44 @@ import java.util.ArrayList;
  * @see Habit_Event
  * @see Habit
  */
-public class User implements Parcelable {
+public class User extends Database_Pointer implements Serializable {
 
     // Attributes //
 
     // Any changes need to be implement in writeToParcel and Parcel constructor - Dakota
 
     private String username;
-    ArrayList<Habit> habitList;
-    ArrayList<User> followerList;
-    ArrayList<User> followingList;
-    ArrayList<User> followerReqList;
+    private String password;
+
+    private ArrayList<Habit> habitList;
+
+    private ArrayList<Database_Pointer> followerList;
+    private ArrayList<Database_Pointer> followingList;
+    private ArrayList<Database_Pointer> followerReqList;
+    private ArrayList<Database_Pointer> followerRequestedList;
+    private ArrayList<Database_Pointer> blockList;
+    private ArrayList<Database_Pointer> blockedByList;
+
+    String biography;
 
     // Constructors //
 
-    User(String username, ArrayList<Habit> habitList, ArrayList<Habit_Event> habitEventList,
-         ArrayList<User> followerList, ArrayList<User> followingList, ArrayList<User> followerReqList){
+    public User(String username, String password, String email, ArrayList<Habit> habitList, ArrayList<Habit_Event> habitEventList,
+                ArrayList<Database_Pointer> followerList, ArrayList<Database_Pointer> followingList, ArrayList<Database_Pointer> followerReqList,
+                ArrayList<Database_Pointer> followerRequestedList, ArrayList<Database_Pointer> blockList, ArrayList<Database_Pointer> blockedByList,
+                String biography){
+
+        super(email);
         this.username = username;
+        this.password = password;
         this.habitList = habitList;
         this.followerList = followerList;
         this.followingList = followingList;
         this.followerReqList = followerReqList;
+        this.followerRequestedList = followerRequestedList;
+        this.blockList = blockList;
+        this.blockedByList = blockedByList;
+        this.biography = biography;
     }
 
     /**
@@ -50,17 +68,41 @@ public class User implements Parcelable {
      * Creates a User with only a username
      *
      * @author Dakota
-     * @param username String is new users new username
      */
-    User(String username){
-        this.username = username;
-
+    public User(){
+        super("dummyEmail");
+        this.username = "dummyUser";
+        this.password = "123456789";
         this.habitList = new ArrayList<Habit>();
-        this.followerList = new ArrayList<User>();
-        this.followingList = new ArrayList<User>();
-        this.followerReqList = new ArrayList<User>();
+        this.followerList = new ArrayList<Database_Pointer>();
+        this.followingList = new ArrayList<Database_Pointer>();
+        this.followerReqList = new ArrayList<Database_Pointer>();
+        this.followerRequestedList = new ArrayList<Database_Pointer>();
+        this.blockList = new ArrayList<Database_Pointer>();
+        this.blockedByList = new ArrayList<Database_Pointer>();
+        this.biography = "";
     }
 
+    /**
+     * New User
+     *
+     * Creates a new User object with only an email
+     * @param email
+     */
+    public User(String email){
+        super(email);
+        this.username = "dummyUser" + email;
+        this.password = "123456789";
+
+        this.habitList = new ArrayList<Habit>();
+        this.followerList = new ArrayList<Database_Pointer>();
+        this.followingList = new ArrayList<Database_Pointer>();
+        this.followerReqList = new ArrayList<Database_Pointer>();
+        this.followerRequestedList = new ArrayList<Database_Pointer>();
+        this.blockList = new ArrayList<Database_Pointer>();
+        this.blockedByList = new ArrayList<Database_Pointer>();
+        this.biography = "";
+    }
     /**
      * Parcel Constructor Class
      *
@@ -71,8 +113,11 @@ public class User implements Parcelable {
      * @see Parcelable
      * @param parcel Parcel to construct from
      */
-    User(Parcel parcel){
+    public User(Parcel parcel){
+        super("broken");
 
+
+        /* Not Working Currently
         Bundle userBundle;
         userBundle = parcel.readBundle(User.class.getClassLoader());
 
@@ -83,31 +128,58 @@ public class User implements Parcelable {
         this.followerList = userBundle.getParcelableArrayList("followerList");
         this.followingList = userBundle.getParcelableArrayList("followingList");
         this.followerReqList = userBundle.getParcelableArrayList("followerReqList");
+        this.biography = userBundle.getString("biography");
+
+         */
 
 
     }
 
 
-    //getter methods
+    // Getter methods
     public String getUsername() {
         return username;
     }
+    public String getPassword() {
+        return password;
+    }
+    public String getEmail() { return super.getEmail(); }
+
     public ArrayList<Habit> getHabitList() {
         return habitList;
     }
 
-    public ArrayList<User> getFollowerList() {
+    public ArrayList<Database_Pointer> getFollowerList() {
         return followerList;
     }
-    public ArrayList<User> getFollowerReqList() {
+    public ArrayList<Database_Pointer> getFollowerReqList() {
         return followerReqList;
     }
-    public ArrayList<User> getFollowingList() {
+    public ArrayList<Database_Pointer> getFollowingList() {
         return followingList;
     }
-    //setter methods
+    public ArrayList<Database_Pointer> getFollowerRequestedList() {
+        return followerReqList;
+    }
+    public ArrayList<Database_Pointer> getBlockList() {
+        return followerList;
+    }
+    public ArrayList<Database_Pointer> getBlockByList() {
+        return followingList;
+    }
+    public String getBiography() {
+        return biography;
+    }
+
+    // Setter methods
+    // Database can modify these //
+
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void setHabitList(ArrayList<Habit> habitList) {
@@ -115,31 +187,52 @@ public class User implements Parcelable {
     }
 
 
-    public void setFollowerList(ArrayList<User> followerList) {
+    public void setFollowerList(ArrayList<Database_Pointer> followerList) {
         this.followerList = followerList;
     }
 
-    public void setFollowingList(ArrayList<User> followingList) {
+    public void setFollowingList(ArrayList<Database_Pointer> followingList) {
         this.followingList = followingList;
     }
 
-    public void setFollowerReqList(ArrayList<User> followerReqList) {
+    public void setFollowerReqList(ArrayList<Database_Pointer> followerReqList) {
         this.followerReqList = followerReqList;
+    }
+    public void setFollowerRequestedList(ArrayList<Database_Pointer> followerRequestedList) {
+        this.followerRequestedList = followerRequestedList;
+    }
+    public void setBlockList(ArrayList<Database_Pointer> blockList) {
+        this.blockList = blockList;
+    }
+    public void setBlockedByList(ArrayList<Database_Pointer> blockedByList) {
+        this.blockedByList = blockedByList;
+    }
+    public void setBiography(String biography) {
+        this.biography = biography;
     }
     // add methods have to adjust the database
     public void addHabit(Habit habit){
         this.habitList.add(habit);
     }
 
+
+
+    @Deprecated
     public void addFollower(User newFollower){
+
         this.followerList.add(newFollower);
     }
+    @Deprecated
     public void addFollowerReq(User newFollowReq){
         this.followerReqList.add(newFollowReq);
     }
+    @Deprecated
     public void addFollowing(User newFollowing){
         this.followingList.add(newFollowing);
     }
+
+
+
     // remove methods
     public boolean removeHabit(Habit habit){
         int index = this.habitList.size();
@@ -158,51 +251,7 @@ public class User implements Parcelable {
     }
 
 
-    public boolean removeFollower(User follower){
-        int index = this.followerList.size();
-        for(int i = 0; i < this.followerList.size(); i++){
-            if(this.followerList.get(i).getUsername().equals(follower.getUsername())){
-                index = i;
-            }
-        }
-        if(index != this.followerList.size()){
-            this.followerList.remove(index);
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-    public boolean removeFollowing(User follower){
-        int index = this.followingList.size();
-        for(int i = 0; i < this.followingList.size(); i++){
-            if(this.followingList.get(i).getUsername().equals(follower.getUsername())){
-                index = i;
-            }
-        }
-        if(index != this.followingList.size()){
-            this.followingList.remove(index);
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-    public boolean removeFollowerReq(User follower){
-        int index = this.followerReqList.size();
-        for(int i = 0; i < this.followerReqList.size(); i++){
-            if(this.followerReqList.get(i).getUsername().equals(follower.getUsername())){
-                index = i;
-            }
-        }
-        if(index != this.followerReqList.size()){
-            this.followerReqList.remove(index);
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
+
     // replace methods not sure if i need it or not
     public void replaceHabit(int index, Habit habit){
         this.habitList.set(index,habit);
@@ -217,10 +266,11 @@ public class User implements Parcelable {
      * @author Dakota
      * @return int 0
      */
+    /*
     @Override
     public int describeContents() {
         return 0;
-    }
+    }*/
 
     /**
      * writeToParcel
@@ -234,6 +284,7 @@ public class User implements Parcelable {
      * @param out Parcel to be create
      * @param flags int, idk not important but required
      */
+    /*
     @Override
     public void writeToParcel(Parcel out, int flags) {
 
@@ -247,15 +298,17 @@ public class User implements Parcelable {
         userBundle.putParcelableArrayList("habitList", habitList);
 
         // requires User to implement Parcelable (which is what this code dose)
-        userBundle.putParcelableArrayList("followerList",followerList);
-        userBundle.putParcelableArrayList("followingList",followingList);
-        userBundle.putParcelableArrayList("followerReqList",followerReqList);
+        // Broken
+        userBundle.putParcelableArrayList("followerList", (ArrayList<? extends Parcelable>) followerList);
+        userBundle.putParcelableArrayList("followingList", (ArrayList<? extends Parcelable>) followingList);
+        userBundle.putParcelableArrayList("followerReqList", (ArrayList<? extends Parcelable>) followerReqList);
 
         out.writeBundle(userBundle); // writes bundle to parcel
 
     }
 
     // Creates User from parcel
+
     public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
 
         @Override
@@ -269,9 +322,7 @@ public class User implements Parcelable {
 
             return new User[size];
         }
-    };
-
-
+    };*/
 
 }
 

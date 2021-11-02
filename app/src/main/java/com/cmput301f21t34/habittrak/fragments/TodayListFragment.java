@@ -19,7 +19,6 @@ import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.TodayHabitList;
 import com.cmput301f21t34.habittrak.user.Habit_List;
-import com.cmput301f21t34.habittrak.user.On_Days;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -36,9 +35,9 @@ import java.util.GregorianCalendar;
  */
 public class TodayListFragment extends Fragment {
     // attributes
-    ListView habitList;
-    ArrayAdapter<Habit> habitAdapter;
-    Habit_List habitsData;
+    private ListView habitList;
+    private ArrayAdapter<Habit> habitAdapter;
+    private Habit_List habitsData;
 
     User mainUser;
 
@@ -63,7 +62,7 @@ public class TodayListFragment extends Fragment {
 
         // code to execute //
 
-        // sample data
+        // sample data (Does not show as we are getting habits from main User)
         Calendar date = new GregorianCalendar(2021,1,31);
         Habit habit1 = new Habit("exercise dog", "some desc", date);
             habit1.getOnDaysObj().setTrue(Calendar.MONDAY);
@@ -83,10 +82,12 @@ public class TodayListFragment extends Fragment {
             }
         });
 
-        refreshHabitList(); // populates habit list
+
         //connect the array adapter
         habitAdapter = new TodayHabitList(getContext(), habitsData);
         habitList.setAdapter(habitAdapter);
+
+        refreshTodayFragment(); // populates habit list
 
 
 
@@ -122,9 +123,8 @@ public class TodayListFragment extends Fragment {
      *
      * @author Dakota
      */
-    public void refreshHabitList() {
+    public void refreshTodayFragment() {
 
-        Log.d("TodayListFragment", "refreshing habit list");
         // Populate today view with Today's habits.
 
         habitsData.clear(); // Make sure is clear

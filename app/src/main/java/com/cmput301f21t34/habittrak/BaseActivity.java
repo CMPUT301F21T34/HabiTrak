@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import com.cmput301f21t34.habittrak.fragments.AllHabitsFragment;
 import com.cmput301f21t34.habittrak.fragments.EventsFragment;
 import com.cmput301f21t34.habittrak.fragments.ProfileFragment;
-import com.cmput301f21t34.habittrak.fragments.SocialFragment;
 import com.cmput301f21t34.habittrak.fragments.TodayListFragment;
 
 
@@ -44,7 +43,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
     User mainUser;
 
     TodayListFragment todayFrag;
-    SocialFragment socialFrag;
     ProfileFragment profileFrag;
     EventsFragment eventsFrag;
     AllHabitsFragment allHabitsFrag;
@@ -71,7 +69,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
         // Initializes Fragments //
         todayFrag = new TodayListFragment(mainUser);
-        socialFrag = new SocialFragment(mainUser);
         profileFrag = new ProfileFragment(mainUser);
         eventsFrag = new EventsFragment(mainUser);
         allHabitsFrag = new AllHabitsFragment(mainUser);

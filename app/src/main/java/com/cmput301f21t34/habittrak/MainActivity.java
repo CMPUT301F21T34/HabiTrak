@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        /*
+
         User mainUser = null;
 
         if (savedInstanceState != null) {
@@ -45,7 +45,8 @@ public class MainActivity extends AppCompatActivity{
                     .beginTransaction()
                     .add(R.id.login_fragment_container, new LoginFragment(mainUser))
                     .commit();
-        }*/
+        }
+
         DatabaseManager db = new DatabaseManager();
         User user = db.getUser("pog@gmail.com");
         //db.createNewUser("okayge@gmail.com","okayge","abc1234&","i am okayge");

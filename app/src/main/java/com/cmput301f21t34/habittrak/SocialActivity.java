@@ -123,7 +123,7 @@ public class SocialActivity extends AppCompatActivity {
         @Override
         public int getItemCount() {
             // Hardcoded, use lists
-            return 4;
+            return socialTab.getTabCount(); // this should do it vs the previous hardcoded solution TODO remove comments once verified works
         }
     }
 

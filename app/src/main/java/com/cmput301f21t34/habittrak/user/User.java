@@ -49,8 +49,8 @@ public class User implements Parcelable {
     public User(String username, String password, String email, Habit_List habitList, ArrayList<Habit_Event> habitEventList,
                 ArrayList<Database_Pointer> followerList, ArrayList<Database_Pointer> followingList,
                 ArrayList<Database_Pointer> followerReqList, ArrayList<Database_Pointer> followerRequestedList,
-                ArrayList<Database_Pointer> blockList, ArrayList<Database_Pointer> blockedByList, String biography) {
-
+                ArrayList<Database_Pointer> blockList, ArrayList<Database_Pointer> blockedByList,
+                String biography) {
         this.email = email;
         this.username = username;
         this.password = password;
@@ -63,7 +63,6 @@ public class User implements Parcelable {
         this.blockedByList = blockedByList;
         this.biography = biography;
     }
-
 
     /**
      * New User
@@ -124,6 +123,7 @@ public class User implements Parcelable {
         userBundle = parcel.readBundle(User.class.getClassLoader());
         Log.d("UserParcelable", "Parcel Construction userName:" + userBundle.getString("username"));
 
+
         this.username = userBundle.getString("username");
         this.password = userBundle.getString("password");
         this.email = userBundle.getString("email");
@@ -138,30 +138,40 @@ public class User implements Parcelable {
         this.biography = userBundle.getString("biography");
 
 
+
+
     }
+
 
     // getter methods
     public String getUsername() {
         return username;
     }
+
     public String getPassword() {
         return password;
     }
+
     public Habit_List getHabitList() {
         return habitList;
     }
+
     public ArrayList<Database_Pointer> getFollowerList() {
         return followerList;
     }
-    public ArrayList<Database_Pointer> getFollowingList() {
-        return followerList;
-    }
+
     public ArrayList<Database_Pointer> getFollowerReqList() {
         return followerReqList;
     }
+
+    public ArrayList<Database_Pointer> getFollowingList() {
+        return followingList;
+    }
+
     public ArrayList<Database_Pointer> getFollowerRequestedList() {
         return followerRequestedList;
     }
+
     public ArrayList<Database_Pointer> getBlockList() {
         return blockList;
     }
@@ -169,6 +179,7 @@ public class User implements Parcelable {
     public ArrayList<Database_Pointer> getBlockedByList() {
         return blockedByList;
     }
+
     public String getBiography() {
         return biography;
     }
@@ -188,6 +199,8 @@ public class User implements Parcelable {
         this.habitList = habitList;
     }
 
+
+    // Might not want to allow these //
     public void setFollowerList(ArrayList<Database_Pointer> followerList) {
         this.followerList = followerList;
     }
@@ -327,7 +340,7 @@ public class User implements Parcelable {
         userBundle.putString("email", this.getEmail());
 
         // requires Habit to implement Parcelable
-        userBundle.putParcelableArrayList("habitList", (ArrayList<Habit>) habitList);
+        userBundle.putParcelableArrayList("habitList", (ArrayList<Habit>)habitList);
 
 
         userBundle.putParcelableArrayList("followerList", followerList);

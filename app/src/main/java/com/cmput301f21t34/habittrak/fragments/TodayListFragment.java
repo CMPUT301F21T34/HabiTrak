@@ -63,10 +63,12 @@ public class TodayListFragment extends Fragment {
 
         // sample data
         Calendar date = new GregorianCalendar(2021,1,31);
+        /*
         Habit habit1 = new Habit("exercise dog", "some desc", date, new boolean[]{true, true, true, true, true, true, true});
         Habit habit2 = new Habit("go for a walk", "some desc 2", date, new boolean[]{true, true, true, true, true, true, true});
         habitsData = new ArrayList<>();
         habitsData.add(habit1); habitsData.add(habit2);
+         */
 
         // Button for adding habit - Dakota
         final FloatingActionButton addHabitButton = view.findViewById(R.id.today_add_habit_button);
@@ -127,12 +129,13 @@ public class TodayListFragment extends Fragment {
         ArrayList<Habit> mainUserHabits = mainUser.getHabitList(); // get HabitsList
 
         // Iterates through all habits
+        /*
         for (int index = 0; index < mainUserHabits.size(); index++){
             if (mainUserHabits.get(index).isOnDay() && mainUserHabits.get(index).isHabitStart()){ // If a habit is active today add
                 habitsData.add(mainUserHabits.get(index));
                 habitAdapter.notifyDataSetChanged();
             }
-        }
+        }*/
 
     }
 

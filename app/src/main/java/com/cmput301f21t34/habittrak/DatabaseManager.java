@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import com.cmput301f21t34.habittrak.user.Database_Pointer;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.Habit_List;
+import com.cmput301f21t34.habittrak.user.On_Days;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -49,6 +50,10 @@ public class DatabaseManager {
 
     public DatabaseManager() {
         database = FirebaseFirestore.getInstance();
+    }
+
+    public FirebaseFirestore getDatabase() {
+        return database;
     }
 
     /**
@@ -144,7 +149,7 @@ public class DatabaseManager {
      * @author Henry
      * returns true if it is successful or false if it is not
      */
-    public boolean createNewUser(String email, String username, String password, String biography) {
+    public boolean createNewUser(String email, String username, String password, String biography, Habit_List habitList) {
 
         String TAG = "Unique";
 
@@ -152,11 +157,13 @@ public class DatabaseManager {
             Log.d(TAG, "Unique");
             final CollectionReference collectionReference = database.collection("users");
 
+            ArrayList<HabitDatabase> habitListDatabase = habitToDatabase(habitList);
+
             HashMap<String, Object> data = new HashMap<>();
             data.put("Password", password);
             data.put("Username", username);
             data.put("Biography", biography);
-            data.put("habitList", new ArrayList<Habit>());
+            data.put("habitList", habitListDatabase);
             data.put("followerList", new ArrayList<Database_Pointer>());
             data.put("followingList", new ArrayList<Database_Pointer>());
             data.put("followReqList", new ArrayList<Database_Pointer>());
@@ -263,7 +270,7 @@ public class DatabaseManager {
 
             user.setPassword(password);
             user.setUsername(name);
-            user.setHabitList((Habit_List) habitList);
+            // user.setHabitList((Habit_List) habitList);
             user.setFollowerList(followerList);
             user.setFollowingList(followingList);
             user.setBlockList(blockList);
@@ -364,7 +371,6 @@ public class DatabaseManager {
      * @param email
      * @return Follower list
      */
-
     public ArrayList<Database_Pointer> getFollowerList(String email) {
 
         ArrayList<Database_Pointer> returnFollowerList = new ArrayList<Database_Pointer>();
@@ -392,7 +398,6 @@ public class DatabaseManager {
      * @param email
      * @return Following list
      */
-
     public ArrayList<Database_Pointer> getFollowingList(String email ){
 
         ArrayList<Database_Pointer> returnFollowingList = new ArrayList<Database_Pointer>();
@@ -423,7 +428,6 @@ public class DatabaseManager {
      * @param email
      * @return follow req list
      */
-
     public ArrayList<Database_Pointer> getFollowReqList(String email) {
 
         ArrayList<Database_Pointer> returnFollowReqList = new ArrayList<Database_Pointer>();
@@ -455,7 +459,6 @@ public class DatabaseManager {
      * @param email
      * @return
      */
-
     public ArrayList<Database_Pointer> getFollowRequestedList(String email) {
 
         ArrayList<Database_Pointer> returnFollowRequestedList = new ArrayList<Database_Pointer>();
@@ -487,7 +490,6 @@ public class DatabaseManager {
      * @param email
      * @return
      */
-
     public ArrayList<Database_Pointer> getBlockList(String email) {
 
         ArrayList<Database_Pointer> returnBlockList = new ArrayList<Database_Pointer>();
@@ -518,7 +520,6 @@ public class DatabaseManager {
      * @param email
      * @return
      */
-
     public ArrayList<Database_Pointer> getBlockedByList(String email) {
 
         ArrayList<Database_Pointer> returnBlockedByList = new ArrayList<Database_Pointer>();
@@ -571,7 +572,7 @@ public class DatabaseManager {
      * @param user
      * @param toBeAdded
      */
-    public void updateFollower(User user, Database_Pointer toBeAdded,boolean remove) {
+    public void updateFollower(User user, Database_Pointer toBeAdded, boolean remove) {
         // Update user's followerList
         DocumentReference userRef = database.collection("users").document(user.getEmail());
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -951,5 +952,57 @@ public class DatabaseManager {
             pointerList.add(dp);
         }
         return pointerList;
+    }
+
+    /**
+     * habitToDatabase
+     * Convert Habit in Habit_List<Habit> to a new object that is compatitble with the database
+     * @author Henry
+     * @param habits
+     * @return
+     * Returns a habit list compatible with the database
+     */
+    public ArrayList<HabitDatabase> habitToDatabase(Habit_List habits) {
+        ArrayList<HabitDatabase> habitListToDatabase = new ArrayList<>();
+        for (int i = 0; i < habits.size(); i++) {
+            Habit primitiveHabit = habits.get(i);
+            HabitDatabase habitToDatabase = new HabitDatabase();
+            habitToDatabase.setIndex(primitiveHabit.getIndex());
+            habitToDatabase.setTitle(primitiveHabit.getTitle());
+            habitToDatabase.setReason(primitiveHabit.getReason());
+            habitToDatabase.setStartDate(primitiveHabit.getStartDate());
+            habitToDatabase.setHabitEvents(primitiveHabit.getHabitEvents());
+            habitToDatabase.setOnDaysObj(primitiveHabit.getOnDaysObj());
+
+            habitListToDatabase.add(habitToDatabase);
+        }
+        return habitListToDatabase;
+    }
+
+    /**
+     * databaseToHabit
+     * @param habitsFromDatabase
+     * @author Henry
+     * @return
+     * Returns a Habit_List given the habitList from Database.
+     * Similar to habitToDatabase, but does it in the opposite direction
+     */
+    public Habit_List databaseToHabit(ArrayList<HabitDatabase> habitsFromDatabase) {
+        Habit_List habitList = new Habit_List();
+        for (int i = 0; i < habitsFromDatabase.size(); i++) {
+            HabitDatabase habitFromDatabase = habitsFromDatabase.get(i);
+            Habit habit = new Habit();
+            habit.setIndex(habitFromDatabase.getIndex());
+            habit.setTitle(habitFromDatabase.getTitle());
+            habit.setReason(habitFromDatabase.getReason());
+            habit.setStartDate(habitFromDatabase.getStartDate());
+            habit.setHabitEvents(habitFromDatabase.getHabitEvents());
+
+            ArrayList<Boolean> dbOnDays = habitFromDatabase.getOnDaysObj();
+
+            habit.setOnDaysObj(new On_Days(dbOnDays));
+            habitList.add(habit);
+        }
+        return habitList;
     }
 }

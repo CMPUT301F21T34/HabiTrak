@@ -31,6 +31,7 @@ public class HabitEventTest {
      * @return Habit
      * Returns a new Habit object to perform tests on
      */
+    /*
     private Habit_Event mockHabitEvent() {
         String id = "173";
         String comment = "I read book 1";
@@ -40,5 +41,5 @@ public class HabitEventTest {
         Calendar completeDate = new GregorianCalendar(2021, 6, 1);
         Habit_Event mockHabitEvent = new Habit_Event(id, comment, completeDate, habit, loc, photo);
         return mockHabitEvent;
-    }
+    }*/
 }

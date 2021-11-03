@@ -214,6 +214,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
         return this.onDaysObj;
     }
 
+    public void setOnDaysObj(On_Days onDaysObj) { this.onDaysObj = onDaysObj; }
 
     /**
      * isHabitStart
@@ -295,7 +296,6 @@ public class Habit implements Comparable<Habit>, Parcelable {
         return removed;
     }*/
 
-
     /**
      * getHabitEvents
      *
@@ -307,6 +307,16 @@ public class Habit implements Comparable<Habit>, Parcelable {
     public ArrayList<Habit_Event> getHabitEvents() {
         return this.habitEvents;
     }
+
+    /**
+     * setHabitEvents
+     *
+     * @author Henry
+     *
+     * @return
+     * Sets the habit events array list
+     */
+    public void setHabitEvents(ArrayList<Habit_Event> habitEvents) { this.habitEvents = habitEvents; }
 
     /**
      * sortHabitEvents

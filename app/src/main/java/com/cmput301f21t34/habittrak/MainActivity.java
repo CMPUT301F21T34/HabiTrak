@@ -10,6 +10,7 @@ import android.util.Log;
 import com.cmput301f21t34.habittrak.user.Database_Pointer;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.Habit_Event;
+import com.cmput301f21t34.habittrak.user.Habit_List;
 import com.cmput301f21t34.habittrak.user.On_Days;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -48,11 +49,30 @@ public class MainActivity extends AppCompatActivity{
                     .add(R.id.login_fragment_container, new LoginFragment(mainUser))
                     .commit();
         }
-        */
+
         Habit_Event event1 = new Habit_Event();
+        event1.setComment("yep");
         Habit_Event event2 = new Habit_Event();
-        Habit habit = new Habit();
-        habit.addHabitEvent(event1);
-        habit.addHabitEvent(event2);
+        Habit habit1 = new Habit();
+        habit1.addHabitEvent(event1);
+        habit1.addHabitEvent(event2);
+
+        Habit_Event event3 = new Habit_Event();
+        event1.setComment("go");
+        Habit_Event event4 = new Habit_Event();
+        event1.setComment("g0");
+        Habit habit2 = new Habit();
+        habit2.addHabitEvent(event3);
+        habit2.addHabitEvent(event4);
+
+        Habit_List habits = new Habit_List();
+        habits.add(habit1);
+        habits.add(habit2);
+        User user = new User("pogo@gmail.com");
+        user.setUsername("pogo");
+        user.setHabitList(habits);
+        DatabaseManager db = new DatabaseManager();
+        db.createNewUser(user.getEmail(), user.getUsername(), user.getPassword(), "", user.getHabitList());
+         */
     }
 }

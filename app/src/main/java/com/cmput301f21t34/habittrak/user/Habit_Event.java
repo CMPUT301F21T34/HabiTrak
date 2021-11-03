@@ -40,13 +40,13 @@ public class Habit_Event implements Comparable<Habit_Event>, Parcelable {
         this.photograph = "photo";
 
     }
+
     public Habit_Event(String comment, Calendar date, String loc, String photo){
         this.photograph = photo;
         this.location = loc;
         this.comment = comment;
         this.completedDate = date;
     }
-
 
     /**
      * Parcel Constructor Class

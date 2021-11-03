@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /** On_Days
@@ -43,6 +44,21 @@ public class On_Days implements Parcelable {
         this.fri = true;
         this.sat = true;
         this.sun = true;
+    }
+
+    /**
+     * Construct an On_Days object from ArrayList<Boolean>
+     * Needed for Database
+     * @author Henry
+     */
+    public On_Days(ArrayList<Boolean> onDaysArray) {
+        this.mon = onDaysArray.get(0);
+        this.tue = onDaysArray.get(1);
+        this.wed = onDaysArray.get(2);
+        this.thu = onDaysArray.get(3);
+        this.fri = onDaysArray.get(4);
+        this.sat = onDaysArray.get(5);
+        this.sun = onDaysArray.get(6);
     }
 
     // Constructing from a parcel

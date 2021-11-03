@@ -28,7 +28,9 @@ public class User implements Parcelable {
     // Any changes need to be implement in writeToParcel and Parcel constructor - Dakota
 
     private String username;
-    
+
+    // Password does not need to be parse and may be eventually removed
+    // TODO: Make password final in version after merge with Database
     private String password;
 
     private Habit_List habitList; // Habit_List extends ArrayList<Habit>
@@ -38,6 +40,8 @@ public class User implements Parcelable {
     private ArrayList<Database_Pointer> followerList;
     private ArrayList<Database_Pointer> followingList;
     private ArrayList<Database_Pointer> followerReqList;
+
+    //TODO: make these attributes Parcelable
     private ArrayList<Database_Pointer> followerRequestedList;
     private ArrayList<Database_Pointer> blockList;
     private ArrayList<Database_Pointer> blockedByList;
@@ -46,14 +50,21 @@ public class User implements Parcelable {
 
     // Constructors //
 
-    public User(String username, String password, String email, Habit_List habitList, ArrayList<Habit_Event> habitEventList,
-                ArrayList<Database_Pointer> followerList, ArrayList<Database_Pointer> followingList,
-                ArrayList<Database_Pointer> followerReqList, ArrayList<Database_Pointer> followerRequestedList,
-                ArrayList<Database_Pointer> blockList, ArrayList<Database_Pointer> blockedByList,
-                String biography) {
+    public User(String username, String password, String email, String biography,
+                Habit_List habitList,
+                ArrayList<Database_Pointer> followerList,
+                ArrayList<Database_Pointer> followingList,
+                ArrayList<Database_Pointer> followerReqList,
+                ArrayList<Database_Pointer> followerRequestedList,
+                ArrayList<Database_Pointer> blockList,
+                ArrayList<Database_Pointer> blockedByList
+                ) {
+
         this.email = email;
         this.username = username;
         this.password = password;
+        this.biography = biography;
+
         this.habitList = habitList;
         this.followerList = followerList;
         this.followingList = followingList;
@@ -61,7 +72,33 @@ public class User implements Parcelable {
         this.followerRequestedList = followerRequestedList;
         this.blockList = blockList;
         this.blockedByList = blockedByList;
-        this.biography = biography;
+
+    }
+
+    /**
+     * basic constructor with bare minimum info
+     *
+     * @param username String the Users username
+     * @param password String the Users password (for auth)
+     * @param email String the Users email (for identification)
+     */
+    public User(String username, String password, String email){
+
+        this.username = username;
+        this.password = password;
+        this.email = email;
+
+        this.biography = "";
+
+        this.habitList = new Habit_List();
+        this.followerList = new ArrayList<Database_Pointer>();
+        this.followingList = new ArrayList<Database_Pointer>();
+        this.followerReqList = new ArrayList<Database_Pointer>();
+        this.followerRequestedList = new ArrayList<Database_Pointer>();
+        this.blockList = new ArrayList<Database_Pointer>();
+        this.blockedByList = new ArrayList<Database_Pointer>();
+
+
     }
 
     /**
@@ -190,7 +227,13 @@ public class User implements Parcelable {
     public void setUsername(String username) {
         this.username = username;
     }
-    
+
+    /**
+     * @deprecated assign password in constructor
+     * @author Dakota
+     * @autor Henry
+     * @param password String The Users password
+     */
     public void setPassword(String password) {
         this.password = password;
     }

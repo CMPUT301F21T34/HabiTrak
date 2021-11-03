@@ -47,7 +47,19 @@ public class LoginFragment extends Fragment {
         TextInputLayout passwordLayout = view.findViewById(R.id.password_text_input);
         TextInputEditText passwordEditText = view.findViewById(R.id.password_edit_text);
         MaterialButton loginButton = view.findViewById(R.id.login_button);
+        MaterialButton signupButton = view.findViewById(R.id.signup_button);
 
+
+        signupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SignUpFragment signUpFragment = new SignUpFragment();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.login_fragment_container, signUpFragment, "signupFrag")
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
         // Password validator
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override

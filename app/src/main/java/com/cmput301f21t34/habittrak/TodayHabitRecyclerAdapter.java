@@ -13,6 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.compose.ui.viewinterop.ViewFactoryHolder;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cmput301f21t34.habittrak.user.Habit;
+import com.cmput301f21t34.habittrak.user.Habit_List;
+
 import java.util.ArrayList;
 
 /**
@@ -28,7 +31,7 @@ import java.util.ArrayList;
 
 public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRecyclerAdapter.ViewHolder>{
 
-    private ArrayList<Habit> habits;
+    private Habit_List habits;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView habitName;
@@ -75,7 +78,7 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
      * @param data ArrayList<Habit> containing the data to populate views to be used
      * by RecyclerView.
      */
-    public TodayHabitRecyclerAdapter(ArrayList<Habit> data){
+    public TodayHabitRecyclerAdapter(Habit_List data){
         habits = data;
     }
 

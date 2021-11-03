@@ -5,8 +5,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import android.location.Location;
 
+import com.cmput301f21t34.habittrak.user.Habit;
+import com.cmput301f21t34.habittrak.user.Habit_Event;
+
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -36,7 +38,8 @@ public class HabitTest {
         boolean[] onDays = {true, false, true, false, true, false, false};
         // use specific start date for future testing
         Calendar startDate = new GregorianCalendar(2021, 1, 1);
-        Habit mockHabit = new Habit(title, reason, startDate, onDays);
+        Habit mockHabit = new Habit(title, reason, startDate);
+        mockHabit.getOnDaysObj().setAll(onDays);
         return mockHabit;
     }
 
@@ -59,7 +62,7 @@ public class HabitTest {
             flag = true;
         // flag and isOnDay() should both return true if today is Monday, Wednesday or Friday
         // and both return false otherwise
-        assertEquals(flag,habit.isOnDay());
+        assertEquals(flag,habit.getOnDaysObj().isOnDay());
     }
 
     /**

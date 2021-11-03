@@ -15,13 +15,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.cmput301f21t34.habittrak.AddHabitActivity;
-import com.cmput301f21t34.habittrak.Habit;
+import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.R;
+
 import com.cmput301f21t34.habittrak.TodayHabitRecyclerAdapter;
-import com.cmput301f21t34.habittrak.User;
+
+import com.cmput301f21t34.habittrak.TodayHabitList;
+import com.cmput301f21t34.habittrak.user.Habit_List;
+import com.cmput301f21t34.habittrak.user.User;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -39,8 +46,14 @@ import java.util.GregorianCalendar;
  */
 public class TodayListFragment extends Fragment {
     // attributes
-    ArrayList<Habit> habitsData;
+
+
     TodayHabitRecyclerAdapter adapter;
+
+    private ListView habitList;
+    private ArrayAdapter<Habit> habitAdapter;
+    private Habit_List habitsData;
+
     User mainUser;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
@@ -51,6 +64,7 @@ public class TodayListFragment extends Fragment {
     public TodayListFragment(User mainUser) {
 
         this.mainUser = mainUser;
+        habitsData = mainUser.getHabitList();
     }
 
     @Override
@@ -61,20 +75,25 @@ public class TodayListFragment extends Fragment {
 
 
 
+
         Log.d("mainUser", "in TodayListFragment mainUser: " + mainUser.getUsername());
 
 
         // code to execute //
 
-        // sample data
+        // sample data (Does not show as we are getting habits from main User)
         Calendar date = new GregorianCalendar(2021,1,31);
-        Habit habit1 = new Habit("exercise dog", "some desc", date, new boolean[]{true, true, true, true, true, true, true});
-        Habit habit2 = new Habit("go for a walk", "some desc 2", date, new boolean[]{true, true, true, true, true, true, true});
-        habitsData = new ArrayList<>();
+        Habit habit1 = new Habit("exercise dog", "some desc", date);
+            habit1.getOnDaysObj().setTrue(Calendar.MONDAY);
+            habit1.getOnDaysObj().setTrue(Calendar.FRIDAY);
+        Habit habit2 = new Habit("go for a walk", "some desc 2", date);
+            habit2.getOnDaysObj().setAll(new boolean[]{true, true, true, true, true, true, true});
+
+        Habit_List habitsData = new Habit_List();
         habitsData.add(habit1); habitsData.add(habit2);
 
 
-        addHabitList(); // populates habit list
+        // populates habit list
 
         // setup recycler view
         recyclerView = view.findViewById(R.id.today_recycler_view);
@@ -88,6 +107,16 @@ public class TodayListFragment extends Fragment {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
+
+        /*
+        //connect the array adapter
+        habitAdapter = new TodayHabitList(getContext(), habitsData);
+        recyclerView.setAdapter(habitAdapter);
+
+
+         */
+
+        refreshTodayFragment(); // populates habit list
 
 
 
@@ -110,11 +139,11 @@ public class TodayListFragment extends Fragment {
             int fromPosition = viewHolder.getAdapterPosition();
             int toPosition = target.getAdapterPosition();
 
-            if (fromPosition < toPosition) {
+            if (fromPosition < toPosition && toPosition < habitsData.size()) {
                 for (int i = fromPosition; i < toPosition; i++) {
                     Collections.swap(habitsData, i, i + 1);
                 }
-            } else {
+            } else if (toPosition >= 0) {
                 for (int i = fromPosition; i > toPosition; i--) {
                     Collections.swap(habitsData, i, i - 1);
                 }
@@ -142,9 +171,10 @@ public class TodayListFragment extends Fragment {
      *
      * @author Dakota
      */
-    public void addHabitList() {
 
-        Log.d("TodayListFragment", "refreshing habit list");
+    public void refreshTodayFragment() {
+
+
         // Populate today view with Today's habits.
 
         habitsData.clear(); // Make sure is clear
@@ -153,7 +183,7 @@ public class TodayListFragment extends Fragment {
 
         // Iterates through all habits
         for (int index = 0; index < mainUserHabits.size(); index++){
-            if (mainUserHabits.get(index).isOnDay() && mainUserHabits.get(index).isHabitStart()){ // If a habit is active today add
+            if (mainUserHabits.get(index).getOnDaysObj().isOnDay() && mainUserHabits.get(index).isHabitStart()){ // If a habit is active today add
                 habitsData.add(mainUserHabits.get(index));
                 adapter.notifyDataSetChanged();
                 Log.d("Habits Size", Integer.toString(habitsData.size()));
@@ -162,13 +192,6 @@ public class TodayListFragment extends Fragment {
 
     }
 
-    public void refreshList(Habit newHabit){
-        if (newHabit.isOnDay() && newHabit.isHabitStart()) {
-            habitsData.add(newHabit);
-            adapter.notifyItemInserted(habitsData.size() - 1);
-            Log.d("Habits Size", Integer.toString(habitsData.size()));
-        }
-    }
 
 
 }

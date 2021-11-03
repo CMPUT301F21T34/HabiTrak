@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.cmput301f21t34.habittrak.user.Habit;
+import com.cmput301f21t34.habittrak.user.User;
 import com.cmput301f21t34.habittrak.fragments.AllHabitsFragment;
 import com.cmput301f21t34.habittrak.fragments.EventsFragment;
 import com.cmput301f21t34.habittrak.fragments.ProfileFragment;
@@ -45,7 +47,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
     //TODO: Explicitly make attributes private
     NavigationBarView bottomNav;
-    User mainUser;
+    User mainUser;// = new User(); // Creates dummy user for testing purposes
 
     TodayListFragment todayFrag;
     SocialFragment socialFrag;
@@ -150,7 +152,10 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         if (resultCode == RESULT_NEW_HABIT) {
             Habit newHabit = intent.getParcelableExtra("newHabit");
             mainUser.addHabit(newHabit);
-            todayFrag.refreshList(newHabit);
+
+            todayFrag.refreshTodayFragment(); // refresh view
+
+
         }
 
         super.onActivityResult(requestCode, resultCode, intent);

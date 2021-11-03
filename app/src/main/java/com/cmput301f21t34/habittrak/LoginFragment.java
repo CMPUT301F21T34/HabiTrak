@@ -3,6 +3,7 @@ package com.cmput301f21t34.habittrak;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +12,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.cmput301f21t34.habittrak.user.Habit;
+import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-import com.cmput301f21t34.habittrak.MainActivity;
+import java.util.Calendar;
+import java.util.TimeZone;
+import java.util.GregorianCalendar;
 
 
 /**
@@ -47,6 +52,19 @@ public class LoginFragment extends Fragment {
         TextInputLayout passwordLayout = view.findViewById(R.id.password_text_input);
         TextInputEditText passwordEditText = view.findViewById(R.id.password_edit_text);
         MaterialButton loginButton = view.findViewById(R.id.login_button);
+
+        // Test Data //
+
+        Calendar date = Calendar.getInstance();
+        Habit habit1 = new Habit("exercise dog", "some desc", date);
+        habit1.getOnDaysObj().setTrue(Calendar.MONDAY);
+        habit1.getOnDaysObj().setTrue(Calendar.FRIDAY);
+        Habit habit2 = new Habit("go for a walk", "some desc 2", date);
+        habit2.getOnDaysObj().setAll(new boolean[]{true, true, true, true, true, true, true});
+
+        mainUser.addHabit(habit1); mainUser.addHabit(habit2);
+
+        // End Test Data //
 
         // Password validator
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -91,8 +109,7 @@ public class LoginFragment extends Fragment {
         if (true) { // logic for allowing loggin in, for sake of testing is always true - Dakota
             passwordOk = true;
 
-            // populate user after verification
-            mainUser = new User("dummyUser");
+
 
 
         }
@@ -107,8 +124,10 @@ public class LoginFragment extends Fragment {
      */
     public void startHomePage(View view){
         Intent intent = new Intent(getActivity(), BaseActivity.class);
-        intent.putExtra("mainUser", mainUser); // passes mainUser through intent
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                .putExtra("mainUser", mainUser);
         startActivity(intent);
         getActivity().finish();
     }

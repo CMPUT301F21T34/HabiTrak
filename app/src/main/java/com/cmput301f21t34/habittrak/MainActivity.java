@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import com.cmput301f21t34.habittrak.user.User;
+
 /**
  * MainActivity
  *
@@ -17,7 +19,7 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        User mainUser = null;
+        User mainUser = new User();
 
         if (savedInstanceState != null) {
             // get users credentials

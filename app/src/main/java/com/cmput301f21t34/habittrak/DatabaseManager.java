@@ -572,8 +572,7 @@ public class DatabaseManager {
      * @param toBeAdded
      */
     public void updateFollower(User user, Database_Pointer toBeAdded,boolean remove) {
-        // Update user
-
+        // Update user's followerList
         DocumentReference userRef = database.collection("users").document(user.getEmail());
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -601,7 +600,7 @@ public class DatabaseManager {
                             }
                             Log.d(TAG,"inside for loop");
                         }
-                        // Updates only if follower is not already in the list
+                        // Updates only if follower (toBeAdded) is not already in the list
                         if (!contains && !remove) {
                             Log.d("Contains", "does not");
                             List<String> fieldsToUpdate = new ArrayList<>();
@@ -632,7 +631,7 @@ public class DatabaseManager {
             }
         });
 
-        // Update toBeAdded
+        // Update toBeAdded's followingList
         DocumentReference addedRef = database.collection("users").document(toBeAdded.getEmail());
         addedRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -647,7 +646,7 @@ public class DatabaseManager {
                         ArrayList<HashMap<String, String>> followingListMap = (ArrayList<HashMap<String, String>>) document.get("followingList");
                         followingList = toPointerList((followingListMap));
                         Database_Pointer following = new Database_Pointer(user.getEmail());
-                        // Updates only if following is not already in the list
+                        // Updates only if following (user) is not already in the list
                         for(int i = 0; i < followingList.size(); i++){
                             if (followingList.get(i).equals(following)){
                                 index = i;
@@ -728,7 +727,7 @@ public class DatabaseManager {
                                 Log.d(TAG,"not from equals");
                             }
                         }
-                        // Updates only if follower is not already in the list
+                        // Updates only if followerReq (toBeAdded) is not already in the list
                         if (!contains && !remove) {
                             Log.d("Contains", "does not");
                             List<String> fieldsToUpdate = new ArrayList<>();
@@ -758,7 +757,7 @@ public class DatabaseManager {
             }
         });
 
-        // Update toBeAdded
+        // Update toBeAdded's followerRequestedList
         DocumentReference addedRef = database.collection("users").document(toBeAdded.getEmail());
         addedRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -773,7 +772,7 @@ public class DatabaseManager {
                         ArrayList<HashMap<String, String>> followerRequestedListMap = (ArrayList<HashMap<String, String>>) document.get("followRequestedList");
                         followerRequestedList = toPointerList((followerRequestedListMap));
                         Database_Pointer followerRequested = new Database_Pointer(user.getEmail());
-                        // Updates only if following is not already in the list
+                        // Updates only if followerRequested (user) is not already in the list
                         for(int i = 0; i < followerRequestedList.size(); i++){
                             if (followerRequestedList.get(i).equals(followerRequested)){
                                 index = i;
@@ -824,7 +823,7 @@ public class DatabaseManager {
      * @param toBeAdded
      */
     public void updateBlock(User user, Database_Pointer toBeAdded, boolean remove) {
-        // Update user
+        // Update user's blockList
         DocumentReference userRef = database.collection("users").document(user.getEmail());
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -837,7 +836,7 @@ public class DatabaseManager {
                         boolean contains = false;
                         ArrayList<Database_Pointer> blockList = new ArrayList<>();
                         ArrayList<HashMap<String, String>> blockListMap = (ArrayList<HashMap<String, String>>) document.get("blockList");
-                        blockList = toPointerList((blockListMap));
+                        blockList = toPointerList(blockListMap);
                         for(int i = 0; i < blockList.size(); i++){
                             if (blockList.get(i).equals(toBeAdded)){
                                 contains = true;
@@ -850,7 +849,7 @@ public class DatabaseManager {
                                 Log.d(TAG,"not from equals");
                             }
                         }
-                        // Updates only if follower is not already in the list
+                        // Updates only if block (toBeAdded) is not already in the list
                         if (!contains && !remove) {
                             Log.d("Contains", "does not");
                             List<String> fieldsToUpdate = new ArrayList<>();
@@ -880,7 +879,7 @@ public class DatabaseManager {
             }
         });
 
-        // Update toBeAdded
+        // Update toBeAdded's blockedByList
         DocumentReference addedRef = database.collection("users").document(toBeAdded.getEmail());
         addedRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -893,9 +892,9 @@ public class DatabaseManager {
                         boolean contains = false;
                         ArrayList<Database_Pointer> blockedByList = new ArrayList<>();
                         ArrayList<HashMap<String, String>> blockedByListMap = (ArrayList<HashMap<String, String>>) document.get("blockedByList");
-                        blockedByList = toPointerList((blockedByListMap));
+                        blockedByList = toPointerList(blockedByListMap);
                         Database_Pointer blockedBy = new Database_Pointer(user.getEmail());
-                        // Updates only if following is not already in the list
+                        // Updates only if blockedBy (user) is not already in the list
                         for(int i = 0; i < blockedByList.size();i++){
                             if (blockedByList.get(i).equals(blockedBy)){
                                 contains = true;

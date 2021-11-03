@@ -274,6 +274,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
      * @return boolean true if a Habit_Event was removed
      * @deprecated use removeHabitEvent(Habit_Event) instead
      */
+    /*
     public boolean removeHabitEvent(String habitEventID){
 
         boolean removed = false; // keeps track if a Habit_Event has been removed
@@ -292,7 +293,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
         }
 
         return removed;
-    }
+    }*/
 
 
     /**

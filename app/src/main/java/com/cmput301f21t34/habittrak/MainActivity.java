@@ -49,7 +49,10 @@ public class MainActivity extends AppCompatActivity{
                     .commit();
         }
         */
-        On_Days on_days = new On_Days();
-
+        Habit_Event event1 = new Habit_Event();
+        Habit_Event event2 = new Habit_Event();
+        Habit habit = new Habit();
+        habit.addHabitEvent(event1);
+        habit.addHabitEvent(event2);
     }
 }

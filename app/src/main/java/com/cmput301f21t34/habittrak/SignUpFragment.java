@@ -19,6 +19,14 @@ import com.google.android.material.textfield.TextInputLayout;
 
 /**
  * SignUpFragment
+ * @author Pranav
+ *
+ * Sign Up frament for creating new users
+ *
+ * @version 1.0
+ * @since 2021-11-03
+ * @see DatabaseManager
+ * @see User
  */
 public class SignUpFragment extends Fragment {
 

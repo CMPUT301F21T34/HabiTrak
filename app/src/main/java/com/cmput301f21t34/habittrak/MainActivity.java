@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        /*
+
         User mainUser = null;
         if (savedInstanceState != null) {
             // get users credentials
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity{
                     .add(R.id.login_fragment_container, new LoginFragment(mainUser))
                     .commit();
         }
-
+        /*
         Habit_Event event1 = new Habit_Event();
         event1.setComment("yep");
         Habit_Event event2 = new Habit_Event();

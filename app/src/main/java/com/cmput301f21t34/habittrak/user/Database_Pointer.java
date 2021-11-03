@@ -16,7 +16,7 @@ public class Database_Pointer {
     private final String email; // id can only be assigned once
 
     public Database_Pointer(String email){
-       this.email = email;
+        this.email = email;
     }
 
 
@@ -66,5 +66,9 @@ public class Database_Pointer {
         if (email != other.getEmail())
             return false;
         return true;
+    }
+
+    public boolean Equals(Database_Pointer dp){
+        return this.getEmail().equals(dp.getEmail());
     }
 }

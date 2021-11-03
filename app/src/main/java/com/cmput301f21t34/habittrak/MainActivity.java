@@ -8,6 +8,8 @@ import android.util.Log;
 
 
 import com.cmput301f21t34.habittrak.user.Database_Pointer;
+import com.cmput301f21t34.habittrak.user.Habit;
+import com.cmput301f21t34.habittrak.user.Habit_Event;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity{
                     .commit();
         }*/
         DatabaseManager db = new DatabaseManager();
+        db.createNewUser("habit@gmail.com", "habitTest", "123", "bio");
         User user = db.getUser("pog@gmail.com");
         String TAG ="Checkchek";
 

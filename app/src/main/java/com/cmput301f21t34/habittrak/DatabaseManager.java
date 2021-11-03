@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.cmput301f21t34.habittrak.user.Database_Pointer;
 import com.cmput301f21t34.habittrak.user.Habit;
+import com.cmput301f21t34.habittrak.user.Habit_List;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -64,7 +65,7 @@ public class DatabaseManager {
     public boolean validCredentials(String email, String password) {
 
         boolean validCredentials = false;
-        
+
         final CollectionReference collectionReference = database.collection("users");
 
         try {
@@ -83,6 +84,13 @@ public class DatabaseManager {
         return validCredentials;
     }
 
+    /**
+     * getAllUsers()
+     *
+     * @author Henry
+     * @return
+     * Fetches all users (identified by email) from the database
+     */
     public ArrayList<Database_Pointer> getAllUsers() {
 
         ArrayList<Database_Pointer> users = new ArrayList<>();
@@ -108,7 +116,6 @@ public class DatabaseManager {
      * @param email
      * @return boolean
      */
-
     public boolean isUnique(String email) {
 
         boolean isUnique = false;
@@ -196,7 +203,6 @@ public class DatabaseManager {
         return false;
     }
 
-
     /**
      * getUser
      *
@@ -257,7 +263,7 @@ public class DatabaseManager {
 
             user.setPassword(password);
             user.setUsername(name);
-            user.setHabitList(habitList);
+            user.setHabitList((Habit_List) habitList);
             user.setFollowerList(followerList);
             user.setFollowingList(followingList);
             user.setBlockList(blockList);
@@ -404,7 +410,7 @@ public class DatabaseManager {
         }
         catch (Exception ignored){}
         return returnFollowingList;
-        }
+    }
 
     /**
      * getFollowReqList
@@ -435,7 +441,7 @@ public class DatabaseManager {
         }
         catch (Exception ignored){}
         return returnFollowReqList;
-        }
+    }
 
 
     /**
@@ -531,30 +537,43 @@ public class DatabaseManager {
         catch (Exception ignored){}
         return returnBlockedByList;
     }
+
     /**
-     * setHabitListDb
-     * sets the habit list in the database
-     * have 2 implementations (one is directly changing entire habit list another is changing habit events individually)
-     * @param user_email
-     * @param habitList
-     * @param givenHabitId
-     * @param habitEventList
+     * updateHabitNamePassword
+     * @author Tauseef
+     * @param user
+     * updates the habit name and password
      */
-    /*
-    public void setHabitListDb(String user_email, ArrayList<Habit> habitList, String givenHabitId,
-                               ArrayList<Habit> habitEventList) {
-        DatabaseReference usersReference = database.getReference("users");
+    public void updateHabitNamePassword(User user){
+        final CollectionReference collectionReference = database.collection("users");
+
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("Password", user.getPassword());
+        data.put("Username", user.getUsername());
+        data.put("Biography", user.getBiography());
+        data.put("habitList", user.getHabitList());
+        data.put("followerList", user.getFollowerList());
+        data.put("followingList", user.getFollowingList());
+        data.put("followReqList", user.getFollowerReqList());
+        data.put("followRequestedList", user.getFollowerRequestedList());
+        data.put("blockList", user.getBlockList());
+        data.put("blockedByList", user.getBlockedByList());
+
+        collectionReference
+                .document(user.getEmail())
+                .set(data);
     }
-    */
+
     /**
      * addFollower
      * email is now a follower of user (so add email to the follower list of user and add user to the following list of email2)
+     * @author Henry
      * @param user
      * @param toBeAdded
      */
-
-    public void addFollower(User user, Database_Pointer toBeAdded) {
+    public void updateFollower(User user, Database_Pointer toBeAdded,boolean remove) {
         // Update user
+
         DocumentReference userRef = database.collection("users").document(user.getEmail());
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -562,10 +581,28 @@ public class DatabaseManager {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
+                        String TAG = "contain checker";
+                        int index = -1;
+                        boolean contains = false;
                         ArrayList<Database_Pointer> followerList = new ArrayList<>();
-                        followerList = (ArrayList<Database_Pointer>) document.get("followerList");
+                        ArrayList<HashMap<String, String>> followerListMap = (ArrayList<HashMap<String, String>>) document.get("followerList");
+                        Log.d(TAG,Integer.toString(followerListMap.size()));
+                        followerList = toPointerList((followerListMap));
+                        for(int i = 0; i <followerList.size(); i++){
+                            if (followerList.get(i).equals(toBeAdded)){
+                                index = i;
+                                contains = true;
+                                Log.d(TAG,"from equals");
+                            }
+                            else if (followerList.get(i).Equals(toBeAdded)){
+                                index = i;
+                                contains = true;
+                                Log.d(TAG,"not from equals");
+                            }
+                            Log.d(TAG,"inside for loop");
+                        }
                         // Updates only if follower is not already in the list
-                        if (!followerList.contains(toBeAdded)) {
+                        if (!contains && !remove) {
                             Log.d("Contains", "does not");
                             List<String> fieldsToUpdate = new ArrayList<>();
                             fieldsToUpdate.add("followerList");
@@ -574,6 +611,144 @@ public class DatabaseManager {
 
                             HashMap<String, Object> data = new HashMap<>();
                             data.put("followerList", followerList);
+                            userRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
+                        }
+                        else if (contains && remove){
+                            Log.d("Contains", "does not");
+                            List<String> fieldsToUpdate = new ArrayList<>();
+                            fieldsToUpdate.add("followerList");
+
+                            followerList.remove(index);
+
+                            HashMap<String, Object> data = new HashMap<>();
+                            data.put("followerList", followerList);
+                            userRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
+
+                        }
+                    }
+                } else {
+                    Log.d("Task", "get failed with ", task.getException());
+                }
+            }
+        });
+
+        // Update toBeAdded
+        DocumentReference addedRef = database.collection("users").document(toBeAdded.getEmail());
+        addedRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        String TAG = "contain checker";
+                        int index = -1;
+                        boolean contains = false;
+                        ArrayList<Database_Pointer> followingList = new ArrayList<>();
+                        ArrayList<HashMap<String, String>> followingListMap = (ArrayList<HashMap<String, String>>) document.get("followingList");
+                        followingList = toPointerList((followingListMap));
+                        Database_Pointer following = new Database_Pointer(user.getEmail());
+                        // Updates only if following is not already in the list
+                        for(int i = 0; i < followingList.size(); i++){
+                            if (followingList.get(i).equals(following)){
+                                index = i;
+                                contains = true;
+                                Log.d(TAG,"from equals");
+                            }
+                            else if (followingList.get(i).Equals(following)){
+                                index = i;
+                                contains = true;
+                                Log.d(TAG,"not from equals");
+                            }
+                        }
+                        if (!contains && !remove){
+                            Log.d("Contains", "does not");
+                            List<String> fieldsToUpdate = new ArrayList<>();
+                            fieldsToUpdate.add("followingList");
+
+                            followingList.add(following);
+
+                            HashMap<String, Object> data = new HashMap<>();
+                            data.put("followingList", followingList);
+                            addedRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
+                        }
+                        else if (contains && remove){
+                            Log.d("Contains", "does not");
+                            List<String> fieldsToUpdate = new ArrayList<>();
+                            fieldsToUpdate.add("followingList");
+
+                            followingList.remove(index);
+
+
+                            HashMap<String, Object> data = new HashMap<>();
+                            data.put("followingList", followingList);
+                            addedRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
+                        }
+                    }
+                } else {
+                    Log.d("Task", "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
+    /**
+     * addfollow req
+     * email1 asked to follow email2 (so add email2 to the followerReq list of email1 and add email1 to the followerRequested list of email2)
+     * followerRequested list means the people that asked to follow the user
+     * followerReq list means the people that the user requested to follow
+     * @author Tauseef
+     * @param user
+     * @param toBeAdded
+     */
+    public void updateFollowerReq(User user, Database_Pointer toBeAdded, boolean remove) {
+        // Update user
+
+        DocumentReference userRef = database.collection("users").document(user.getEmail());
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        String TAG = "contain checker";
+                        int index = -1;
+                        boolean contains = false;
+                        ArrayList<Database_Pointer> followerReqList = new ArrayList<>();
+                        ArrayList<HashMap<String, String>> followerReqListMap = (ArrayList<HashMap<String, String>>) document.get("followReqList");
+                        followerReqList = toPointerList((followerReqListMap));
+                        for(int i = 0; i < followerReqList.size(); i++){
+                            if (followerReqList.get(i).equals(toBeAdded)){
+                                index = i;
+                                contains = true;
+                                Log.d(TAG,"from equals");
+                            }
+                            else if (followerReqList.get(i).Equals(toBeAdded)){
+                                index = i;
+                                contains = true;
+                                Log.d(TAG,"not from equals");
+                            }
+                        }
+                        // Updates only if follower is not already in the list
+                        if (!contains && !remove) {
+                            Log.d("Contains", "does not");
+                            List<String> fieldsToUpdate = new ArrayList<>();
+                            fieldsToUpdate.add("followReqList");
+
+                            followerReqList.add(toBeAdded);
+
+                            HashMap<String, Object> data = new HashMap<>();
+                            data.put("followReqList", followerReqList);
+                            userRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
+                        }
+                        else if (contains && remove){
+                            Log.d("Contains", "does not");
+                            List<String> fieldsToUpdate = new ArrayList<>();
+                            fieldsToUpdate.add("followReqList");
+
+                            followerReqList.remove(index);
+
+                            HashMap<String, Object> data = new HashMap<>();
+                            data.put("followReqList", followerReqList);
                             userRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
                         }
                     }
@@ -591,19 +766,46 @@ public class DatabaseManager {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        ArrayList<Database_Pointer> followingList = new ArrayList<>();
-                        followingList = (ArrayList<Database_Pointer>) document.get("followingList");
-                        Database_Pointer following = new Database_Pointer(user.getEmail());
+                        int index = -1;
+                        String TAG = "contain checker";
+                        boolean contains = false;
+                        ArrayList<Database_Pointer> followerRequestedList = new ArrayList<>();
+                        ArrayList<HashMap<String, String>> followerRequestedListMap = (ArrayList<HashMap<String, String>>) document.get("followRequestedList");
+                        followerRequestedList = toPointerList((followerRequestedListMap));
+                        Database_Pointer followerRequested = new Database_Pointer(user.getEmail());
                         // Updates only if following is not already in the list
-                        if (!followingList.contains(following)) {
+                        for(int i = 0; i < followerRequestedList.size(); i++){
+                            if (followerRequestedList.get(i).equals(followerRequested)){
+                                index = i;
+                                contains = true;
+                                Log.d(TAG,"from equals");
+                            }
+                            else if (followerRequestedList.get(i).Equals(followerRequested)){
+                                index = i;
+                                contains = true;
+                                Log.d(TAG,"not from equals");
+                            }
+                        }
+                        if (!contains && !remove){
                             Log.d("Contains", "does not");
                             List<String> fieldsToUpdate = new ArrayList<>();
-                            fieldsToUpdate.add("followingList");
+                            fieldsToUpdate.add("followRequestedList");
 
-                            followingList.add(following);
+                            followerRequestedList.add(followerRequested);
 
                             HashMap<String, Object> data = new HashMap<>();
-                            data.put("followingList", followingList);
+                            data.put("followRequestedList", followerRequestedList);
+                            addedRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
+                        }
+                        else if (contains && remove){
+                            Log.d("Contains", "does not");
+                            List<String> fieldsToUpdate = new ArrayList<>();
+                            fieldsToUpdate.add("followRequestedList");
+
+                            followerRequestedList.remove(index);
+
+                            HashMap<String, Object> data = new HashMap<>();
+                            data.put("followRequestedList", followerRequestedList);
                             addedRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
                         }
                     }
@@ -613,37 +815,136 @@ public class DatabaseManager {
             }
         });
     }
-    /**
-     * addfollow req
-     * email1 asked to follow email2 (so add email2 to the followerReq list of email1 and add email1 to the followerRequested list of email2)
-     * followerRequested list means the people that asked to follow the user
-     * followerReq list means the people that the user requested to follow
-     * @param email1
-     * @param email2
-     */
 
-    //public void addFollowerReq(String email1, String email2){}
     /**
      * addtoblocklist
      * email2 is now blocked by email1 (so add email2 to the block list of email1 and add email1 to the blockedby list of email2)
-     * @param email1
-     * @param email2
+     * @author Tauseef
+     * @param user
+     * @param toBeAdded
      */
+    public void updateBlock(User user, Database_Pointer toBeAdded, boolean remove) {
+        // Update user
 
-    //public void addBlockList(String email1, String email2){}
-    // change username and password and for habit just update
+        DocumentReference userRef = database.collection("users").document(user.getEmail());
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        int index = -1;
+                        String TAG = "contain checker";
+                        boolean contains = false;
+                        ArrayList<Database_Pointer> blockList = new ArrayList<>();
+                        ArrayList<HashMap<String, String>> blockListMap = (ArrayList<HashMap<String, String>>) document.get("blockList");
+                        blockList = toPointerList((blockListMap));
+                        for(int i = 0; i < blockList.size(); i++){
+                            if (blockList.get(i).equals(toBeAdded)){
+                                contains = true;
+                                index = i;
+                                Log.d(TAG,"from equals");
+                            }
+                            else if (blockList.get(i).Equals(toBeAdded)){
+                                contains = true;
+                                index = i;
+                                Log.d(TAG,"not from equals");
+                            }
+                        }
+                        // Updates only if follower is not already in the list
+                        if (!contains && !remove) {
+                            Log.d("Contains", "does not");
+                            List<String> fieldsToUpdate = new ArrayList<>();
+                            fieldsToUpdate.add("blockList");
+
+                            blockList.add(toBeAdded);
+
+                            HashMap<String, Object> data = new HashMap<>();
+                            data.put("blockList", blockList);
+                            userRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
+                        }
+                        else if (contains && remove){
+                            Log.d("Contains", "does not");
+                            List<String> fieldsToUpdate = new ArrayList<>();
+                            fieldsToUpdate.add("blockList");
+
+                            blockList.remove(index);
+
+                            HashMap<String, Object> data = new HashMap<>();
+                            data.put("blockList", blockList);
+                            userRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
+                        }
+                    }
+                } else {
+                    Log.d("Task", "get failed with ", task.getException());
+                }
+            }
+        });
+
+        // Update toBeAdded
+        DocumentReference addedRef = database.collection("users").document(toBeAdded.getEmail());
+        addedRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        String TAG = "contain checker";
+                        int index = -1;
+                        boolean contains = false;
+                        ArrayList<Database_Pointer> blockedByList = new ArrayList<>();
+                        ArrayList<HashMap<String, String>> blockedByListMap = (ArrayList<HashMap<String, String>>) document.get("blockedByList");
+                        blockedByList = toPointerList((blockedByListMap));
+                        Database_Pointer blockedBy = new Database_Pointer(user.getEmail());
+                        // Updates only if following is not already in the list
+                        for(int i = 0; i < blockedByList.size();i++){
+                            if (blockedByList.get(i).equals(blockedBy)){
+                                contains = true;
+                                index = i;
+                                Log.d(TAG,"from equals");
+                            }
+                            else if (blockedByList.get(i).Equals(blockedBy)){
+                                contains = true;
+                                index = i;
+                                Log.d(TAG,"not from equals");
+                            }
+                        }
+                        if (!contains && !remove){
+                            Log.d("Contains", "does not");
+                            List<String> fieldsToUpdate = new ArrayList<>();
+                            fieldsToUpdate.add("blockedByList");
+
+                            blockedByList.add(blockedBy);
+
+                            HashMap<String, Object> data = new HashMap<>();
+                            data.put("blockedByList", blockedByList);
+                            addedRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
+                        }
+                        else if (contains && remove){
+                            Log.d("Contains", "does not");
+                            List<String> fieldsToUpdate = new ArrayList<>();
+                            fieldsToUpdate.add("blockedByList");
+
+                            blockedByList.remove(index);
+
+                            HashMap<String, Object> data = new HashMap<>();
+                            data.put("blockedByList", blockedByList);
+                            addedRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
+                        }
+                    }
+                } else {
+                    Log.d("Task", "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
     /**
-     * changePassword
-     * @param email
-     * @param password
+     * Converts an ArrayList<HashMap<String, String>> listOfMap to an ArrayList<Database_Pointer>
+     * @author henry
+     * @param listOfMap
+     * @return
      */
-    //public void changePassword(String email, String password)
-
-    /**
-     * changeUserName
-     */
-    //public void changeUsername(String email, String username)
-
     public ArrayList<Database_Pointer> toPointerList(ArrayList<HashMap<String, String>> listOfMap) {
         ArrayList<Database_Pointer> pointerList = new ArrayList<>();
         for (int i = 0; i < listOfMap.size(); i++) {

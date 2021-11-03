@@ -28,6 +28,8 @@ public class User implements Parcelable {
     // Any changes need to be implement in writeToParcel and Parcel constructor - Dakota
 
     private String username;
+    
+    private String password;
 
     private Habit_List habitList; // Habit_List extends ArrayList<Habit>
 
@@ -36,24 +38,30 @@ public class User implements Parcelable {
     private ArrayList<Database_Pointer> followerList;
     private ArrayList<Database_Pointer> followingList;
     private ArrayList<Database_Pointer> followerReqList;
-
-
+    private ArrayList<Database_Pointer> followerRequestedList;
+    private ArrayList<Database_Pointer> blockList;
+    private ArrayList<Database_Pointer> blockedByList;
 
     private String biography;
 
     // Constructors //
 
     public User(String username, String email, Habit_List habitList, ArrayList<Habit_Event> habitEventList,
-         ArrayList<Database_Pointer> followerList, ArrayList<Database_Pointer> followingList, ArrayList<Database_Pointer> followerReqList, String biography){
+                ArrayList<Database_Pointer> followerList, ArrayList<Database_Pointer> followingList,
+                ArrayList<Database_Pointer> followerReqList, ArrayList<Database_Pointer> followerRequestedList,
+                ArrayList<Database_Pointer> blockList, ArrayList<Database_Pointer> blockedByList,
+                String biography) {
         this.email = email;
         this.username = username;
         this.habitList = habitList;
         this.followerList = followerList;
         this.followingList = followingList;
         this.followerReqList = followerReqList;
+        this.followerRequestedList = followerRequestedList;
+        this.blockList = blockList;
+        this.blockedByList = blockedByList;
         this.biography = biography;
     }
-
 
     /**
      * New User
@@ -65,11 +73,36 @@ public class User implements Parcelable {
     public User(){
         this.email = "dummyEmail";
         this.username = "dummyUser";
+        this.password = "12345";
+        
+        this.habitList = new Habit_List();
+        this.followerList = new ArrayList<Database_Pointer>();
+        this.followingList = new ArrayList<Database_Pointer>();
+        this.followerReqList = new ArrayList<Database_Pointer>();
+        this.followerRequestedList = new ArrayList<Database_Pointer>();
+        this.blockList = new ArrayList<Database_Pointer>();
+        this.blockedByList = new ArrayList<Database_Pointer>();
+        this.biography = "";
+    }
+    
+    /**
+     * User
+     *
+     * Creates a User with the given email
+     * User only has a username, an email and a password
+     */
+    public User(String email){
+        this.email = email;
+        this.username = "dummyUser";
+        this.password = "12345";
 
         this.habitList = new Habit_List();
         this.followerList = new ArrayList<Database_Pointer>();
         this.followingList = new ArrayList<Database_Pointer>();
         this.followerReqList = new ArrayList<Database_Pointer>();
+        this.followerRequestedList = new ArrayList<Database_Pointer>();
+        this.blockList = new ArrayList<Database_Pointer>();
+        this.blockedByList = new ArrayList<Database_Pointer>();
         this.biography = "";
     }
 
@@ -85,19 +118,21 @@ public class User implements Parcelable {
      */
     public User(Parcel parcel){
 
-
-
         Bundle userBundle;
         userBundle = parcel.readBundle(User.class.getClassLoader());
         Log.d("UserParcelable", "Parcel Construction userName:" + userBundle.getString("username"));
 
 
         this.username = userBundle.getString("username");
+        this.password = userBundle.getString("password");
         this.email = userBundle.getString("email");
         this.habitList = new Habit_List(userBundle.getParcelableArrayList("habitList"));
         this.followerList = userBundle.getParcelableArrayList("followerList");
         this.followingList = userBundle.getParcelableArrayList("followingList");
         this.followerReqList = userBundle.getParcelableArrayList("followerReqList");
+        this.followerReqList = userBundle.getParcelableArrayList("followerRequestedList");
+        this.blockList = userBundle.getParcelableArrayList("blockList");
+        this.blockedByList = userBundle.getParcelableArrayList("blockedByList");
 
         this.biography = userBundle.getString("biography");
 
@@ -107,24 +142,43 @@ public class User implements Parcelable {
     }
 
 
-    //getter methods
+    // getter methods
     public String getUsername() {
         return username;
     }
-
+    
+    public String getPassword() {
+        return password;
+    }
+    
     public Habit_List getHabitList() {
         return habitList;
     }
-
+    
     public ArrayList<Database_Pointer> getFollowerList() {
         return followerList;
     }
+    
     public ArrayList<Database_Pointer> getFollowerReqList() {
         return followerReqList;
     }
+    
     public ArrayList<Database_Pointer> getFollowingList() {
         return followingList;
     }
+    
+    public ArrayList<Database_Pointer> getFollowerRequestedList() {
+        return followerRequestedList;
+    }
+    
+    public ArrayList<Database_Pointer> getBlockList() {
+        return blockList;
+    }
+    
+    public ArrayList<Database_Pointer> getBlockedByList() {
+        return blockedByList;
+    }
+    
     public String getBiography() {
         return biography;
     }
@@ -134,6 +188,10 @@ public class User implements Parcelable {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+    
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void setHabitList(Habit_List habitList) {
@@ -154,14 +212,24 @@ public class User implements Parcelable {
         this.followerReqList = followerReqList;
     }
 
+    public void setFollowerRequestedList(ArrayList<Database_Pointer> followerRequestedList) {
+        this.followerRequestedList = followerRequestedList;
+    }
 
+    public void setBlockList(ArrayList<Database_Pointer> blockList) {
+        this.blockList = blockList;
+    }
 
+    public void setBlockedByList(ArrayList<Database_Pointer> blockedByList) {
+        this.blockedByList = blockedByList;
+    }
+    
     public void setBiography(String biography) {
         this.biography = biography;
     }
     // add methods have to adjust the database
 
-
+    
     public void addHabit(Habit habit){
         this.habitList.add(habit);
     }
@@ -263,6 +331,8 @@ public class User implements Parcelable {
         userBundle.putString("username", username);
 
         Log.d("UserParcelable", "Parcel Writer userName:" + userBundle.getString("username"));
+        
+        userBundle.putString("password", password);
 
         userBundle.putString("biography", biography);
 
@@ -275,6 +345,9 @@ public class User implements Parcelable {
         userBundle.putParcelableArrayList("followerList", followerList);
         userBundle.putParcelableArrayList("followingList", followingList);
         userBundle.putParcelableArrayList("followerReqList", followerReqList);
+        userBundle.putParcelableArrayList("followerRequestedList", followerRequestedList);
+        userBundle.putParcelableArrayList("blockList", blockList);
+        userBundle.putParcelableArrayList("blockedByList", blockedByList);
 
         parcel.writeBundle(userBundle); // writes bundle to parcel
 

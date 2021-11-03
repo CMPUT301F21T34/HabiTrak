@@ -46,13 +46,14 @@ public class User implements Parcelable {
 
     // Constructors //
 
-    public User(String username, String email, Habit_List habitList, ArrayList<Habit_Event> habitEventList,
+    public User(String username, String password, String email, Habit_List habitList, ArrayList<Habit_Event> habitEventList,
                 ArrayList<Database_Pointer> followerList, ArrayList<Database_Pointer> followingList,
                 ArrayList<Database_Pointer> followerReqList, ArrayList<Database_Pointer> followerRequestedList,
                 ArrayList<Database_Pointer> blockList, ArrayList<Database_Pointer> blockedByList,
                 String biography) {
         this.email = email;
         this.username = username;
+        this.password = password;
         this.habitList = habitList;
         this.followerList = followerList;
         this.followingList = followingList;

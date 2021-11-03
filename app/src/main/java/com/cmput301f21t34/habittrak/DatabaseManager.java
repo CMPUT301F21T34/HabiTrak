@@ -121,7 +121,48 @@ public class DatabaseManager {
      * @param email
      * @return boolean
      */
-    public boolean isUnique(String email) {
+    public boolean isUniqueEmail(String email) {
+
+        boolean isUnique = false;
+
+        final CollectionReference collectionReference = database.collection("users");
+
+        try {
+            // Get all usernames
+            ArrayList<String> allUserNames = new ArrayList<>();
+            Task<QuerySnapshot> task1 = database.collection("users").get();
+            while (!task1.isComplete()) ;
+            for (QueryDocumentSnapshot document : task1.getResult()) {
+                allUserNames.add(document.get("username").toString());
+            }
+
+            // Get username for given email, then compare
+            DocumentReference docref = collectionReference.document(email);
+            Task<DocumentSnapshot> task2 = docref.get();
+            while (!task2.isComplete());
+            DocumentSnapshot document = task2.getResult();
+            String username = document.get("username").toString();
+            if (!allUserNames.contains(username)) {
+                isUnique = true;
+            }
+            return isUnique;
+
+        }
+
+        catch (Exception ignored) {}
+
+        return isUnique;
+    }
+
+    /**
+     * Checks to see if the user with the provided email already exists
+     *
+     * @author Henry
+     * @param username
+     * @param email
+     * @return boolean
+     */
+    public boolean isUniqueUsername(String username, String email) {
 
         boolean isUnique = false;
 
@@ -149,21 +190,19 @@ public class DatabaseManager {
      * @author Henry
      * returns true if it is successful or false if it is not
      */
-    public boolean createNewUser(String email, String username, String password, String biography, Habit_List habitList) {
+    public boolean createNewUser(String email, String password) {
 
         String TAG = "Unique";
 
-        if (isUnique(email)) {
+        if (isUniqueEmail(email)) {
             Log.d(TAG, "Unique");
             final CollectionReference collectionReference = database.collection("users");
 
-            ArrayList<HabitDatabase> habitListDatabase = habitToDatabase(habitList);
-
             HashMap<String, Object> data = new HashMap<>();
             data.put("Password", password);
-            data.put("Username", username);
-            data.put("Biography", biography);
-            data.put("habitList", habitListDatabase);
+            data.put("Username", "");
+            data.put("Biography", "");
+            data.put("habitList", new ArrayList<HabitDatabase>());
             data.put("followerList", new ArrayList<Database_Pointer>());
             data.put("followingList", new ArrayList<Database_Pointer>());
             data.put("followReqList", new ArrayList<Database_Pointer>());
@@ -190,7 +229,7 @@ public class DatabaseManager {
     public boolean deleteUser(String email) {
 
         String TAG = "Delete";
-        if (!isUnique(email)) {
+        if (!isUniqueEmail(email)) {
             database.collection("users").document(email)
                     .delete()
                     .addOnSuccessListener(new OnSuccessListener<Void>() {

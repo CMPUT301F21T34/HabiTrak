@@ -28,6 +28,7 @@ public class User implements Parcelable {
     // Any changes need to be implement in writeToParcel and Parcel constructor
     // - Dakota
 
+    // TODO: Make username final in version after merge with Database
     private String username;
 
     // Password does not need to be parse and may be eventually removed
@@ -257,7 +258,7 @@ public class User implements Parcelable {
     /**
      * @deprecated assign password in constructor
      * @author Dakota
-     * @autor Henry
+     * @author Henry
      * @param password String The Users password
      */
     public void setPassword(String password) {
@@ -416,7 +417,7 @@ public class User implements Parcelable {
         userBundle.putString("email", this.getEmail());
 
         // requires Habit to implement Parcelable
-        userBundle.putParcelableArrayList("habitList", (ArrayList<Habit>)habitList);
+        userBundle.putParcelableArrayList("habitList", habitList);
 
 
         userBundle.putParcelableArrayList("followerList", followerList);
@@ -431,28 +432,25 @@ public class User implements Parcelable {
     }
 
     // Creates User from parcel
-    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
+    public static final Parcelable.Creator<User> CREATOR
+            = new Parcelable.Creator<User>()
+    {
+        @Override
+        public User createFromParcel(Parcel in) { return new User(in); }
 
         @Override
-        public User createFromParcel(Parcel in) {
-
-            return new User(in);
-        }
-
-        @Override
-        public User[] newArray(int size) {
-
-            return new User[size];
-        }
+        public User[] newArray(int size) { return new User[size]; }
     };
 
 
     public boolean removeFollower(Database_Pointer follower) {
-        boolean success = false;
-        success = this.followerList.removeIf(database_pointer -> {
-            if (database_pointer.getEmail() == follower.getEmail()){ return true; }
-            return false;
-        });
+        boolean success;
+        success = this.followerList.removeIf(
+
+                database_pointer ->
+                        database_pointer.getEmail().equals( follower.getEmail() )
+
+        );
 
         return success;
     }
@@ -469,10 +467,7 @@ public class User implements Parcelable {
 
     public boolean removeFollowing(Database_Pointer following) {
         boolean success = false;
-        success = this.followingList.removeIf(database_pointer -> {
-            if (database_pointer.getEmail() == following.getEmail()){ return true; }
-            return false;
-        });
+        success = this.followingList.removeIf(database_pointer -> database_pointer.getEmail().equals( following.getEmail() ));
 
         return success;
     }

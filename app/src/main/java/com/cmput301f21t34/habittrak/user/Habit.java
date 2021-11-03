@@ -28,7 +28,8 @@ public class Habit implements Comparable<Habit>, Parcelable {
 
 
     private int index = 0;
-    private String title, reason;
+    private String title;
+    private String reason;
     private Calendar startDate;
     private ArrayList<Habit_Event> habitEvents = new ArrayList<Habit_Event>();
     private boolean isPublic = false; // If other users can see this habit

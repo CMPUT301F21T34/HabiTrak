@@ -190,7 +190,7 @@ public class DatabaseManager {
      * @author Henry
      * returns true if it is successful or false if it is not
      */
-    public boolean createNewUser(String email, String password) {
+    public boolean createNewUser(String email, String username, String password) {
 
         String TAG = "Unique";
 
@@ -200,7 +200,7 @@ public class DatabaseManager {
 
             HashMap<String, Object> data = new HashMap<>();
             data.put("Password", password);
-            data.put("Username", "");
+            data.put("Username", username);
             data.put("Biography", "");
             data.put("habitList", new ArrayList<HabitDatabase>());
             data.put("followerList", new ArrayList<Database_Pointer>());

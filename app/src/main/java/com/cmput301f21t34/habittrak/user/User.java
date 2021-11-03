@@ -25,7 +25,8 @@ public class User implements Parcelable {
 
     // Attributes //
 
-    // Any changes need to be implement in writeToParcel and Parcel constructor - Dakota
+    // Any changes need to be implement in writeToParcel and Parcel constructor
+    // - Dakota
 
     private String username;
 
@@ -50,14 +51,21 @@ public class User implements Parcelable {
 
     // Constructors //
 
-    public User(String username, String password, String email, String biography,
-                Habit_List habitList,
-                ArrayList<Database_Pointer> followerList,
-                ArrayList<Database_Pointer> followingList,
-                ArrayList<Database_Pointer> followerReqList,
-                ArrayList<Database_Pointer> followerRequestedList,
-                ArrayList<Database_Pointer> blockList,
-                ArrayList<Database_Pointer> blockedByList
+    public User(
+
+            String username,
+            String password,
+            String email,
+            String biography,
+
+            Habit_List habitList,
+            ArrayList<Database_Pointer> followerList,
+            ArrayList<Database_Pointer> followingList,
+            ArrayList<Database_Pointer> followerReqList,
+            ArrayList<Database_Pointer> followerRequestedList,
+            ArrayList<Database_Pointer> blockList,
+            ArrayList<Database_Pointer> blockedByList
+
                 ) {
 
         this.email = email;
@@ -158,21 +166,39 @@ public class User implements Parcelable {
 
         Bundle userBundle;
         userBundle = parcel.readBundle(User.class.getClassLoader());
-        Log.d("UserParcelable", "Parcel Construction userName:" + userBundle.getString("username"));
 
-
+        // Strings //
         this.username = userBundle.getString("username");
         this.password = userBundle.getString("password");
         this.email = userBundle.getString("email");
-        this.habitList = new Habit_List(userBundle.getParcelableArrayList("habitList"));
-        this.followerList = userBundle.getParcelableArrayList("followerList");
-        this.followingList = userBundle.getParcelableArrayList("followingList");
-        this.followerReqList = userBundle.getParcelableArrayList("followerReqList");
-        this.followerReqList = userBundle.getParcelableArrayList("followerRequestedList");
-        this.blockList = userBundle.getParcelableArrayList("blockList");
-        this.blockedByList = userBundle.getParcelableArrayList("blockedByList");
-
         this.biography = userBundle.getString("biography");
+
+        // Habit_List from ArrayList<Habit>
+        this.habitList = new Habit_List(
+                userBundle.getParcelableArrayList("habitList")
+        );
+
+        // Database_Pointer Lists //
+        this.followerList = userBundle.getParcelableArrayList(
+                "followerList"
+        );
+        this.followingList = userBundle.getParcelableArrayList(
+                "followingList"
+        );
+        this.followerReqList = userBundle.getParcelableArrayList(
+                "followerReqList"
+        );
+        this.followerReqList = userBundle.getParcelableArrayList(
+                "followerRequestedList"
+        );
+        this.blockList = userBundle.getParcelableArrayList(
+                "blockList"
+        );
+        this.blockedByList = userBundle.getParcelableArrayList(
+                "blockedByList"
+        );
+
+
 
 
 
@@ -244,33 +270,40 @@ public class User implements Parcelable {
 
 
         // Might not want to allow these //
-    public void setFollowerList(ArrayList<Database_Pointer> followerList) {
-        this.followerList = followerList;
-    }
+    public void setFollowerList(
+            ArrayList<Database_Pointer> followerList
+    )
+    { this.followerList = followerList; }
 
-    public void setFollowingList(ArrayList<Database_Pointer> followingList) {
-        this.followingList = followingList;
-    }
+    public void setFollowingList(
+            ArrayList<Database_Pointer> followingList
+    )
+    { this.followingList = followingList; }
 
-    public void setFollowerReqList(ArrayList<Database_Pointer> followerReqList) {
-        this.followerReqList = followerReqList;
-    }
+    public void setFollowerReqList(
+            ArrayList<Database_Pointer> followerReqList
+    )
+    { this.followerReqList = followerReqList; }
 
-    public void setFollowerRequestedList(ArrayList<Database_Pointer> followerRequestedList) {
-        this.followerRequestedList = followerRequestedList;
-    }
+    public void setFollowerRequestedList(
+            ArrayList<Database_Pointer> followerRequestedList
+    )
+    { this.followerRequestedList = followerRequestedList; }
 
-    public void setBlockList(ArrayList<Database_Pointer> blockList) {
-        this.blockList = blockList;
-    }
+    public void setBlockList(
+            ArrayList<Database_Pointer> blockList
+    )
+    { this.blockList = blockList; }
 
-    public void setBlockedByList(ArrayList<Database_Pointer> blockedByList) {
-        this.blockedByList = blockedByList;
-    }
+    public void setBlockedByList(
+            ArrayList<Database_Pointer> blockedByList
+    )
+    { this.blockedByList = blockedByList; }
     
-    public void setBiography(String biography) {
-        this.biography = biography;
-    }
+    public void setBiography(
+            String biography
+    )
+    { this.biography = biography; }
     // add methods have to adjust the database
 
     

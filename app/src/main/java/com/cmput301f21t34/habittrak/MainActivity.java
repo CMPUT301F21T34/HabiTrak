@@ -10,6 +10,7 @@ import android.util.Log;
 import com.cmput301f21t34.habittrak.user.Database_Pointer;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.Habit_Event;
+import com.cmput301f21t34.habittrak.user.On_Days;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,7 +36,6 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
         /*
         User mainUser = null;
-
         if (savedInstanceState != null) {
             // get users credentials
             // validate credentials with database
@@ -48,27 +48,8 @@ public class MainActivity extends AppCompatActivity{
                     .add(R.id.login_fragment_container, new LoginFragment(mainUser))
                     .commit();
         }
-        /*
-        DatabaseManager db = new DatabaseManager();
-        db.createNewUser("habit@gmail.com", "habitTest", "123", "bio");
-        User user = db.getUser("pog@gmail.com");
-        //db.createNewUser("okayge@gmail.com","okayge","abc1234&","i am okayge");
-        String TAG ="Checkchek";
-        db.updateFollower(user,new Database_Pointer("okayge@gmail.com"),false);
-        db.updateFollowerReq(user,new Database_Pointer("okayge@gmail.com"),false);
-        db.updateBlock(user,new Database_Pointer("okayge@gmail.com"),false);
-        Log.d(TAG,user.getUsername());
-        Log.d(TAG,user.getFollowingList().get(0).getEmail());
-        Log.d(TAG,db.getFollowerList(user.getEmail()).get(0).getEmail());
-        Log.d(TAG,db.getFollowingList(user.getEmail()).get(0).getEmail());
-        Log.d(TAG,db.getBlockList(user.getEmail()).get(0).getEmail());
-        Log.d(TAG,db.getBlockedByList("okayge@gmail.com").get(0).getEmail());
-        Log.d(TAG,db.getFollowReqList(user.getEmail()).get(0).getEmail());
+        */
+        On_Days on_days = new On_Days();
 
-        Log.d(TAG,db.getFollowRequestedList("okayge@gmail.com").get(0).getEmail());
-
-        db.updateFollower(user,new Database_Pointer("okayge@gmail.com"),true);
-        db.updateFollowerReq(user,new Database_Pointer("okayge@gmail.com"),true);
-        db.updateBlock(user,new Database_Pointer("okayge@gmail.com"),true);*/
     }
 }

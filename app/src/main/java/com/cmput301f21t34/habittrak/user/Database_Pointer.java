@@ -54,8 +54,7 @@ public class Database_Pointer {
 
     // equals Implementation
     @Override
-    public boolean equals(Object obj)
-    {
+    public boolean equals(Object obj) {
         if (this == obj)
             return true;
         if (obj == null)
@@ -66,6 +65,7 @@ public class Database_Pointer {
         if (email != other.getEmail())
             return false;
         return true;
+
     }
 
     public boolean Equals(Database_Pointer dp){

@@ -825,7 +825,6 @@ public class DatabaseManager {
      */
     public void updateBlock(User user, Database_Pointer toBeAdded, boolean remove) {
         // Update user
-
         DocumentReference userRef = database.collection("users").document(user.getEmail());
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override

@@ -47,13 +47,28 @@ public class MainActivity extends AppCompatActivity{
                     .beginTransaction()
                     .add(R.id.login_fragment_container, new LoginFragment(mainUser))
                     .commit();
-        }*/
+        }
+        /*
         DatabaseManager db = new DatabaseManager();
         db.createNewUser("habit@gmail.com", "habitTest", "123", "bio");
         User user = db.getUser("pog@gmail.com");
+        //db.createNewUser("okayge@gmail.com","okayge","abc1234&","i am okayge");
         String TAG ="Checkchek";
-
+        db.updateFollower(user,new Database_Pointer("okayge@gmail.com"),false);
+        db.updateFollowerReq(user,new Database_Pointer("okayge@gmail.com"),false);
+        db.updateBlock(user,new Database_Pointer("okayge@gmail.com"),false);
         Log.d(TAG,user.getUsername());
-        Log.d(TAG,user.getFollowingList().get(1).getEmail());
+        Log.d(TAG,user.getFollowingList().get(0).getEmail());
+        Log.d(TAG,db.getFollowerList(user.getEmail()).get(0).getEmail());
+        Log.d(TAG,db.getFollowingList(user.getEmail()).get(0).getEmail());
+        Log.d(TAG,db.getBlockList(user.getEmail()).get(0).getEmail());
+        Log.d(TAG,db.getBlockedByList("okayge@gmail.com").get(0).getEmail());
+        Log.d(TAG,db.getFollowReqList(user.getEmail()).get(0).getEmail());
+
+        Log.d(TAG,db.getFollowRequestedList("okayge@gmail.com").get(0).getEmail());
+
+        db.updateFollower(user,new Database_Pointer("okayge@gmail.com"),true);
+        db.updateFollowerReq(user,new Database_Pointer("okayge@gmail.com"),true);
+        db.updateBlock(user,new Database_Pointer("okayge@gmail.com"),true);*/
     }
 }

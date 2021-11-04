@@ -394,7 +394,6 @@ public class DatabaseManager {
      * @param email
      * @return habitList
      */
-
     public Habit_List getHabitList(String email) {
 
         Habit_List returnHabitList = new Habit_List();
@@ -413,6 +412,14 @@ public class DatabaseManager {
         return returnHabitList;
     }
 
+    /**
+     * toHabitDatabaseList
+     * Converts an array of HashMap (data from the database) to an array of HabitDatabase objects
+     *
+     * @author Tauseef
+     * @param hashMapList
+     * @return
+     */
     public ArrayList<HabitDatabase> toHabitDatabaseList(ArrayList<HashMap<String,Object>>hashMapList){
         ArrayList<HabitDatabase> habitDatabaseList = new ArrayList<>();
         for (int i = 0; i < hashMapList.size(); i++) {
@@ -421,20 +428,35 @@ public class DatabaseManager {
         }
         return habitDatabaseList;
     }
-    // TODO calendar left
-    // time for habit database then array of it
+
+    /**
+     * toHabitDatabase
+     * Converts HashMap from database to HabitDatabase object
+     *
+     * @author Tauseef
+     * @param hashmap
+     * @return
+     */
     public HabitDatabase toHabitDatabase(HashMap<String ,Object> hashmap){
         HabitDatabase habitDatabase = new HabitDatabase();
         habitDatabase.setIndex((int)(long) hashmap.get("index"));
         habitDatabase.setReason((String) hashmap.get("reason"));
         habitDatabase.setTitle((String) hashmap.get("title"));
-//        habitDatabase.setisPublic((boolean) hashmap.get("isPublic"));
+        habitDatabase.setisPublic((boolean) hashmap.get("isPublic"));
         habitDatabase.setHabitEvents(toHabitEventList((ArrayList<HashMap<String, Object>>) hashmap.get("habitEvents")));
         habitDatabase.setOnDaysObj((ArrayList<Boolean>) hashmap.get("onDaysObj"));
         habitDatabase.setStartDate(toCalendar((HashMap<String, Object>) hashmap.get("startDate")));
         return  habitDatabase;
     }
 
+    /**
+     * tohabitEventList
+     * Converts an array of HashMap (data from the database) to an array of HabitEvent objects
+     *
+     * @author Tauseef
+     * @param hashMapList
+     * @return
+     */
     public ArrayList<Habit_Event> toHabitEventList(ArrayList<HashMap<String,Object>>hashMapList){
         ArrayList<Habit_Event> habitEventList = new ArrayList<>();
         for (int i = 0; i < hashMapList.size(); i++) {
@@ -443,17 +465,32 @@ public class DatabaseManager {
         }
         return habitEventList;
     }
-    // TODO calendar left
+
+    /**
+     * toHabitEvent
+     * Converts HashMap from database to HabitEvent object
+     *
+     * @author Tauseef
+     * @param hashmap
+     * @return
+     */
     public Habit_Event toHabitEvent(HashMap<String,Object> hashmap){
-        Habit_Event he = new Habit_Event();
-        he.setComment((String) hashmap.get("comment"));
-        he.setLocation((String) hashmap.get("location"));
-        he.setPhotograph((String) hashmap.get("photograph"));
-        //Log.d("HABITEVENT CALENDER", hashmap.get("completedDate").getClass().getName());
-        he.setCompletedDate(toCalendar((HashMap<String, Object>) hashmap.get("completedDate")));
-// calendar left file image as well
-        return he;
+        Habit_Event event = new Habit_Event();
+        event.setComment((String) hashmap.get("comment"));
+        event.setLocation((String) hashmap.get("location"));
+        event.setPhotograph((String) hashmap.get("photograph"));
+        event.setCompletedDate(toCalendar((HashMap<String, Object>) hashmap.get("completedDate")));
+        return event;
     }
+
+    /**
+     * toCalendar
+     * Converts HashMap from database to Calendar object
+     *
+     * @author Tauseef
+     * @param hashmap
+     * @return
+     */
     public GregorianCalendar toCalendar(HashMap<String,Object> hashmap){
         GregorianCalendar returnCalendar = new GregorianCalendar();
         returnCalendar.setLenient((boolean) hashmap.get("lenient"));
@@ -465,8 +502,17 @@ public class DatabaseManager {
         returnCalendar.setTime(((Timestamp) hashmap.get("time")).toDate());
         return returnCalendar;
     }
+
+    /**
+     * getTimezone
+     * Converts HashMap from database to TimeZone object
+     *
+     * @author Tauseef
+     * @param hashMap
+     * @return
+     */
     public TimeZone getTimezone(HashMap<String,Object> hashMap){
-        String timezoneId = ( String) hashMap.get("id");
+        String timezoneId = (String) hashMap.get("id");
         TimeZone zone = TimeZone.getTimeZone(timezoneId);
         return zone;
     }
@@ -660,7 +706,7 @@ public class DatabaseManager {
         data.put("Password", user.getPassword());
         data.put("Username", user.getUsername());
         data.put("Biography", user.getBiography());
-        data.put("habitList", habitToDatabase(user.getHabitList()));///////////////////////////////////////////////// check with henry
+        data.put("habitList", habitToDatabase(user.getHabitList()));
         data.put("followerList", user.getFollowerList());
         data.put("followingList", user.getFollowingList());
         data.put("followReqList", user.getFollowerReqList());
@@ -1048,7 +1094,7 @@ public class DatabaseManager {
 
     /**
      * Converts an ArrayList<HashMap<String, String>> listOfMap to an ArrayList<Database_Pointer>
-     * @author henry
+     * @author Henry
      * @param listOfMap
      * @return
      */

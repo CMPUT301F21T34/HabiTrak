@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        /*
+
         User mainUser = null;
         if (savedInstanceState != null) {
             // get users credentials
@@ -53,41 +53,5 @@ public class MainActivity extends AppCompatActivity{
                     .add(R.id.login_fragment_container, new LoginFragment(mainUser))
                     .commit();
         }
-
-        Habit_Event event1 = new Habit_Event();
-        event1.setComment("yep");
-        Habit_Event event2 = new Habit_Event();
-        Habit habit1 = new Habit();
-        habit1.addHabitEvent(event1);
-        habit1.addHabitEvent(event2);
-
-        Habit_Event event3 = new Habit_Event();
-        event1.setComment("go");
-        Habit_Event event4 = new Habit_Event();
-        event1.setComment("g0");
-        Habit habit2 = new Habit();
-        habit2.addHabitEvent(event3);
-        habit2.addHabitEvent(event4);
-
-        Habit_List habits = new Habit_List();
-        habits.add(habit1);
-        habits.add(habit2);
-        User user = new User("pogo@gmail.com");
-        user.setUsername("pogo");
-        user.setHabitList(habits);
-        DatabaseManager db = new DatabaseManager();
-        db.createNewUser(user.getEmail(), user.getUsername(), user.getPassword(), "", user.getHabitList());
-         */
-
-        DatabaseManager db = new DatabaseManager();
-        User user = db.getUser("pogo@gmail.com");
-        Habit_List hl =  user.getHabitList();
-        SimpleDateFormat fmt = new SimpleDateFormat("dd-MMM-yyyy");
-        Calendar cal = hl.get(0).getHabitEvents().get(1).getCompletedDate();
-        fmt.setCalendar(cal);
-
-        Log.d("contains",Integer.toString(hl.size()));
-        Log.d("contains",fmt.format(cal.getTime()));
-//        Log.d("contains",( hl.get(0).getHabitEvents().get(0).getCompletedDate().toString()));
     }
 }

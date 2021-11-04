@@ -107,7 +107,7 @@ public class LoginFragment extends Fragment {
 
         String user = username.toString();
 
-        boolean isInDatabase = !db.isUnique(user);
+        boolean isInDatabase = !db.isUniqueEmail(user);
         return isInDatabase;
     }
 

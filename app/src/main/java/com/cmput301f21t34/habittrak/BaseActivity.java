@@ -13,7 +13,6 @@ import com.cmput301f21t34.habittrak.user.User;
 import com.cmput301f21t34.habittrak.fragments.AllHabitsFragment;
 import com.cmput301f21t34.habittrak.fragments.EventsFragment;
 import com.cmput301f21t34.habittrak.fragments.ProfileFragment;
-import com.cmput301f21t34.habittrak.fragments.SocialFragment;
 import com.cmput301f21t34.habittrak.fragments.TodayListFragment;
 
 
@@ -46,7 +45,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
     User mainUser;// = new User(); // Creates dummy user for testing purposes
 
     TodayListFragment todayFrag;
-    SocialFragment socialFrag;
     ProfileFragment profileFrag;
     EventsFragment eventsFrag;
     AllHabitsFragment allHabitsFrag;
@@ -73,7 +71,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
         // Initializes Fragments //
         todayFrag = new TodayListFragment(mainUser);
-        socialFrag = new SocialFragment(mainUser);
         profileFrag = new ProfileFragment(mainUser);
         eventsFrag = new EventsFragment(mainUser);
         allHabitsFrag = new AllHabitsFragment(mainUser);
@@ -122,8 +119,11 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, profileFrag).commit();
                 return true;
             case R.id.navbar_menu_social:
-                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, socialFrag).commit();
-                return true;
+                Intent intent = new Intent(getBaseContext(), SocialActivity.class);
+                intent.putExtra("mainUser", mainUser); // passes mainUser through intent
+                startActivity(intent);
+                bottomNav.setSelectedItemId(R.id.navbar_menu_today);
+                return false;
         }
 
         return false;

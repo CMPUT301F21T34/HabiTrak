@@ -1,20 +1,16 @@
-package com.cmput301f21t34.habittrak;
+package com.cmput301f21t34.habittrak.recycler;
 
-import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.compose.ui.viewinterop.ViewFactoryHolder;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.user.Habit;
-import com.cmput301f21t34.habittrak.user.Habit_List;
 
 import java.util.ArrayList;
 

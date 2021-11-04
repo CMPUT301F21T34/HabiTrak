@@ -55,6 +55,7 @@ public class LoginFragment extends Fragment {
 
         // Test Data //
 
+        /*
         Calendar date = Calendar.getInstance();
         Habit habit1 = new Habit("exercise dog", "some desc", date);
         habit1.getOnDaysObj().setTrue(Calendar.MONDAY);
@@ -63,6 +64,8 @@ public class LoginFragment extends Fragment {
         habit2.getOnDaysObj().setAll(new boolean[]{true, true, true, true, true, true, true});
 
         mainUser.addHabit(habit1); mainUser.addHabit(habit2);
+
+         */
 
         // End Test Data //
 

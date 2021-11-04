@@ -31,7 +31,7 @@ import java.util.ArrayList;
 
 public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRecyclerAdapter.ViewHolder>{
 
-    private Habit_List habits;
+    private ArrayList<Habit> habits;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView habitName;
@@ -78,7 +78,7 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
      * @param data ArrayList<Habit> containing the data to populate views to be used
      * by RecyclerView.
      */
-    public TodayHabitRecyclerAdapter(Habit_List data){
+    public TodayHabitRecyclerAdapter(ArrayList<Habit> data){
         habits = data;
     }
 

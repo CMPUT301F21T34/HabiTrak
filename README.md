@@ -37,3 +37,6 @@ The goal of this project is to create a habit tracking app which also has social
 [Project Wiki](https://github.com/CMPUT301F21T34/HabiTrak/wiki)
 
 [Design](https://github.com/CMPUT301F21T34/HabiTrak/wiki/Design)
+
+## License
+ Licensed under the Apache License, Version 2.0. Copyright 2021 CMPUT301F21T34. [Copy of the license](LICENSE) 

@@ -410,9 +410,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
      */
     @Override
     public boolean equals(Object object){
-        String TAG = "HabitEquals";
 
-        Log.d(TAG, "entered equals");
 
         if (object.getClass() == Habit.class){
 

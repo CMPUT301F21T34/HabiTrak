@@ -31,11 +31,10 @@ public class UserTest {
      * @return Habit
      * Returns a new Habit object to perform tests on
      */
-    /*
     private User mockUser() {
         User mockUser = new User();
         return mockUser;
-    }*/
+    }
 
     /**
      * addHabitTest
@@ -43,7 +42,6 @@ public class UserTest {
      *
      * @author Henry
      */
-    /*
     @Test
     public void addHabitTest() {
         User user = mockUser();
@@ -60,7 +58,7 @@ public class UserTest {
         // Compare added habit object
         assertEquals(habit1, user.getHabitList().get(0));
         assertEquals(habit2, user.getHabitList().get(1));
-    }*/
+    }
 
     /**
      * removeHabitTest
@@ -68,7 +66,6 @@ public class UserTest {
      *
      * @author Henry
      */
-    /*
     @Test
     public void removeHabitTest() {
         User user = mockUser();
@@ -87,7 +84,7 @@ public class UserTest {
         // Remove habit2, size should be 0
         assertTrue(user.removeHabit(habit2));
         assertEquals(0, user.getHabitList().size());
-    }*/
+    }
 
 
 
@@ -97,7 +94,6 @@ public class UserTest {
      *
      * @author Henry
      */
-    /*
     @Test
     public void addFollowerTest() {
         User user = mockUser();
@@ -115,7 +111,7 @@ public class UserTest {
         // Compare added follower (user object)
         assertEquals(follower1, user.getFollowerList().get(0));
         assertEquals(follower2, user.getFollowerList().get(1));
-    }*/
+    }
 
     /**
      * removeFollowerTest
@@ -123,7 +119,7 @@ public class UserTest {
      *
      * @author Henry
      */
-    /*
+
     @Test
     public void removeFollowerTest() {
         User user = mockUser();
@@ -141,7 +137,7 @@ public class UserTest {
         // Remove follower2, size should be 0
         assertTrue(user.removeFollower(follower2));
         assertEquals(0, user.getFollowerList().size());
-    }*/
+    }
 
     /**
      * addFollowerReqTest
@@ -149,7 +145,6 @@ public class UserTest {
      *
      * @author Henry
      */
-    /*
     @Test
     public void addFollowerReqTest() {
         User user = mockUser();
@@ -171,15 +166,11 @@ public class UserTest {
         assertEquals(2, user.getFollowerReqList().size());
 
         // Compare added followerreq (user object)
-<<<<<<< HEAD
-        assertEquals(followerreq1, user.getFollowerReqList().get(0));
-        assertEquals(followerreq2, user.getFollowerReqList().get(1));
-    }*/
-=======
+
         assertEquals(follower1, user.getFollowerReqList().get(0));
         assertEquals(follower2, user.getFollowerReqList().get(1));
     }
->>>>>>> feature-profile
+
 
     /**
      * removeFollowerReqTest
@@ -187,7 +178,6 @@ public class UserTest {
      *
      * @author Henry
      */
-    /*
     @Test
     public void removeFollowerReqTest() {
         User user = mockUser();
@@ -205,14 +195,13 @@ public class UserTest {
         // Remove followerreq2, size should be 0
         assertTrue(user.removeFollowerReq(follower2));
         assertEquals(0, user.getFollowerReqList().size());
-    }*/
+    }
     /**
      * addFollowingTest
      * Tests if following is correctly added to the user
      *
      * @author Henry
      */
-    /*
     @Test
     public void addFollowingTest() {
         User user = mockUser();
@@ -232,15 +221,11 @@ public class UserTest {
         assertEquals(2, user.getFollowingList().size());
 
         // Compare added following (user object)
-<<<<<<< HEAD
-        assertEquals(following1, user.getFollowingList().get(0));
-        assertEquals(following2, user.getFollowingList().get(1));
-    }*/
-=======
+
         assertEquals(follower1, user.getFollowingList().get(0));
         assertEquals(follower2, user.getFollowingList().get(1));
     }
->>>>>>> feature-profile
+
 
     /**
      * removeFollowingTest
@@ -248,7 +233,6 @@ public class UserTest {
      *
      * @author Henry
      */
-    /*
     @Test
     public void removeFollowingTest() {
         User user = mockUser();
@@ -266,7 +250,7 @@ public class UserTest {
         // Remove following2, size should be 0
         assertTrue(user.removeFollowing(follower2));
         assertEquals(0, user.getFollowingList().size());
-    }*/
+    }
     /**
      * replaceHabitTest() for potential replaceHabitTest() method
      */

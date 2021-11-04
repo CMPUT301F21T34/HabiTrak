@@ -88,7 +88,6 @@ public class On_Days implements Parcelable {
      * @return boolean val of particular day;
      */
     public boolean get(int day){
-        Log.d("On_Days", "int passed: " + String.valueOf(day));
 
         switch (day){
             case MON: return mon;

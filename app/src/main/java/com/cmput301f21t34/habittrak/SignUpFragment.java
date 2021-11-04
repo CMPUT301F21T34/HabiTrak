@@ -121,7 +121,7 @@ public class SignUpFragment extends Fragment {
 
     public void startHomePage(View view){
         Intent intent = new Intent(getActivity(), BaseActivity.class);
-        intent.putExtra("user", currentUser);
+        intent.putExtra("mainUser", currentUser);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         getActivity().finish();

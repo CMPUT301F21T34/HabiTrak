@@ -6,6 +6,7 @@
     android:id="@+id/profileLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:windowSoftInputMode="adjustResize"
     tools:context=".fragments.ProfileFragment">
 
     <TextView
@@ -17,7 +18,7 @@
         android:layout_marginEnd="16dp"
         android:text="User Profile"
         android:textAlignment="center"
-        android:textColor="@color/black"
+        android:textColor="?android:textColorPrimary"
         android:textSize="32sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/nameHeader"
@@ -35,7 +36,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="4dp"
         android:text="Username:"
-        android:textColor="@color/black"
+        android:textColor="?android:textColorPrimary"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/editUserBorder"
@@ -74,7 +75,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:text="Email:"
-        android:textColor="@color/black"
+        android:textColor="?android:textColorPrimary"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/userEmail"
@@ -89,7 +90,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:text="user_email"
-        android:textColor="@color/black"
+        android:textColor="?android:textColorPrimary"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/bioHeader"
         app:layout_constraintEnd_toEndOf="parent"
@@ -104,7 +105,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="4dp"
         android:text="Biography:"
-        android:textColor="@color/black"
+        android:textColor="?android:textColorPrimary"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/editBioBorder"
@@ -140,9 +141,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="64dp"
+        android:layout_marginBottom="128dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/deleter"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editBioBorder">
@@ -170,11 +171,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="64dp"
         android:layout_marginBottom="16dp"
         android:text="Delete Account"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -28,20 +28,24 @@ public class Habit_Event implements Comparable<Habit_Event>, Parcelable {
     // Any changes need to be implement in writeToParcel and Parcel constructor - Dakota
 
     private String comment;
+
     private Calendar completedDate;
-    private String location;
-    private String photograph;
+    private Location location;
+    private File photograph;
 
     // redundant constructor
+
     public Habit_Event() {
         this.comment= "";
         this.completedDate = Calendar.getInstance();
-        this.location = "loc";
-        this.photograph = "photo";
+
+        this.location = new Location("");
+        this.photograph = new File("");
+
 
     }
 
-    public Habit_Event(String comment, Calendar date, String loc, String photo){
+    public Habit_Event(String comment, Calendar date, Location loc, File photo){
         this.photograph = photo;
         this.location = loc;
         this.comment = comment;
@@ -79,9 +83,15 @@ public class Habit_Event implements Comparable<Habit_Event>, Parcelable {
             this.completedDate = null;
         }
 
-        this.location = habitEventBundle.getString("location");
 
-        this.photograph = habitEventBundle.getString("photograph");
+
+        this.location = habitEventBundle.getParcelable("location");
+
+
+        // Sets path
+        String photographPath = habitEventBundle.getString("photograph");
+
+        this.photograph = new File(photographPath);
     }
 
 
@@ -111,11 +121,11 @@ public class Habit_Event implements Comparable<Habit_Event>, Parcelable {
         return completedDate;
     }
 
-    public String getPhotograph() {
+    public File getPhotograph() {
         return photograph;
     }
 
-    public String getLocation() {
+    public Location getLocation() {
         return location;
     }
 
@@ -141,11 +151,11 @@ public class Habit_Event implements Comparable<Habit_Event>, Parcelable {
         this.completedDate = completedDate;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
 
-    public void setPhotograph(String photograph) {
+    public void setPhotograph(File photograph) {
         this.photograph = photograph;
     }
 
@@ -199,10 +209,12 @@ public class Habit_Event implements Comparable<Habit_Event>, Parcelable {
             habitEventBundle.putString("completedDateTimeZone", null);
         }
 
-        habitEventBundle.putString("location", location);
 
+        habitEventBundle.putParcelable("location", location);
+
+        String photographPath = photograph.getPath();
         // Handles photograph
-        habitEventBundle.putString("photograph", photograph);
+        habitEventBundle.putString("photograph", photographPath);
 
         parcel.writeBundle(habitEventBundle);
     }

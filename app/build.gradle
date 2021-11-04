@@ -58,6 +58,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation 'commons-io:commons-io:2.6'
 
+
+
     // navigation
     implementation "androidx.navigation:navigation-fragment:$nav_version"
     implementation "androidx.navigation:navigation-ui:$nav_version"
@@ -84,4 +86,7 @@ dependencies {
 
     // firebase authentication
     implementation 'com.google.firebase:firebase-auth'
+
+
+
 }

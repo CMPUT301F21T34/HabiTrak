@@ -18,6 +18,7 @@ import com.cmput301f21t34.habittrak.AddHabitActivity;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.TodayHabitList;
+import com.cmput301f21t34.habittrak.user.Habit_List;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -34,9 +35,9 @@ import java.util.GregorianCalendar;
  */
 public class TodayListFragment extends Fragment {
     // attributes
-    ListView habitList;
-    ArrayAdapter<Habit> habitAdapter;
-    ArrayList<Habit> habitsData;
+    private ListView habitList;
+    private ArrayAdapter<Habit> habitAdapter;
+    private ArrayList<Habit> habitsData = new ArrayList<>();
 
     User mainUser;
 
@@ -46,6 +47,8 @@ public class TodayListFragment extends Fragment {
     public TodayListFragment(User mainUser) {
 
         this.mainUser = mainUser;
+
+        Log.d("User", "In Today Frag, User: " + mainUser.getUsername());
     }
 
     @Override
@@ -56,19 +59,12 @@ public class TodayListFragment extends Fragment {
         habitList = view.findViewById(R.id.today_listview);
 
 
-        Log.d("mainUser", "in TodayListFragment mainUser: " + mainUser.getUsername());
+
 
 
         // code to execute //
 
-        // sample data
-        Calendar date = new GregorianCalendar(2021,1,31);
-        /*
-        Habit habit1 = new Habit("exercise dog", "some desc", date, new boolean[]{true, true, true, true, true, true, true});
-        Habit habit2 = new Habit("go for a walk", "some desc 2", date, new boolean[]{true, true, true, true, true, true, true});
-        habitsData = new ArrayList<>();
-        habitsData.add(habit1); habitsData.add(habit2);
-         */
+
 
         // Button for adding habit - Dakota
         final FloatingActionButton addHabitButton = view.findViewById(R.id.today_add_habit_button);
@@ -80,10 +76,12 @@ public class TodayListFragment extends Fragment {
             }
         });
 
-        refreshHabitList(); // populates habit list
+
         //connect the array adapter
         habitAdapter = new TodayHabitList(getContext(), habitsData);
         habitList.setAdapter(habitAdapter);
+
+        //refreshTodayFragment(); // populates habit list
 
 
 
@@ -119,9 +117,8 @@ public class TodayListFragment extends Fragment {
      *
      * @author Dakota
      */
-    public void refreshHabitList() {
+    public void refreshTodayFragment() {
 
-        Log.d("TodayListFragment", "refreshing habit list");
         // Populate today view with Today's habits.
 
         habitsData.clear(); // Make sure is clear
@@ -129,13 +126,13 @@ public class TodayListFragment extends Fragment {
         ArrayList<Habit> mainUserHabits = mainUser.getHabitList(); // get HabitsList
 
         // Iterates through all habits
-        /*
+
         for (int index = 0; index < mainUserHabits.size(); index++){
-            if (mainUserHabits.get(index).isOnDay() && mainUserHabits.get(index).isHabitStart()){ // If a habit is active today add
+            if (mainUserHabits.get(index).getOnDaysObj().isOnDay() && mainUserHabits.get(index).isHabitStart()){ // If a habit is active today add
                 habitsData.add(mainUserHabits.get(index));
                 habitAdapter.notifyDataSetChanged();
             }
-        }*/
+        }
 
     }
 

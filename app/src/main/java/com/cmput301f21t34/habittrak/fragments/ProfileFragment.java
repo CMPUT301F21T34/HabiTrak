@@ -1,5 +1,6 @@
 package com.cmput301f21t34.habittrak.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.cmput301f21t34.habittrak.MainActivity;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.textfield.TextInputEditText;
@@ -77,6 +79,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
      * TODO:delete account and log out functionality
      *
      * @author Aron Rajabi
+     * @param view the view we are currently on
      */
     @Override
     public void onClick(View view) {
@@ -96,6 +99,45 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                     mainUser.setBiography(newBio);
                 }
                 break;
+            case R.id.logout:
+                // Logout button pressed //
+                // TODO: make sure database it updated
+                // TODO: make sure to remove any offline stored credientals
+
+                // Send user back to main activity
+                startMainActivity();
+
+
+
+
+
+
+                break;
+            case R.id.deleter:
+
+                // TODO: require reauth
+                // TODO: remove from database
+                // TODO: remove from account manager if needed
+
+                // Send user back to main activity
+                startMainActivity();
+
+                break;
         }
+    }
+
+    /**
+     * startMainActivity
+     *
+     * sends the user back to the main activity through an intent
+     *
+     * @author Dakota
+     */
+    private void startMainActivity(){
+        // Send user back to main activity
+        Intent intent = new Intent(getActivity(), MainActivity.class);
+        startActivity(intent);
+        mainUser = null; // Possibly redundant
+        getActivity().finish();
     }
 }

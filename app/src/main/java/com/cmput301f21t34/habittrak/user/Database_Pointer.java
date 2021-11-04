@@ -26,6 +26,7 @@ public class Database_Pointer implements Parcelable {
     }
 
 
+
     protected Database_Pointer(Parcel parcel) {
         email = parcel.readString();
     }

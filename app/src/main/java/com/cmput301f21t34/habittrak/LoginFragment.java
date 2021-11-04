@@ -3,6 +3,7 @@ package com.cmput301f21t34.habittrak;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +12,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.Calendar;
+import java.util.TimeZone;
+import java.util.GregorianCalendar;
 
 
 /**
@@ -60,12 +66,13 @@ public class LoginFragment extends Fragment {
                         .commit();
             }
         });
+
         // Password validator
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // BYPASS LOGIN FOR NOW
-                startHomePage(view, getUser(usernameEditText.getText()));
+                startHomePage(view, getUser(usernameEditText.getText().toString()));
                 // BYPASS LOGIN FOR NOW
 
                 passwordLayout.setError(null);
@@ -80,7 +87,7 @@ public class LoginFragment extends Fragment {
                 else {
                     passwordLayout.setError(null);
                     usernameLayout.setError(null);
-                    User currentUser = getUser(usernameEditText.getText());
+                    User currentUser = getUser(usernameEditText.getText().toString());
                     startHomePage(view, currentUser);
                 }
             }
@@ -133,12 +140,15 @@ public class LoginFragment extends Fragment {
      * @param username username from input
      * @return
      */
-    public User getUser(@Nullable Editable username) {
+    public User getUser(@Nullable String username) {
 
         DatabaseManager db = new DatabaseManager();
 
-        String user = username.toString();
-        return db.getUser(user);
+        User user = db.getUser(username);
+
+        Log.d("LoginFrag", "User from db: " + user.getEmail());
+
+        return user;
     }
 
     /**
@@ -147,9 +157,14 @@ public class LoginFragment extends Fragment {
      * @param view
      */
     public void startHomePage(View view, User currentUser){
+
+        Log.d("MERGE", "startHomePage");
+
         Intent intent = new Intent(getActivity(), BaseActivity.class);
-        intent.putExtra("user", currentUser);
+
+        intent.putExtra("mainUser", currentUser);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
         startActivity(intent);
         getActivity().finish();
     }

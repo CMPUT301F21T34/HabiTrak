@@ -28,7 +28,10 @@ public class Habit implements Comparable<Habit>, Parcelable {
 
 
     private int index = 0;
-    private String title, reason;
+
+    private String title;
+    private String reason;
+
     private Calendar startDate;
     private ArrayList<Habit_Event> habitEvents = new ArrayList<Habit_Event>();
     private boolean isPublic = false; // If other users can see this habit
@@ -196,10 +199,14 @@ public class Habit implements Comparable<Habit>, Parcelable {
 
     public int getIndex(){
         return this.index;
+
     }
+
     public void setIndex(int index){
         this.index = index;
     }
+
+
 
     /**
      * getOnDaysOnj
@@ -214,7 +221,10 @@ public class Habit implements Comparable<Habit>, Parcelable {
         return this.onDaysObj;
     }
 
+
+    @Deprecated
     public void setOnDaysObj(On_Days onDaysObj) { this.onDaysObj = onDaysObj; }
+
 
     /**
      * isHabitStart
@@ -265,36 +275,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
         return habitEvents.remove(habit);
     }
 
-    /**
-     * removeHabitEvent
-     *
-     * removes a Habit_Event using its String id from Habit's habit events
-     *
-     * @author Dakota
-     * @param habitEventID String habit event id
-     * @return boolean true if a Habit_Event was removed
-     * @deprecated use removeHabitEvent(Habit_Event) instead
-     */
-    /*
-    public boolean removeHabitEvent(String habitEventID){
 
-        boolean removed = false; // keeps track if a Habit_Event has been removed
-
-        // iterates through habitEvents
-        for (int index = 0; index < habitEvents.size(); index++){
-
-            // checks for matching habitEventID
-            if (habitEvents.get(index).getHabitEventId() == habitEventID){
-
-                habitEvents.remove(index); // removes if found
-                removed = true;
-
-                break;
-            }
-        }
-
-        return removed;
-    }*/
 
     /**
      * getHabitEvents
@@ -401,6 +382,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
 
     }
 
+
     /**
      * hashCode
      *
@@ -414,6 +396,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
     public int hashCode(){
         return this.title.hashCode() * this.reason.hashCode();
     }
+
 
     /**
      * equals

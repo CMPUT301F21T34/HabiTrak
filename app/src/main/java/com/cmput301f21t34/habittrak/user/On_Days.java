@@ -52,13 +52,13 @@ public class On_Days implements Parcelable {
      * @author Henry
      */
     public On_Days(ArrayList<Boolean> onDaysArray) {
-        this.mon = onDaysArray.get(0);
-        this.tue = onDaysArray.get(1);
-        this.wed = onDaysArray.get(2);
-        this.thu = onDaysArray.get(3);
-        this.fri = onDaysArray.get(4);
-        this.sat = onDaysArray.get(5);
-        this.sun = onDaysArray.get(6);
+        this.mon = onDaysArray.get(0).booleanValue();
+        this.tue = onDaysArray.get(1).booleanValue();
+        this.wed = onDaysArray.get(2).booleanValue();
+        this.thu = onDaysArray.get(3).booleanValue();
+        this.fri = onDaysArray.get(4).booleanValue();
+        this.sat = onDaysArray.get(5).booleanValue();
+        this.sun = onDaysArray.get(6).booleanValue();
     }
 
     // Constructing from a parcel
@@ -117,6 +117,7 @@ public class On_Days implements Parcelable {
     public void setTrue(int day){
         Log.d("On_Days", "int passed: " + String.valueOf(day)
                 + "int expected (for monday): " + String.valueOf(MON));
+
 
         switch (day){
             case MON: mon = true; break;
@@ -394,6 +395,7 @@ public class On_Days implements Parcelable {
         return 0;
     }
 
+
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
 
@@ -420,4 +422,3 @@ public class On_Days implements Parcelable {
         }
     };
 }
-

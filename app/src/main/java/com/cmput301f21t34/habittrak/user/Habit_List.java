@@ -42,6 +42,7 @@ public class Habit_List extends ArrayList<Habit> {
 
     }
 
+
     public void saveOrder(){
         int size = this.size();
 
@@ -71,6 +72,7 @@ public class Habit_List extends ArrayList<Habit> {
         this.sort(Habit::compareTo);
     }
 
+
     public void swap(int index1, int index2){
 
         // Swaps //
@@ -93,6 +95,7 @@ public class Habit_List extends ArrayList<Habit> {
         this.saveOrder(index); // Saves order for all index above the inserted element
     }
 
+
     @Override
     public boolean add(Habit habit){
 
@@ -113,6 +116,7 @@ public class Habit_List extends ArrayList<Habit> {
 
     public boolean remove( Habit toRemove ){
 
+
         boolean success;
         int index = toRemove.getIndex();
         if (this.get(index) == toRemove){
@@ -131,7 +135,13 @@ public class Habit_List extends ArrayList<Habit> {
             this.saveOrder();
 
             return success;
+
         }
+
+
+
+
+
     }
 
 }

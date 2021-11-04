@@ -42,7 +42,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
     //TODO: Explicitly make attributes private
     NavigationBarView bottomNav;
-    User mainUser = new User(); // Creates dummy user for testing purposes
+    User mainUser;// = new User(); // Creates dummy user for testing purposes
 
     TodayListFragment todayFrag;
     ProfileFragment profileFrag;
@@ -62,11 +62,12 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         setContentView(R.layout.activity_base);
 
         // Gets Intents //
-        //Intent intent = getIntent();
+        Intent intent = getIntent();
 
-        //this.mainUser = intent.getParcelableExtra("mainUser"); // Gets mainUser from intent
+        this.mainUser = intent.getParcelableExtra("mainUser"); // Gets mainUser from intent
 
-        Log.d("mainUser", "in BaseActivity mainUser: " + mainUser.getUsername());
+        Log.d("User", "In Base Activity, User: " + mainUser.getUsername());
+
 
 
         // Initializes Fragments //
@@ -139,7 +140,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         if (resultCode == RESULT_NEW_HABIT) {
             Habit newHabit = intent.getParcelableExtra("newHabit");
             mainUser.addHabit(newHabit);
-            todayFrag.refreshHabitList(); // refresh view
+            todayFrag.refreshTodayFragment(); // refresh view
 
 
         }

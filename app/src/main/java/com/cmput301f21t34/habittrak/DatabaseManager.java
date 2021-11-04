@@ -477,8 +477,12 @@ public class DatabaseManager {
     public Habit_Event toHabitEvent(HashMap<String,Object> hashmap){
         Habit_Event event = new Habit_Event();
         event.setComment((String) hashmap.get("comment"));
+
+        //TODO: Figure out away to store a Location and Photograph
+        /*
         event.setLocation((String) hashmap.get("location"));
         event.setPhotograph((String) hashmap.get("photograph"));
+         */
         event.setCompletedDate(toCalendar((HashMap<String, Object>) hashmap.get("completedDate")));
         return event;
     }

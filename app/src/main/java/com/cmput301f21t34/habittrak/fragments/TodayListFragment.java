@@ -88,13 +88,14 @@ public class TodayListFragment extends Fragment {
         // code to execute //
 
         // sample data (Does not show as we are getting habits from main User)
+        /*
         Calendar date = new GregorianCalendar(2021,1,31);
         Habit habit1 = new Habit("exercise dog", "some desc", date);
             habit1.getOnDaysObj().setTrue(Calendar.MONDAY);
             habit1.getOnDaysObj().setTrue(Calendar.FRIDAY);
         Habit habit2 = new Habit("go for a walk", "some desc 2", date);
             habit2.getOnDaysObj().setAll(new boolean[]{true, true, true, true, true, true, true});
-
+        */
 
         //habitsData.add(habit1); habitsData.add(habit2);
 
@@ -107,7 +108,6 @@ public class TodayListFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         adapter = new TodayHabitRecyclerAdapter(habitsData);
         recyclerView.setAdapter(adapter);
-        Log.d("Habits Size", Integer.toString(habitsData.size()));
 
         // touch helper for dragging habits
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
@@ -154,6 +154,7 @@ public class TodayListFragment extends Fragment {
                     Collections.swap(habitsData, i, i - 1);
                 }
             }
+            Log.d("Habit", "moved");
             recyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
             Log.d("Position", "From: " + Integer.toString(fromPosition) + " To: " + Integer.toString(toPosition));
             return true;
@@ -198,13 +199,13 @@ public class TodayListFragment extends Fragment {
             Log.d(TAG, "is on day?: " + String.valueOf(mainUserHabits.get(index).getOnDaysObj().isOnDay()));
             Log.d(TAG, "is habit start: " + String.valueOf(mainUserHabits.get(index).isHabitStart()));
 
+
             if (mainUserHabits.get(index).getOnDaysObj().isOnDay() && mainUserHabits.get(index).isHabitStart()){ // If a habit is active today add
 
                 Log.d(TAG, "populating display");
 
                 habitsData.add(mainUserHabits.get(index));
                 adapter.notifyDataSetChanged();
-                Log.d("Habits Size", Integer.toString(habitsData.size()));
             }
         }
 

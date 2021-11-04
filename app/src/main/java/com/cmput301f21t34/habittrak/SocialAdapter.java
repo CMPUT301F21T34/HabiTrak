@@ -18,8 +18,14 @@ import java.util.ArrayList;
 
 /**
  * SocialAdapter
- * <p>
- * Custom list for users on the social page
+ *
+ * @author Pranav
+ * @author Kaaden
+ *
+ * Custom Recycler View Adapter for users on the social page
+ * @version 1.0
+ * @since 2021-11-01
+ * @see RecyclerView
  */
 public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder> {
 
@@ -34,6 +40,15 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         void mainButtonOnClick(View view, int position);
     }
 
+    /**
+     * ViewHolder
+     *
+     * View Holder of the SocialAdapter
+     *
+     * @see RecyclerView.ViewHolder
+     * @author Pranav
+     * @version 1.0
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView username;
         private final MaterialButton mainButton;
@@ -79,15 +94,34 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
             }
         }
 
-
+        /**
+         * makeButtonVisible
+         *
+         * set the visibility of the button depending on the usage of the adapter
+         *
+         * @author Pranav
+         */
         public void makeButtonVisible() {
             mainButton.setVisibility(View.VISIBLE);
         }
 
+        /**
+         * makeButtonInvisible
+         *
+         * set the visibility of the button depending on the usage of the adapter
+         *
+         * @author Pranav
+         */
         public void makeButtonInvisible() {
             mainButton.setVisibility(View.INVISIBLE);
         }
 
+        /**
+         * setButtonText
+         *
+         * sets the test of the main button in the recycler view
+         * @param text
+         */
         public void setButtonText(String text) {
             mainButton.setText(text);
         }
@@ -95,6 +129,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
     }
 
 
+    // class constructor
     public SocialAdapter(ArrayList<User> users, ClickListener listener, boolean visible, String buttonText) {
         this.profiles = users;
         this.listener = listener;

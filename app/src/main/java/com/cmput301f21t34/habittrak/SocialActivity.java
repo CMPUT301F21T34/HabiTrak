@@ -28,13 +28,13 @@ import java.util.List;
  * SocialActivity
  *
  * @author Pranav
- *
+ * @author Kaaden
  * Hold the Social Activity fragments
  *
  * @version 1.0
  * @since 2021-10-27
  */
-public class SocialActivity extends AppCompatActivity {
+public class SocialActivity extends AppCompatActivity{
 
     TabLayout socialTab;
     ViewPager2 viewPager;
@@ -83,7 +83,7 @@ public class SocialActivity extends AppCompatActivity {
             }
         });
 
-        // setting view pager slider
+        // setting view pager slider. Adds the sliding feature to the fragments
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
@@ -98,6 +98,7 @@ public class SocialActivity extends AppCompatActivity {
      *
      * Adapter for the view pager
      * @author Pranav
+     * @author Kaaden
      */
     private class ViewStateAdapter extends FragmentStateAdapter {
 
@@ -129,6 +130,7 @@ public class SocialActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
+        // Adding the back button and
         onBackPressed();
         return true;
     }

@@ -19,6 +19,19 @@ import com.cmput301f21t34.habittrak.user.User;
 import java.util.ArrayList;
 
 //TODO: Add functions for Blocking and Removing Followers
+
+/**
+ * Followers Fragment
+ *
+ * @author Pranav
+ * @author Kaaden
+ *
+ * Fragment for displaying users followers
+ *
+ * @see SocialAdapter
+ * @version 1.0
+ * @since 2021-11-1
+ */
 public class FollowersFragment extends Fragment {
 
     SocialAdapter socialAdapter;
@@ -41,8 +54,8 @@ public class FollowersFragment extends Fragment {
         View view = inflater.inflate(R.layout.habi_followers_fragment, container, false);
 
         // Sample Data
-        User sample1 = new User("hello123");
-        User sample2 = new User("another User");
+        User sample1 = new User("Henry");
+        User sample2 = new User("Jakob");
         ArrayList<User> userArrayList = new ArrayList<>();
         userArrayList.add(sample1);
         userArrayList.add(sample2);
@@ -69,6 +82,15 @@ public class FollowersFragment extends Fragment {
         return view;
     }
 
+    /**
+     * showMenu
+     *
+     * listener function for ImageButton in Recycler View
+     *
+     * @see SocialAdapter
+     * @param view
+     * @param userPosition position of the clicked menu in the adapter
+     */
     public void showMenu(View view, int userPosition) {
         PopupMenu menu = new PopupMenu(getContext(), view);
         menu.getMenuInflater().inflate(R.menu.social_popup_menu, menu.getMenu());

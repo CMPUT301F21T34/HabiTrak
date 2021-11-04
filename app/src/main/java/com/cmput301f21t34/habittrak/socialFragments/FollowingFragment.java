@@ -19,7 +19,18 @@ import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 
-
+/**
+ * FollowingFragment
+ *
+ * Fragment for displaying users the main user is following
+ *
+ * @author Pranav
+ * @author Kaaden
+ *
+ * @see SocialAdapter
+ * @version 1.0
+ * @since 2021-11-01
+ */
 public class FollowingFragment extends Fragment {
     SocialAdapter socialAdapter;
     RecyclerView recyclerView;
@@ -67,6 +78,15 @@ public class FollowingFragment extends Fragment {
         return view;
     }
 
+    /**
+     * showMenu
+     *
+     * listener function for ImageButton in Recycler View
+     *
+     * @see SocialAdapter
+     * @param view
+     * @param userPosition position of the clicked menu in the adapter
+     */
     public void showMenu(View view, int userPosition) {
         PopupMenu menu = new PopupMenu(getContext(), view);
         menu.getMenuInflater().inflate(R.menu.social_popup_menu, menu.getMenu());
@@ -85,9 +105,19 @@ public class FollowingFragment extends Fragment {
         });
     }
 
+    /**
+     * ButtonClicked
+     *
+     * listener for the button in Recycler View
+     *
+     * @see SocialAdapter
+     * @param view
+     * @param userPosition
+     */
     public void ButtonClicked(View view, int userPosition) {
         MaterialButton button = view.findViewById(R.id.social_main_button);
         Log.d("ListButton", "Clicked");
+        //TODO: implement this function
     }
 
 }

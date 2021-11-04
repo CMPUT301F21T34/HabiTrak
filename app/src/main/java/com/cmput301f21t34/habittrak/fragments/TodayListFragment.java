@@ -37,6 +37,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 
+
+
 /**
  * TodayListFragment
  *
@@ -45,6 +47,11 @@ import java.util.GregorianCalendar;
  * Fragment for displaying habits for today
  */
 public class TodayListFragment extends Fragment {
+
+
+    final String TAG = "TodayFrag";
+
+
     // attributes
 
 
@@ -52,7 +59,7 @@ public class TodayListFragment extends Fragment {
 
     private ListView habitList;
     private ArrayAdapter<Habit> habitAdapter;
-    private Habit_List habitsData;
+    private Habit_List habitsData = new Habit_List();
 
     User mainUser;
     RecyclerView recyclerView;
@@ -64,7 +71,6 @@ public class TodayListFragment extends Fragment {
     public TodayListFragment(User mainUser) {
 
         this.mainUser = mainUser;
-        habitsData = mainUser.getHabitList();
     }
 
     @Override
@@ -89,8 +95,8 @@ public class TodayListFragment extends Fragment {
         Habit habit2 = new Habit("go for a walk", "some desc 2", date);
             habit2.getOnDaysObj().setAll(new boolean[]{true, true, true, true, true, true, true});
 
-        Habit_List habitsData = new Habit_List();
-        habitsData.add(habit1); habitsData.add(habit2);
+
+        //habitsData.add(habit1); habitsData.add(habit2);
 
 
         // populates habit list
@@ -174,16 +180,28 @@ public class TodayListFragment extends Fragment {
 
     public void refreshTodayFragment() {
 
+        Log.d(TAG, "refreshing today frag");
 
         // Populate today view with Today's habits.
 
-        habitsData.clear(); // Make sure is clear
+        habitsData.clear();// Make sure is clear
 
-        ArrayList<Habit> mainUserHabits = mainUser.getHabitList(); // get HabitsList
+        Habit_List mainUserHabits = mainUser.getHabitList(); // get HabitsList
+
+        Log.d(TAG, "size of mainUserHabits: " + String.valueOf(mainUserHabits.size()));
+
+
 
         // Iterates through all habits
         for (int index = 0; index < mainUserHabits.size(); index++){
+
+            Log.d(TAG, "is on day?: " + String.valueOf(mainUserHabits.get(index).getOnDaysObj().isOnDay()));
+            Log.d(TAG, "is habit start: " + String.valueOf(mainUserHabits.get(index).isHabitStart()));
+
             if (mainUserHabits.get(index).getOnDaysObj().isOnDay() && mainUserHabits.get(index).isHabitStart()){ // If a habit is active today add
+
+                Log.d(TAG, "populating display");
+
                 habitsData.add(mainUserHabits.get(index));
                 adapter.notifyDataSetChanged();
                 Log.d("Habits Size", Integer.toString(habitsData.size()));

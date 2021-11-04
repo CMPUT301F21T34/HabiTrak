@@ -39,6 +39,8 @@ import com.google.android.material.navigation.NavigationBarView;
 
 public class BaseActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
 
+    final String TAG = "BaseActivity";
+
     /**
      * Function called when activity is created
      * @param savedInstanceState savedInstances
@@ -151,7 +153,14 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (resultCode == RESULT_NEW_HABIT) {
             Habit newHabit = intent.getParcelableExtra("newHabit");
+
+            Log.d(TAG, "adding new habit: " + newHabit.getTitle());
+
             mainUser.addHabit(newHabit);
+
+            Log.d(TAG, "new habit: " + mainUser.getHabit(mainUser.getHabitList().size() - 1).getTitle());
+
+            Log.d(TAG, "size: " + String.valueOf(mainUser.getHabitList().size()));
 
             todayFrag.refreshTodayFragment(); // refresh view
 

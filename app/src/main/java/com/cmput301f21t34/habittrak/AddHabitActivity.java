@@ -238,6 +238,7 @@ public class AddHabitActivity extends AppCompatActivity {
         String name = habitName.getText().toString();
         String reason = habitReason.getText().toString();
         Habit newHabit = new Habit(name, reason, calendar);
+        newHabit.getOnDaysObj().setAll(daysOfWeek);
         //Bundle newHabitBundle = new Bundle();
         //newHabitBundle.putParcelable("newHabit", newHabit);
         Intent result = new Intent();

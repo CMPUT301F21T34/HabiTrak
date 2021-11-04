@@ -272,7 +272,8 @@ public class DatabaseManager {
         String name = "";
         String password = "";
         String bio = "";
-        ArrayList<Habit> habitList = new ArrayList<Habit>();
+
+        Habit_List habitList = new Habit_List();
         ArrayList<Database_Pointer>followerList = new ArrayList<Database_Pointer>();
         ArrayList<Database_Pointer>followingList = new ArrayList<Database_Pointer>();
         ArrayList<Database_Pointer>followReqList = new ArrayList<Database_Pointer>();
@@ -289,6 +290,10 @@ public class DatabaseManager {
             if (document.getData() != null) {
                 Log.d("getData", "not null");
                 // ArrayList<Map<Integer, Habit>> habitListMap = (ArrayList<Map<Integer, Habit>>) document.get("habitList");
+
+                ArrayList<HashMap<String, Object>> requestedHabitList = (ArrayList<HashMap<String, Object>>) document.get("habitList");
+                ArrayList<HabitDatabase> requestedHabitDatabases = toHabitDatabaseList(requestedHabitList);
+                habitList = databaseToHabit(requestedHabitDatabases);
                 ArrayList<HashMap<String, String>> followerListMap = (ArrayList<HashMap<String, String>>) document.get("followerList");
                 followerList = toPointerList(followerListMap);
 
@@ -316,7 +321,7 @@ public class DatabaseManager {
 
             user.setPassword(password);
             user.setUsername(name);
-            // user.setHabitList((Habit_List) habitList);
+            user.setHabitList(habitList);
             user.setFollowerList(followerList);
             user.setFollowingList(followingList);
             user.setBlockList(blockList);

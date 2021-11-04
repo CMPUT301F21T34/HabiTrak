@@ -80,7 +80,8 @@ public class MainActivity extends AppCompatActivity{
          */
 
         DatabaseManager db = new DatabaseManager();
-        Habit_List hl =  db.getHabitList("pogo@gmail.com");
+        User user = db.getUser("pogo@gmail.com");
+        Habit_List hl =  user.getHabitList();
         SimpleDateFormat fmt = new SimpleDateFormat("dd-MMM-yyyy");
         Calendar cal = hl.get(0).getHabitEvents().get(1).getCompletedDate();
         fmt.setCalendar(cal);

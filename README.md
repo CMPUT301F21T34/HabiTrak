@@ -27,16 +27,23 @@ Group Project for Fall 2021 at University of Alberta
 </table>
 
 
-# Details
+## Details
 
 The goal of this project is to create a habit tracking app which also has social features like following other users.
 
 
-# Documentation and Wiki
+## Documentation and Wiki
 
-[Project Wiki](https://github.com/CMPUT301F21T34/HabiTrak/wiki)
+* [Issue Tracker](https://github.com/CMPUT301F21T34/HabiTrak/projects/4)
 
-[Design](https://github.com/CMPUT301F21T34/HabiTrak/wiki/Design)
+* [Project Wiki](https://github.com/CMPUT301F21T34/HabiTrak/wiki)
+
+* [Design](https://github.com/CMPUT301F21T34/HabiTrak/wiki/Design)
+  * [UML](https://github.com/CMPUT301F21T34/HabiTrak/wiki/Design#uml-design)
+  * [UI](https://github.com/CMPUT301F21T34/HabiTrak/wiki/Design#ui-design)
+  * [Storyboard](https://github.com/CMPUT301F21T34/HabiTrak/wiki/Design#storyboard)
+  * [Database Design](https://github.com/CMPUT301F21T34/HabiTrak/wiki/Design#database-design) 
+   
 
 ## License
  Licensed under the Apache License, Version 2.0. Copyright 2021 CMPUT301F21T34. [Copy of the license](LICENSE) 

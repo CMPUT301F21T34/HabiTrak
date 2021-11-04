@@ -147,11 +147,12 @@ public class TodayListFragment extends Fragment {
 
             if (fromPosition < toPosition && toPosition < habitsData.size()) {
                 for (int i = fromPosition; i < toPosition; i++) {
-                    Collections.swap(habitsData, i, i + 1);
+                    habitsData.swap(i, i + 1);
+
                 }
             } else if (toPosition >= 0) {
                 for (int i = fromPosition; i > toPosition; i--) {
-                    Collections.swap(habitsData, i, i - 1);
+                    habitsData.swap(i, i - 1);
                 }
             }
             Log.d("Habit", "moved");
@@ -188,6 +189,8 @@ public class TodayListFragment extends Fragment {
         habitsData.clear();// Make sure is clear
 
         Habit_List mainUserHabits = mainUser.getHabitList(); // get HabitsList
+
+        mainUserHabits.reOrder(); // Makes sure we are in proper saved order
 
         Log.d(TAG, "size of mainUserHabits: " + String.valueOf(mainUserHabits.size()));
 

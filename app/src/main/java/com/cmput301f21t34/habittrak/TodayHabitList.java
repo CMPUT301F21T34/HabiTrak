@@ -53,7 +53,7 @@ public class TodayHabitList extends ArrayAdapter<Habit> {
         View view = convertView;
 
         if (view == null){
-            view = LayoutInflater.from(context).inflate(R.layout.habi_today_fragment, parent, false);
+            view = LayoutInflater.from(context).inflate(R.layout.recycler_view_row, parent, false);
         }
 
         Habit habit = habits.get(position);

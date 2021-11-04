@@ -21,6 +21,8 @@ import java.util.ArrayList;
  */
 public class Habit_List extends ArrayList<Habit> {
 
+    final String TAG = "Habit_List";
+
     public Habit_List(){
         super();
     }
@@ -69,21 +71,76 @@ public class Habit_List extends ArrayList<Habit> {
     }
 
     public void reOrder(){
+
+        Log.d(TAG, "\n==sorting==");
+
+        for(int i = 0; i < this.size(); i++){
+            Log.d(TAG, "\nBefore Sort! Index: " + String.valueOf(i)
+                    + " = Habit: " + String.valueOf(this.get(i).getTitle()));
+        }
+
         this.sort(Habit::compareTo);
+
+        for(int i = 0; i < this.size(); i++){
+            Log.d(TAG, "\nAfter Sort! Index: " + String.valueOf(i)
+                    + " = Habit: " + String.valueOf(this.get(i).getTitle()));
+        }
+
+        Log.d(TAG, "\n====end====");
     }
 
 
     public void swap(int index1, int index2){
 
+
+
+        Log.d(TAG, "index1: " + String.valueOf(index1));
+        Log.d(TAG, "index2: " + String.valueOf(index2));
+
+
+
+
         // Swaps //
-        Habit swap = this.get(index1);
-        this.set(index1, this.get(index2));
-        this.set(index2, swap);
+        Habit habit1 = this.get(index1);
+        Habit habit2 = this.get(index2);
+
+        Log.d(TAG, "Habit1: " + String.valueOf(habit1.getTitle()));
+        Log.d(TAG, "Habit2: " + String.valueOf(habit2.getTitle()));
+
+
+        int habit1Index = habit1.getIndex();
+        int habit2Index = habit2.getIndex();
+
+        Log.d(TAG, "!!habit1Index: " + String.valueOf(habit1Index));
+        Log.d(TAG, "!!habit2Index: " + String.valueOf(habit2Index));
+
+        Log.d(TAG, "Habit1 Absolute Index: " + String.valueOf(habit1Index));
+        Log.d(TAG, "Habit2 Absolute Index: " + String.valueOf(habit2Index));
+
+        habit1.setIndex(habit2Index);
+        habit2.setIndex(habit1Index);
+
+        Log.d(TAG, "!!habit1Index: " + String.valueOf(habit1Index));
+        Log.d(TAG, "!!habit2Index: " + String.valueOf(habit2Index));
+
+        Log.d(TAG, "Habit1 Absolute Index: " + String.valueOf(habit1.getIndex()));
+        Log.d(TAG, "Habit2 Absolute Index: " + String.valueOf(habit2.getIndex()));
+
+        this.reOrder();
+
+
+
+        //this.set(index1, this.get(index2));
+        Log.d(TAG, "Habit now at index1: " + String.valueOf(this.get(index1).getTitle()));
+
+        //this.set(index2, swap);
+        Log.d(TAG, "Habit now at index2: " + String.valueOf(this.get(index2).getTitle()));
 
         // Updates index
-        this.get(index1).setIndex(index1);
-        this.get(index2).setIndex(index2);
+        //this.get(index1).setIndex(index1);
+        //this.get(index2).setIndex(index2);
     }
+
 
     @Override
     public void add(int index, Habit habit){
@@ -93,6 +150,24 @@ public class Habit_List extends ArrayList<Habit> {
         // Calls super add
         super.add(index, habit);
         this.saveOrder(index); // Saves order for all index above the inserted element
+    }
+
+    /**
+     * addTracking
+     *
+     * adds a habit to the list but does not update
+     * the habits indexes or any other
+     *
+     * Used when tracking a subset from a larger Habit_List
+     *
+     * @param habit Habit to be added for tracking
+     */
+    public void addTracking(Habit habit){
+
+
+        // Calls super add
+        super.add(habit);
+
     }
 
 

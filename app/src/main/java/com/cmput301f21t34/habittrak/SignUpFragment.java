@@ -90,11 +90,10 @@ public class SignUpFragment extends Fragment {
                     emailLayout.setError("Email Already in Use");
                 }
                 else{
-                    Habit_List habit_list = new Habit_List();
+
                     db.createNewUser(emailEditText.getText().toString(),
                             usernameEditText.getText().toString(),
-                            passwordEditText.getText().toString(),
-                            "", habit_list);
+                            passwordEditText.getText().toString());
                     currentUser = db.getUser(emailEditText.getText().toString());
                     startHomePage(view);
                 }
@@ -110,7 +109,7 @@ public class SignUpFragment extends Fragment {
     public boolean checkEmail(@NonNull Editable userEmail){
         String email = userEmail.toString();
         boolean isValid = false;
-        if (db.isUnique(email)){
+        if (db.isUniqueEmail(email)){
             isValid = true;
         }
         return isValid;

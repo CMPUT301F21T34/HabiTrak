@@ -18,7 +18,7 @@ import java.util.ArrayList;
 /**
  * TodayHabitList
  *
- * customList for ListView of Today Fragment
+ * customList for ListView of TodayListFragment and AllHabitsFragment
  * @version 1.0
  * @since 2021-10-19
  * @see Habit

@@ -178,8 +178,8 @@ public class DatabaseManager {
             Task<DocumentSnapshot> task2 = docref.get();
             while (!task2.isComplete());
             DocumentSnapshot document = task2.getResult();
-            String username = document.get("username").toString();
-            if (!allUserNames.contains(username)) {
+            String name = document.get("username").toString();
+            if (!allUserNames.contains(name)) {
                 isUnique = true;
             }
             return isUnique;

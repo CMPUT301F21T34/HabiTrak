@@ -156,7 +156,9 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
             Log.d(TAG, "adding new habit: " + newHabit.getTitle());
 
-            mainUser.addHabit(newHabit);
+            mainUser.getHabitList().add(newHabit);
+
+            Log.d(TAG, "!newHabit Absolute Index: " + String.valueOf(newHabit.getIndex()));
 
             Log.d(TAG, "new habit: " + mainUser.getHabit(mainUser.getHabitList().size() - 1).getTitle());
 

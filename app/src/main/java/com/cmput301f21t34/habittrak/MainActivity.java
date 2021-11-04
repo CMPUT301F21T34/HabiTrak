@@ -21,13 +21,17 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.cmput301f21t34.habittrak.user.User;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * MainActivity
  *
  * Starting point of the app
  * TODO: figure out how to save the login state of the user
+ * TODO : Testing that the database returns the correct on days object
+ *
  */
 public class MainActivity extends AppCompatActivity{
 
@@ -49,30 +53,6 @@ public class MainActivity extends AppCompatActivity{
                     .add(R.id.login_fragment_container, new LoginFragment(mainUser))
                     .commit();
         }
-        /*
-        Habit_Event event1 = new Habit_Event();
-        event1.setComment("yep");
-        Habit_Event event2 = new Habit_Event();
-        Habit habit1 = new Habit();
-        habit1.addHabitEvent(event1);
-        habit1.addHabitEvent(event2);
 
-        Habit_Event event3 = new Habit_Event();
-        event1.setComment("go");
-        Habit_Event event4 = new Habit_Event();
-        event1.setComment("g0");
-        Habit habit2 = new Habit();
-        habit2.addHabitEvent(event3);
-        habit2.addHabitEvent(event4);
-
-        Habit_List habits = new Habit_List();
-        habits.add(habit1);
-        habits.add(habit2);
-        User user = new User("pogo@gmail.com");
-        user.setUsername("pogo");
-        user.setHabitList(habits);
-        DatabaseManager db = new DatabaseManager();
-        db.createNewUser(user.getEmail(), user.getUsername(), user.getPassword(), "", user.getHabitList());
-         */
     }
 }

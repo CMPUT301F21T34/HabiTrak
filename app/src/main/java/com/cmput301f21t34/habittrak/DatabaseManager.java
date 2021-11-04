@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.cmput301f21t34.habittrak.user.Database_Pointer;
 import com.cmput301f21t34.habittrak.user.Habit;
+import com.cmput301f21t34.habittrak.user.Habit_Event;
 import com.cmput301f21t34.habittrak.user.Habit_List;
 import com.cmput301f21t34.habittrak.user.On_Days;
 import com.cmput301f21t34.habittrak.user.User;
@@ -14,6 +15,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.ChildEventListener;
@@ -31,10 +33,14 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -43,6 +49,7 @@ import java.util.concurrent.CountDownLatch;
  * @see User
  * @version 1.0
  * Implemented the getter methods only the setters methods will be implemented soon
+ * TODO: Create the calendar constructor
  */
 
 public class DatabaseManager {
@@ -121,8 +128,8 @@ public class DatabaseManager {
      * @param email
      * @return boolean
      */
-    public boolean isUnique(String email) {
-
+    public boolean isUniqueEmail(String email) {
+        
         boolean isUnique = false;
 
         final CollectionReference collectionReference = database.collection("users");
@@ -144,26 +151,65 @@ public class DatabaseManager {
     }
 
     /**
+     * Checks to see if the user with the provided email already exists
+     *
+     * @author Henry
+     * @param username
+     * @param email
+     * @return boolean
+     */
+    public boolean isUniqueUsername(String username, String email) {
+
+        boolean isUnique = false;
+
+        final CollectionReference collectionReference = database.collection("users");
+
+        try {
+            // Get all usernames
+            ArrayList<String> allUserNames = new ArrayList<>();
+            Task<QuerySnapshot> task1 = database.collection("users").get();
+            while (!task1.isComplete()) ;
+            for (QueryDocumentSnapshot document : task1.getResult()) {
+                allUserNames.add(document.get("username").toString());
+            }
+
+            // Get username for given email, then compare
+            DocumentReference docref = collectionReference.document(email);
+            Task<DocumentSnapshot> task2 = docref.get();
+            while (!task2.isComplete());
+            DocumentSnapshot document = task2.getResult();
+            String name = document.get("username").toString();
+            if (!allUserNames.contains(name)) {
+                isUnique = true;
+            }
+            return isUnique;
+
+        }
+
+        catch (Exception ignored) {}
+
+        return isUnique;
+    }
+
+    /**
      * createNewUser
      *
      * @author Henry
      * returns true if it is successful or false if it is not
      */
-    public boolean createNewUser(String email, String username, String password, String biography, Habit_List habitList) {
+    public boolean createNewUser(String email, String username, String password) {
 
         String TAG = "Unique";
 
-        if (isUnique(email)) {
+        if (isUniqueEmail(email)) {
             Log.d(TAG, "Unique");
             final CollectionReference collectionReference = database.collection("users");
-
-            ArrayList<HabitDatabase> habitListDatabase = habitToDatabase(habitList);
 
             HashMap<String, Object> data = new HashMap<>();
             data.put("Password", password);
             data.put("Username", username);
-            data.put("Biography", biography);
-            data.put("habitList", habitListDatabase);
+            data.put("Biography", "");
+            data.put("habitList", new ArrayList<HabitDatabase>());
             data.put("followerList", new ArrayList<Database_Pointer>());
             data.put("followingList", new ArrayList<Database_Pointer>());
             data.put("followReqList", new ArrayList<Database_Pointer>());
@@ -190,7 +236,7 @@ public class DatabaseManager {
     public boolean deleteUser(String email) {
 
         String TAG = "Delete";
-        if (!isUnique(email)) {
+        if (!isUniqueEmail(email)) {
             database.collection("users").document(email)
                     .delete()
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -226,7 +272,8 @@ public class DatabaseManager {
         String name = "";
         String password = "";
         String bio = "";
-        ArrayList<Habit> habitList = new ArrayList<Habit>();
+
+        Habit_List habitList = new Habit_List();
         ArrayList<Database_Pointer>followerList = new ArrayList<Database_Pointer>();
         ArrayList<Database_Pointer>followingList = new ArrayList<Database_Pointer>();
         ArrayList<Database_Pointer>followReqList = new ArrayList<Database_Pointer>();
@@ -242,7 +289,10 @@ public class DatabaseManager {
 
             if (document.getData() != null) {
                 Log.d("getData", "not null");
-                // ArrayList<Map<Integer, Habit>> habitListMap = (ArrayList<Map<Integer, Habit>>) document.get("habitList");
+                
+                ArrayList<HashMap<String, Object>> requestedHabitList = (ArrayList<HashMap<String, Object>>) document.get("habitList");
+                ArrayList<HabitDatabase> requestedHabitDatabases = toHabitDatabaseList(requestedHabitList);
+                habitList = databaseToHabit(requestedHabitDatabases);
                 ArrayList<HashMap<String, String>> followerListMap = (ArrayList<HashMap<String, String>>) document.get("followerList");
                 followerList = toPointerList(followerListMap);
 
@@ -270,7 +320,7 @@ public class DatabaseManager {
 
             user.setPassword(password);
             user.setUsername(name);
-            // user.setHabitList((Habit_List) habitList);
+            user.setHabitList(habitList);
             user.setFollowerList(followerList);
             user.setFollowingList(followingList);
             user.setBlockList(blockList);
@@ -344,23 +394,127 @@ public class DatabaseManager {
      * @param email
      * @return habitList
      */
+    public Habit_List getHabitList(String email) {
 
-    public ArrayList<Habit> getHabitList(String email) {
-
-        ArrayList<Habit> returnHabitList = new ArrayList<Habit>();
-
+        Habit_List returnHabitList = new Habit_List();
         try {
             DocumentReference docref = database.collection("users").document(email);
             Task<DocumentSnapshot> task = docref.get();
-            while (!task.isComplete()) ;
+            while (!task.isComplete());
             DocumentSnapshot document = task.getResult();
-
-            if (document.getData() != null) {
-                returnHabitList = (ArrayList<Habit>) document.get("habitList");
+            if(document.getData() != null){
+                ArrayList<HashMap<String, Object>> requestedHabitList = (ArrayList<HashMap<String, Object>>) document.get("habitList");
+                ArrayList<HabitDatabase> requestedHabitDatabases = toHabitDatabaseList(requestedHabitList);
+                returnHabitList = databaseToHabit(requestedHabitDatabases);
             }
         }
-        catch (Exception ignored){}
+        catch (Exception ignored){Log.d("XYZGETTING", "habitlist", ignored);}
         return returnHabitList;
+    }
+
+    /**
+     * toHabitDatabaseList
+     * Converts an array of HashMap (data from the database) to an array of HabitDatabase objects
+     *
+     * @author Tauseef
+     * @param hashMapList
+     * @return
+     */
+    public ArrayList<HabitDatabase> toHabitDatabaseList(ArrayList<HashMap<String,Object>>hashMapList){
+        ArrayList<HabitDatabase> habitDatabaseList = new ArrayList<>();
+        for (int i = 0; i < hashMapList.size(); i++) {
+            HabitDatabase habitDatabase = toHabitDatabase(hashMapList.get(i));
+            habitDatabaseList.add(habitDatabase);
+        }
+        return habitDatabaseList;
+    }
+
+    /**
+     * toHabitDatabase
+     * Converts HashMap from database to HabitDatabase object
+     *
+     * @author Tauseef
+     * @param hashmap
+     * @return
+     */
+    public HabitDatabase toHabitDatabase(HashMap<String ,Object> hashmap){
+        HabitDatabase habitDatabase = new HabitDatabase();
+        habitDatabase.setIndex((int)(long) hashmap.get("index"));
+        habitDatabase.setReason((String) hashmap.get("reason"));
+        habitDatabase.setTitle((String) hashmap.get("title"));
+        habitDatabase.setisPublic((boolean) hashmap.get("isPublic"));
+        habitDatabase.setHabitEvents(toHabitEventList((ArrayList<HashMap<String, Object>>) hashmap.get("habitEvents")));
+        habitDatabase.setOnDaysObj((ArrayList<Boolean>) hashmap.get("onDaysObj"));
+        habitDatabase.setStartDate(toCalendar((HashMap<String, Object>) hashmap.get("startDate")));
+        return  habitDatabase;
+    }
+
+    /**
+     * tohabitEventList
+     * Converts an array of HashMap (data from the database) to an array of HabitEvent objects
+     *
+     * @author Tauseef
+     * @param hashMapList
+     * @return
+     */
+    public ArrayList<Habit_Event> toHabitEventList(ArrayList<HashMap<String,Object>>hashMapList){
+        ArrayList<Habit_Event> habitEventList = new ArrayList<>();
+        for (int i = 0; i < hashMapList.size(); i++) {
+            Habit_Event habitEvent = toHabitEvent( hashMapList.get(i));
+            habitEventList.add(habitEvent);
+        }
+        return habitEventList;
+    }
+
+    /**
+     * toHabitEvent
+     * Converts HashMap from database to HabitEvent object
+     *
+     * @author Tauseef
+     * @param hashmap
+     * @return
+     */
+    public Habit_Event toHabitEvent(HashMap<String,Object> hashmap){
+        Habit_Event event = new Habit_Event();
+        event.setComment((String) hashmap.get("comment"));
+        event.setLocation((String) hashmap.get("location"));
+        event.setPhotograph((String) hashmap.get("photograph"));
+        event.setCompletedDate(toCalendar((HashMap<String, Object>) hashmap.get("completedDate")));
+        return event;
+    }
+
+    /**
+     * toCalendar
+     * Converts HashMap from database to Calendar object
+     *
+     * @author Tauseef
+     * @param hashmap
+     * @return
+     */
+    public GregorianCalendar toCalendar(HashMap<String,Object> hashmap){
+        GregorianCalendar returnCalendar = new GregorianCalendar();
+        returnCalendar.setLenient((boolean) hashmap.get("lenient"));
+        returnCalendar.setFirstDayOfWeek((int) (long) hashmap.get("firstDayOfWeek"));
+        returnCalendar.setMinimalDaysInFirstWeek((int) (long) hashmap.get("minimalDaysInFirstWeek"));
+        returnCalendar.setTimeInMillis((long) hashmap.get("timeInMillis"));
+        returnCalendar.setGregorianChange(((Timestamp) hashmap.get("gregorianChange")).toDate());
+        returnCalendar.setTimeZone(getTimezone((HashMap<String, Object>) hashmap.get("timeZone")));
+        returnCalendar.setTime(((Timestamp) hashmap.get("time")).toDate());
+        return returnCalendar;
+    }
+
+    /**
+     * getTimezone
+     * Converts HashMap from database to TimeZone object
+     *
+     * @author Tauseef
+     * @param hashMap
+     * @return
+     */
+    public TimeZone getTimezone(HashMap<String,Object> hashMap){
+        String timezoneId = (String) hashMap.get("id");
+        TimeZone zone = TimeZone.getTimeZone(timezoneId);
+        return zone;
     }
 
     /**
@@ -552,7 +706,7 @@ public class DatabaseManager {
         data.put("Password", user.getPassword());
         data.put("Username", user.getUsername());
         data.put("Biography", user.getBiography());
-        data.put("habitList", user.getHabitList());
+        data.put("habitList", habitToDatabase(user.getHabitList()));
         data.put("followerList", user.getFollowerList());
         data.put("followingList", user.getFollowingList());
         data.put("followReqList", user.getFollowerReqList());
@@ -940,7 +1094,7 @@ public class DatabaseManager {
 
     /**
      * Converts an ArrayList<HashMap<String, String>> listOfMap to an ArrayList<Database_Pointer>
-     * @author henry
+     * @author Henry
      * @param listOfMap
      * @return
      */

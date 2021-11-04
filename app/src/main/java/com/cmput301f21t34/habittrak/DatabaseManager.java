@@ -129,6 +129,36 @@ public class DatabaseManager {
      * @return boolean
      */
     public boolean isUniqueEmail(String email) {
+        
+        boolean isUnique = false;
+
+        final CollectionReference collectionReference = database.collection("users");
+
+        try {
+            DocumentReference docref = collectionReference.document(email);
+            Task<DocumentSnapshot> task = docref.get();
+            while (!task.isComplete());
+            DocumentSnapshot document = task.getResult();
+            if (!document.exists()) {
+                isUnique = true;
+                return isUnique;
+            }
+        }
+
+        catch (Exception ignored) {}
+
+        return isUnique;
+    }
+
+    /**
+     * Checks to see if the user with the provided email already exists
+     *
+     * @author Henry
+     * @param username
+     * @param email
+     * @return boolean
+     */
+    public boolean isUniqueUsername(String username, String email) {
 
         boolean isUnique = false;
 
@@ -154,36 +184,6 @@ public class DatabaseManager {
             }
             return isUnique;
 
-        }
-
-        catch (Exception ignored) {}
-
-        return isUnique;
-    }
-
-    /**
-     * Checks to see if the user with the provided email already exists
-     *
-     * @author Henry
-     * @param username
-     * @param email
-     * @return boolean
-     */
-    public boolean isUniqueUsername(String username, String email) {
-
-        boolean isUnique = false;
-
-        final CollectionReference collectionReference = database.collection("users");
-
-        try {
-            DocumentReference docref = collectionReference.document(email);
-            Task<DocumentSnapshot> task = docref.get();
-            while (!task.isComplete());
-            DocumentSnapshot document = task.getResult();
-            if (!document.exists()) {
-                isUnique = true;
-                return isUnique;
-            }
         }
 
         catch (Exception ignored) {}

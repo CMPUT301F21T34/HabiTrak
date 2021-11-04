@@ -59,7 +59,7 @@ public class TodayListFragment extends Fragment {
 
     private ListView habitList;
     private ArrayAdapter<Habit> habitAdapter;
-    private Habit_List habitsData = new Habit_List();
+    private ArrayList<Habit> habitsData = new ArrayList<>();
 
     User mainUser;
     RecyclerView recyclerView;
@@ -147,15 +147,61 @@ public class TodayListFragment extends Fragment {
 
             if (fromPosition < toPosition && toPosition < habitsData.size()) {
                 for (int i = fromPosition; i < toPosition; i++) {
-                    habitsData.swap(i, i + 1);
+
+                    Log.d(TAG, "==swapping==");
+
+                    Habit habit1 = habitsData.get(i);
+                    Habit habit2 = habitsData.get(i + 1);
+
+                    Log.d(TAG, "habit1 : " + String.valueOf(habit1.getTitle()) + "index in display: " + String.valueOf(i));
+                    Log.d(TAG, "habit2 : " + String.valueOf(habit2.getTitle()) + "index in display: " + String.valueOf(i + 1) );
+
+
+                    Log.d(TAG, "habit1 index before swap: " + String.valueOf(habit1.getIndex()));
+                    Log.d(TAG, "habit2 index before swap: " + String.valueOf(habit2.getIndex()));
+
+
+
+                    // We swap the habits in the main list rather then the views particular list
+
+                    mainUser.getHabitList().swap(habit1.getIndex(), habit2.getIndex());
+
+                    Log.d(TAG, "habit1 index after swap: " + String.valueOf(habit1.getIndex()));
+                    Log.d(TAG, "habit2 index after swap: " + String.valueOf(habit2.getIndex()));
+
+
+                    Log.d(TAG, "====end====");
+
+                    //habitsData.swap(i, i + 1);
 
                 }
             } else if (toPosition >= 0) {
                 for (int i = fromPosition; i > toPosition; i--) {
-                    habitsData.swap(i, i - 1);
+
+                    Log.d(TAG, "==swapping==");
+
+                    Habit habit1 = habitsData.get(i);
+                    Habit habit2 = habitsData.get(i - 1);
+
+                    Log.d(TAG, "habit1 : " + String.valueOf(habit1.getTitle()) + " index in display: " + String.valueOf(i));
+                    Log.d(TAG, "habit2 : " + String.valueOf(habit2.getTitle()) + " index in display: " + String.valueOf(i - 1) );
+
+                    Log.d(TAG, "habit1 index before swap: " + String.valueOf(habit1.getIndex()));
+                    Log.d(TAG, "habit2 index before swap: " + String.valueOf(habit2.getIndex()));
+
+
+                    // We swap the habits in the main list rather then the views particular list
+
+                    mainUser.getHabitList().swap(habit1.getIndex(), habit2.getIndex());
+
+                    Log.d(TAG, "habit1 index after swap: " + String.valueOf(habit1.getIndex()));
+                    Log.d(TAG, "habit2 index after swap: " + String.valueOf(habit2.getIndex()));
+
+                    Log.d(TAG, "====end====");
                 }
             }
             Log.d("Habit", "moved");
+
             recyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
             Log.d("Position", "From: " + Integer.toString(fromPosition) + " To: " + Integer.toString(toPosition));
             return true;
@@ -207,10 +253,14 @@ public class TodayListFragment extends Fragment {
 
                 Log.d(TAG, "populating display");
 
+
+                // ensure index are parallel when populating from established list
                 habitsData.add(mainUserHabits.get(index));
                 adapter.notifyDataSetChanged();
+
             }
         }
+
 
     }
 

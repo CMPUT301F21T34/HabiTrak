@@ -31,6 +31,7 @@ public class HabitTest {
      * @return Habit
      * Returns a new Habit object to perform tests on
      */
+    /*
     private Habit mockHabit() {
         String title = "Read book";
         String reason = "Book good";
@@ -40,7 +41,7 @@ public class HabitTest {
         Calendar startDate = new GregorianCalendar(2021, 1, 1);
         Habit mockHabit = new Habit(title, reason, startDate, onDays);
         return mockHabit;
-    }
+    }*/
 
     /**
      * isOnDayTest
@@ -49,6 +50,7 @@ public class HabitTest {
      *
      * Tests if isOnDay() correctly compares today and the day(s) of the week to complete a habit
      */
+    /*
     @Test
     public void isOnDayTest() {
         Habit habit = mockHabit();
@@ -62,7 +64,7 @@ public class HabitTest {
         // flag and isOnDay() should both return true if today is Monday, Wednesday or Friday
         // and both return false otherwise
         assertEquals(flag,habit.isOnDay());
-    }
+    }*/
 
     /**
      * addHabitEventTest
@@ -71,6 +73,7 @@ public class HabitTest {
      *
      * Tests if habit_event is properly added to habit.habitEvents
      */
+    /*
     @Test
     public void addHabitEventTest() {
         Habit habit = mockHabit();
@@ -91,7 +94,7 @@ public class HabitTest {
         // Compare added habit events
         assertEquals(event1, habit.getHabitEvents().get(0));
         assertEquals(event2, habit.getHabitEvents().get(1));
-    }
+    }*/
 
     /**
      * addHabitEventTest
@@ -100,6 +103,7 @@ public class HabitTest {
      *
      * Tests if habit_event is properly removed from habit.habitEvents
      */
+    /*
     @Test
     public void removeHabitEventTest() {
         Habit habit = mockHabit();
@@ -126,5 +130,5 @@ public class HabitTest {
         // remove by habit_event object
         assertTrue(habit.removeHabitEvent(event2));
         assertEquals(0, habit.getHabitEvents().size());
-    }
+    }*/
 }

@@ -1,5 +1,11 @@
 package com.cmput301f21t34.habittrak.user;
 
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.util.Log;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /** On_Days
@@ -12,8 +18,8 @@ import java.util.Calendar;
  *
  */
 
-//TODO, implement parcelable
-public class On_Days {
+
+public class On_Days implements Parcelable {
 
 
 
@@ -30,7 +36,7 @@ public class On_Days {
 
 
     // initializes On_Days by default to all true
-    On_Days(){
+    public On_Days(){
         this.mon = true;
         this.tue = true;
         this.wed = true;
@@ -40,6 +46,36 @@ public class On_Days {
         this.sun = true;
     }
 
+    /**
+     * Construct an On_Days object from ArrayList<Boolean>
+     * Needed for Database
+     * @author Henry
+     */
+    public On_Days(ArrayList<Boolean> onDaysArray) {
+        this.mon = onDaysArray.get(0);
+        this.tue = onDaysArray.get(1);
+        this.wed = onDaysArray.get(2);
+        this.thu = onDaysArray.get(3);
+        this.fri = onDaysArray.get(4);
+        this.sat = onDaysArray.get(5);
+        this.sun = onDaysArray.get(6);
+    }
+
+    // Constructing from a parcel
+    public On_Days(Parcel parcel){
+
+        Bundle onDaysBundle = parcel.readBundle(this.getClass().getClassLoader()); // get bundle
+        boolean[] onDays = onDaysBundle.getBooleanArray("onDays");
+
+        this.mon = onDays[0];
+        this.tue = onDays[1];
+        this.wed = onDays[2];
+        this.thu = onDays[3];
+        this.fri = onDays[4];
+        this.sat = onDays[5];
+        this.sun = onDays[6];
+
+    }
 
     /** get
      *
@@ -52,6 +88,7 @@ public class On_Days {
      * @return boolean val of particular day;
      */
     public boolean get(int day){
+        Log.d("On_Days", "int passed: " + String.valueOf(day));
 
         switch (day){
             case MON: return mon;
@@ -78,17 +115,19 @@ public class On_Days {
      * @param day int day constant that you want to set true (Ex. MON))
      */
     public void setTrue(int day){
+        Log.d("On_Days", "int passed: " + String.valueOf(day)
+                + "int expected (for monday): " + String.valueOf(MON));
 
         switch (day){
-            case MON: mon = true;
-            case TUE: tue = true;
-            case WED: wed = true;
-            case THU: thu = true;
-            case FRI: fri = true;
-            case SAT: sat = true;
-            case SUN: sun = true;
+            case MON: mon = true; break;
+            case TUE: tue = true; break;
+            case WED: wed = true; break;
+            case THU: thu = true; break;
+            case FRI: fri = true; break;
+            case SAT: sat = true; break;
+            case SUN: sun = true; break;
             default: throw new IllegalArgumentException("must use Calendar int constant object " +
-                "with On_Days.setTrue(). \nEx. Calendar.MONDAY");
+                    "with On_Days.setTrue(). \nEx. Calendar.MONDAY");
         }
 
 
@@ -106,13 +145,13 @@ public class On_Days {
     public void setFalse(int day){
 
         switch (day){
-            case MON: mon = true;
-            case TUE: tue = true;
-            case WED: wed = true;
-            case THU: thu = true;
-            case FRI: fri = true;
-            case SAT: sat = true;
-            case SUN: sun = true;
+            case MON: mon = false; break;
+            case TUE: tue = false; break;
+            case WED: wed = false; break;
+            case THU: thu = false; break;
+            case FRI: fri = false; break;
+            case SAT: sat = false; break;
+            case SUN: sun = false; break;
             default: throw new IllegalArgumentException("must use Calendar int constant object " +
                     "with On_Days.setTrue(). \nEx. Calendar.MONDAY");
         }
@@ -187,24 +226,18 @@ public class On_Days {
         }
 
         int shift = 0;
-        boolean[] allDays = new boolean[7];
+        boolean[] allDays = array;
 
         // Makes sure array starts on monday for handling
         switch (startOfWeek) {
             case MON:
                 break; // If monday then no need to shift
-            case SUN:
-                shift++; // shift 6 to the left
-            case SAT:
-                shift++; // shift 5 to the left
-            case FRI:
-                shift++; //   .
-            case THU:
-                shift++; //   .
-            case WED:
-                shift++; //   .
-            case TUE:
-                shift++; // shift 1 to the left
+            case SUN: shift++; // shift 6 to the left
+            case SAT: shift++; // shift 5 to the left
+            case FRI: shift++; //   .
+            case THU: shift++; //   .
+            case WED: shift++; //   .
+            case TUE: shift++; // shift 1 to the left
                 allDays = shiftRight(array, shift); // execute shift
                 break;
             default:
@@ -356,10 +389,35 @@ public class On_Days {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
 
+        Bundle onDaysBundle = new Bundle(this.getClass().getClassLoader()); // Create a new bundle
+        onDaysBundle.putBooleanArray // Writes the vals as a bool array
+                ("onDays",new boolean[]{mon, tue, wed, thu, fri, sat, sun});
+        parcel.writeBundle(onDaysBundle); // Writes to parcel
 
+    }
 
+    // Creates User from parcel
+    public static final Parcelable.Creator<On_Days> CREATOR = new Parcelable.Creator<On_Days>() {
+
+        @Override
+        public On_Days createFromParcel(Parcel in) {
+
+            return new On_Days(in);
+        }
+
+        @Override
+        public On_Days[] newArray(int size) {
+
+            return new On_Days[size];
+        }
+    };
 }
-
 

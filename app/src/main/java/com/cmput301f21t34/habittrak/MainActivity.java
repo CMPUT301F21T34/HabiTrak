@@ -8,6 +8,10 @@ import android.util.Log;
 
 
 import com.cmput301f21t34.habittrak.user.Database_Pointer;
+import com.cmput301f21t34.habittrak.user.Habit;
+import com.cmput301f21t34.habittrak.user.Habit_Event;
+import com.cmput301f21t34.habittrak.user.Habit_List;
+import com.cmput301f21t34.habittrak.user.On_Days;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -17,13 +21,17 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.cmput301f21t34.habittrak.user.User;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * MainActivity
  *
  * Starting point of the app
  * TODO: figure out how to save the login state of the user
+ * TODO : Testing that the database returns the correct on days object
+ *
  */
 public class MainActivity extends AppCompatActivity{
 
@@ -32,8 +40,8 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        User mainUser = null;
 
+        User mainUser = null;
         if (savedInstanceState != null) {
             // get users credentials
             // validate credentials with database

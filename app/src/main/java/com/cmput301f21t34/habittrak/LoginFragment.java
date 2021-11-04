@@ -98,16 +98,17 @@ public class LoginFragment extends Fragment {
      * userExists
      * Checks if the given username exists in the database
      *
-     * @param username username from input
+     * @param email username from input
      * @return true if there is such a username, false otherwise
      */
-    public boolean userExists(@Nullable Editable username) {
+    public boolean userExists(@Nullable Editable email) {
 
         DatabaseManager db = new DatabaseManager();
 
-        String user = username.toString();
+        String user = email.toString();
 
         boolean isInDatabase = !db.isUniqueEmail(user);
+
         return isInDatabase;
     }
 

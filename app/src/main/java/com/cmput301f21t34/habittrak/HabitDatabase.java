@@ -31,6 +31,14 @@ public class HabitDatabase {
         this.onDaysObj = new ArrayList<Boolean>();
     }
 
+    public void setisPublic(boolean aPublic) {
+        isPublic = aPublic;
+    }
+
+    public boolean getisPublic() {
+        return isPublic;
+    }
+
     public String getTitle(){ return this.title; }
     public void setTitle(String title){ this.title = title; }
 
@@ -55,4 +63,8 @@ public class HabitDatabase {
         }
         this.onDaysObj = onDaysToSet;
     }
+    public void setOnDaysObj(ArrayList<Boolean> booleanArrayList){
+        this.onDaysObj = booleanArrayList;
+    }
+
 }

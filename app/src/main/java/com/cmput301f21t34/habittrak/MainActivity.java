@@ -21,13 +21,17 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.cmput301f21t34.habittrak.user.User;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * MainActivity
  *
  * Starting point of the app
  * TODO: figure out how to save the login state of the user
+ * TODO : Testing that the database returns the correct on days object
+ *
  */
 public class MainActivity extends AppCompatActivity{
 
@@ -74,5 +78,16 @@ public class MainActivity extends AppCompatActivity{
         DatabaseManager db = new DatabaseManager();
         db.createNewUser(user.getEmail(), user.getUsername(), user.getPassword(), "", user.getHabitList());
          */
+
+        DatabaseManager db = new DatabaseManager();
+        User user = db.getUser("pogo@gmail.com");
+        Habit_List hl =  user.getHabitList();
+        SimpleDateFormat fmt = new SimpleDateFormat("dd-MMM-yyyy");
+        Calendar cal = hl.get(0).getHabitEvents().get(1).getCompletedDate();
+        fmt.setCalendar(cal);
+
+        Log.d("contains",Integer.toString(hl.size()));
+        Log.d("contains",fmt.format(cal.getTime()));
+//        Log.d("contains",( hl.get(0).getHabitEvents().get(0).getCompletedDate().toString()));
     }
 }

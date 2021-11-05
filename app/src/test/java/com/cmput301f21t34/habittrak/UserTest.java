@@ -3,9 +3,9 @@ package com.cmput301f21t34.habittrak;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.cmput301f21t34.habittrak.user.Database_Pointer;
+import com.cmput301f21t34.habittrak.user.DatabasePointer;
 import com.cmput301f21t34.habittrak.user.Habit;
-import com.cmput301f21t34.habittrak.user.Habit_Event;
+import com.cmput301f21t34.habittrak.user.HabitEvent;
 import com.cmput301f21t34.habittrak.user.User;
 
 
@@ -18,7 +18,7 @@ import com.cmput301f21t34.habittrak.user.User;
  * @since 2021-10-22
  * @see User
  * @see Habit
- * @see Habit_Event
+ * @see HabitEvent
  */
 
 public class UserTest {
@@ -99,9 +99,9 @@ public class UserTest {
         User user = mockUser();
 
         // Adds mock follower to user
-        Database_Pointer follower1 = getMockFol1();
+        DatabasePointer follower1 = getMockFol1();
         user.addFollower(follower1);
-        Database_Pointer follower2 = getMockFol2();
+        DatabasePointer follower2 = getMockFol2();
         user.addFollower(follower2);
 
 
@@ -124,9 +124,9 @@ public class UserTest {
         User user = mockUser();
 
         // Adds mock follower to user
-        Database_Pointer follower1 = getMockFol1();
+        DatabasePointer follower1 = getMockFol1();
         user.addFollower(follower1);
-        Database_Pointer follower2 = getMockFol2();
+        DatabasePointer follower2 = getMockFol2();
         user.addFollower(follower2);
 
         // Remove follower1 then check size
@@ -152,14 +152,14 @@ public class UserTest {
         assertEquals(0, user.getFollowerReqList().size());
 
         // Adds mock follower to user
-        Database_Pointer follower1 = getMockFol1();
+        DatabasePointer follower1 = getMockFol1();
         user.addFollowerReq(follower1);
 
 
 
         assertEquals(1, user.getFollowerReqList().size());
 
-        Database_Pointer follower2 = getMockFol2();
+        DatabasePointer follower2 = getMockFol2();
         user.addFollowerReq(follower2);
 
         assertEquals(2, user.getFollowerReqList().size());
@@ -180,9 +180,9 @@ public class UserTest {
         User user = mockUser();
 
         // Populate followerreq list of a new user
-        Database_Pointer follower1 = getMockFol1();
+        DatabasePointer follower1 = getMockFol1();
         user.addFollowerReq(follower1);
-        Database_Pointer follower2 = getMockFol2();
+        DatabasePointer follower2 = getMockFol2();
         user.addFollowerReq(follower2);
 
         // Remove followerreq1 then check size
@@ -207,12 +207,12 @@ public class UserTest {
         // Add new following then check size
         assertEquals(0, user.getFollowingList().size());
 
-        Database_Pointer follower1 = getMockFol1();
+        DatabasePointer follower1 = getMockFol1();
         user.addFollowing(follower1);
 
         assertEquals(1, user.getFollowingList().size());
 
-        Database_Pointer follower2 = getMockFol2();
+        DatabasePointer follower2 = getMockFol2();
         user.addFollowing(follower2);
 
         assertEquals(2, user.getFollowingList().size());
@@ -233,9 +233,9 @@ public class UserTest {
         User user = mockUser();
 
         // Populate following list of a new user
-        Database_Pointer follower1 = getMockFol1();
+        DatabasePointer follower1 = getMockFol1();
         user.addFollowing(follower1);
-        Database_Pointer follower2 = getMockFol2();
+        DatabasePointer follower2 = getMockFol2();
         user.addFollowing(follower2);
 
         // Remove following1 then check size
@@ -255,14 +255,14 @@ public class UserTest {
     }
 
 
-    private Database_Pointer getMockFol1(){
+    private DatabasePointer getMockFol1(){
 
-        return new Database_Pointer("fol1");
+        return new DatabasePointer("fol1");
 
     }
-    private Database_Pointer getMockFol2(){
+    private DatabasePointer getMockFol2(){
 
-        return new Database_Pointer("fol2");
+        return new DatabasePointer("fol2");
 
     }
 

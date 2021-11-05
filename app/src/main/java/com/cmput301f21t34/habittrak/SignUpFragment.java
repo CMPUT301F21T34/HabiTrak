@@ -109,18 +109,14 @@ public class SignUpFragment extends Fragment {
     /**
      * checkEmail
      *
-     * @author Pranav
+     * @author Pranav, Kaaden
      * checks if the provided email is in the database or not
      * @param userEmail Editable type user email
-     * @return boolean if the email is there or not
+     * @return boolean; returns true if the email is valid, otherwise returns false
      */
     public boolean checkEmail(@NonNull Editable userEmail){
-        String email = userEmail.toString();
-        boolean isValid = false;
-        if (db.isUniqueEmail(email)){
-            isValid = true;
-        }
-        return isValid;
+        // isUniqueEmail returns true if the email is not in the database already.
+        return !db.isUniqueEmail(userEmail.toString());
     }
 
     /**

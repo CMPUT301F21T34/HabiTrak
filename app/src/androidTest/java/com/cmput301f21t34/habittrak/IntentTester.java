@@ -72,6 +72,8 @@ public class IntentTester {
         onView(withId(R.id.signup_signup_button))
                 .perform(click());
 
+        // Delete the test user
+        new DatabaseManager().deleteUser("iTestEmail@gmail.com");
     }
 
     @Test

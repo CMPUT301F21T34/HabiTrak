@@ -84,12 +84,9 @@ public class HabitTest {
         Location loc = new Location("");
         File photo = new File("");
         Calendar completeDate = new GregorianCalendar(2021, 6, 1);
-<<<<<<< HEAD
+
         HabitEvent event2 = new HabitEvent("event2", completeDate, loc, photo);
-=======
-        HabitEvent event2 = new HabitEvent("id", "comment",
-                completeDate, habit, loc, photo);
->>>>>>> 3992ef7e0b74bd9368073e44db4c74be7b0b8f58
+
 
         // Check size
         assertEquals(0, habit.getHabitEvents().size());
@@ -118,13 +115,9 @@ public class HabitTest {
         Location loc = new Location("");
         File photo = new File("");
         Calendar completeDate = new GregorianCalendar(2021, 6, 1);
-<<<<<<< HEAD
         HabitEvent event2 = new HabitEvent("comment",
                 completeDate, loc, photo);
-=======
-        HabitEvent event2 = new HabitEvent("173", "comment",
-                completeDate, habit, loc, photo);
->>>>>>> 3992ef7e0b74bd9368073e44db4c74be7b0b8f58
+
 
         // Check size and add habit_event to habit's habit_event list
         assertEquals(0, habit.getHabitEvents().size());

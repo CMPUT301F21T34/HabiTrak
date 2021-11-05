@@ -7,7 +7,9 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.toPackage;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -22,9 +24,16 @@ import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.anything;
 import static org.junit.Assert.*;
 
+import android.app.Instrumentation.ActivityResult;
+import android.content.Intent;
+
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
+
+import com.cmput301f21t34.habittrak.user.Habit;
+
+import java.util.Calendar;
 
 public class IntentTester {
 
@@ -42,7 +51,7 @@ public class IntentTester {
     public void tearDown() {
         Intents.release();
     }
-
+    
     @Test
     public void signUpTest(){
         //Click signup button
@@ -63,7 +72,6 @@ public class IntentTester {
 
     }
 
-    /*
     @Test
     public void addHabitTest(){
         //Click login to login with dummyUser
@@ -88,16 +96,32 @@ public class IntentTester {
         onView(withId(R.id.thursday_button))
                 .perform(click());
         onView(withId(R.id.save_habit));
-        //Click to the "habits" page and make sure the habit is there
-        onView(withId(R.id.today_add_habit_button))
-                .perform(click());
-        onView(withId(R.id.bottom_nav))
-                .perform(click());
-        onData(anything()).inAdapterView(withId(R.id.all_habits_listview)).atPosition(0)
-                .check(matches(withText("Breakfast")));
     }
-     */
-    
+
+    @Test
+    public void habitAddedTest(){
+        //Click login to login with dummyUser
+        //TODO: On complete implementation, will have to login for real
+        onView(withId(R.id.login_button))
+                .perform(click());
+        //Check to make sure we're on the intended activity, then click the add habit button
+        intended(hasComponent(BaseActivity.class.getName()));
+        //Build the stub for AddHabitActivity to return
+        Intent resultData = new Intent();
+        String name = "Breakfast";
+        String reason = "Most important meal of the day!";
+        Calendar calendar = Calendar.getInstance();
+        Habit testHabit = new Habit(name, reason, calendar);
+        resultData.putExtra("newHabit", testHabit);
+        ActivityResult result = new ActivityResult(BaseActivity.RESULT_NEW_HABIT, resultData);
+        //Call the AddHabitActivity to return the stub
+        intending(toPackage("com.cmput301f21t34.habittrak.AddHabitActivity"))
+                .respondWith(result);
+        //Check to see if the new habit was added
+        onView(withId(R.id.navbar_menu_habits))
+                .perform(click());
+    }
+
     @Test
     public void profileFragTest(){
         //Click login to login with dummyUser

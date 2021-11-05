@@ -20,8 +20,14 @@ import com.cmput301f21t34.habittrak.user.User;
 import java.util.ArrayList;
 
 /**
- * A simple {@link Fragment} subclass.
- * Fragment for displaying all habits
+ * AllHabitsFragment
+ *
+ * @author Pranav
+ * @author Dakota
+ *
+ * Fragment for displaying all the user's habits
+ *
+ * @version 1.0
  */
 public class AllHabitsFragment extends Fragment {
 
@@ -64,7 +70,13 @@ public class AllHabitsFragment extends Fragment {
         return view;
     }
 
-
+    /**
+     * refreshAllFragment
+     *
+     * @author Dakota
+     *
+     * refresh the habitsdata list to update the data
+     */
     public void refreshAllFragment() {
 
         Log.d("TodayListFragment", "refreshing habit list");

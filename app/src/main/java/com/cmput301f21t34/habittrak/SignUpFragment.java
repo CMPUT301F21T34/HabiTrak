@@ -26,6 +26,7 @@ import com.google.android.material.textfield.TextInputLayout;
  * @since 2021-11-03
  * @see DatabaseManager
  * @see User
+ * TODO: Add authentication
  */
 public class SignUpFragment extends Fragment {
 
@@ -105,6 +106,14 @@ public class SignUpFragment extends Fragment {
         return view;
     }
 
+    /**
+     * checkEmail
+     *
+     * @author Pranav
+     * checks if the provided email is in the database or not
+     * @param userEmail Editable type user email
+     * @return boolean if the email is there or not
+     */
     public boolean checkEmail(@NonNull Editable userEmail){
         String email = userEmail.toString();
         boolean isValid = false;
@@ -114,10 +123,27 @@ public class SignUpFragment extends Fragment {
         return isValid;
     }
 
+    /**
+     * isEmpty
+     *
+     * @author Pranav
+     *
+     * check to see if a EditText is empty
+     * @param text EditText
+     * @return boolean
+     */
     public boolean isEmpty(TextInputEditText text){
         return text.getText().toString().length() == 0;
     }
 
+    /**
+     * startHomePage
+     *
+     * @author Pranav
+     *
+     * start the base activity after signing up
+     * @param view
+     */
     public void startHomePage(View view){
         Intent intent = new Intent(getActivity(), BaseActivity.class);
         intent.putExtra("mainUser", currentUser);

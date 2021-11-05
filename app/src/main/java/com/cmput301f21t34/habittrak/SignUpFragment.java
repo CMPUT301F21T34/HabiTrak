@@ -10,6 +10,7 @@ import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
@@ -18,15 +19,15 @@ import com.google.android.material.textfield.TextInputLayout;
 
 /**
  * SignUpFragment
+ *
  * @author Pranav
- *
+ * <p>
  * Sign Up frament for creating new users
- *
  * @version 1.0
- * @since 2021-11-03
  * @see DatabaseManager
  * @see User
  * TODO: Add authentication
+ * @since 2021-11-03
  */
 public class SignUpFragment extends Fragment {
 
@@ -38,13 +39,11 @@ public class SignUpFragment extends Fragment {
     TextInputEditText passwordEditText;
     MaterialButton signupButton;
     DatabaseManager db = new DatabaseManager();
-    User currentUser = null;
-
+    User currentUser;
 
     public SignUpFragment() {
-        // Required empty public constructor
+        /* Required empty public constructor */
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,33 +63,24 @@ public class SignUpFragment extends Fragment {
         passwordEditText = view.findViewById(R.id.signup_password_edit_text);
         signupButton = view.findViewById(R.id.signup_signup_button);
 
-
         signupButton.setOnClickListener(view1 -> {
-            emailLayout.setError(null);
-            usernameLayout.setError(null);
-            passwordLayout.setError(null);
-
-            boolean fieldsFull = false;
-            // check fields empty
-            if(isEmpty(emailEditText)){
+            // Check if all the fields have input and notify the user if they do not.
+            boolean fieldsFull;
+            if (fieldsFull = isEmpty(emailEditText)) {
                 emailLayout.setError("Email Required");
             }
-            else if(isEmpty(usernameEditText)){
+            if (fieldsFull &= isEmpty(usernameEditText)) {
                 usernameLayout.setError("Username Required");
             }
-            else if(isEmpty(passwordEditText)){
+            if (fieldsFull &= isEmpty(passwordEditText)) {
                 passwordLayout.setError("Password Required");
             }
-            else{
-                fieldsFull = true;
-            }
-            // check email
-            if(fieldsFull) {
-                if (checkEmail(emailEditText.getText())) {
-                    emailLayout.setError("Email Already in Use");
-                }
-                else{
 
+            // check email
+            if (fieldsFull) {
+                if (!db.isUniqueEmail(emailEditText.getText().toString())) {
+                    emailLayout.setError("Email Already in Use");
+                } else {
                     db.createNewUser(emailEditText.getText().toString(),
                             usernameEditText.getText().toString(),
                             passwordEditText.getText().toString());
@@ -99,7 +89,6 @@ public class SignUpFragment extends Fragment {
                 }
             }
 
-
             // if everything correct then start base activity
         });
 
@@ -107,44 +96,27 @@ public class SignUpFragment extends Fragment {
     }
 
     /**
-     * checkEmail
-     *
-     * @author Pranav
-     * checks if the provided email is in the database or not
-     * @param userEmail Editable type user email
-     * @return boolean if the email is there or not
-     */
-    public boolean checkEmail(@NonNull Editable userEmail){
-        String email = userEmail.toString();
-        boolean isValid = false;
-        if (db.isUniqueEmail(email)){
-            isValid = true;
-        }
-        return isValid;
-    }
-
-    /**
      * isEmpty
      *
-     * @author Pranav
-     *
-     * check to see if a EditText is empty
      * @param text EditText
      * @return boolean
+     * @author Pranav
+     * <p>
+     * check to see if a EditText is empty
      */
-    public boolean isEmpty(TextInputEditText text){
-        return text.getText().toString().length() == 0;
+    private boolean isEmpty(TextInputEditText text) {
+        return text.getText().toString().equals("");
     }
 
     /**
      * startHomePage
      *
-     * @author Pranav
-     *
-     * start the base activity after signing up
      * @param view
+     * @author Pranav
+     * <p>
+     * start the base activity after signing up
      */
-    public void startHomePage(View view){
+    public void startHomePage(View view) {
         Intent intent = new Intent(getActivity(), BaseActivity.class);
         intent.putExtra("mainUser", currentUser);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

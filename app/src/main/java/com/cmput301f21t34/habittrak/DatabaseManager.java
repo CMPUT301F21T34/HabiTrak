@@ -99,9 +99,10 @@ public class DatabaseManager {
     /**
      * getAllUsers()
      *
-     * @author Henry
-     * @return
      * Fetches all users (identified by email) from the database
+     *
+     * @author Henry
+     * @return ArrayList<Database_Pointer>
      */
     public ArrayList<Database_Pointer> getAllUsers() {
 
@@ -122,6 +123,8 @@ public class DatabaseManager {
     }
 
     /**
+     * isUniqueEmail
+     *
      * Checks to see if the user with the provided email already exists
      *
      * @author Henry
@@ -151,6 +154,8 @@ public class DatabaseManager {
     }
 
     /**
+     * isUniqueUsername
+     *
      * Checks to see if the user with the provided email already exists
      *
      * @author Henry
@@ -194,8 +199,10 @@ public class DatabaseManager {
     /**
      * createNewUser
      *
+     * Creates a new user from the data passed into it, and puts it into the database
+     *
      * @author Henry
-     * returns true if it is successful or false if it is not
+     * @return true if it is successful or false if it is not
      */
     public boolean createNewUser(String email, String username, String password) {
 
@@ -230,8 +237,10 @@ public class DatabaseManager {
     /**
      * deleteUser
      *
+     * Attempts to delete a user from the database
+     *
      * @author Henry
-     * returns true if it is successful or false if it is not
+     * @return true if it is successful or false if it is not
      */
     public boolean deleteUser(String email) {
 
@@ -259,10 +268,10 @@ public class DatabaseManager {
     /**
      * getUser
      *
+     * returns the user with the provided email
+     *
      * @author Tauseef
      * @author Henry
-     *
-     * returns the user with the provided email
      * @param email
      * @return User
      */
@@ -336,6 +345,7 @@ public class DatabaseManager {
 
     /**
      * getUserName
+     *
      * gets the user name of the provided email
      *
      * @author Tauseef
@@ -361,12 +371,13 @@ public class DatabaseManager {
     }
 
     /**
-     * getUserName
+     * getUserBio
+     *
      * gets the user bio of the provided email
      *
      * @author Tauseef
      * @param email
-     * @return
+     * @return String containing the bio
      */
     public String getUserBio(String email) {
 
@@ -414,6 +425,7 @@ public class DatabaseManager {
 
     /**
      * toHabitDatabaseList
+     *
      * Converts an array of HashMap (data from the database) to an array of HabitDatabase objects
      *
      * @author Tauseef
@@ -509,11 +521,12 @@ public class DatabaseManager {
 
     /**
      * getTimezone
+     *
      * Converts HashMap from database to TimeZone object
      *
      * @author Tauseef
      * @param hashMap
-     * @return
+     * @return TimeZone
      */
     public TimeZone getTimezone(HashMap<String,Object> hashMap){
         String timezoneId = (String) hashMap.get("id");
@@ -550,6 +563,7 @@ public class DatabaseManager {
 
     /**
      * getFollowingList
+     *
      * gets the following list of the provided email
      *
      * @author Tauseef
@@ -699,9 +713,11 @@ public class DatabaseManager {
 
     /**
      * updateHabitNamePassword
+     *
+     * updates the habit name and password
+     *
      * @author Tauseef
      * @param user
-     * updates the habit name and password
      */
     public void updateHabitNamePassword(User user){
         final CollectionReference collectionReference = database.collection("users");
@@ -724,8 +740,10 @@ public class DatabaseManager {
     }
 
     /**
-     * addFollower
+     * updateFollower
+     *
      * email is now a follower of user (so add email to the follower list of user and add user to the following list of email2)
+     *
      * @author Henry
      * @param user
      * @param toBeAdded
@@ -850,10 +868,12 @@ public class DatabaseManager {
     }
 
     /**
-     * addfollow req
+     * updateFollowerReq
+     *
      * email1 asked to follow email2 (so add email2 to the followerReq list of email1 and add email1 to the followerRequested list of email2)
      * followerRequested list means the people that asked to follow the user
      * followerReq list means the people that the user requested to follow
+     * 
      * @author Tauseef
      * @param user
      * @param toBeAdded
@@ -975,8 +995,10 @@ public class DatabaseManager {
     }
 
     /**
-     * addtoblocklist
+     * updateBlock
+     *
      * email2 is now blocked by email1 (so add email2 to the block list of email1 and add email1 to the blockedby list of email2)
+     *
      * @author Tauseef
      * @param user
      * @param toBeAdded
@@ -1097,7 +1119,10 @@ public class DatabaseManager {
     }
 
     /**
+     * toPointerList
+     *
      * Converts an ArrayList<HashMap<String, String>> listOfMap to an ArrayList<Database_Pointer>
+     *
      * @author Henry
      * @param listOfMap
      * @return
@@ -1114,7 +1139,9 @@ public class DatabaseManager {
 
     /**
      * habitToDatabase
+     *
      * Convert Habit in Habit_List<Habit> to a new object that is compatitble with the database
+     *
      * @author Henry
      * @param habits
      * @return
@@ -1139,6 +1166,7 @@ public class DatabaseManager {
 
     /**
      * databaseToHabit
+     *
      * @param habitsFromDatabase
      * @author Henry
      * @return

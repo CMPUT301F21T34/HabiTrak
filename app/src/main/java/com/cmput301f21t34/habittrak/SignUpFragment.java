@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,8 @@ import com.google.android.material.textfield.TextInputLayout;
  * @since 2021-11-03
  */
 public class SignUpFragment extends Fragment {
+
+    private final String TAG = "SignUpFragment";
 
     TextInputLayout emailLayout;
     TextInputEditText emailEditText;
@@ -65,25 +68,34 @@ public class SignUpFragment extends Fragment {
 
         signupButton.setOnClickListener(view1 -> {
             // Check if all the fields have input and notify the user if they do not.
-            boolean fieldsFull;
-            if (fieldsFull = isEmpty(emailEditText)) {
+            emailLayout.setError(null);
+            usernameLayout.setError(null);
+            passwordLayout.setError(null);
+
+            boolean fieldsFull = true;
+            if (isEmpty(emailEditText)) {
+                fieldsFull = false;
                 emailLayout.setError("Email Required");
             }
-            if (fieldsFull &= isEmpty(usernameEditText)) {
+            if (isEmpty(usernameEditText)) {
+                fieldsFull = false;
                 usernameLayout.setError("Username Required");
             }
-            if (fieldsFull &= isEmpty(passwordEditText)) {
+            if (isEmpty(passwordEditText)) {
+                fieldsFull = false;
                 passwordLayout.setError("Password Required");
             }
 
             // check email
             if (fieldsFull) {
+                Log.d(TAG, "fieldsfull");
                 if (!db.isUniqueEmail(emailEditText.getText().toString())) {
                     emailLayout.setError("Email Already in Use");
                 } else {
                     db.createNewUser(emailEditText.getText().toString(),
                             usernameEditText.getText().toString(),
                             passwordEditText.getText().toString());
+                    Log.d(TAG, "Fields Full and email unique");
                     currentUser = db.getUser(emailEditText.getText().toString());
                     startHomePage(view);
                 }

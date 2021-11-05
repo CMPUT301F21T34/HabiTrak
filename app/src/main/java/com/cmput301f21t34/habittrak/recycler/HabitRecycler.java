@@ -1,17 +1,13 @@
 package com.cmput301f21t34.habittrak.recycler;
 
-import android.icu.text.ListFormatter;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.user.Habit;
-import com.cmput301f21t34.habittrak.user.Habit_List;
-import com.cmput301f21t34.habittrak.user.User;
+import com.cmput301f21t34.habittrak.user.HabitList;
 
 import java.util.ArrayList;
 
@@ -20,20 +16,29 @@ public class HabitRecycler {
     private final String TAG = "HabitRecycler";
 
     private ArrayList<Habit> displayHabits;
-    private Habit_List habits;
+    private HabitList habits;
     private TodayHabitRecyclerAdapter adapter;
 
     private ItemTouchHelper.SimpleCallback simpleCallback;
 
-    private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager layoutManager;
+    private final RecyclerView recyclerView;
+    private final RecyclerView.LayoutManager layoutManager;
+
+    private boolean locked = false;
 
 
-    public HabitRecycler(RecyclerView recyclerView, RecyclerView.LayoutManager layoutManager, ArrayList<Habit> displayHabits, Habit_List habits){
+    /**
+     * Standard Constructor for a recyclable view of habits
+     *
+     * @author Dakota
+     * @param recyclerView The RecyclerView to use
+     * @param layoutManager The Layout Manger from the activity to use
+     * @param displayHabits An ArrayList<Habit> for using as a display list
+     * @param habits A HabitList for getting the Habits from
+     */
+    public HabitRecycler(RecyclerView recyclerView, RecyclerView.LayoutManager layoutManager, ArrayList<Habit> displayHabits, HabitList habits){
 
-
-
-        // Sets up two list of habits, the ones to display and the Habit_List of all habits
+        // Sets up two list of habits, the ones to display and the HabitList of all habits
         this.displayHabits = displayHabits;
         this.habits = habits;
 
@@ -48,20 +53,64 @@ public class HabitRecycler {
 
         // Sets up our simpleCallBack that manages the moving of objects in
         // the recycler view
-        this.simpleCallback = simpleCallback();
+        this.simpleCallback = recycler(locked);
+
+        // Sets up touch handling with the recycler view
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
+    }
+
+    /**
+     * Standard Constructor for a recyclable view of habits with lock boolean
+     * to pass
+     *
+     * @author Dakota
+     * @param recyclerView The RecyclerView to use
+     * @param layoutManager The Layout Manger from the activity to use
+     * @param displayHabits An ArrayList<Habit> for using as a display list
+     * @param habits A HabitList for getting the Habits from
+     * @param locked A boolean who if is true, locks the recycler view
+     */
+    public HabitRecycler(RecyclerView recyclerView, RecyclerView.LayoutManager layoutManager, ArrayList<Habit> displayHabits, HabitList habits, boolean locked){
+
+        // Sets up two list of habits, the ones to display and the HabitList of all habits
+        this.displayHabits = displayHabits;
+        this.habits = habits;
+
+        // Sets up recycler view and its layout manger
+        this.recyclerView = recyclerView;
+        this.layoutManager = layoutManager;
+        recyclerView.setLayoutManager(layoutManager);
+
+        // Sets up our adapter with our displayHabits
+        adapter = new TodayHabitRecyclerAdapter(displayHabits);
+        recyclerView.setAdapter(adapter);
+
+        // Sets up our simpleCallBack that manages the moving of objects in
+        // the recycler view
+        this.simpleCallback = recycler(locked);
 
         // Sets up touch handling with the recycler view
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
 
-
-
     }
 
 
-
-    public ItemTouchHelper.SimpleCallback simpleCallback(){
+    /**
+     * recycler
+     *
+     * Handles the recycler views logic, swapping the indices
+     * in the view, and the indices of the habits involved,
+     *
+     * @author Dakota
+     * @author Nav
+     *
+     * @param locked boolean If true then locks the recycler view
+     */
+    private ItemTouchHelper.SimpleCallback recycler(boolean locked){
 
         /**
          * Touch Helper for dragging habits
@@ -151,8 +200,10 @@ public class HabitRecycler {
 
             @Override
             public boolean isLongPressDragEnabled() {
-                Log.d(TAG, "long press enabled");
-                return true;
+
+                // is locked is true, then long press drag is disabled and user
+                // can't use recycler view
+                return !locked;
             }
 
             @Override
@@ -165,6 +216,13 @@ public class HabitRecycler {
 
     }
 
+    /**
+     * notifyDataSetChanged
+     *
+     * Allows user to notify the adapter that the data set has changed
+     *
+     * @author Dakota
+     */
     public void notifyDataSetChanged(){
         this.adapter.notifyDataSetChanged();
     }

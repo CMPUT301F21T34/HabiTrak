@@ -15,12 +15,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.cmput301f21t34.habittrak.recycler.HabitRecycler;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.R;
 
 import com.cmput301f21t34.habittrak.recycler.TodayHabitRecyclerAdapter;
 
-import com.cmput301f21t34.habittrak.user.Habit_List;
+import com.cmput301f21t34.habittrak.user.HabitList;
 import com.cmput301f21t34.habittrak.user.User;
 
 import java.util.ArrayList;
@@ -36,81 +37,40 @@ import java.util.ArrayList;
 public class TodayListFragment extends Fragment {
 
 
-    final String TAG = "TodayFrag";
+    // Attributes //
 
+    // These are for the Recycler view
+    private RecyclerView habitRecyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private HabitRecycler habitRecycler;
+    private ArrayList<Habit> habitsDisplayList;
 
-    // attributes
-
-
-    TodayHabitRecyclerAdapter adapter;
-
-    private ListView habitList;
-    private ArrayAdapter<Habit> habitAdapter;
-    private ArrayList<Habit> habitsData = new ArrayList<>();
-
-    User mainUser;
-    RecyclerView recyclerView;
-    RecyclerView.LayoutManager layoutManager;
+    private User mainUser;
 
 
 
     // constructor
     public TodayListFragment(User mainUser) {
 
+        habitsDisplayList = new ArrayList<>();
         this.mainUser = mainUser;
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.habi_all_habits_fragment, container, false);
 
-        View view = inflater.inflate(R.layout.habi_today_fragment, container, false);
-
-
-
-
-        Log.d("mainUser", "in TodayListFragment mainUser: " + mainUser.getUsername());
-
-
-        // code to execute //
-
-        // sample data (Does not show as we are getting habits from main User)
-        /*
-        Calendar date = new GregorianCalendar(2021,1,31);
-        Habit habit1 = new Habit("exercise dog", "some desc", date);
-            habit1.getOnDaysObj().setTrue(Calendar.MONDAY);
-            habit1.getOnDaysObj().setTrue(Calendar.FRIDAY);
-        Habit habit2 = new Habit("go for a walk", "some desc 2", date);
-            habit2.getOnDaysObj().setAll(new boolean[]{true, true, true, true, true, true, true});
-        */
-
-        //habitsData.add(habit1); habitsData.add(habit2);
-
-
-        // populates habit list
-
-        // setup recycler view
-        recyclerView = view.findViewById(R.id.today_recycler_view);
+        // Sets up views and manager for recycler view
+        habitRecyclerView = view.findViewById(R.id.all_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
-        adapter = new TodayHabitRecyclerAdapter(habitsData);
-        recyclerView.setAdapter(adapter);
-
-        // touch helper for dragging habits
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
 
 
-        /*
-        //connect the array adapter
-        habitAdapter = new TodayHabitList(getContext(), habitsData);
-        recyclerView.setAdapter(habitAdapter);
-
-
-         */
-
-        refreshTodayFragment(); // populates habit list
-
+        // Sets up the recycler view with a list of all habits, and
+        // an array list for the recycler to use for display - Dakota
+        this.habitRecycler = new HabitRecycler(habitRecyclerView, layoutManager, habitsDisplayList, mainUser.getHabitList(), true);
 
 
 
@@ -119,93 +79,16 @@ public class TodayListFragment extends Fragment {
         return view;
     }
 
-    /**
-     * Touch Helper for dragging habits
-     *
-     * onMove swaps the position in the adapter
-     */
-    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(
-            ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.START
-            | ItemTouchHelper.END, 0) {
-        @Override
-        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-            int fromPosition = viewHolder.getAdapterPosition();
-            int toPosition = target.getAdapterPosition();
+    @Override
+    public void onResume() {
 
-            if (fromPosition < toPosition && toPosition < habitsData.size()) {
-                for (int i = fromPosition; i < toPosition; i++) {
+        super.onResume();
 
-                    Log.d(TAG, "==swapping==");
+        // Refreshes Frag
+        refreshTodayFragment();
 
-                    Habit habit1 = habitsData.get(i);
-                    Habit habit2 = habitsData.get(i + 1);
+    }
 
-                    Log.d(TAG, "habit1 : " + String.valueOf(habit1.getTitle()) + "index in display: " + String.valueOf(i));
-                    Log.d(TAG, "habit2 : " + String.valueOf(habit2.getTitle()) + "index in display: " + String.valueOf(i + 1) );
-
-
-                    Log.d(TAG, "habit1 index before swap: " + String.valueOf(habit1.getIndex()));
-                    Log.d(TAG, "habit2 index before swap: " + String.valueOf(habit2.getIndex()));
-
-
-
-                    // We swap the habits in the main list rather then the views particular list
-
-                    mainUser.getHabitList().swap(habit1.getIndex(), habit2.getIndex());
-
-                    Log.d(TAG, "habit1 index after swap: " + String.valueOf(habit1.getIndex()));
-                    Log.d(TAG, "habit2 index after swap: " + String.valueOf(habit2.getIndex()));
-
-
-                    Log.d(TAG, "====end====");
-
-                    //habitsData.swap(i, i + 1);
-
-                }
-            } else if (toPosition >= 0) {
-                for (int i = fromPosition; i > toPosition; i--) {
-
-                    Log.d(TAG, "==swapping==");
-
-                    Habit habit1 = habitsData.get(i);
-                    Habit habit2 = habitsData.get(i - 1);
-
-                    Log.d(TAG, "habit1 : " + String.valueOf(habit1.getTitle()) + " index in display: " + String.valueOf(i));
-                    Log.d(TAG, "habit2 : " + String.valueOf(habit2.getTitle()) + " index in display: " + String.valueOf(i - 1) );
-
-                    Log.d(TAG, "habit1 index before swap: " + String.valueOf(habit1.getIndex()));
-                    Log.d(TAG, "habit2 index before swap: " + String.valueOf(habit2.getIndex()));
-
-
-                    // We swap the habits in the main list rather then the views particular list
-
-                    mainUser.getHabitList().swap(habit1.getIndex(), habit2.getIndex());
-
-                    Log.d(TAG, "habit1 index after swap: " + String.valueOf(habit1.getIndex()));
-                    Log.d(TAG, "habit2 index after swap: " + String.valueOf(habit2.getIndex()));
-
-                    Log.d(TAG, "====end====");
-                }
-            }
-            Log.d("Habit", "moved");
-
-            recyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
-            Log.d("Position", "From: " + Integer.toString(fromPosition) + " To: " + Integer.toString(toPosition));
-            return true;
-        }
-
-        @Override
-        public boolean isLongPressDragEnabled() {
-
-            Log.d(TAG, "long press enabled");
-            return true;
-        }
-
-        @Override
-        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            // nothing function function
-        }
-    };
 
     /**
      * refreshHabitList
@@ -217,35 +100,24 @@ public class TodayListFragment extends Fragment {
 
     public void refreshTodayFragment() {
 
-        Log.d(TAG, "refreshing today frag");
 
         // Populate today view with Today's habits.
 
-        habitsData.clear();// Make sure is clear
+        habitsDisplayList.clear();// Make sure is clear
 
-        Habit_List mainUserHabits = mainUser.getHabitList(); // get HabitsList
-
-        mainUserHabits.reOrder(); // Makes sure we are in proper saved order
-
-        Log.d(TAG, "size of mainUserHabits: " + String.valueOf(mainUserHabits.size()));
-
+        HabitList mainUserHabits = mainUser.getHabitList(); // get HabitsList
 
 
         // Iterates through all habits
         for (int index = 0; index < mainUserHabits.size(); index++){
 
-            Log.d(TAG, "is on day?: " + String.valueOf(mainUserHabits.get(index).getOnDaysObj().isOnDay()));
-            Log.d(TAG, "is habit start: " + String.valueOf(mainUserHabits.get(index).isHabitStart()));
-
-
+            // Checks to see if they should be displayed
             if (mainUserHabits.get(index).getOnDaysObj().isOnDay() && mainUserHabits.get(index).isHabitStart()){ // If a habit is active today add
-
-                Log.d(TAG, "populating display");
 
 
                 // ensure index are parallel when populating from established list
-                habitsData.add(mainUserHabits.get(index));
-                adapter.notifyDataSetChanged();
+                habitsDisplayList.add(mainUserHabits.get(index));
+                habitRecycler.notifyDataSetChanged();
 
             }
         }

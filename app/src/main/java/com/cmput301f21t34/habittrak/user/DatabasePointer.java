@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * DatabasePointer
+ * Database_Pointer
  *
  * @author Dakota
  *
@@ -19,18 +19,17 @@ public class DatabasePointer implements Parcelable {
     private final String email; // id can only be assigned once
 
     public DatabasePointer(String email){
-       this.email = email;
+        this.email = email;
     }
     public DatabasePointer(User user){
         this.email = user.getEmail();
     }
 
 
+
     protected DatabasePointer(Parcel parcel) {
         email = parcel.readString();
     }
-
-
 
     /**
      * getEmail
@@ -43,7 +42,6 @@ public class DatabasePointer implements Parcelable {
     public String getEmail(){
         return this.email;
     }
-
 
     @Override
     public int describeContents() {
@@ -67,5 +65,34 @@ public class DatabasePointer implements Parcelable {
         }
     };
 
+    /**
+     * custom hashCode() and equals() for Database_Pointer
+     *
+     * Reference: https://stackoverflow.com/a/17801750
+     * @return
+     */
+    @Override
+    public int hashCode() {
+        return email.hashCode();
+    }
 
+    // equals Implementation
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        DatabasePointer other = (DatabasePointer) obj;
+        if (email != other.getEmail())
+            return false;
+        return true;
+
+    }
+
+    public boolean Equals(DatabasePointer dp){
+        return this.getEmail().equals(dp.getEmail());
+    }
 }

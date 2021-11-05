@@ -116,7 +116,7 @@ public class DatabaseManager {
      * @return boolean; returns true if unique otherwise will return false
      */
     public boolean isUniqueEmail(String email) {
-        
+
         boolean isUnique = false;
 
         final CollectionReference collectionReference = database.collection("users");
@@ -286,7 +286,7 @@ public class DatabaseManager {
 
             if (document.getData() != null) {
                 Log.d("getData", "not null");
-                
+
                 ArrayList<HashMap<String, Object>> requestedHabitList = (ArrayList<HashMap<String, Object>>) document.get("habitList");
                 ArrayList<HabitDatabase> requestedHabitDatabases = toHabitDatabaseList(requestedHabitList);
                 habitList = databaseToHabit(requestedHabitDatabases);
@@ -750,7 +750,7 @@ public class DatabaseManager {
                                 contains = true;
                                 Log.d(TAG,"from equals");
                             }
-                            else if (followerList.get(i).equals(toBeAdded)){
+                            else if (followerList.get(i).Equals(toBeAdded)){
                                 index = i;
                                 contains = true;
                                 Log.d(TAG,"not from equals");
@@ -810,7 +810,7 @@ public class DatabaseManager {
                                 contains = true;
                                 Log.d(TAG,"from equals");
                             }
-                            else if (followingList.get(i).equals(following)){
+                            else if (followingList.get(i).Equals(following)){
                                 index = i;
                                 contains = true;
                                 Log.d(TAG,"not from equals");
@@ -879,7 +879,7 @@ public class DatabaseManager {
                                 contains = true;
                                 Log.d(TAG,"from equals");
                             }
-                            else if (followerReqList.get(i).equals(toBeAdded)){
+                            else if (followerReqList.get(i).Equals(toBeAdded)){
                                 index = i;
                                 contains = true;
                                 Log.d(TAG,"not from equals");
@@ -937,7 +937,7 @@ public class DatabaseManager {
                                 contains = true;
                                 Log.d(TAG,"from equals");
                             }
-                            else if (followerRequestedList.get(i).equals(followerRequested)){
+                            else if (followerRequestedList.get(i).Equals(followerRequested)){
                                 index = i;
                                 contains = true;
                                 Log.d(TAG,"not from equals");
@@ -1005,7 +1005,7 @@ public class DatabaseManager {
                                 index = i;
                                 Log.d(TAG,"from equals");
                             }
-                            else if (blockList.get(i).equals(toBeAdded)){
+                            else if (blockList.get(i).Equals(toBeAdded)){
                                 contains = true;
                                 index = i;
                                 Log.d(TAG,"not from equals");
@@ -1063,7 +1063,7 @@ public class DatabaseManager {
                                 index = i;
                                 Log.d(TAG,"from equals");
                             }
-                            else if (blockedByList.get(i).equals(blockedBy)){
+                            else if (blockedByList.get(i).Equals(blockedBy)){
                                 contains = true;
                                 index = i;
                                 Log.d(TAG,"not from equals");

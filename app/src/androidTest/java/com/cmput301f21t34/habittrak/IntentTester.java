@@ -10,6 +10,7 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.toPackage;
+import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -22,6 +23,7 @@ import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.anything;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.*;
 
 import android.app.Instrumentation.ActivityResult;
@@ -122,7 +124,7 @@ public class IntentTester {
                 .perform(click());
         onData(anything())
                 .inAdapterView(withId(R.id.all_habits_listview)).atPosition(0)
-                .check(matches(withText("Breakfast")));
+                .check(matches(withClassName(containsString("Habit"))));
     }
 
     @Test

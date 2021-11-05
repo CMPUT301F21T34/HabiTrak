@@ -3,12 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.socialscreen.SocialFragment">
+    tools:context=".socialFragments.RequestsFragment">
 
-
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/requests_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Social Fragment" />
+        android:layout_height="match_parent"/>
 
 </FrameLayout>

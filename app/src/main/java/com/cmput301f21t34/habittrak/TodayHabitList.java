@@ -11,12 +11,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.cmput301f21t34.habittrak.user.Habit;
+
 import java.util.ArrayList;
 
 /**
  * TodayHabitList
  *
- * customList for ListView of Today Fragment
+ * customList for ListView of TodayListFragment and AllHabitsFragment
  * @version 1.0
  * @since 2021-10-19
  * @see Habit
@@ -51,7 +53,7 @@ public class TodayHabitList extends ArrayAdapter<Habit> {
         View view = convertView;
 
         if (view == null){
-            view = LayoutInflater.from(context).inflate(R.layout.habi_today_listview_content, parent, false);
+            view = LayoutInflater.from(context).inflate(R.layout.recycler_view_row, parent, false);
         }
 
         Habit habit = habits.get(position);

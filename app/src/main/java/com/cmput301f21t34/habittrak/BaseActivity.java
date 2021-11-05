@@ -1,5 +1,7 @@
 package com.cmput301f21t34.habittrak;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,14 +9,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.cmput301f21t34.habittrak.user.Habit;
+import com.cmput301f21t34.habittrak.user.User;
 import com.cmput301f21t34.habittrak.fragments.AllHabitsFragment;
 import com.cmput301f21t34.habittrak.fragments.EventsFragment;
 import com.cmput301f21t34.habittrak.fragments.ProfileFragment;
-import com.cmput301f21t34.habittrak.fragments.SocialFragment;
 import com.cmput301f21t34.habittrak.fragments.TodayListFragment;
 
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationBarView;
 
 //TODO: Rename BaseActivity to a more suitable name
@@ -33,6 +38,8 @@ import com.google.android.material.navigation.NavigationBarView;
 
 public class BaseActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
 
+    final String TAG = "BaseActivity";
+
     /**
      * Function called when activity is created
      * @param savedInstanceState savedInstances
@@ -41,13 +48,14 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
     //TODO: Explicitly make attributes private
     NavigationBarView bottomNav;
-    User mainUser;
+    User mainUser;// = new User(); // Creates dummy user for testing purposes
 
     TodayListFragment todayFrag;
-    SocialFragment socialFrag;
     ProfileFragment profileFrag;
     EventsFragment eventsFrag;
     AllHabitsFragment allHabitsFrag;
+
+    MaterialButton addHabitButton;
 
 
     public static final int RESULT_NEW_HABIT = 1000; // Custom Activity Result
@@ -66,12 +74,12 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
         this.mainUser = intent.getParcelableExtra("mainUser"); // Gets mainUser from intent
 
-        Log.d("mainUser", "in BaseActivity mainUser: " + mainUser.getUsername());
+        addHabitButton = findViewById(R.id.base_add_habit_button);
+
 
 
         // Initializes Fragments //
         todayFrag = new TodayListFragment(mainUser);
-        socialFrag = new SocialFragment(mainUser);
         profileFrag = new ProfileFragment(mainUser);
         eventsFrag = new EventsFragment(mainUser);
         allHabitsFrag = new AllHabitsFragment(mainUser);
@@ -85,7 +93,13 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
 
 
-
+        addHabitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), AddHabitActivity.class);
+                addHabitActivityLauncher.launch(intent);
+            }
+        });
 
 
         
@@ -108,40 +122,63 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
         switch (item.getItemId()) {
             case R.id.navbar_menu_today:
+                addHabitButton.setVisibility(View.VISIBLE);
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, todayFrag).commit();
                 return true;
             case R.id.navbar_menu_events:
+                addHabitButton.setVisibility(View.INVISIBLE);
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, eventsFrag).commit();
                 return true;
             case R.id.navbar_menu_habits:
+                addHabitButton.setVisibility(View.VISIBLE);
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, allHabitsFrag).commit();
                 return true;
             case R.id.navbar_menu_profile:
+                addHabitButton.setVisibility(View.INVISIBLE);
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, profileFrag).commit();
                 return true;
             case R.id.navbar_menu_social:
-                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, socialFrag).commit();
-                return true;
+
+                Intent intent = new Intent(getBaseContext(), SocialActivity.class);
+                intent.putExtra("mainUser", mainUser); // passes mainUser through intent
+                startActivity(intent);
+                bottomNav.setSelectedItemId(R.id.navbar_menu_today);
+                addHabitButton.setVisibility(View.INVISIBLE);
+
+                return false;
         }
 
         return false;
     }
 
 
-    //TODO:
-    // implement public function in BaseActivity to handle
-    // launching AddHabitActivity and refreshing views
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (resultCode == RESULT_NEW_HABIT) {
             Habit newHabit = intent.getParcelableExtra("newHabit");
-            mainUser.addHabit(newHabit);
-            todayFrag.refreshHabitList(); // refresh view
+
+            Log.d(TAG, "adding new habit: " + newHabit.getTitle());
+
+            mainUser.getHabitList().add(newHabit);
+
+            Log.d(TAG, "!newHabit Absolute Index: " + String.valueOf(newHabit.getIndex()));
+
+            Log.d(TAG, "new habit: " + mainUser.getHabit(mainUser.getHabitList().size() - 1).getTitle());
+
+            Log.d(TAG, "size: " + String.valueOf(mainUser.getHabitList().size()));
+
+            todayFrag.refreshTodayFragment(); // refresh view
 
 
         }
 
         super.onActivityResult(requestCode, resultCode, intent);
     }
+    ActivityResultLauncher<Intent> addHabitActivityLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+            }
+    );
+
+
 }

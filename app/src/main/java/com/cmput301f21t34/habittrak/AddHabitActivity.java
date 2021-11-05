@@ -3,9 +3,7 @@ package com.cmput301f21t34.habittrak;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,12 +13,12 @@ import android.view.View;
 import android.widget.TextView;
 
 
+import com.cmput301f21t34.habittrak.user.Habit;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -235,11 +233,14 @@ public class AddHabitActivity extends AppCompatActivity {
     /**
      * finish activity if all fields are filled
      */
-
     public void finishActivityWithResult(){
         String name = habitName.getText().toString();
         String reason = habitReason.getText().toString();
-        Habit newHabit = new Habit(name, reason, calendar, daysOfWeek);
+
+        Habit newHabit = new Habit(name, reason, calendar);
+
+        newHabit.getOnDaysObj().setAll(daysOfWeek);
+
         //Bundle newHabitBundle = new Bundle();
         //newHabitBundle.putParcelable("newHabit", newHabit);
         Intent result = new Intent();

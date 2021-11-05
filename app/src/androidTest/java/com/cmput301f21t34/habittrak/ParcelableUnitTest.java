@@ -4,13 +4,15 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-import android.location.Location;
 import android.os.Parcel;
-import android.util.Log;
-import org.apache.commons.io.FileUtils;
 
-import java.io.File;
-import java.util.ArrayList;
+import com.cmput301f21t34.habittrak.user.Habit;
+import com.cmput301f21t34.habittrak.user.HabitEvent;
+import com.cmput301f21t34.habittrak.user.HabitList;
+import com.cmput301f21t34.habittrak.user.OnDays;
+import com.cmput301f21t34.habittrak.user.User;
+
+
 import java.util.Calendar;
 
 /**
@@ -23,7 +25,7 @@ import java.util.Calendar;
  * @see android.os.Parcelable
  * @see User
  * @see Habit
- * @see Habit_Event
+ * @see HabitEvent
  */
 // TODO: Assert similarity for location and file
 public class ParcelableUnitTest {
@@ -66,12 +68,16 @@ public class ParcelableUnitTest {
      */
     private User getTestUser(){
 
-        return new User("testUser",
-                getTestHabitList(),
-                null,
-                null,
-                null,
-                null);
+
+        User testUser = new User("DummyUser","Pass","dummy@email.com");
+
+        HabitList testHabits = getTestHabitList();
+        for (int index = 0; index < testHabits.size(); index++){
+            testUser.addHabit(testHabits.get(index));
+        }
+
+
+        return testUser;
 
     }
 
@@ -81,11 +87,11 @@ public class ParcelableUnitTest {
      * helper class that creates a habit list for testing
      * @return ArrayList\<Habit\> for testing
      */
-    private ArrayList<Habit> getTestHabitList(){
+    private HabitList getTestHabitList(){
         boolean[] onDays = new boolean[]{false, false, false, false, false, false, false};
-        ArrayList<Habit> habitList = new ArrayList<>();
+        HabitList habitList = new HabitList();
         habitList.add(new Habit("hab1"));
-        habitList.add(new Habit("hab2", "reason", Calendar.getInstance(), onDays));
+        habitList.add(new Habit("hab2","res2",Calendar.getInstance()));
 
         return  habitList;
 
@@ -101,9 +107,9 @@ public class ParcelableUnitTest {
     public void testParcelableHabit(){
 
         boolean[] onDays = new boolean[]{true, false, false, false, false, false, false};
-        Habit testHabit = new Habit("title", "reason", Calendar.getInstance(), onDays);
-        Habit_Event event = new Habit_Event();
-        testHabit.addHabitEvent(event);
+        Habit testHabit = new Habit("tit", "res", Calendar.getInstance());
+        HabitEvent testEvent = new HabitEvent();
+        testHabit.addHabitEvent(testEvent);
 
         // Create empty parcels to populate
         Parcel testParcel = Parcel.obtain();
@@ -118,22 +124,22 @@ public class ParcelableUnitTest {
         assertEquals(testHabit.getTitle(), parceledHabit.getTitle()); // compare title
         assertEquals(testHabit.getReason(), parceledHabit.getReason()); // compare reason
         assertEquals(testHabit.getStartDate(), parceledHabit.getStartDate()); // compare startDate
-        assertArrayEquals(testHabit.getOnDays(), parceledHabit.getOnDays()); // compare onDays
+        assertArrayEquals(testHabit.getOnDaysObj().getAll(), parceledHabit.getOnDaysObj().getAll()); // compare onDays
 
         // Similarity for habit event list in testHabit
-        assertEquals(testHabit.getHabitEvents().get(0).getHabitEventId(), parceledHabit.getHabitEvents().get(0).getHabitEventId());
+        assertEquals(testHabit.getHabitEvents().get(0).getComment(), parceledHabit.getHabitEvents().get(0).getComment());
         assertEquals(testHabit.getHabitEvents().get(0).getComment(), parceledHabit.getHabitEvents().get(0).getComment());
         assertEquals(testHabit.getHabitEvents().get(0).getCompletedDate(), parceledHabit.getHabitEvents().get(0).getCompletedDate());
     }
 
-    // Testing Parcelability for Habit_Event
+    // Testing Parcelability for HabitEvent
     /**
-     * Tests if {@link Habit_Event} is properly parceled and unpacked
+     * Tests if {@link HabitEvent} is properly parceled and unpacked
      */
     @Test
     public void testParcelableHabitEvent(){
 
-        Habit_Event testHabitEvent = new Habit_Event();
+        HabitEvent testHabitEvent = new HabitEvent();
         // Create empty parcels to populate
         Parcel testParcel = Parcel.obtain();
 
@@ -141,11 +147,28 @@ public class ParcelableUnitTest {
         testHabitEvent.writeToParcel(testParcel, 0);
         testParcel.setDataPosition(0); // reset data position after writing to read
 
-        Habit_Event parceledHabitEvent = new Habit_Event(testParcel); // construct from parcel
+        HabitEvent parceledHabitEvent = new HabitEvent(testParcel); // construct from parcel
 
         // Asserts Similarity
-        assertEquals(testHabitEvent.getHabitEventId(), parceledHabitEvent.getHabitEventId());
         assertEquals(testHabitEvent.getComment(), parceledHabitEvent.getComment());
         assertEquals(testHabitEvent.getCompletedDate(), parceledHabitEvent.getCompletedDate());
+    }
+
+
+    @Test
+    public void testParcelableOnDays(){
+
+        OnDays onDays = new OnDays();
+        onDays.setAll(new boolean[]{true, false, true, false, true, true, true});
+
+        Parcel testParcel = Parcel.obtain();
+        onDays.writeToParcel(testParcel, 0);
+        testParcel.setDataPosition(0);
+
+        OnDays parceledOnDays = new OnDays(testParcel);
+
+        assertEquals(onDays.getAll()[1], parceledOnDays.getAll()[1]);
+
+
     }
 }

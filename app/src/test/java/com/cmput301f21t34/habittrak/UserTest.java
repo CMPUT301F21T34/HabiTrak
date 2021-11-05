@@ -3,8 +3,12 @@ package com.cmput301f21t34.habittrak;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import com.cmput301f21t34.habittrak.user.DatabasePointer;
+import com.cmput301f21t34.habittrak.user.Habit;
+import com.cmput301f21t34.habittrak.user.HabitEvent;
+import com.cmput301f21t34.habittrak.user.User;
+
+
 
 /**
  * Class for testing User Objects
@@ -14,7 +18,7 @@ import java.util.GregorianCalendar;
  * @since 2021-10-22
  * @see User
  * @see Habit
- * @see Habit_Event
+ * @see HabitEvent
  */
 
 public class UserTest {
@@ -28,7 +32,7 @@ public class UserTest {
      * Returns a new Habit object to perform tests on
      */
     private User mockUser() {
-        User mockUser = new User("Main_User");
+        User mockUser = new User();
         return mockUser;
     }
 
@@ -66,6 +70,7 @@ public class UserTest {
     public void removeHabitTest() {
         User user = mockUser();
 
+
         // Populate habit list of a new user
         Habit habit1 = new Habit("habit1");
         user.addHabit(habit1);
@@ -81,6 +86,8 @@ public class UserTest {
         assertEquals(0, user.getHabitList().size());
     }
 
+
+
     /**
      * addFollowerTest
      * Tests if follower is correctly added to the user
@@ -91,13 +98,14 @@ public class UserTest {
     public void addFollowerTest() {
         User user = mockUser();
 
-        // Add new follower then check size
-        assertEquals(0, user.getFollowerList().size());
-        User follower1 = new User("follower1");
+        // Adds mock follower to user
+        DatabasePointer follower1 = getMockFol1();
         user.addFollower(follower1);
-        assertEquals(1, user.getFollowerList().size());
-        User follower2 = new User("follower2");
+        DatabasePointer follower2 = getMockFol2();
         user.addFollower(follower2);
+
+
+
         assertEquals(2, user.getFollowerList().size());
 
         // Compare added follower (user object)
@@ -111,14 +119,15 @@ public class UserTest {
      *
      * @author Henry
      */
+
     @Test
     public void removeFollowerTest() {
         User user = mockUser();
 
-        // Populate follower list of a new user
-        User follower1 = new User("follower1");
+        // Adds mock follower to user
+        DatabasePointer follower1 = getMockFol1();
         user.addFollower(follower1);
-        User follower2 = new User("follower2");
+        DatabasePointer follower2 = getMockFol2();
         user.addFollower(follower2);
 
         // Remove follower1 then check size
@@ -142,17 +151,26 @@ public class UserTest {
 
         // Add new followerreq then check size
         assertEquals(0, user.getFollowerReqList().size());
-        User followerreq1 = new User("followerreq1");
-        user.addFollowerReq(followerreq1);
+
+        // Adds mock follower to user
+        DatabasePointer follower1 = getMockFol1();
+        user.addFollowerReq(follower1);
+
+
+
         assertEquals(1, user.getFollowerReqList().size());
-        User followerreq2 = new User("followerreq2");
-        user.addFollowerReq(followerreq2);
+
+        DatabasePointer follower2 = getMockFol2();
+        user.addFollowerReq(follower2);
+
         assertEquals(2, user.getFollowerReqList().size());
 
         // Compare added followerreq (user object)
-        assertEquals(followerreq1, user.getFollowerReqList().get(0));
-        assertEquals(followerreq2, user.getFollowerReqList().get(1));
+
+        assertEquals(follower1, user.getFollowerReqList().get(0));
+        assertEquals(follower2, user.getFollowerReqList().get(1));
     }
+
 
     /**
      * removeFollowerReqTest
@@ -165,17 +183,17 @@ public class UserTest {
         User user = mockUser();
 
         // Populate followerreq list of a new user
-        User followerreq1 = new User("followerreq1");
-        user.addFollowerReq(followerreq1);
-        User followerreq2 = new User("followerreq2");
-        user.addFollowerReq(followerreq2);
+        DatabasePointer follower1 = getMockFol1();
+        user.addFollowerReq(follower1);
+        DatabasePointer follower2 = getMockFol2();
+        user.addFollowerReq(follower2);
 
         // Remove followerreq1 then check size
-        assertTrue(user.removeFollowerReq(followerreq1));
+        assertTrue(user.removeFollowerReq(follower1));
         assertEquals(1, user.getFollowerReqList().size());
-        assertEquals(followerreq2, user.getFollowerReqList().get(0)); // followerreq at index 0 should now be followerreq2
+        assertEquals(follower2, user.getFollowerReqList().get(0)); // followerreq at index 0 should now be followerreq2
         // Remove followerreq2, size should be 0
-        assertTrue(user.removeFollowerReq(followerreq2));
+        assertTrue(user.removeFollowerReq(follower2));
         assertEquals(0, user.getFollowerReqList().size());
     }
     /**
@@ -188,19 +206,26 @@ public class UserTest {
     public void addFollowingTest() {
         User user = mockUser();
 
+
         // Add new following then check size
         assertEquals(0, user.getFollowingList().size());
-        User following1 = new User("following1");
-        user.addFollowing(following1);
+
+        DatabasePointer follower1 = getMockFol1();
+        user.addFollowing(follower1);
+
         assertEquals(1, user.getFollowingList().size());
-        User following2 = new User("following2");
-        user.addFollowing(following2);
+
+        DatabasePointer follower2 = getMockFol2();
+        user.addFollowing(follower2);
+
         assertEquals(2, user.getFollowingList().size());
 
         // Compare added following (user object)
-        assertEquals(following1, user.getFollowingList().get(0));
-        assertEquals(following2, user.getFollowingList().get(1));
+
+        assertEquals(follower1, user.getFollowingList().get(0));
+        assertEquals(follower2, user.getFollowingList().get(1));
     }
+
 
     /**
      * removeFollowingTest
@@ -213,17 +238,17 @@ public class UserTest {
         User user = mockUser();
 
         // Populate following list of a new user
-        User following1 = new User("following1");
-        user.addFollowing(following1);
-        User following2 = new User("following2");
-        user.addFollowing(following2);
+        DatabasePointer follower1 = getMockFol1();
+        user.addFollowing(follower1);
+        DatabasePointer follower2 = getMockFol2();
+        user.addFollowing(follower2);
 
         // Remove following1 then check size
-        assertTrue(user.removeFollowing(following1));
+        assertTrue(user.removeFollowing(follower1));
         assertEquals(1, user.getFollowingList().size());
-        assertEquals(following2, user.getFollowingList().get(0)); // following at index 0 should now be following2
+        assertEquals(follower2, user.getFollowingList().get(0)); // following at index 0 should now be following2
         // Remove following2, size should be 0
-        assertTrue(user.removeFollowing(following2));
+        assertTrue(user.removeFollowing(follower2));
         assertEquals(0, user.getFollowingList().size());
     }
     /**
@@ -233,4 +258,18 @@ public class UserTest {
     public void replaceHabitTest() {
 
     }
+
+
+    private DatabasePointer getMockFol1(){
+
+        return new DatabasePointer("fol1");
+
+    }
+    private DatabasePointer getMockFol2(){
+
+        return new DatabasePointer("fol2");
+
+    }
+
+
 }

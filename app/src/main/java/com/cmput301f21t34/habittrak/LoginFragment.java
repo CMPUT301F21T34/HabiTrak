@@ -3,6 +3,7 @@ package com.cmput301f21t34.habittrak;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,17 +12,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.cmput301f21t34.habittrak.user.Habit;
+import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-import com.cmput301f21t34.habittrak.MainActivity;
+import java.util.Calendar;
+import java.util.TimeZone;
+import java.util.GregorianCalendar;
 
 
 /**
  * LoginFragment
  *
  * @author Pranav
+ * @author Henry
  *
  * Login Fragment for the app
  *
@@ -47,24 +53,45 @@ public class LoginFragment extends Fragment {
         TextInputLayout passwordLayout = view.findViewById(R.id.password_text_input);
         TextInputEditText passwordEditText = view.findViewById(R.id.password_edit_text);
         MaterialButton loginButton = view.findViewById(R.id.login_button);
+        MaterialButton signupButton = view.findViewById(R.id.signup_button);
+
+
+
+        signupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SignUpFragment signUpFragment = new SignUpFragment();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.login_fragment_container, signUpFragment, "signupFrag")
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+
 
         // Password validator
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isPasswordValid(passwordEditText.getText(), usernameEditText.getText())) {
-                    passwordLayout.setError("Incorrect password");
-                    usernameLayout.setError("Incorrect username");
+                // BYPASS LOGIN FOR NOW
+                startHomePage(view, getUser(usernameEditText.getText().toString()));
+                // BYPASS LOGIN FOR NOW
+
+                passwordLayout.setError(null);
+                usernameLayout.setError(null);
+
+                if (!userExists(usernameEditText.getText())) {
+                    usernameLayout.setError("This email does not exist!");
                 }
-                else{
+                else if (!isPasswordValid(passwordEditText.getText(), usernameEditText.getText())) {
+                    passwordLayout.setError("Incorrect password!");
+                }
+                else {
                     passwordLayout.setError(null);
                     usernameLayout.setError(null);
-                    startHomePage(view);
-
+                    User currentUser = getUser(usernameEditText.getText().toString());
+                    startHomePage(view, currentUser);
                 }
-
-
-
             }
         });
 
@@ -81,23 +108,49 @@ public class LoginFragment extends Fragment {
      * @param username username from input
      * @return passwordOk boolean if the password is valid
      */
-    public boolean isPasswordValid(@Nullable Editable password, @Nullable Editable username){
+    public boolean isPasswordValid(@Nullable Editable password, @Nullable Editable username) {
 
-        Boolean passwordOk = false;
+        DatabaseManager db = new DatabaseManager();
+
         String pass = password.toString();
         String user = username.toString();
 
+        return db.validCredentials(user, pass);
+    }
 
-        if (true) { // logic for allowing loggin in, for sake of testing is always true - Dakota
-            passwordOk = true;
+    /**
+     * userExists
+     * Checks if the given username exists in the database
+     *
+     * @param email username from input
+     * @return true if there is such a username, false otherwise
+     */
+    public boolean userExists(@Nullable Editable email) {
 
-            // populate user after verification
-            mainUser = new User("dummyUser");
+        DatabaseManager db = new DatabaseManager();
 
+        String user = email.toString();
 
-        }
+        boolean isInDatabase = !db.isUniqueEmail(user);
 
-        return passwordOk;
+        return isInDatabase;
+    }
+
+    /**
+     * getUser
+     * Returns a User object for the given username
+     * @param username username from input
+     * @return
+     */
+    public User getUser(@Nullable String username) {
+
+        DatabaseManager db = new DatabaseManager();
+
+        User user = db.getUser(username);
+
+        Log.d("LoginFrag", "User from db: " + user.getEmail());
+
+        return user;
     }
 
     /**
@@ -105,10 +158,15 @@ public class LoginFragment extends Fragment {
      * Start the base activity after logging in
      * @param view
      */
-    public void startHomePage(View view){
+    public void startHomePage(View view, User currentUser){
+
+        Log.d("MERGE", "startHomePage");
+
         Intent intent = new Intent(getActivity(), BaseActivity.class);
-        intent.putExtra("mainUser", mainUser); // passes mainUser through intent
+
+        intent.putExtra("mainUser", currentUser);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
         startActivity(intent);
         getActivity().finish();
     }

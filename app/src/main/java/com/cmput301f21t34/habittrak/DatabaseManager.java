@@ -873,7 +873,7 @@ public class DatabaseManager {
      * email1 asked to follow email2 (so add email2 to the followerReq list of email1 and add email1 to the followerRequested list of email2)
      * followerRequested list means the people that asked to follow the user
      * followerReq list means the people that the user requested to follow
-     * 
+     *
      * @author Tauseef
      * @param user
      * @param toBeAdded

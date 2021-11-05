@@ -86,7 +86,7 @@ public class SignUpFragment extends Fragment {
             }
             // check email
             if(fieldsFull) {
-                if (!checkEmail(emailEditText.getText())) {
+                if (checkEmail(emailEditText.getText())) {
                     emailLayout.setError("Email Already in Use");
                 }
                 else{

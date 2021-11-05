@@ -51,7 +51,7 @@ public class IntentTester {
     public void tearDown() {
         Intents.release();
     }
-    
+
     @Test
     public void signUpTest(){
         //Click signup button
@@ -120,6 +120,9 @@ public class IntentTester {
         //Check to see if the new habit was added
         onView(withId(R.id.navbar_menu_habits))
                 .perform(click());
+        onData(anything())
+                .inAdapterView(withId(R.id.all_habits_listview)).atPosition(0)
+                .check(matches(withText("Breakfast")));
     }
 
     @Test

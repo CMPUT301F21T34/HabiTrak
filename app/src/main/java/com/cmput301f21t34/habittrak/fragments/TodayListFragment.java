@@ -18,13 +18,10 @@ import com.cmput301f21t34.habittrak.AddHabitActivity;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.TodayHabitList;
-import com.cmput301f21t34.habittrak.user.Habit_List;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 /**
  * TodayListFragment

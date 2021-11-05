@@ -1,7 +1,7 @@
 package com.cmput301f21t34.habittrak;
 
-import com.cmput301f21t34.habittrak.user.Habit_Event;
-import com.cmput301f21t34.habittrak.user.On_Days;
+import com.cmput301f21t34.habittrak.user.HabitEvent;
+import com.cmput301f21t34.habittrak.user.OnDays;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,7 +17,7 @@ public class HabitDatabase {
     private int index = 0;
     private String title, reason;
     private Calendar startDate;
-    private ArrayList<Habit_Event> habitEvents;
+    private ArrayList<HabitEvent> habitEvents;
     private boolean isPublic;
     private ArrayList<Boolean> onDaysObj;
 
@@ -26,7 +26,7 @@ public class HabitDatabase {
         this.title = "";
         this.reason= "";
         this.startDate = Calendar.getInstance();
-        this.habitEvents = new ArrayList<Habit_Event>();
+        this.habitEvents = new ArrayList<HabitEvent>();
         this.isPublic = false;
         this.onDaysObj = new ArrayList<Boolean>();
     }
@@ -51,11 +51,11 @@ public class HabitDatabase {
     public int getIndex(){ return this.index; }
     public void setIndex(int index){ this.index = index; }
 
-    public ArrayList<Habit_Event> getHabitEvents(){ return this.habitEvents; }
-    public void setHabitEvents(ArrayList<Habit_Event> habitEvents) { this.habitEvents = habitEvents; }
+    public ArrayList<HabitEvent> getHabitEvents(){ return this.habitEvents; }
+    public void setHabitEvents(ArrayList<HabitEvent> habitEvents) { this.habitEvents = habitEvents; }
 
     public ArrayList<Boolean> getOnDaysObj(){ return this.onDaysObj; }
-    public void setOnDaysObj(On_Days onDays) {
+    public void setOnDaysObj(OnDays onDays) {
         ArrayList<Boolean> onDaysToSet = new ArrayList<>();
         boolean[] onDaysArray = onDays.getAll();
         for (int i = 0; i < onDaysArray.length; i++) {

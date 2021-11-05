@@ -1,13 +1,7 @@
 package com.cmput301f21t34.habittrak;
 
-import android.location.Location;
-
 import com.cmput301f21t34.habittrak.user.Habit;
-import com.cmput301f21t34.habittrak.user.Habit_Event;
-
-import java.io.File;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import com.cmput301f21t34.habittrak.user.HabitEvent;
 
 /**
  * Class for testing Habit_Event Objects
@@ -16,7 +10,7 @@ import java.util.GregorianCalendar;
  * @version 1.0
  * @since 2021-10-22
  * @see Habit
- * @see Habit_Event
+ * @see HabitEvent
  */
 // TODO: Used for future testing if more methods (apart from getters and setters) are added to Habit_Event
 

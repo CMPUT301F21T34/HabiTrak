@@ -1,47 +1,33 @@
 package com.cmput301f21t34.habittrak;
 
-import android.provider.ContactsContract;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.cmput301f21t34.habittrak.user.Database_Pointer;
+import com.cmput301f21t34.habittrak.user.DatabasePointer;
 import com.cmput301f21t34.habittrak.user.Habit;
-import com.cmput301f21t34.habittrak.user.Habit_Event;
-import com.cmput301f21t34.habittrak.user.Habit_List;
-import com.cmput301f21t34.habittrak.user.On_Days;
+import com.cmput301f21t34.habittrak.user.HabitEvent;
+import com.cmput301f21t34.habittrak.user.HabitList;
+import com.cmput301f21t34.habittrak.user.OnDays;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
-import java.util.concurrent.CountDownLatch;
 
 /**
  * @author Tauseef Nafee Fattah
@@ -104,9 +90,9 @@ public class DatabaseManager {
      * @author Henry
      * @return ArrayList<Database_Pointer>
      */
-    public ArrayList<Database_Pointer> getAllUsers() {
+    public ArrayList<DatabasePointer> getAllUsers() {
 
-        ArrayList<Database_Pointer> users = new ArrayList<>();
+        ArrayList<DatabasePointer> users = new ArrayList<>();
 
         try {
             Task<QuerySnapshot> task = database.collection("users").get();
@@ -114,7 +100,7 @@ public class DatabaseManager {
             while (!task.isComplete()) ;
 
             for (QueryDocumentSnapshot document : task.getResult()) {
-                users.add(new Database_Pointer(document.getId().toString()));
+                users.add(new DatabasePointer(document.getId().toString()));
             }
         }
         catch (Exception ignored) {}
@@ -217,12 +203,12 @@ public class DatabaseManager {
             data.put("Username", username);
             data.put("Biography", "");
             data.put("habitList", new ArrayList<HabitDatabase>());
-            data.put("followerList", new ArrayList<Database_Pointer>());
-            data.put("followingList", new ArrayList<Database_Pointer>());
-            data.put("followReqList", new ArrayList<Database_Pointer>());
-            data.put("followRequestedList", new ArrayList<Database_Pointer>());
-            data.put("blockList", new ArrayList<Database_Pointer>());
-            data.put("blockedByList", new ArrayList<Database_Pointer>());
+            data.put("followerList", new ArrayList<DatabasePointer>());
+            data.put("followingList", new ArrayList<DatabasePointer>());
+            data.put("followReqList", new ArrayList<DatabasePointer>());
+            data.put("followRequestedList", new ArrayList<DatabasePointer>());
+            data.put("blockList", new ArrayList<DatabasePointer>());
+            data.put("blockedByList", new ArrayList<DatabasePointer>());
 
             collectionReference
                     .document(email)
@@ -282,13 +268,13 @@ public class DatabaseManager {
         String password = "";
         String bio = "";
 
-        Habit_List habitList = new Habit_List();
-        ArrayList<Database_Pointer>followerList = new ArrayList<Database_Pointer>();
-        ArrayList<Database_Pointer>followingList = new ArrayList<Database_Pointer>();
-        ArrayList<Database_Pointer>followReqList = new ArrayList<Database_Pointer>();
-        ArrayList<Database_Pointer>followRequestedList = new ArrayList<Database_Pointer>();
-        ArrayList<Database_Pointer>blockList = new ArrayList<Database_Pointer>();
-        ArrayList<Database_Pointer>blockedByList = new ArrayList<Database_Pointer>();
+        HabitList habitList = new HabitList();
+        ArrayList<DatabasePointer>followerList = new ArrayList<DatabasePointer>();
+        ArrayList<DatabasePointer>followingList = new ArrayList<DatabasePointer>();
+        ArrayList<DatabasePointer>followReqList = new ArrayList<DatabasePointer>();
+        ArrayList<DatabasePointer>followRequestedList = new ArrayList<DatabasePointer>();
+        ArrayList<DatabasePointer>blockList = new ArrayList<DatabasePointer>();
+        ArrayList<DatabasePointer>blockedByList = new ArrayList<DatabasePointer>();
 
         try {
             DocumentReference docref = database.collection("users").document(email);
@@ -405,9 +391,9 @@ public class DatabaseManager {
      * @param email
      * @return habitList
      */
-    public Habit_List getHabitList(String email) {
+    public HabitList getHabitList(String email) {
 
-        Habit_List returnHabitList = new Habit_List();
+        HabitList returnHabitList = new HabitList();
         try {
             DocumentReference docref = database.collection("users").document(email);
             Task<DocumentSnapshot> task = docref.get();
@@ -469,10 +455,10 @@ public class DatabaseManager {
      * @param hashMapList
      * @return
      */
-    public ArrayList<Habit_Event> toHabitEventList(ArrayList<HashMap<String,Object>>hashMapList){
-        ArrayList<Habit_Event> habitEventList = new ArrayList<>();
+    public ArrayList<HabitEvent> toHabitEventList(ArrayList<HashMap<String,Object>>hashMapList){
+        ArrayList<HabitEvent> habitEventList = new ArrayList<>();
         for (int i = 0; i < hashMapList.size(); i++) {
-            Habit_Event habitEvent = toHabitEvent( hashMapList.get(i));
+            HabitEvent habitEvent = toHabitEvent( hashMapList.get(i));
             habitEventList.add(habitEvent);
         }
         return habitEventList;
@@ -486,8 +472,8 @@ public class DatabaseManager {
      * @param hashmap
      * @return
      */
-    public Habit_Event toHabitEvent(HashMap<String,Object> hashmap){
-        Habit_Event event = new Habit_Event();
+    public HabitEvent toHabitEvent(HashMap<String,Object> hashmap){
+        HabitEvent event = new HabitEvent();
         event.setComment((String) hashmap.get("comment"));
 
         //TODO: Figure out away to store a Location and Photograph
@@ -542,9 +528,9 @@ public class DatabaseManager {
      * @param email
      * @return Follower list
      */
-    public ArrayList<Database_Pointer> getFollowerList(String email) {
+    public ArrayList<DatabasePointer> getFollowerList(String email) {
 
-        ArrayList<Database_Pointer> returnFollowerList = new ArrayList<Database_Pointer>();
+        ArrayList<DatabasePointer> returnFollowerList = new ArrayList<DatabasePointer>();
 
         try {
             DocumentReference docref = database.collection("users").document(email);
@@ -570,9 +556,9 @@ public class DatabaseManager {
      * @param email
      * @return Following list
      */
-    public ArrayList<Database_Pointer> getFollowingList(String email ){
+    public ArrayList<DatabasePointer> getFollowingList(String email ){
 
-        ArrayList<Database_Pointer> returnFollowingList = new ArrayList<Database_Pointer>();
+        ArrayList<DatabasePointer> returnFollowingList = new ArrayList<DatabasePointer>();
 
         try {
             DocumentReference docref = database.collection("users").document(email);
@@ -600,9 +586,9 @@ public class DatabaseManager {
      * @param email
      * @return follow req list
      */
-    public ArrayList<Database_Pointer> getFollowReqList(String email) {
+    public ArrayList<DatabasePointer> getFollowReqList(String email) {
 
-        ArrayList<Database_Pointer> returnFollowReqList = new ArrayList<Database_Pointer>();
+        ArrayList<DatabasePointer> returnFollowReqList = new ArrayList<DatabasePointer>();
 
         try {
             DocumentReference docref = database.collection("users").document(email);
@@ -631,9 +617,9 @@ public class DatabaseManager {
      * @param email
      * @return
      */
-    public ArrayList<Database_Pointer> getFollowRequestedList(String email) {
+    public ArrayList<DatabasePointer> getFollowRequestedList(String email) {
 
-        ArrayList<Database_Pointer> returnFollowRequestedList = new ArrayList<Database_Pointer>();
+        ArrayList<DatabasePointer> returnFollowRequestedList = new ArrayList<DatabasePointer>();
 
         try {
             DocumentReference docref = database.collection("users").document(email);
@@ -662,9 +648,9 @@ public class DatabaseManager {
      * @param email
      * @return
      */
-    public ArrayList<Database_Pointer> getBlockList(String email) {
+    public ArrayList<DatabasePointer> getBlockList(String email) {
 
-        ArrayList<Database_Pointer> returnBlockList = new ArrayList<Database_Pointer>();
+        ArrayList<DatabasePointer> returnBlockList = new ArrayList<DatabasePointer>();
 
         try {
             DocumentReference docref = database.collection("users").document(email);
@@ -692,9 +678,9 @@ public class DatabaseManager {
      * @param email
      * @return
      */
-    public ArrayList<Database_Pointer> getBlockedByList(String email) {
+    public ArrayList<DatabasePointer> getBlockedByList(String email) {
 
-        ArrayList<Database_Pointer> returnBlockedByList = new ArrayList<Database_Pointer>();
+        ArrayList<DatabasePointer> returnBlockedByList = new ArrayList<DatabasePointer>();
 
         try {
             DocumentReference docref = database.collection("users").document(email);
@@ -748,7 +734,7 @@ public class DatabaseManager {
      * @param user
      * @param toBeAdded
      */
-    public void updateFollower(User user, Database_Pointer toBeAdded, boolean remove) {
+    public void updateFollower(User user, DatabasePointer toBeAdded, boolean remove) {
         // Update user's followerList
         DocumentReference userRef = database.collection("users").document(user.getEmail());
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -760,7 +746,7 @@ public class DatabaseManager {
                         String TAG = "contain checker";
                         int index = -1;
                         boolean contains = false;
-                        ArrayList<Database_Pointer> followerList = new ArrayList<>();
+                        ArrayList<DatabasePointer> followerList = new ArrayList<>();
                         ArrayList<HashMap<String, String>> followerListMap = (ArrayList<HashMap<String, String>>) document.get("followerList");
                         Log.d(TAG,Integer.toString(followerListMap.size()));
                         followerList = toPointerList((followerListMap));
@@ -819,10 +805,10 @@ public class DatabaseManager {
                         String TAG = "contain checker";
                         int index = -1;
                         boolean contains = false;
-                        ArrayList<Database_Pointer> followingList = new ArrayList<>();
+                        ArrayList<DatabasePointer> followingList = new ArrayList<>();
                         ArrayList<HashMap<String, String>> followingListMap = (ArrayList<HashMap<String, String>>) document.get("followingList");
                         followingList = toPointerList((followingListMap));
-                        Database_Pointer following = new Database_Pointer(user.getEmail());
+                        DatabasePointer following = new DatabasePointer(user.getEmail());
                         // Updates only if following (user) is not already in the list
                         for(int i = 0; i < followingList.size(); i++){
                             if (followingList.get(i).equals(following)){
@@ -878,7 +864,7 @@ public class DatabaseManager {
      * @param user
      * @param toBeAdded
      */
-    public void updateFollowerReq(User user, Database_Pointer toBeAdded, boolean remove) {
+    public void updateFollowerReq(User user, DatabasePointer toBeAdded, boolean remove) {
         // Update user
 
         DocumentReference userRef = database.collection("users").document(user.getEmail());
@@ -891,7 +877,7 @@ public class DatabaseManager {
                         String TAG = "contain checker";
                         int index = -1;
                         boolean contains = false;
-                        ArrayList<Database_Pointer> followerReqList = new ArrayList<>();
+                        ArrayList<DatabasePointer> followerReqList = new ArrayList<>();
                         ArrayList<HashMap<String, String>> followerReqListMap = (ArrayList<HashMap<String, String>>) document.get("followReqList");
                         followerReqList = toPointerList((followerReqListMap));
                         for(int i = 0; i < followerReqList.size(); i++){
@@ -947,10 +933,10 @@ public class DatabaseManager {
                         int index = -1;
                         String TAG = "contain checker";
                         boolean contains = false;
-                        ArrayList<Database_Pointer> followerRequestedList = new ArrayList<>();
+                        ArrayList<DatabasePointer> followerRequestedList = new ArrayList<>();
                         ArrayList<HashMap<String, String>> followerRequestedListMap = (ArrayList<HashMap<String, String>>) document.get("followRequestedList");
                         followerRequestedList = toPointerList((followerRequestedListMap));
-                        Database_Pointer followerRequested = new Database_Pointer(user.getEmail());
+                        DatabasePointer followerRequested = new DatabasePointer(user.getEmail());
                         // Updates only if followerRequested (user) is not already in the list
                         for(int i = 0; i < followerRequestedList.size(); i++){
                             if (followerRequestedList.get(i).equals(followerRequested)){
@@ -1003,7 +989,7 @@ public class DatabaseManager {
      * @param user
      * @param toBeAdded
      */
-    public void updateBlock(User user, Database_Pointer toBeAdded, boolean remove) {
+    public void updateBlock(User user, DatabasePointer toBeAdded, boolean remove) {
         // Update user's blockList
         DocumentReference userRef = database.collection("users").document(user.getEmail());
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -1015,7 +1001,7 @@ public class DatabaseManager {
                         int index = -1;
                         String TAG = "contain checker";
                         boolean contains = false;
-                        ArrayList<Database_Pointer> blockList = new ArrayList<>();
+                        ArrayList<DatabasePointer> blockList = new ArrayList<>();
                         ArrayList<HashMap<String, String>> blockListMap = (ArrayList<HashMap<String, String>>) document.get("blockList");
                         blockList = toPointerList(blockListMap);
                         for(int i = 0; i < blockList.size(); i++){
@@ -1071,10 +1057,10 @@ public class DatabaseManager {
                         String TAG = "contain checker";
                         int index = -1;
                         boolean contains = false;
-                        ArrayList<Database_Pointer> blockedByList = new ArrayList<>();
+                        ArrayList<DatabasePointer> blockedByList = new ArrayList<>();
                         ArrayList<HashMap<String, String>> blockedByListMap = (ArrayList<HashMap<String, String>>) document.get("blockedByList");
                         blockedByList = toPointerList(blockedByListMap);
-                        Database_Pointer blockedBy = new Database_Pointer(user.getEmail());
+                        DatabasePointer blockedBy = new DatabasePointer(user.getEmail());
                         // Updates only if blockedBy (user) is not already in the list
                         for(int i = 0; i < blockedByList.size();i++){
                             if (blockedByList.get(i).equals(blockedBy)){
@@ -1127,11 +1113,11 @@ public class DatabaseManager {
      * @param listOfMap
      * @return
      */
-    public ArrayList<Database_Pointer> toPointerList(ArrayList<HashMap<String, String>> listOfMap) {
-        ArrayList<Database_Pointer> pointerList = new ArrayList<>();
+    public ArrayList<DatabasePointer> toPointerList(ArrayList<HashMap<String, String>> listOfMap) {
+        ArrayList<DatabasePointer> pointerList = new ArrayList<>();
         for (int i = 0; i < listOfMap.size(); i++) {
             String email = listOfMap.get(i).get("email");
-            Database_Pointer dp = new Database_Pointer(email);
+            DatabasePointer dp = new DatabasePointer(email);
             pointerList.add(dp);
         }
         return pointerList;
@@ -1147,7 +1133,7 @@ public class DatabaseManager {
      * @return
      * Returns a habit list compatible with the database
      */
-    public ArrayList<HabitDatabase> habitToDatabase(Habit_List habits) {
+    public ArrayList<HabitDatabase> habitToDatabase(HabitList habits) {
         ArrayList<HabitDatabase> habitListToDatabase = new ArrayList<>();
         for (int i = 0; i < habits.size(); i++) {
             Habit primitiveHabit = habits.get(i);
@@ -1173,8 +1159,8 @@ public class DatabaseManager {
      * Returns a Habit_List given the habitList from Database.
      * Similar to habitToDatabase, but does it in the opposite direction
      */
-    public Habit_List databaseToHabit(ArrayList<HabitDatabase> habitsFromDatabase) {
-        Habit_List habitList = new Habit_List();
+    public HabitList databaseToHabit(ArrayList<HabitDatabase> habitsFromDatabase) {
+        HabitList habitList = new HabitList();
         for (int i = 0; i < habitsFromDatabase.size(); i++) {
             HabitDatabase habitFromDatabase = habitsFromDatabase.get(i);
             Habit habit = new Habit();
@@ -1186,7 +1172,7 @@ public class DatabaseManager {
 
             ArrayList<Boolean> dbOnDays = habitFromDatabase.getOnDaysObj();
 
-            habit.setOnDaysObj(new On_Days(dbOnDays));
+            habit.setOnDaysObj(new OnDays(dbOnDays));
             habitList.add(habit);
         }
         return habitList;

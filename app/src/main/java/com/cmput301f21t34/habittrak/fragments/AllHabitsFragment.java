@@ -14,10 +14,9 @@ import android.widget.ListView;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.TodayHabitList;
 import com.cmput301f21t34.habittrak.user.Habit;
-import com.cmput301f21t34.habittrak.user.Habit_List;
+import com.cmput301f21t34.habittrak.user.HabitList;
 import com.cmput301f21t34.habittrak.user.User;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -53,7 +52,7 @@ public class AllHabitsFragment extends Fragment {
 
 
 
-        habitsData = new Habit_List();
+        habitsData = new HabitList();
 
 
         //connect the array adapter
@@ -73,7 +72,7 @@ public class AllHabitsFragment extends Fragment {
 
         habitsData.clear(); // Make sure is clear
 
-        Habit_List mainUserHabits = mainUser.getHabitList(); // get HabitsList
+        HabitList mainUserHabits = mainUser.getHabitList(); // get HabitsList
 
         habitsData.addAll(mainUserHabits);
         habitAdapter.notifyDataSetChanged();

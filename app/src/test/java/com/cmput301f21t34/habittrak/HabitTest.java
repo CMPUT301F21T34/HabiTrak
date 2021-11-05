@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import android.location.Location;
 
 import com.cmput301f21t34.habittrak.user.Habit;
-import com.cmput301f21t34.habittrak.user.Habit_Event;
+import com.cmput301f21t34.habittrak.user.HabitEvent;
 
 import java.io.File;
 import java.util.Calendar;
@@ -19,7 +19,7 @@ import java.util.GregorianCalendar;
  * @version 1.0
  * @since 2021-10-22
  * @see Habit
- * @see Habit_Event
+ * @see HabitEvent
  */
 public class HabitTest {
     // No tests for getters or setters
@@ -80,11 +80,11 @@ public class HabitTest {
     @Test
     public void addHabitEventTest() {
         Habit habit = mockHabit();
-        Habit_Event event1 = new Habit_Event();
+        HabitEvent event1 = new HabitEvent();
         Location loc = new Location("");
         File photo = new File("");
         Calendar completeDate = new GregorianCalendar(2021, 6, 1);
-        Habit_Event event2 = new Habit_Event("event2", completeDate, loc, photo);
+        HabitEvent event2 = new HabitEvent("event2", completeDate, loc, photo);
 
         // Check size
         assertEquals(0, habit.getHabitEvents().size());
@@ -109,11 +109,11 @@ public class HabitTest {
     @Test
     public void removeHabitEventTest() {
         Habit habit = mockHabit();
-        Habit_Event event1 = new Habit_Event();
+        HabitEvent event1 = new HabitEvent();
         Location loc = new Location("");
         File photo = new File("");
         Calendar completeDate = new GregorianCalendar(2021, 6, 1);
-        Habit_Event event2 = new Habit_Event("comment",
+        HabitEvent event2 = new HabitEvent("comment",
                 completeDate, loc, photo);
 
         // Check size and add habit_event to habit's habit_event list

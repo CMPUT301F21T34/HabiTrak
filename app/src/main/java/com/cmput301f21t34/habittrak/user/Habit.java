@@ -3,7 +3,6 @@ package com.cmput301f21t34.habittrak.user;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18,7 +17,7 @@ import java.util.TimeZone;
  *
  * @version 2.0
  * @since 2021-10-15
- * @see Habit_Event
+ * @see HabitEvent
  */
 public class Habit implements Comparable<Habit>, Parcelable {
 
@@ -33,10 +32,10 @@ public class Habit implements Comparable<Habit>, Parcelable {
     private String reason;
 
     private Calendar startDate;
-    private ArrayList<Habit_Event> habitEvents = new ArrayList<Habit_Event>();
+    private ArrayList<HabitEvent> habitEvents = new ArrayList<HabitEvent>();
     private boolean isPublic = false; // If other users can see this habit
 
-    private On_Days onDaysObj = new On_Days();
+    private OnDays onDaysObj = new OnDays();
 
     // Enum //
 
@@ -217,13 +216,13 @@ public class Habit implements Comparable<Habit>, Parcelable {
      *
      * @return On_Days object for manipulation
      */
-    public On_Days getOnDaysObj(){
+    public OnDays getOnDaysObj(){
         return this.onDaysObj;
     }
 
 
     @Deprecated
-    public void setOnDaysObj(On_Days onDaysObj) { this.onDaysObj = onDaysObj; }
+    public void setOnDaysObj(OnDays onDaysObj) { this.onDaysObj = onDaysObj; }
 
 
     /**
@@ -257,7 +256,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
      * @return boolean true if added
      */
 
-    public boolean addHabitEvent(Habit_Event habitEvent){
+    public boolean addHabitEvent(HabitEvent habitEvent){
         return habitEvents.add(habitEvent);
     }
 
@@ -271,7 +270,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
      * @param habit Habit_Event object to be removed
      * @return boolean true if removed
      */
-    public boolean removeHabitEvent(Habit_Event habit){
+    public boolean removeHabitEvent(HabitEvent habit){
         return habitEvents.remove(habit);
     }
 
@@ -285,7 +284,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
      * @return
      * Returns the habit events array list
      */
-    public ArrayList<Habit_Event> getHabitEvents() {
+    public ArrayList<HabitEvent> getHabitEvents() {
         return this.habitEvents;
     }
 
@@ -297,7 +296,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
      * @return
      * Sets the habit events array list
      */
-    public void setHabitEvents(ArrayList<Habit_Event> habitEvents) { this.habitEvents = habitEvents; }
+    public void setHabitEvents(ArrayList<HabitEvent> habitEvents) { this.habitEvents = habitEvents; }
 
     /**
      * sortHabitEvents
@@ -310,7 +309,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
 
         // Sorts with Habit_Event's compareTo method
         // Sorts by date
-        habitEvents.sort(Habit_Event::compareTo);
+        habitEvents.sort(HabitEvent::compareTo);
         // min API 24 needed, need to program own sorting else wise
 
     }

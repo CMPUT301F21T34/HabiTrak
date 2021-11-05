@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Database_Pointer
+ * DatabasePointer
  *
  * @author Dakota
  *
@@ -14,19 +14,19 @@ import android.os.Parcelable;
  * @since 2021-10-27
  * @see User
  */
-public class Database_Pointer implements Parcelable {
+public class DatabasePointer implements Parcelable {
 
     private final String email; // id can only be assigned once
 
-    public Database_Pointer(String email){
+    public DatabasePointer(String email){
        this.email = email;
     }
-    public Database_Pointer(User user){
+    public DatabasePointer(User user){
         this.email = user.getEmail();
     }
 
 
-    protected Database_Pointer(Parcel parcel) {
+    protected DatabasePointer(Parcel parcel) {
         email = parcel.readString();
     }
 
@@ -55,15 +55,15 @@ public class Database_Pointer implements Parcelable {
         parcel.writeString(email);
     }
 
-    public static final Creator<Database_Pointer> CREATOR = new Creator<Database_Pointer>() {
+    public static final Creator<DatabasePointer> CREATOR = new Creator<DatabasePointer>() {
         @Override
-        public Database_Pointer createFromParcel(Parcel in) {
-            return new Database_Pointer(in);
+        public DatabasePointer createFromParcel(Parcel in) {
+            return new DatabasePointer(in);
         }
 
         @Override
-        public Database_Pointer[] newArray(int size) {
-            return new Database_Pointer[size];
+        public DatabasePointer[] newArray(int size) {
+            return new DatabasePointer[size];
         }
     };
 

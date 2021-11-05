@@ -18,7 +18,7 @@ import java.util.TimeZone;
  *
  * @version 2.0
  * @since 2021-10-15
- * @see Habit_Event
+ * @see HabitEvent
  */
 public class Habit implements Comparable<Habit>, Parcelable {
 
@@ -31,10 +31,10 @@ public class Habit implements Comparable<Habit>, Parcelable {
     private String title;
     private String reason;
     private Calendar startDate;
-    private ArrayList<Habit_Event> habitEvents = new ArrayList<Habit_Event>();
+    private ArrayList<HabitEvent> habitEvents = new ArrayList<HabitEvent>();
     private boolean isPublic = false; // If other users can see this habit
 
-    private On_Days onDaysObj = new On_Days();
+    private OnDays onDaysObj = new OnDays();
 
     // Enum //
 
@@ -207,13 +207,13 @@ public class Habit implements Comparable<Habit>, Parcelable {
     /**
      * getOnDaysOnj
      *
-     * gets reference to Habits On_Days object
+     * gets reference to Habits OnDays object
      *
      * @author Dakota
      *
-     * @return On_Days object for manipulation
+     * @return OnDays object for manipulation
      */
-    public On_Days getOnDaysObj(){
+    public OnDays getOnDaysObj(){
         return this.onDaysObj;
     }
 
@@ -247,13 +247,13 @@ public class Habit implements Comparable<Habit>, Parcelable {
     /**
      * addHabitEvent
      *
-     * adds a Habit_Event object to Habit's habit events
+     * adds a HabitEvent object to Habit's habit events
      *
-     * @param habitEvent Habit_Event to be added
+     * @param habitEvent HabitEvent to be added
      * @return boolean true if added
      */
 
-    public boolean addHabitEvent(Habit_Event habitEvent){
+    public boolean addHabitEvent(HabitEvent habitEvent){
         return habitEvents.add(habitEvent);
     }
 
@@ -261,29 +261,29 @@ public class Habit implements Comparable<Habit>, Parcelable {
     /**
      * removeHabitEvent
      *
-     * removes a specific Habit_Event object from Habit's habit events
+     * removes a specific HabitEvent object from Habit's habit events
      *
      * @author Dakota
-     * @param habit Habit_Event object to be removed
+     * @param habit HabitEvent object to be removed
      * @return boolean true if removed
      */
-    public boolean removeHabitEvent(Habit_Event habit){
+    public boolean removeHabitEvent(HabitEvent habit){
         return habitEvents.remove(habit);
     }
 
     /**
      * removeHabitEvent
      *
-     * removes a Habit_Event using its String id from Habit's habit events
+     * removes a HabitEvent using its String id from Habit's habit events
      *
      * @author Dakota
      * @param habitEventID String habit event id
-     * @return boolean true if a Habit_Event was removed
-     * @deprecated use removeHabitEvent(Habit_Event) instead
+     * @return boolean true if a HabitEvent was removed
+     * @deprecated use removeHabitEvent(HabitEvent) instead
      */
     public boolean removeHabitEvent(String habitEventID){
 
-        boolean removed = false; // keeps track if a Habit_Event has been removed
+        boolean removed = false; // keeps track if a HabitEvent has been removed
 
         // iterates through habitEvents
         for (int index = 0; index < habitEvents.size(); index++){
@@ -310,7 +310,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
      * @return
      * Returns the habit events array list
      */
-    public ArrayList<Habit_Event> getHabitEvents() {
+    public ArrayList<HabitEvent> getHabitEvents() {
         return this.habitEvents;
     }
 
@@ -323,9 +323,9 @@ public class Habit implements Comparable<Habit>, Parcelable {
      */
     public void sortHabitEvents(){
 
-        // Sorts with Habit_Event's compareTo method
+        // Sorts with HabitEvent's compareTo method
         // Sorts by date
-        habitEvents.sort(Habit_Event::compareTo);
+        habitEvents.sort(HabitEvent::compareTo);
         // min API 24 needed, need to program own sorting else wise
 
     }

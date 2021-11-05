@@ -7,9 +7,9 @@ import android.util.Log;
 
 import java.util.Calendar;
 
-/** On_Days
+/** OnDays
  *
- * On_Days object for representing which weekdays a habit is on
+ * OnDays object for representing which weekdays a habit is on
  *
  * @author Dakota
  * @since 2021-10-25
@@ -18,7 +18,7 @@ import java.util.Calendar;
  */
 
 
-public class On_Days implements Parcelable {
+public class OnDays implements Parcelable {
 
 
 
@@ -34,8 +34,8 @@ public class On_Days implements Parcelable {
             SUN = Calendar.SUNDAY;
 
 
-    // initializes On_Days by default to all true
-    public On_Days(){
+    // initializes OnDays by default to all true
+    public OnDays(){
         this.mon = true;
         this.tue = true;
         this.wed = true;
@@ -46,7 +46,7 @@ public class On_Days implements Parcelable {
     }
 
     // Constructing from a parcel
-    public On_Days(Parcel parcel){
+    public OnDays(Parcel parcel){
 
         Bundle onDaysBundle = parcel.readBundle(this.getClass().getClassLoader()); // get bundle
         boolean[] onDays = onDaysBundle.getBooleanArray("onDays");
@@ -72,7 +72,7 @@ public class On_Days implements Parcelable {
      * @return boolean val of particular day;
      */
     public boolean get(int day){
-        Log.d("On_Days", "int passed: " + String.valueOf(day));
+        Log.d("OnDays", "int passed: " + String.valueOf(day));
 
         switch (day){
             case MON: return mon;
@@ -83,7 +83,7 @@ public class On_Days implements Parcelable {
             case SAT: return sat;
             case SUN: return sun;
             default: throw new IllegalArgumentException("must use Calendar int constant object " +
-                    "with On_Days.get(). \nEx. Calendar.MONDAY");
+                    "with OnDays.get(). \nEx. Calendar.MONDAY");
         }
 
 
@@ -99,7 +99,7 @@ public class On_Days implements Parcelable {
      * @param day int day constant that you want to set true (Ex. MON))
      */
     public void setTrue(int day){
-        Log.d("On_Days", "int passed: " + String.valueOf(day)
+        Log.d("OnDays", "int passed: " + String.valueOf(day)
         + "int expected (for monday): " + String.valueOf(MON));
 
         switch (day){
@@ -111,7 +111,7 @@ public class On_Days implements Parcelable {
             case SAT: sat = true; break;
             case SUN: sun = true; break;
             default: throw new IllegalArgumentException("must use Calendar int constant object " +
-                "with On_Days.setTrue(). \nEx. Calendar.MONDAY");
+                "with OnDays.setTrue(). \nEx. Calendar.MONDAY");
         }
 
 
@@ -137,7 +137,7 @@ public class On_Days implements Parcelable {
             case SAT: sat = false; break;
             case SUN: sun = false; break;
             default: throw new IllegalArgumentException("must use Calendar int constant object " +
-                    "with On_Days.setTrue(). \nEx. Calendar.MONDAY");
+                    "with OnDays.setTrue(). \nEx. Calendar.MONDAY");
         }
 
 
@@ -169,7 +169,7 @@ public class On_Days implements Parcelable {
                 shiftLeft(allDays, shift); // execute shift
                 break;
             default: throw new IllegalArgumentException("must use int day constant " +
-                    "with On_Days.getAll()" +
+                    "with OnDays.getAll()" +
                     "\nEx. MONDAY");
 
         }
@@ -226,7 +226,7 @@ public class On_Days implements Parcelable {
                 break;
             default:
                 throw new IllegalArgumentException("must use Calendar day constant " +
-                        "with On_Days.getAll()" +
+                        "with OnDays.getAll()" +
                         "\nEx. Calendar.MONDAY.");
         }
 
@@ -389,18 +389,18 @@ public class On_Days implements Parcelable {
     }
 
     // Creates User from parcel
-    public static final Parcelable.Creator<On_Days> CREATOR = new Parcelable.Creator<On_Days>() {
+    public static final Parcelable.Creator<OnDays> CREATOR = new Parcelable.Creator<OnDays>() {
 
         @Override
-        public On_Days createFromParcel(Parcel in) {
+        public OnDays createFromParcel(Parcel in) {
 
-            return new On_Days(in);
+            return new OnDays(in);
         }
 
         @Override
-        public On_Days[] newArray(int size) {
+        public OnDays[] newArray(int size) {
 
-            return new On_Days[size];
+            return new OnDays[size];
         }
     };
 }

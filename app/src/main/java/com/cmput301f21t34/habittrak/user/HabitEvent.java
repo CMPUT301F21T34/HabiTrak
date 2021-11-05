@@ -10,7 +10,7 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 /**
- * Habit_Event
+ * HabitEvent
  *
  *
  * @author Dakota
@@ -21,7 +21,7 @@ import java.util.TimeZone;
  * @since 2021-10-16
  * @see Habit
  */
-public class Habit_Event implements Comparable<Habit_Event>, Parcelable {
+public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
 
     // Attributes //
 
@@ -37,14 +37,14 @@ public class Habit_Event implements Comparable<Habit_Event>, Parcelable {
     private File photograph;
 
     // redundant constructor
-    public Habit_Event() {
+    public HabitEvent() {
         this.comment= "";
         this.completedDate = Calendar.getInstance();
         this.location = new Location("");
         this.photograph = new File("");
 
     }
-    public Habit_Event(String habitEventId, String comment, Calendar date, Habit habit, Location loc, File photo){
+    public HabitEvent(String habitEventId, String comment, Calendar date, Habit habit, Location loc, File photo){
         this.photograph = photo;
         this.location = loc;
         this.comment = comment;
@@ -55,17 +55,17 @@ public class Habit_Event implements Comparable<Habit_Event>, Parcelable {
     /**
      * Parcel Constructor Class
      *
-     * Constructs Habit_Event from a parcel
+     * Constructs HabitEvent from a parcel
      * Un-does writeToParcel method
      *
      * @author Dakota
      * @see Parcelable
      * @param parcel Parcel to construct from
      */
-    public Habit_Event(Parcel parcel){
+    public HabitEvent(Parcel parcel){
 
         Bundle habitEventBundle;
-        habitEventBundle = parcel.readBundle(Habit_Event.class.getClassLoader());
+        habitEventBundle = parcel.readBundle(HabitEvent.class.getClassLoader());
 
 
         this.comment = habitEventBundle.getString("comment");
@@ -93,15 +93,15 @@ public class Habit_Event implements Comparable<Habit_Event>, Parcelable {
 
     // getter methods
 
-    public static final Parcelable.Creator<Habit_Event> CREATOR = new Parcelable.Creator<Habit_Event>() {
+    public static final Parcelable.Creator<HabitEvent> CREATOR = new Parcelable.Creator<HabitEvent>() {
         @Override
-        public Habit_Event createFromParcel(Parcel in) {
-            return new Habit_Event(in);
+        public HabitEvent createFromParcel(Parcel in) {
+            return new HabitEvent(in);
         }
 
         @Override
-        public Habit_Event[] newArray(int size) {
-            return new Habit_Event[size];
+        public HabitEvent[] newArray(int size) {
+            return new HabitEvent[size];
         }
     };
 
@@ -164,14 +164,14 @@ public class Habit_Event implements Comparable<Habit_Event>, Parcelable {
      * @return int -1,0,1
      */
     @Override
-    public int compareTo(Habit_Event habitEvent) {
+    public int compareTo(HabitEvent habitEvent) {
         return this.completedDate.compareTo(habitEvent.completedDate);
     }
 
     // Parcelable Implementation Code  Start //
 
     /**
-     * Code that parses Habit_Event parameters into a Parcel
+     * Code that parses HabitEvent parameters into a Parcel
      * Needs to be updated for any changes to attributes
      * Or new attributes added
      *
@@ -188,7 +188,7 @@ public class Habit_Event implements Comparable<Habit_Event>, Parcelable {
     public void writeToParcel(Parcel parcel, int flags) {
 
 
-        Bundle habitEventBundle = new Bundle(Habit_Event.class.getClassLoader());
+        Bundle habitEventBundle = new Bundle(HabitEvent.class.getClassLoader());
 
         habitEventBundle.putString("comment", comment);
 
@@ -222,13 +222,13 @@ public class Habit_Event implements Comparable<Habit_Event>, Parcelable {
         return 0;
     }
 
-    private static class Creator implements Parcelable.Creator<Habit_Event> {
-        public Habit_Event createFromParcel(Parcel source) {
-            return new Habit_Event(source);
+    private static class Creator implements Parcelable.Creator<HabitEvent> {
+        public HabitEvent createFromParcel(Parcel source) {
+            return new HabitEvent(source);
         }
 
-        public Habit_Event[] newArray(int size) {
-            return new Habit_Event[size];
+        public HabitEvent[] newArray(int size) {
+            return new HabitEvent[size];
         }
     }
 

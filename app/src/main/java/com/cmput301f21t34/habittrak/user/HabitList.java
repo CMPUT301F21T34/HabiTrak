@@ -2,13 +2,12 @@ package com.cmput301f21t34.habittrak.user;
 
 import android.os.Bundle;
 import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.Log;
 
 import java.util.ArrayList;
 
 /**
- * Habit_List
+ * HabitList
  *
  * @author Dakota
  *
@@ -19,22 +18,22 @@ import java.util.ArrayList;
  * @see ArrayList
  * @see Habit
  */
-public class Habit_List extends ArrayList<Habit> {
+public class HabitList extends ArrayList<Habit> {
 
-    final String TAG = "Habit_List";
+    final String TAG = "HabitList";
 
-    public Habit_List(){
+    public HabitList(){
         super();
     }
 
-    public Habit_List(ArrayList<Habit> arrayList){
+    public HabitList(ArrayList<Habit> arrayList){
         this.addAll(arrayList);
     }
 
-    public Habit_List(Parcel parcel) {
+    public HabitList(Parcel parcel) {
 
         // Gets the bundle
-        Bundle habitListBundle = parcel.readBundle(Habit_List.class.getClassLoader());
+        Bundle habitListBundle = parcel.readBundle(HabitList.class.getClassLoader());
 
         // Gets the arraylist
         ArrayList<Habit> habitArrayList = habitListBundle.getParcelableArrayList("habitList");
@@ -158,7 +157,7 @@ public class Habit_List extends ArrayList<Habit> {
      * adds a habit to the list but does not update
      * the habits indexes or any other
      *
-     * Used when tracking a subset from a larger Habit_List
+     * Used when tracking a subset from a larger HabitList
      *
      * @param habit Habit to be added for tracking
      */
@@ -200,7 +199,7 @@ public class Habit_List extends ArrayList<Habit> {
 
         } else {
             // index mismatch //
-            Log.e("Habit_List", "Index Mismatch:" + "\n\t index expected: "
+            Log.e("HabitList", "Index Mismatch:" + "\n\t index expected: "
                     + String.valueOf(index)
                     + "\n\t index retrieved: "
                     + String.valueOf(this.get(index).getIndex())

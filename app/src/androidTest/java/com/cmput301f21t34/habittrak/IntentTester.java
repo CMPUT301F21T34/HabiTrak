@@ -84,7 +84,7 @@ public class IntentTester {
                 .perform(click());
         //Check to make sure we're on the intended activity, then click the add habit button
         intended(hasComponent(BaseActivity.class.getName()));
-        onView(withId(R.id.today_add_habit_button))
+        onView(withId(R.id.base_add_habit_button))
                 .perform(click());
         intended(hasComponent(AddHabitActivity.class.getName()));
         //Fill out the new habit form

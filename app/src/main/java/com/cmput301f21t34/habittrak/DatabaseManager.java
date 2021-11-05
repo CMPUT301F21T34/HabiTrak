@@ -34,8 +34,7 @@ import java.util.TimeZone;
  * @author Henry
  * @see User
  * @version 1.0
- * Implemented the getter methods only the setters methods will be implemented soon
- * TODO: Create the calendar constructor
+ *
  */
 
 public class DatabaseManager {
@@ -55,10 +54,9 @@ public class DatabaseManager {
      * checks if given password matches the actual password of an email
      *
      * @author Henry
-     * @param email
-     * @param password
-     * @return
-     * returns true if credentials match, false otherwise
+     * @param email - Type String; the email of the user who's validity is being checked
+     * @param password - Type password; The password of the user who's validity is being checked
+     * @return Boolean; returns true if credentials match, false otherwise
      */
     public boolean validCredentials(String email, String password) {
 
@@ -114,8 +112,8 @@ public class DatabaseManager {
      * Checks to see if the user with the provided email already exists
      *
      * @author Henry
-     * @param email
-     * @return boolean
+     * @param email - Type String; the email that is to be checked id its unique or not
+     * @return boolean; returns true if unique otherwise will return false
      */
     public boolean isUniqueEmail(String email) {
         
@@ -145,8 +143,8 @@ public class DatabaseManager {
      * Checks to see if the user with the provided email already exists
      *
      * @author Henry
-     * @param username
-     * @param email
+     * @param username -Type String, the username to check
+     * @param email - Type String, the email associated with the email
      * @return boolean
      */
     public boolean isUniqueUsername(String username, String email) {
@@ -188,6 +186,9 @@ public class DatabaseManager {
      * Creates a new user from the data passed into it, and puts it into the database
      *
      * @author Henry
+     * @param email -Type String the email of the user to be created
+     * @param password -Type String the password of the user to be created
+     * @param username -Type String the username of the user to be created
      * @return true if it is successful or false if it is not
      */
     public boolean createNewUser(String email, String username, String password) {
@@ -226,6 +227,7 @@ public class DatabaseManager {
      * Attempts to delete a user from the database
      *
      * @author Henry
+     * @param email -Type String; the email of the user to be deleted
      * @return true if it is successful or false if it is not
      */
     public boolean deleteUser(String email) {
@@ -258,7 +260,7 @@ public class DatabaseManager {
      *
      * @author Tauseef
      * @author Henry
-     * @param email
+     * @param email- Type String; the email of the user to get
      * @return User
      */
     public User getUser(String email) {
@@ -335,7 +337,7 @@ public class DatabaseManager {
      * gets the user name of the provided email
      *
      * @author Tauseef
-     * @param email
+     * @param email -Type String; The email email of the user who's username is to be retrieved
      * @return username (string)
      */
     public String getUserName(String email) {
@@ -362,7 +364,7 @@ public class DatabaseManager {
      * gets the user bio of the provided email
      *
      * @author Tauseef
-     * @param email
+     * @param email -Type String; The email email of the user who's bio is to be retrieved
      * @return String containing the bio
      */
     public String getUserBio(String email) {
@@ -388,7 +390,7 @@ public class DatabaseManager {
      * gets the habit list of the provided user email
      *
      * @author Tauseef
-     * @param email
+     * @param email -Type String; The email email of the user who's habit list is to be retrieved
      * @return habitList
      */
     public HabitList getHabitList(String email) {
@@ -415,8 +417,8 @@ public class DatabaseManager {
      * Converts an array of HashMap (data from the database) to an array of HabitDatabase objects
      *
      * @author Tauseef
-     * @param hashMapList
-     * @return
+     * @param hashMapList -Type ArrayList<HashMap<String,Object>> the array of HashMap to be converted
+     * @return ArrayList <HabitDatabase>
      */
     public ArrayList<HabitDatabase> toHabitDatabaseList(ArrayList<HashMap<String,Object>>hashMapList){
         ArrayList<HabitDatabase> habitDatabaseList = new ArrayList<>();
@@ -432,8 +434,8 @@ public class DatabaseManager {
      * Converts HashMap from database to HabitDatabase object
      *
      * @author Tauseef
-     * @param hashmap
-     * @return
+     * @param hashmap -Type HashMap<String,Object> the HashMap to be converted
+     * @return HabitDatabase
      */
     public HabitDatabase toHabitDatabase(HashMap<String ,Object> hashmap){
         HabitDatabase habitDatabase = new HabitDatabase();
@@ -448,12 +450,12 @@ public class DatabaseManager {
     }
 
     /**
-     * tohabitEventList
+     * toHabitEventList
      * Converts an array of HashMap (data from the database) to an array of HabitEvent objects
      *
      * @author Tauseef
-     * @param hashMapList
-     * @return
+     * @param hashMapList -Type ArrayList<HashMap<String,Object>> the array of HashMap to be converted
+     * @return ArrayList<Habit_Event>
      */
     public ArrayList<HabitEvent> toHabitEventList(ArrayList<HashMap<String,Object>>hashMapList){
         ArrayList<HabitEvent> habitEventList = new ArrayList<>();
@@ -469,8 +471,8 @@ public class DatabaseManager {
      * Converts HashMap from database to HabitEvent object
      *
      * @author Tauseef
-     * @param hashmap
-     * @return
+     * @param hashmap -Type HashMap<String,Object> the HashMap to be converted
+     * @return Habit_Event
      */
     public HabitEvent toHabitEvent(HashMap<String,Object> hashmap){
         HabitEvent event = new HabitEvent();
@@ -490,8 +492,8 @@ public class DatabaseManager {
      * Converts HashMap from database to Calendar object
      *
      * @author Tauseef
-     * @param hashmap
-     * @return
+     * @param hashmap -Type HashMap<String,Object> the HashMap to be converted
+     * @return GregorianCalendar
      */
     public GregorianCalendar toCalendar(HashMap<String,Object> hashmap){
         GregorianCalendar returnCalendar = new GregorianCalendar();
@@ -511,7 +513,7 @@ public class DatabaseManager {
      * Converts HashMap from database to TimeZone object
      *
      * @author Tauseef
-     * @param hashMap
+     * @param hashMap -Type HashMap<String,Object> the HashMap to be converted
      * @return TimeZone
      */
     public TimeZone getTimezone(HashMap<String,Object> hashMap){
@@ -525,7 +527,7 @@ public class DatabaseManager {
      * gets the follower list of the provided email
      *
      * @author Tauseef
-     * @param email
+     * @param email -Type String; The email of the user who's followerList is to be retrieved
      * @return Follower list
      */
     public ArrayList<DatabasePointer> getFollowerList(String email) {
@@ -553,7 +555,7 @@ public class DatabaseManager {
      * gets the following list of the provided email
      *
      * @author Tauseef
-     * @param email
+     * @param email -Type String; The email of the user who's followingList is to be retrieved
      * @return Following list
      */
     public ArrayList<DatabasePointer> getFollowingList(String email ){
@@ -579,12 +581,10 @@ public class DatabaseManager {
      * getFollowReqList
      * returns followReq list of the provided email (The followReq list contains all the users email
      * the main user(the one with the id) has requested to follow)
-     * Example: user 1 has requested to follow user 2 and user 3 then this function will return user 2 and user 3
-     * the input is user 1 email
      *
      * @author Tauseef
-     * @param email
-     * @return follow req list
+     * @param email -Type String; The email email of the user who's follow req list is to be retrieved
+     * @return ArrayList<Database_Pointer> Follow req list
      */
     public ArrayList<DatabasePointer> getFollowReqList(String email) {
 
@@ -610,12 +610,10 @@ public class DatabaseManager {
      * getFollowRequestedList
      * returns followRequested list of the provided email (The followReq list contains all the users email
      * that have requested to follow the main user(the one with the id)
-     * Example: user 2 and user 3 has requested to follow user 1 then this function will return user 2 and user 3
-     * the input is user 1 email
      *
      * @author Tauseef
-     * @param email
-     * @return
+     * @param email -Type String; The email email of the user who's follow requested list is to be retrieved
+     * @return ArrayList<Database_Pointer>
      */
     public ArrayList<DatabasePointer> getFollowRequestedList(String email) {
 
@@ -641,12 +639,10 @@ public class DatabaseManager {
      * getBlockList
      * returns the block list of the provided email (The block list contains all the users email
      * that the user have blocked
-     * Example: user 2 and user 3 has been blocked by user 1 then this function will return user 2 and user 3
-     * the input is user 1 email
      *
      * @author Tauseef
-     * @param email
-     * @return
+     * @param email -Type String; The email email of the user who's block list is to be retrieved
+     * @return ArrayList<Database_Pointer> Block List
      */
     public ArrayList<DatabasePointer> getBlockList(String email) {
 
@@ -669,14 +665,12 @@ public class DatabaseManager {
 
     /**
      * getBlockedByList
-     * returns followRequested list of the provided email (The followReq list contains all the users email
-     * that have requested to follow the main user(the one with the id)
-     * Example: user 2 and user 3 has requested to follow user 1 then this function will return user 2 and user 3
-     * the input is user 1 email
+     * returns blockedBylist of the provided email (The BlockedBy list contains all the users email
+     * that have blocked the user)
      *
      * @author Tauseef
-     * @param email
-     * @return
+     * @param email -Type String; The email email of the user who's blockedBy list is to be retrieved
+     * @return ArrayList<Database_Pointer> BlockedByList
      */
     public ArrayList<DatabasePointer> getBlockedByList(String email) {
 
@@ -700,10 +694,10 @@ public class DatabaseManager {
     /**
      * updateHabitNamePassword
      *
-     * updates the habit name and password
+     * updates the habit, name and password of the user
      *
      * @author Tauseef
-     * @param user
+     * @param user Type- User, the user who's habit/password/name is to be updated
      */
     public void updateHabitNamePassword(User user){
         final CollectionReference collectionReference = database.collection("users");
@@ -728,11 +722,11 @@ public class DatabaseManager {
     /**
      * updateFollower
      *
-     * email is now a follower of user (so add email to the follower list of user and add user to the following list of email2)
-     *
+     * Updates the follower list of the usr by adding or removing the database_pointer toBeAdded
      * @author Henry
-     * @param user
-     * @param toBeAdded
+     * @param user Type- User, the user who's follower list is to be updated
+     * @param toBeAdded Type- Database_Pointer, the database_pointer to be added or removed
+     * @param remove -Type Boolean, Indicates whether its add or remove operation
      */
     public void updateFollower(User user, DatabasePointer toBeAdded, boolean remove) {
         // Update user's followerList
@@ -856,13 +850,12 @@ public class DatabaseManager {
     /**
      * updateFollowerReq
      *
-     * email1 asked to follow email2 (so add email2 to the followerReq list of email1 and add email1 to the followerRequested list of email2)
-     * followerRequested list means the people that asked to follow the user
-     * followerReq list means the people that the user requested to follow
+     * Updates the follower requested list of the user by adding or removing the database_pointer toBeAdded
      *
      * @author Tauseef
-     * @param user
-     * @param toBeAdded
+     * @param user- Type User; the user who's follower requested list is to be updated
+     * @param toBeAdded - Type Database_pointer; the database_pointer to be added or removed
+     * @param remove - Type Boolean; Indicates whether the operation is adding or removing
      */
     public void updateFollowerReq(User user, DatabasePointer toBeAdded, boolean remove) {
         // Update user
@@ -983,11 +976,13 @@ public class DatabaseManager {
     /**
      * updateBlock
      *
-     * email2 is now blocked by email1 (so add email2 to the block list of email1 and add email1 to the blockedby list of email2)
+     * Updates the blocklist of the user by adding or removing the database_pointer toBeAdded
      *
      * @author Tauseef
-     * @param user
-     * @param toBeAdded
+     * @param user- Type User; the user who's block list is to be updated
+     * @param toBeAdded - Type Database_pointer; the database_pointer to be added or removed
+     * @param remove - Type Boolean; Indicates whether the operation is adding or removing
+     *
      */
     public void updateBlock(User user, DatabasePointer toBeAdded, boolean remove) {
         // Update user's blockList
@@ -1110,8 +1105,9 @@ public class DatabaseManager {
      * Converts an ArrayList<HashMap<String, String>> listOfMap to an ArrayList<Database_Pointer>
      *
      * @author Henry
-     * @param listOfMap
-     * @return
+     * @param listOfMap - Type; The hashmap from the database that has to be converted to an arraylist of Database_pointer
+     *
+     * @return ArrayList<Database_Pointer>
      */
     public ArrayList<DatabasePointer> toPointerList(ArrayList<HashMap<String, String>> listOfMap) {
         ArrayList<DatabasePointer> pointerList = new ArrayList<>();
@@ -1129,9 +1125,9 @@ public class DatabaseManager {
      * Convert Habit in Habit_List<Habit> to a new object that is compatitble with the database
      *
      * @author Henry
-     * @param habits
-     * @return
-     * Returns a habit list compatible with the database
+     * @param habits- Type Habit_List; the Habit_list that has to be converted to HabitDatabase
+     *              so that its compatible with the database
+     * @return ArrayList<HabitDatabase>; a habit list compatible with the database
      */
     public ArrayList<HabitDatabase> habitToDatabase(HabitList habits) {
         ArrayList<HabitDatabase> habitListToDatabase = new ArrayList<>();
@@ -1152,12 +1148,13 @@ public class DatabaseManager {
 
     /**
      * databaseToHabit
-     *
-     * @param habitsFromDatabase
      * @author Henry
-     * @return
+     * @param habitsFromDatabase - Type Arraylist<HabitDatabase>; the arraylist of HabitDatabase
+     *                           that is to be converted to Habit_List
+     *
+     * @return Habit_List;
      * Returns a Habit_List given the habitList from Database.
-     * Similar to habitToDatabase, but does it in the opposite direction
+     *
      */
     public HabitList databaseToHabit(ArrayList<HabitDatabase> habitsFromDatabase) {
         HabitList habitList = new HabitList();

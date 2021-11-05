@@ -68,7 +68,18 @@ public class ParcelableUnitTest {
      */
     private User getTestUser(){
 
+<<<<<<< HEAD
         User testUser = new User("DummyUser","Pass","dummy@email.com");
+=======
+        User testUser = new User("testUser",
+                null,
+                getTestHabitList(),
+                null,
+                null,
+                null,
+                null,
+                null);
+>>>>>>> 3992ef7e0b74bd9368073e44db4c74be7b0b8f58
         HabitList testHabits = getTestHabitList();
         for (int index = 0; index < testHabits.size(); index++){
             testUser.addHabit(testHabits.get(index));
@@ -130,7 +141,7 @@ public class ParcelableUnitTest {
         assertEquals(testHabit.getHabitEvents().get(0).getCompletedDate(), parceledHabit.getHabitEvents().get(0).getCompletedDate());
     }
 
-    // Testing Parcelability for Habit_Event
+    // Testing Parcelability for HabitEvent
     /**
      * Tests if {@link HabitEvent} is properly parceled and unpacked
      */

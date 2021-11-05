@@ -1,14 +1,16 @@
-package com.cmput301f21t34.habittrak;
+package com.cmput301f21t34.habittrak.recycler;
 
-import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.cmput301f21t34.habittrak.R;
+import com.cmput301f21t34.habittrak.user.Habit;
 
 import java.util.ArrayList;
 
@@ -38,11 +40,19 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
          */
         public ViewHolder(View view) {
             super(view);
+
             // Define click listener for the ViewHolder's View
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d("TodayHabitRecyclerAdapter", "Element" + getAdapterPosition() + "clicked");
+                }
+            });
 
             habitName = (TextView) view.findViewById(R.id.today_listview_habit_name);
             habitDesc = (TextView) view.findViewById(R.id.today_listview_habit_desc);
             checkBox = (CheckBox) view.findViewById(R.id.today_listview_checkbox);
+
         }
 
         public TextView getHabitDesc() {

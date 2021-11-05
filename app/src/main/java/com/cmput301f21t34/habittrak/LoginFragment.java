@@ -56,6 +56,7 @@ public class LoginFragment extends Fragment {
         MaterialButton signupButton = view.findViewById(R.id.signup_button);
 
 
+
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,6 +67,7 @@ public class LoginFragment extends Fragment {
                         .commit();
             }
         });
+
 
         // Password validator
         loginButton.setOnClickListener(new View.OnClickListener() {

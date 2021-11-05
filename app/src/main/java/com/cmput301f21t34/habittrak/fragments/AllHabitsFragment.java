@@ -3,16 +3,16 @@ package com.cmput301f21t34.habittrak.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import com.cmput301f21t34.habittrak.R;
-import com.cmput301f21t34.habittrak.TodayHabitList;
+import com.cmput301f21t34.habittrak.recycler.HabitRecycler;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitList;
 import com.cmput301f21t34.habittrak.user.User;
@@ -31,19 +31,22 @@ import java.util.ArrayList;
  */
 public class AllHabitsFragment extends Fragment {
 
-    // attributes
-    private ListView habitList;
-    private ArrayAdapter<Habit> habitAdapter;
-    private ArrayList<Habit> habitsData = new ArrayList<>();
 
+    // Attributes //
 
+    // These are for the Recycler view
+    private RecyclerView habitRecyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private HabitRecycler habitRecycler;
+    private ArrayList<Habit> habitsDisplayList;
 
-    User mainUser;
+    private User mainUser;
 
     public AllHabitsFragment(User mainUser) {
+
+        habitsDisplayList = new ArrayList<>();
         this.mainUser = mainUser;
 
-        Log.d("User", "In All Habits Frag, User: " + mainUser.getUsername());
 
     }
 
@@ -54,21 +57,30 @@ public class AllHabitsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.habi_all_habits_fragment, container, false);
 
-        habitList = view.findViewById(R.id.all_habits_listview);
+        // Sets up views and manager for recycler view
+        habitRecyclerView = view.findViewById(R.id.all_recycler_view);
+        layoutManager = new LinearLayoutManager(getActivity());
 
 
+        // Sets up the recycler view with a list of all habits, and
+        // an array list for the recycler to use for display - Dakota
+        this.habitRecycler = new HabitRecycler(habitRecyclerView, layoutManager, habitsDisplayList, mainUser.getHabitList());
 
-        habitsData = new HabitList();
-
-
-        //connect the array adapter
-        habitAdapter = new TodayHabitList(getContext(), habitsData);
-        habitList.setAdapter(habitAdapter);
-
-        refreshAllFragment(); // populates habit list
 
         return view;
     }
+
+
+    @Override
+    public void onResume() {
+
+        super.onResume();
+
+        // Refreshes Frag
+        refreshAllFragment();
+
+    }
+
 
     /**
      * refreshAllFragment
@@ -82,12 +94,14 @@ public class AllHabitsFragment extends Fragment {
         Log.d("TodayListFragment", "refreshing habit list");
         // Populate today view with Today's habits.
 
-        habitsData.clear(); // Make sure is clear
+        habitsDisplayList.clear(); // Make sure is clear
 
         HabitList mainUserHabits = mainUser.getHabitList(); // get HabitsList
 
-        habitsData.addAll(mainUserHabits);
-        habitAdapter.notifyDataSetChanged();
+        habitsDisplayList.addAll(mainUserHabits);
+
+        // tells the adapter in recycler that the dataset has changed
+        habitRecycler.notifyDataSetChanged();
 
     }
 }

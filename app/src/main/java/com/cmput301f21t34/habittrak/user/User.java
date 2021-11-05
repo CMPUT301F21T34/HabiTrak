@@ -39,6 +39,7 @@ public class User implements Parcelable {
 
     private HabitList habitList; // Habit_List extends ArrayList<Habit>
 
+
     private final String email;
 
     private ArrayList<DatabasePointer> followerList;
@@ -111,6 +112,7 @@ public class User implements Parcelable {
         this.blockList = new ArrayList<DatabasePointer>();
         this.blockedByList = new ArrayList<DatabasePointer>();
 
+
     }
 
     /**
@@ -178,12 +180,14 @@ public class User implements Parcelable {
         this.email = userBundle.getString("email");
         this.biography = userBundle.getString("biography");
 
-        // Habit_List from ArrayList<Habit>
+
+        // HabitList from ArrayList<Habit>
+
         this.habitList = new HabitList(
                 userBundle.getParcelableArrayList("habitList")
         );
 
-        // Database_Pointer Lists //
+        // DatabasePointer Lists //
         this.followerList = userBundle.getParcelableArrayList(
                 "followerList"
         );
@@ -272,15 +276,19 @@ public class User implements Parcelable {
     }
 
 
+
     public void setHabitList (HabitList habitList){
+
         this.habitList = habitList;
 
     }
 
 
+
     // Might not want to allow these //
     public void setFollowerList (
             ArrayList <DatabasePointer> followerList
+
     )
     {
         this.followerList = followerList;
@@ -288,6 +296,7 @@ public class User implements Parcelable {
 
     public void setFollowingList (
             ArrayList <DatabasePointer> followingList
+
     )
     {
         this.followingList = followingList;
@@ -295,27 +304,34 @@ public class User implements Parcelable {
 
     public void setFollowerReqList (
             ArrayList <DatabasePointer> followerReqList
+
     )
     {
         this.followerReqList = followerReqList;
     }
 
+
     public void setFollowerRequestedList (
             ArrayList <DatabasePointer> followerRequestedList
+
     )
     {
         this.followerRequestedList = followerRequestedList;
     }
 
+
     public void setBlockList (
             ArrayList <DatabasePointer> blockList
+
     )
     {
         this.blockList = blockList;
     }
 
+
     public void setBlockedByList (
             ArrayList <DatabasePointer> blockedByList
+
     )
     {
         this.blockedByList = blockedByList;
@@ -352,19 +368,25 @@ public class User implements Parcelable {
     }
 
 
+
     public void addFollower (DatabasePointer newFollower){
+
 
         //TODO: Database Implementation
         this.followerList.add(newFollower);
     }
 
+
     public void addFollowerReq (DatabasePointer newFollowReq){
+
 
         //TODO: Database Implementation
         this.followerReqList.add(newFollowReq);
     }
 
+
     public void addFollowing (DatabasePointer newFollowing){
+
 
         //TODO: Database Implementation
         this.followingList.add(newFollowing);
@@ -465,7 +487,9 @@ public class User implements Parcelable {
     };
 
 
+
     public boolean removeFollower (DatabasePointer follower){
+
         boolean success;
         success = this.followerList.removeIf(
 
@@ -477,7 +501,9 @@ public class User implements Parcelable {
         return success;
     }
 
+
     public boolean removeFollowerReq (DatabasePointer followReq){
+
         boolean success = false;
         success = this.followerReqList.removeIf(database_pointer -> {
             if (database_pointer.getEmail() == followReq.getEmail()) {
@@ -489,7 +515,9 @@ public class User implements Parcelable {
         return success;
     }
 
+
     public boolean removeFollowing (DatabasePointer following){
+
         boolean success = false;
 
         success = this.followingList.removeIf(database_pointer -> database_pointer.getEmail().equals(following.getEmail()));

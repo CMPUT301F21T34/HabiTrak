@@ -210,11 +210,11 @@ public class Habit implements Comparable<Habit>, Parcelable {
     /**
      * getOnDaysOnj
      *
-     * gets reference to Habits On_Days object
+     * gets reference to Habits OnDays object
      *
      * @author Dakota
      *
-     * @return On_Days object for manipulation
+     * @return OnDays object for manipulation
      */
     public OnDays getOnDaysObj(){
         return this.onDaysObj;
@@ -250,9 +250,9 @@ public class Habit implements Comparable<Habit>, Parcelable {
     /**
      * addHabitEvent
      *
-     * adds a Habit_Event object to Habit's habit events
+     * adds a HabitEvent object to Habit's habit events
      *
-     * @param habitEvent Habit_Event to be added
+     * @param habitEvent HabitEvent to be added
      * @return boolean true if added
      */
 
@@ -264,10 +264,10 @@ public class Habit implements Comparable<Habit>, Parcelable {
     /**
      * removeHabitEvent
      *
-     * removes a specific Habit_Event object from Habit's habit events
+     * removes a specific HabitEvent object from Habit's habit events
      *
      * @author Dakota
-     * @param habit Habit_Event object to be removed
+     * @param habit HabitEvent object to be removed
      * @return boolean true if removed
      */
     public boolean removeHabitEvent(HabitEvent habit){
@@ -307,7 +307,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
      */
     public void sortHabitEvents(){
 
-        // Sorts with Habit_Event's compareTo method
+        // Sorts with HabitEvent's compareTo method
         // Sorts by date
         habitEvents.sort(HabitEvent::compareTo);
         // min API 24 needed, need to program own sorting else wise

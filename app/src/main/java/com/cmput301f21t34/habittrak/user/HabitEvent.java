@@ -10,7 +10,7 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 /**
- * Habit_Event
+ * HabitEvent
  *
  *
  * @author Dakota
@@ -46,6 +46,7 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
     }
 
     public HabitEvent(String comment, Calendar date, Location loc, File photo){
+
         this.photograph = photo;
         this.location = loc;
         this.comment = comment;
@@ -55,7 +56,7 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
     /**
      * Parcel Constructor Class
      *
-     * Constructs Habit_Event from a parcel
+     * Constructs HabitEvent from a parcel
      * Un-does writeToParcel method
      *
      * @author Dakota
@@ -176,7 +177,7 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
     // Parcelable Implementation Code  Start //
 
     /**
-     * Code that parses Habit_Event parameters into a Parcel
+     * Code that parses HabitEvent parameters into a Parcel
      * Needs to be updated for any changes to attributes
      * Or new attributes added
      *

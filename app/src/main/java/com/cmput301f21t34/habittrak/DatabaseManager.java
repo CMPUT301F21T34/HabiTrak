@@ -750,7 +750,7 @@ public class DatabaseManager {
                                 contains = true;
                                 Log.d(TAG,"from equals");
                             }
-                            else if (followerList.get(i).Equals(toBeAdded)){
+                            else if (followerList.get(i).equals(toBeAdded)){
                                 index = i;
                                 contains = true;
                                 Log.d(TAG,"not from equals");
@@ -810,7 +810,7 @@ public class DatabaseManager {
                                 contains = true;
                                 Log.d(TAG,"from equals");
                             }
-                            else if (followingList.get(i).Equals(following)){
+                            else if (followingList.get(i).equals(following)){
                                 index = i;
                                 contains = true;
                                 Log.d(TAG,"not from equals");
@@ -879,7 +879,7 @@ public class DatabaseManager {
                                 contains = true;
                                 Log.d(TAG,"from equals");
                             }
-                            else if (followerReqList.get(i).Equals(toBeAdded)){
+                            else if (followerReqList.get(i).equals(toBeAdded)){
                                 index = i;
                                 contains = true;
                                 Log.d(TAG,"not from equals");
@@ -937,7 +937,7 @@ public class DatabaseManager {
                                 contains = true;
                                 Log.d(TAG,"from equals");
                             }
-                            else if (followerRequestedList.get(i).Equals(followerRequested)){
+                            else if (followerRequestedList.get(i).equals(followerRequested)){
                                 index = i;
                                 contains = true;
                                 Log.d(TAG,"not from equals");
@@ -1005,7 +1005,7 @@ public class DatabaseManager {
                                 index = i;
                                 Log.d(TAG,"from equals");
                             }
-                            else if (blockList.get(i).Equals(toBeAdded)){
+                            else if (blockList.get(i).equals(toBeAdded)){
                                 contains = true;
                                 index = i;
                                 Log.d(TAG,"not from equals");
@@ -1063,7 +1063,7 @@ public class DatabaseManager {
                                 index = i;
                                 Log.d(TAG,"from equals");
                             }
-                            else if (blockedByList.get(i).Equals(blockedBy)){
+                            else if (blockedByList.get(i).equals(blockedBy)){
                                 contains = true;
                                 index = i;
                                 Log.d(TAG,"not from equals");

@@ -105,6 +105,8 @@ public class Habit implements Comparable<Habit>, Parcelable {
             this.startDate = null;
         }
 
+        this.streak = habitBundle.getInt("streak");
+
         this.isPublic = habitBundle.getBoolean("isPublic");
 
         this.onDaysObj = habitBundle.getParcelable("onDaysObj");
@@ -243,7 +245,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
         int streak = 0;
 
         ArrayList<HabitEvent> events = getHabitEvents();
-        
+
         // Make sure events is sorted for optimal efficiency
         events.sort(HabitEvent::compareTo);
 
@@ -552,6 +554,8 @@ public class Habit implements Comparable<Habit>, Parcelable {
 
         habitBundle.putString("title", title);
         habitBundle.putString("reason", reason);
+
+        habitBundle.putInt("streak", this.streak);
 
         // Requires Habit_Events to implement parcelable
         habitBundle.putParcelableArrayList("habitEvents", habitEvents);

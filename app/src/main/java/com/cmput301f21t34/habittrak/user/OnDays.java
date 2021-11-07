@@ -387,6 +387,31 @@ public class OnDays implements Parcelable {
 
     }
 
+    private int getShift(int startOfWeek) {
+
+        int shift = 0;
+
+        switch (startOfWeek) {
+            case MON:
+                break; // If monday then no need to shift
+            case SUN:
+                shift++; // shift 6 to the left
+            case SAT:
+                shift++; // shift 5 to the left
+            case FRI:
+                shift++; //   .
+            case THU:
+                shift++; //   .
+            case WED:
+                shift++; //   .
+            case TUE:
+                shift++;
+        }
+
+        return shift;
+
+    }
+
     private boolean[] shift(boolean[] array, int shift, int direction){
 
         if ( direction != -1 && direction != 1) {

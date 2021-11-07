@@ -256,7 +256,20 @@ public class OnDays implements Parcelable {
      */
     public boolean isOnDay(){
 
-        int currentDayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        // Calls isOnDay with today's date
+        return isOnDay(Calendar.getInstance());
+
+    }
+
+    /**
+     * returns if it is an OnDay for a particular date
+     * @param date Calendar that we want to check
+     * @return boolean true if it is an On Day, false elsewise
+     * @throws IllegalStateException impossible state to reach, default switch case.
+     */
+    public boolean isOnDay(Calendar date){
+
+        int currentDayOfWeek = date.get(Calendar.DAY_OF_WEEK);
 
         switch (currentDayOfWeek){
             case MON: return get(MON);
@@ -269,7 +282,6 @@ public class OnDays implements Parcelable {
             default: throw new IllegalStateException("Current day does not exist!?!");
 
         }
-
 
     }
 
@@ -300,7 +312,7 @@ public class OnDays implements Parcelable {
             case WED:
                 shift++; //   .
             case TUE:
-                shift++;
+                shift++; // shift 1 to the left
                 break;
             default:
                 throw new IllegalArgumentException("must use Calendar day constant " +

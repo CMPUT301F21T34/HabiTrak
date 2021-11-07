@@ -136,7 +136,13 @@ public class OnDays implements Parcelable {
 
     }
 
-    
+    /**
+     * sets a given day to a given boolean
+     *
+     * @author Dakota
+     * @param day int day to be changed
+     * @param bool boolean to change it to
+     */
     private void set(int day, boolean bool){
 
         switch (day){
@@ -228,10 +234,16 @@ public class OnDays implements Parcelable {
      * sets the days On_Day with an array starting on Monday
      *
      * @author Dakota
-     * @param array boolean[7] array of values to set
+     * @param onDays boolean[7] array of values to set
      */
-    public void setAll(boolean[] array){
-        setAll(array, MON);
+    public void setAll(boolean[] onDays){
+        set(MON, onDays[0]);
+        set(TUE, onDays[1]);
+        set(WED, onDays[2]);
+        set(THU, onDays[3]);
+        set(FRI, onDays[4]);
+        set(SAT, onDays[5]);
+        set(SUN, onDays[6]);
     }
 
     /** isOnDay

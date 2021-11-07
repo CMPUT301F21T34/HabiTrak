@@ -170,24 +170,10 @@ public class OnDays implements Parcelable {
      */
     public boolean[] getAll(int startOfWeek){
 
-        boolean[] allDays = new boolean[]{get(MON), get(TUE), get(WED), get(THU), get(FRI), get(SAT), get(SUN)};
-        int shift = 0;
+        boolean[] allDays = getAll();
 
-        switch (startOfWeek){
-            case MON: break; // If monday then no need to shift
-            case SUN: shift++; // shift 6 to the left
-            case SAT: shift++; // shift 5 to the left
-            case FRI: shift++; //   .
-            case THU: shift++; //   .
-            case WED: shift++; //   .
-            case TUE: shift++; // shift 1 to the left
-                shiftLeft(allDays, shift); // execute shift
-                break;
-            default: throw new IllegalArgumentException("must use int day constant " +
-                    "with On_Days.getAll()" +
-                    "\nEx. MONDAY");
-
-        }
+        // + 1 shifts the array to the left
+        allDays = shift(allDays, getShift(startOfWeek), + 1);
 
         return allDays;
 
@@ -203,7 +189,15 @@ public class OnDays implements Parcelable {
      */
     public boolean[] getAll(){
 
-        return getAll(MON);
+        return new boolean[] {
+                get(MON),
+                get(TUE),
+                get(WED),
+                get(THU),
+                get(FRI),
+                get(SAT),
+                get(SUN),
+        };
 
     }
 
@@ -224,34 +218,13 @@ public class OnDays implements Parcelable {
             throw new IllegalArgumentException("boolean[] argument of setAll must be of length 7");
         }
 
-        int shift = 0;
-        boolean[] allDays = array;
+        boolean[] allDays;
 
-        // Makes sure array starts on monday for handling
-        switch (startOfWeek) {
-            case MON:
-                break; // If monday then no need to shift
-            case SUN: shift++; // shift 6 to the left
-            case SAT: shift++; // shift 5 to the left
-            case FRI: shift++; //   .
-            case THU: shift++; //   .
-            case WED: shift++; //   .
-            case TUE: shift++; // shift 1 to the left
-                allDays = shiftRight(array, shift); // execute shift
-                break;
-            default:
-                throw new IllegalArgumentException("must use Calendar day constant " +
-                        "with On_Days.getAll()" +
-                        "\nEx. Calendar.MONDAY.");
-        }
+        // - 1 shifts the array to the right
+        allDays = shift(array, getShift(startOfWeek), - 1);
 
-        this.mon = allDays[0];
-        this.tue = allDays[1];
-        this.wed = allDays[2];
-        this.thu = allDays[3];
-        this.fri = allDays[4];
-        this.sat = allDays[5];
-        this.sun = allDays[6];
+        setAll(allDays);
+
 
     }
 

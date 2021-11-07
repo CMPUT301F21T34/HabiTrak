@@ -113,21 +113,9 @@ public class OnDays implements Parcelable {
      * @param day int day constant that you want to set true (Ex. MON))
      */
     public void setTrue(int day){
-        Log.d("On_Days", "int passed: " + String.valueOf(day)
-                + "int expected (for monday): " + String.valueOf(MON));
 
 
-        switch (day){
-            case MON: mon = true; break;
-            case TUE: tue = true; break;
-            case WED: wed = true; break;
-            case THU: thu = true; break;
-            case FRI: fri = true; break;
-            case SAT: sat = true; break;
-            case SUN: sun = true; break;
-            default: throw new IllegalArgumentException("must use Calendar int constant object " +
-                    "with On_Days.setTrue(). \nEx. Calendar.MONDAY");
-        }
+        set(day, true);
 
 
     }
@@ -143,18 +131,25 @@ public class OnDays implements Parcelable {
      */
     public void setFalse(int day){
 
+        set(day, false);
+
+
+    }
+
+    
+    private void set(int day, boolean bool){
+
         switch (day){
-            case MON: mon = false; break;
-            case TUE: tue = false; break;
-            case WED: wed = false; break;
-            case THU: thu = false; break;
-            case FRI: fri = false; break;
-            case SAT: sat = false; break;
-            case SUN: sun = false; break;
+            case MON: mon = bool; break;
+            case TUE: tue = bool; break;
+            case WED: wed = bool; break;
+            case THU: thu = bool; break;
+            case FRI: fri = bool; break;
+            case SAT: sat = bool; break;
+            case SUN: sun = bool; break;
             default: throw new IllegalArgumentException("must use Calendar int constant object " +
                     "with On_Days.setTrue(). \nEx. Calendar.MONDAY");
         }
-
 
     }
 

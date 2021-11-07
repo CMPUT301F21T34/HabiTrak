@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.cmput301f21t34.habittrak.TimeIgnoringComparator;
+
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -221,15 +224,28 @@ public class Habit implements Comparable<Habit>, Parcelable {
      */
     public void refreshStreak(){
 
-        int streak = 0;
+        refreshStreak(Calendar.getInstance());
+
+    }
+
+    /**
+     * Checks the habit events to get the total streak
+     * for a particular day
+     *
+     * @author Dakota
+     */
+    public void refreshStreak(Calendar firstDay){
+
 
         Calendar day = Calendar.getInstance();
+
+        day.setTime(firstDay.getTime());
+        int streak = 0;
+
         ArrayList<HabitEvent> events = getHabitEvents();
-
-
+        
         // Make sure events is sorted for optimal efficiency
         events.sort(HabitEvent::compareTo);
-
 
         boolean notCompleted = true;
         while (notCompleted){
@@ -238,31 +254,45 @@ public class Habit implements Comparable<Habit>, Parcelable {
             if (this.getOnDaysObj().isOnDay(day)){
 
                 // Checks if the current day has a corresponding event
-                for (int index = 0; index < events.size(); index++){
+                int index = 0; // Must init before loop
+                for (; index < events.size(); index++){
+
                     HabitEvent event = events.get(index);
-                    if (event.getCompletedDate().compareTo(day) == 0){
+
+                    //TODO Find a better way maybe
+                    int comparison = new TimeIgnoringComparator().compare(event.getCompletedDate(), day);
+                    System.out.println(comparison);
+
+                    if ( comparison == 0){
                         // Then the habit was completed that day
                         streak++;
                         break;
 
                     }
                     // Checks if we are missing a day, excluding the current day
-                    else if (event.getCompletedDate().compareTo(day) < 0
-                            && day.compareTo(Calendar.getInstance()) != 0 ) {
+                    else if (
+                                    (comparison < 0)
+                            &&
+                                    (new TimeIgnoringComparator().compare(Calendar.getInstance(), day) != 0)
+                            ) {
                         // We are missing an event aka the streak was broken
                         notCompleted = false;
                         break;
 
                     }
+
                 }
 
-                // decrement the day by one a check that day
-                day.add(Calendar.DAY_OF_YEAR, - 1);
+                if (index >= events.size()){
+                    // Ran out of events last search
+                    notCompleted = false;
+                }
 
             }
+            // decrement the day by one a check that day
+            day.add(Calendar.DATE, -1);
 
         }
-
         // sets streak
         this.streak = streak;
 

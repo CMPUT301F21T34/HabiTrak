@@ -52,13 +52,17 @@ public class OnDays implements Parcelable {
      * @author Henry
      */
     public OnDays(ArrayList<Boolean> onDaysArray) {
-        this.mon = onDaysArray.get(0).booleanValue();
-        this.tue = onDaysArray.get(1).booleanValue();
-        this.wed = onDaysArray.get(2).booleanValue();
-        this.thu = onDaysArray.get(3).booleanValue();
-        this.fri = onDaysArray.get(4).booleanValue();
-        this.sat = onDaysArray.get(5).booleanValue();
-        this.sun = onDaysArray.get(6).booleanValue();
+
+        setAll(new boolean[]{
+                onDaysArray.get(0),
+                onDaysArray.get(1),
+                onDaysArray.get(2),
+                onDaysArray.get(3),
+                onDaysArray.get(4),
+                onDaysArray.get(5),
+                onDaysArray.get(6),
+        });
+
     }
 
     // Constructing from a parcel
@@ -67,13 +71,8 @@ public class OnDays implements Parcelable {
         Bundle onDaysBundle = parcel.readBundle(this.getClass().getClassLoader()); // get bundle
         boolean[] onDays = onDaysBundle.getBooleanArray("onDays");
 
-        this.mon = onDays[0];
-        this.tue = onDays[1];
-        this.wed = onDays[2];
-        this.thu = onDays[3];
-        this.fri = onDays[4];
-        this.sat = onDays[5];
-        this.sun = onDays[6];
+        setAll(onDays);
+
 
     }
 

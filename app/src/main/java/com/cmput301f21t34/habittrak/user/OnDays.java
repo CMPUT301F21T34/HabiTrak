@@ -406,6 +406,12 @@ public class OnDays implements Parcelable {
                 shift++; //   .
             case TUE:
                 shift++;
+                break;
+            default:
+                throw new IllegalArgumentException("must use Calendar day constant " +
+                        "with On_Days.getAll()" +
+                        "\nEx. Calendar.MONDAY.");
+
         }
 
         return shift;

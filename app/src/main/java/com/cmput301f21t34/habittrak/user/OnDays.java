@@ -387,6 +387,45 @@ public class OnDays implements Parcelable {
 
     }
 
+    private boolean[] shift(boolean[] array, int shift, int direction){
+
+        if ( direction != -1 && direction != 1) {
+            throw new IllegalArgumentException(
+                    "direction must be -1 or 1! Given was: " + String.valueOf(direction)
+            );
+        }
+
+        if (array == null){
+            throw new NullPointerException("array passed to shiftLeft is null");
+        } else if (shift >= array.length) {
+            throw new IllegalArgumentException("shift passed to shiftLeft is greater then array length");
+        }
+
+        int maxIndex = array.length - 1;
+
+        // for each time we want to shift it
+        for (;shift > 0; shift--){
+
+            // for each pair of [index] [index - 1] swap
+            for (int index = 0; index <= maxIndex; index++){
+
+                boolean swap = array[index];
+
+                if (index == 0){ // if we are at index 0, loop back to max index
+                    array[index] = array[maxIndex];
+                    array[maxIndex] = swap;
+                } else {
+                    array[index] = array[index + direction];
+                    array[index + direction] = swap;
+                }
+
+            }
+        }
+
+        return array;
+
+    }
+
 
     @Override
     public int describeContents() {

@@ -269,20 +269,19 @@ public class OnDays implements Parcelable {
      */
     public boolean isOnDay(Calendar date){
 
-        // Add one to change it from week start sunday to monday, mod 7 to wrap int 8 -> 1
         date.setFirstDayOfWeek(Calendar.SUNDAY);
         int currentDayOfWeek = date.get(Calendar.DAY_OF_WEEK);
 
-        System.out.println(String.valueOf(currentDayOfWeek) + " mon: " + String.valueOf(MON));
+        System.out.println(String.valueOf(currentDayOfWeek) + " mon: " + String.valueOf(MON - 1));
 
         switch (currentDayOfWeek){
-            case MON - 1: return get(MON);
-            case TUE - 1: return get(TUE);
-            case WED - 1: return get(WED);
-            case THU - 1: return get(THU);
-            case FRI - 1: return get(FRI);
-            case SAT - 1: return get(SAT);
-            case SUN + 6: return get(SUN);
+            case MON + 3: return get(MON);
+            case TUE + 3: return get(TUE);
+            case WED + 3: return get(WED);
+            case THU - 4: return get(THU);
+            case FRI - 4: return get(FRI);
+            case SAT - 4: return get(SAT);
+            case SUN + 3: return get(SUN);
             default: throw new IllegalStateException("Current day does not exist!?!");
 
         }

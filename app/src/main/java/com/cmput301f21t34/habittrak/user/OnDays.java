@@ -233,7 +233,6 @@ public class OnDays implements Parcelable {
      * sets the days On_Day with an array starting on Monday
      *
      * @author Dakota
-     *
      * @param array boolean[7] array of values to set
      */
     public void setAll(boolean[] array){
@@ -244,6 +243,7 @@ public class OnDays implements Parcelable {
      *
      * returns if an On_Day object is on today
      *
+     * @author Dakota
      * @return boolean true if On_Day is on today
      * @throws IllegalStateException impossible state to reach, default switch case.
      */
@@ -266,100 +266,15 @@ public class OnDays implements Parcelable {
 
     }
 
-    /**
-     * shiftLeft
-     *
-     * shifts a boolean array to the left
-     *
-     * @author Dakota
-     *
-     * @throws NullPointerException array can't be null
-     * @throws IllegalArgumentException shift can't be greater than array length
-     * @param array the array to be shifted
-     * @param shift the amount of times to shift to the left
-     * @return boolean[] shifted
-     */
-    private boolean[] shiftLeft(boolean[] array, int shift){
-        // Worst case O(n^2) Best case O(n) pretty slow
-
-        if (array == null){
-            throw new NullPointerException("array passed to shiftLeft is null");
-        } else if (shift >= array.length) {
-            throw new IllegalArgumentException("shift passed to shiftLeft is greater then array length");
-        }
-
-        int maxIndex = array.length - 1;
-
-        // for each time we want to shift it
-        for (;shift > 0; shift--){
-
-            // for each pair of [index] [index + 1] swap
-            for (int index = 0; index <= maxIndex; index++){
-
-                boolean swap = array[index];
-
-                if (index == maxIndex){ // if we are at max index, loop back to index 0
-                    array[index] = array[0];
-                    array[0] = swap;
-                } else {
-                    array[index] = array[index + 1];
-                    array[index + 1] = swap;
-                }
-
-            }
-        }
-
-        return array;
-
-    }
 
     /**
-     * shiftRight
-     *
-     * shifts a boolean array to the right
+     * gets the amount a boolean array needs to be shifted to change its start
+     * day from monday to startOfWeek
      *
      * @author Dakota
-     *
-     * @throws NullPointerException array can't be null
-     * @throws IllegalArgumentException shift can't be greater than array length
-     * @param array the array to be shifted
-     * @param shift the amount of times to shift to the right
-     * @return boolean[] shifted
+     * @param startOfWeek Int Calendar constant of startOfWeek to shift to
+     * @return int amount to shift
      */
-    private boolean[] shiftRight(boolean[] array, int shift){
-        // Worst case O(n^2) Best case O(n) pretty slow
-
-        if (array == null){
-            throw new NullPointerException("array passed to shiftLeft is null");
-        } else if (shift >= array.length) {
-            throw new IllegalArgumentException("shift passed to shiftLeft is greater then array length");
-        }
-
-        int maxIndex = array.length - 1;
-
-        // for each time we want to shift it
-        for (;shift > 0; shift--){
-
-            // for each pair of [index] [index - 1] swap
-            for (int index = 0; index <= maxIndex; index++){
-
-                boolean swap = array[index];
-
-                if (index == 0){ // if we are at index 0, loop back to max index
-                    array[index] = array[maxIndex];
-                    array[maxIndex] = swap;
-                } else {
-                    array[index] = array[index - 1];
-                    array[index - 1] = swap;
-                }
-
-            }
-        }
-
-        return array;
-
-    }
-
     private int getShift(int startOfWeek) {
 
         int shift = 0;
@@ -391,6 +306,15 @@ public class OnDays implements Parcelable {
 
     }
 
+    /**
+     * shifts a boolean array left or right
+     *
+     * @author Dakota
+     * @param array boolean[] to be shifted
+     * @param shift amount to shift
+     * @param direction +1 to shift left, -1 to shift right
+     * @return boolean[] that has been shifted
+     */
     private boolean[] shift(boolean[] array, int shift, int direction){
 
         if ( direction != -1 && direction != 1) {

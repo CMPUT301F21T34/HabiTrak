@@ -136,4 +136,86 @@ public class HabitTest {
         assertTrue(habit.removeHabitEvent(event2));
         assertEquals(0, habit.getHabitEvents().size());
     }
+
+    @Test
+    public void habitStreakTest() {
+        // Inits habit
+        Habit habit = mockHabit();
+        habit.getOnDaysObj().setAll(new boolean[]{
+                false,
+                true,
+                false,
+                false,
+                true,
+                false,
+                false
+        });
+
+        Calendar startDay  = Calendar.getInstance();
+        startDay.set(2020, 12, 28);
+        habit.setStartDate(startDay);
+
+        // Defaults
+
+        Location loc = new Location("");
+        File photo = new File("");
+
+
+        // Create some events
+
+        Calendar event0Day = Calendar.getInstance();
+        event0Day.set(2020, 12, 29);
+
+        HabitEvent event0 = new HabitEvent("event0", event0Day, loc, photo);
+
+        Calendar event1Day = Calendar.getInstance();
+        event1Day.set(2021, 1, 1);
+
+        HabitEvent event1 = new HabitEvent("event1", event1Day, loc, photo);
+
+        Calendar event2Day = Calendar.getInstance();
+        event2Day.set(2021, 1, 5);
+
+        HabitEvent event2 = new HabitEvent("event2", event2Day, loc, photo);
+
+        Calendar event3Day = Calendar.getInstance();
+        event3Day.set(2021, 1, 8);
+
+        HabitEvent event3 = new HabitEvent("event3", event3Day, loc, photo);
+
+        // Add Events
+
+        habit.addHabitEvent(event0); habit.addHabitEvent(event1); habit.addHabitEvent(event2); habit.addHabitEvent(event3);
+
+        // Asserts 0
+        assertEquals(0, habit.getStreak());
+
+        // Refresh streak
+        Calendar testDay = Calendar.getInstance();
+        testDay.set(2021, 1, 10);
+
+        habit.refreshStreak(testDay);
+
+        // Asserts 3
+        assertEquals(4, habit.getStreak());
+
+        // Removes middle event
+        habit.removeHabitEvent(event2);
+
+        System.out.println("===");
+
+        habit.refreshStreak(testDay);
+        assertEquals(1, habit.getStreak());
+
+        // Removes latest even
+        habit.removeHabitEvent(event3);
+
+        habit.refreshStreak(testDay);
+        assertEquals(0, habit.getStreak());
+
+
+
+
+    }
+
 }

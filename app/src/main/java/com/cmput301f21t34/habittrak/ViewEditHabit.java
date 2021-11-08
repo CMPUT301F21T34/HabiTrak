@@ -4,12 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
 import android.widget.TextView;
 
+import com.cmput301f21t34.habittrak.user.Habit;
+import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
@@ -44,9 +47,13 @@ public class ViewEditHabit extends AppCompatActivity {
     MaterialButton fridayButton;
     MaterialButton saturdayButton;
     MaterialButton sundayButton;
-    boolean[] daysOfWeek = new boolean[]{true, true, true, true, true, true, true};;
+    boolean[] daysOfWeek;
     int whiteColor = Color.WHITE;
     int tealColor;
+
+    User mainUser;
+    Habit habit;
+    int habitPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +66,11 @@ public class ViewEditHabit extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        // get data
+        Intent intent = getIntent();
+        this.mainUser = intent.getParcelableExtra("mainUser");
+        this.habitPosition = intent.getIntExtra("position", 0);
+        this.habit = mainUser.getHabit(habitPosition);
         // getting views
         habitName = findViewById(R.id.view_habit_name_edit_text);
         habitReason = findViewById(R.id.view_habit_reason_edit_text);
@@ -75,8 +87,16 @@ public class ViewEditHabit extends AppCompatActivity {
 
         tealColor = ContextCompat.getColor(getBaseContext(), R.color.teal_200);
 
-        // set date from habit
+        // set data from habit
+        String name = habit.getTitle();
+        String reason = habit.getReason();
+        Calendar date = habit.getStartDate();
+        Boolean isPublic = habit.isPublic();
+        setDaysSelector();
 
+        // setting date
+        String setDateText = "Selected Date: " + getDate(date);
+        startDate.setText(setDateText);
 
         // setting up date picker
         MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
@@ -86,6 +106,26 @@ public class ViewEditHabit extends AppCompatActivity {
 
     }
 
+    public void setDaysSelector(){
+        daysOfWeek = habit.getOnDaysObj().getAll();
+        setButtonState(mondayButton, daysOfWeek[0]);
+        setButtonState(tuesdayButton, daysOfWeek[1]);
+        setButtonState(wednesdayButton, daysOfWeek[2]);
+        setButtonState(thursdayButton, daysOfWeek[3]);
+        setButtonState(fridayButton, daysOfWeek[4]);
+        setButtonState(saturdayButton, daysOfWeek[5]);
+        setButtonState(sundayButton, daysOfWeek[6]);
+    }
+
+    public void setButtonState(MaterialButton button, Boolean state){
+        if(state){
+            button.setBackgroundColor(tealColor);
+        }
+        else{
+            button.setBackgroundColor(whiteColor);
+        }
+    }
+
     /**
      * Change the color of the button and the arraylist for days of week
      * @param view Button View
@@ -93,7 +133,6 @@ public class ViewEditHabit extends AppCompatActivity {
      * @param position which day to change
      * @author Pranav
      */
-
     public void changeButtonState(View view, MaterialButton button, int position){
         if(daysOfWeek[position]){
             button.setBackgroundColor(whiteColor);
@@ -111,7 +150,6 @@ public class ViewEditHabit extends AppCompatActivity {
      * @param calendar
      * @return string value of type Month, Day
      */
-
     public String getDate(Calendar calendar){
         String month = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
         String day = Integer.toString(calendar.get(Calendar.DAY_OF_MONTH));

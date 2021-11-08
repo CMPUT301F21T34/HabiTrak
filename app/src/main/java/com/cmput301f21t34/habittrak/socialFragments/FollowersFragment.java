@@ -25,22 +25,21 @@ import java.util.ArrayList;
  *
  * @author Pranav
  * @author Kaaden
- *
+ * <p>
  * Fragment for displaying users followers
- *
- * @see SocialAdapter
  * @version 1.0
+ * @see SocialAdapter
  * @since 2021-11-1
  */
 public class FollowersFragment extends Fragment {
-
-    SocialAdapter socialAdapter;
+    ImageButton imageButton;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
-    ImageButton imageButton;
+    SocialAdapter socialAdapter;
+    User mainUser;
 
-    public FollowersFragment() {
-        // Required empty public constructor
+    public FollowersFragment(User mainUser) {
+        this.mainUser = mainUser;
     }
 
     @Override
@@ -84,12 +83,12 @@ public class FollowersFragment extends Fragment {
 
     /**
      * showMenu
-     *
+     * <p>
      * listener function for ImageButton in Recycler View
      *
-     * @see SocialAdapter
      * @param view
      * @param userPosition position of the clicked menu in the adapter
+     * @see SocialAdapter
      */
     public void showMenu(View view, int userPosition) {
         PopupMenu menu = new PopupMenu(getContext(), view);

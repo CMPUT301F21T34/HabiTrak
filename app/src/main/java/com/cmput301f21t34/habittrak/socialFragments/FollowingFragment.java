@@ -1,16 +1,15 @@
 package com.cmput301f21t34.habittrak.socialFragments;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.SocialAdapter;
@@ -21,23 +20,23 @@ import java.util.ArrayList;
 
 /**
  * FollowingFragment
- *
+ * <p>
  * Fragment for displaying users the main user is following
  *
  * @author Pranav
  * @author Kaaden
- *
- * @see SocialAdapter
  * @version 1.0
+ * @see SocialAdapter
  * @since 2021-11-01
  */
 public class FollowingFragment extends Fragment {
-    SocialAdapter socialAdapter;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
+    SocialAdapter socialAdapter;
+    User mainUser;
 
-    public FollowingFragment() {
-        // Required empty public constructor
+    public FollowingFragment(User mainUser) {
+        this.mainUser = mainUser;
     }
 
     @Override
@@ -80,12 +79,12 @@ public class FollowingFragment extends Fragment {
 
     /**
      * showMenu
-     *
+     * <p>
      * listener function for ImageButton in Recycler View
      *
-     * @see SocialAdapter
      * @param view
      * @param userPosition position of the clicked menu in the adapter
+     * @see SocialAdapter
      */
     public void showMenu(View view, int userPosition) {
         PopupMenu menu = new PopupMenu(getContext(), view);
@@ -107,12 +106,12 @@ public class FollowingFragment extends Fragment {
 
     /**
      * ButtonClicked
-     *
+     * <p>
      * listener for the button in Recycler View
      *
-     * @see SocialAdapter
      * @param view
      * @param userPosition
+     * @see SocialAdapter
      */
     public void ButtonClicked(View view, int userPosition) {
         MaterialButton button = view.findViewById(R.id.social_main_button);

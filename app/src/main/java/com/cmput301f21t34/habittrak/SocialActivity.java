@@ -1,28 +1,22 @@
 package com.cmput301f21t34.habittrak;
 
+import android.os.Bundle;
+
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.Lifecycle;
-import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
-
-import android.os.Bundle;
 
 import com.cmput301f21t34.habittrak.socialFragments.FollowersFragment;
 import com.cmput301f21t34.habittrak.socialFragments.FollowingFragment;
 import com.cmput301f21t34.habittrak.socialFragments.RequestsFragment;
 import com.cmput301f21t34.habittrak.socialFragments.SearchFragment;
+import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * SocialActivity
@@ -30,13 +24,12 @@ import java.util.List;
  * @author Pranav
  * @author Kaaden
  * Hold the Social Activity fragments
- *
  * @version 1.0
  * @since 2021-10-27
  */
-public class SocialActivity extends AppCompatActivity{
-
+public class SocialActivity extends AppCompatActivity {
     TabLayout socialTab;
+    User mainUser;
     ViewPager2 viewPager;
 
     @Override
@@ -44,8 +37,11 @@ public class SocialActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_social);
 
+        // Get mainUser from intent
+        this.mainUser = getIntent().getParcelableExtra("mainUser");
+
         // add back button to toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.social_toolbar);
+        Toolbar toolbar = findViewById(R.id.social_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -93,10 +89,18 @@ public class SocialActivity extends AppCompatActivity{
 
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        // Adding the back button and
+        onBackPressed();
+        return true;
+    }
+
     /**
      * ViewStateAdapter
-     *
+     * <p>
      * Adapter for the view pager
+     *
      * @author Pranav
      * @author Kaaden
      */
@@ -111,13 +115,13 @@ public class SocialActivity extends AppCompatActivity{
         public Fragment createFragment(int position) {
             switch (position) {
                 case 0:
-                    return new FollowersFragment();
+                    return new FollowersFragment(mainUser);
                 case 1:
-                    return new FollowingFragment();
+                    return new FollowingFragment(mainUser);
                 case 2:
-                    return new RequestsFragment();
+                    return new RequestsFragment(mainUser);
                 default:
-                    return new SearchFragment();
+                    return new SearchFragment(mainUser);
             }
         }
 
@@ -126,12 +130,5 @@ public class SocialActivity extends AppCompatActivity{
             // Hardcoded, use lists
             return socialTab.getTabCount(); // this should do it vs the previous hardcoded solution TODO remove comments once verified works
         }
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        // Adding the back button and
-        onBackPressed();
-        return true;
     }
 }

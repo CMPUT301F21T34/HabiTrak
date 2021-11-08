@@ -15,10 +15,12 @@ import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.TimeZone;
 
 
 /**
@@ -32,7 +34,7 @@ import java.util.Locale;
  * @version 1.0
  * @since 2021-11-08
  */
-public class ViewEditHabit extends AppCompatActivity {
+public class ViewEditHabit extends AppCompatActivity implements View.OnClickListener{
 
     TextInputEditText habitName;
     TextInputEditText habitReason;
@@ -47,6 +49,7 @@ public class ViewEditHabit extends AppCompatActivity {
     MaterialButton fridayButton;
     MaterialButton saturdayButton;
     MaterialButton sundayButton;
+    MaterialDatePicker materialDatePicker;
     boolean[] daysOfWeek;
     int whiteColor = Color.WHITE;
     int tealColor;
@@ -101,8 +104,49 @@ public class ViewEditHabit extends AppCompatActivity {
         // setting up date picker
         MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
         materialDateBuilder.setTitleText("SELECT A DATE");
-        final MaterialDatePicker materialDatePicker = materialDateBuilder.build();
+        materialDatePicker = materialDateBuilder.build();
 
+
+        // material button listener
+        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
+            @Override
+            public void onPositiveButtonClick(Object selection) {
+                calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                calendar.setTimeInMillis((long) selection);
+                String date = "Selected Date is : " + getDate(calendar);
+                startDate.setText(date);
+            }
+        });
+
+
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.view_start_date_button){
+            materialDatePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
+        }
+        else if (view.getId() == R.id.monday_button){
+            changeButtonState(view, mondayButton, 0);
+        }
+        else if (view.getId() == R.id.tuesday_button){
+            changeButtonState(view, tuesdayButton, 1);
+        }
+        else if (view.getId() == R.id.wednesday_button){
+            changeButtonState(view, wednesdayButton, 2);
+        }
+        else if (view.getId() == R.id.thursday_button){
+            changeButtonState(view, thursdayButton, 3);
+        }
+        else if (view.getId() == R.id.friday_button){
+            changeButtonState(view, fridayButton, 4);
+        }
+        else if (view.getId() == R.id.saturday_button){
+            changeButtonState(view, saturdayButton, 5);
+        }
+        else if (view.getId() == R.id.sunday_button){
+            changeButtonState(view, sundayButton, 6);
+        }
 
     }
 
@@ -177,4 +221,6 @@ public class ViewEditHabit extends AppCompatActivity {
         onBackPressed();
         return true;
     }
+
+
 }

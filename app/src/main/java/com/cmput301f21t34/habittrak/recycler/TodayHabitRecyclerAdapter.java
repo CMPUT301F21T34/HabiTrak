@@ -28,8 +28,13 @@ import java.util.ArrayList;
 public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRecyclerAdapter.ViewHolder>{
 
     private ArrayList<Habit> habits;
+    private static HabitClickListener habitClickListener;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public interface HabitClickListener{
+        void onItemClick(View view, int position);
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView habitName;
         private final TextView habitDesc;
         private final CheckBox checkBox;
@@ -40,19 +45,17 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
          */
         public ViewHolder(View view) {
             super(view);
-
-            // Define click listener for the ViewHolder's View
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.d("TodayHabitRecyclerAdapter", "Element" + getAdapterPosition() + "clicked");
-                }
-            });
+            view.setOnClickListener(this);
 
             habitName = (TextView) view.findViewById(R.id.today_listview_habit_name);
             habitDesc = (TextView) view.findViewById(R.id.today_listview_habit_desc);
             checkBox = (CheckBox) view.findViewById(R.id.today_listview_checkbox);
 
+        }
+
+        @Override
+        public void onClick(View view) {
+            habitClickListener.onItemClick(view, getAdapterPosition());
         }
 
         public TextView getHabitDesc() {
@@ -66,6 +69,10 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
         public CheckBox getCheckBox() {
             return checkBox;
         }
+    }
+
+    public void setHabitClickListener(HabitClickListener habitClickListener) {
+        TodayHabitRecyclerAdapter.habitClickListener = habitClickListener;
     }
 
     /**

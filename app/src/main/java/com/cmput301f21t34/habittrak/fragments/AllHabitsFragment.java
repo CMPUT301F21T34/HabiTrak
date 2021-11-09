@@ -10,9 +10,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.recycler.HabitRecycler;
+import com.cmput301f21t34.habittrak.recycler.TodayHabitRecyclerAdapter;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitList;
 import com.cmput301f21t34.habittrak.user.User;
@@ -39,7 +41,7 @@ public class AllHabitsFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private HabitRecycler habitRecycler;
     private ArrayList<Habit> habitsDisplayList;
-
+    private TodayHabitRecyclerAdapter adapter;
     private User mainUser;
 
     public AllHabitsFragment(User mainUser) {
@@ -64,8 +66,15 @@ public class AllHabitsFragment extends Fragment {
 
         // Sets up the recycler view with a list of all habits, and
         // an array list for the recycler to use for display - Dakota
+        this.adapter = new TodayHabitRecyclerAdapter(habitsDisplayList);
+        adapter.setHabitClickListener(new TodayHabitRecyclerAdapter.HabitClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Toast.makeText(getContext(),Integer.toString(position), Toast.LENGTH_SHORT).show();
+            }
+        });
         this.habitRecycler = new HabitRecycler(habitRecyclerView, layoutManager, habitsDisplayList, mainUser.getHabitList());
-
+        habitRecycler.setAdapter(adapter);
 
         return view;
     }
@@ -101,7 +110,7 @@ public class AllHabitsFragment extends Fragment {
         habitsDisplayList.addAll(mainUserHabits);
 
         // tells the adapter in recycler that the dataset has changed
-        habitRecycler.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
 
     }
 }

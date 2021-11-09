@@ -14,8 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.cmput301f21t34.habittrak.recycler.HabitRecycler;
+import com.cmput301f21t34.habittrak.recycler.TodayHabitRecyclerAdapter;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.R;
 
@@ -48,7 +50,7 @@ public class TodayListFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private HabitRecycler habitRecycler;
     private ArrayList<Habit> habitsDisplayList;
-
+    private TodayHabitRecyclerAdapter adapter;
     private User mainUser;
 
 
@@ -75,8 +77,15 @@ public class TodayListFragment extends Fragment {
 
         // Sets up the recycler view with a list of all habits, and
         // an array list for the recycler to use for display - Dakota
+        adapter = new TodayHabitRecyclerAdapter(habitsDisplayList);
+        adapter.setHabitClickListener(new TodayHabitRecyclerAdapter.HabitClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Toast.makeText(getContext(),Integer.toString(position), Toast.LENGTH_SHORT).show();
+            }
+        });
         this.habitRecycler = new HabitRecycler(habitRecyclerView, layoutManager, habitsDisplayList, mainUser.getHabitList(), true);
-
+        habitRecycler.setAdapter(adapter);
 
 
 
@@ -120,10 +129,10 @@ public class TodayListFragment extends Fragment {
             // Checks to see if they should be displayed
             if (mainUserHabits.get(index).getOnDaysObj().isOnDay() && mainUserHabits.get(index).isHabitStart()){ // If a habit is active today add
 
-
-                // ensure index are parallel when populating from established list
                 habitsDisplayList.add(mainUserHabits.get(index));
-                habitRecycler.notifyDataSetChanged();
+                // ensure index are parallel when populating from established list
+                adapter.notifyDataSetChanged();
+
 
             }
         }

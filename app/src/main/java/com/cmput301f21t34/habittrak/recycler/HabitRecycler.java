@@ -227,6 +227,15 @@ public class HabitRecycler {
         this.adapter.notifyDataSetChanged();
     }
 
+    /**
+     * Allows to set adapter
+     *
+     * @author Dakota
+     * @param adapter TodayHabitRecyclerAdapter to set
+     */
+    public void setAdapter(TodayHabitRecyclerAdapter adapter){
+        this.adapter = adapter;
+    }
 
 
 

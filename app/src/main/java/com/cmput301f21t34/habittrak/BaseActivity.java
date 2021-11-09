@@ -59,7 +59,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
 
     public static final int RESULT_NEW_HABIT = 1000; // Custom Activity Result
-
+    public static final int RESULT_EDIT_HABIT = 2000;
 
 
 
@@ -171,6 +171,15 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
 
         }
+
+        else if (resultCode == RESULT_EDIT_HABIT){
+            Habit habit = intent.getParcelableExtra("HABIT");
+            int position = intent.getIntExtra("position", 0);
+            mainUser.replaceHabit(position, habit);
+            todayFrag.refreshTodayFragment();
+            allHabitsFrag.refreshAllFragment();
+        }
+        Log.d("BaseActivity", Integer.toString(resultCode));
 
         super.onActivityResult(requestCode, resultCode, intent);
     }

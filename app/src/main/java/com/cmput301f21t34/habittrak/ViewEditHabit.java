@@ -194,6 +194,7 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
                 Intent result = new Intent();
                 result.putExtra("HABIT", habit);
                 result.putExtra("position", habitPosition);
+                Log.d("VIEW_HABIT", "SENDING RESULT");
                 setResult(RESULT_CODE, result);
                 this.finish();
             }
@@ -268,6 +269,5 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
         onBackPressed();
         return true;
     }
-
 
 }

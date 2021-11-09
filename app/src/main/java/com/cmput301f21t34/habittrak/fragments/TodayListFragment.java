@@ -66,7 +66,9 @@ public class TodayListFragment extends Fragment {
 
         habitsDisplayList = new ArrayList<>();
         this.mainUser = mainUser;
+        adapter = new TodayHabitRecyclerAdapter(habitsDisplayList);
 
+        Log.d("TodayList", "New Frag Created");
     }
 
     @Override
@@ -75,7 +77,7 @@ public class TodayListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.habi_all_habits_fragment, container, false);
 
-
+        Log.d("TodayList", "New View Created");
         // Sets up views and manager for recycler view
         habitRecyclerView = view.findViewById(R.id.all_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
@@ -83,7 +85,6 @@ public class TodayListFragment extends Fragment {
 
         // Sets up the recycler view with a list of all habits, and
         // an array list for the recycler to use for display - Dakota
-        adapter = new TodayHabitRecyclerAdapter(habitsDisplayList);
         adapter.setHabitClickListener(new TodayHabitRecyclerAdapter.HabitClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -94,7 +95,7 @@ public class TodayListFragment extends Fragment {
                 viewHabitResultLauncher.launch(intent);
             }
         });
-        this.habitRecycler = new HabitRecycler(habitRecyclerView, layoutManager, habitsDisplayList, mainUser.getHabitList(), true);
+        habitRecycler = new HabitRecycler(habitRecyclerView, layoutManager, habitsDisplayList, mainUser.getHabitList(), true);
         habitRecycler.setAdapter(adapter);
 
 
@@ -152,17 +153,7 @@ public class TodayListFragment extends Fragment {
 
     ActivityResultLauncher<Intent> viewHabitResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == RESULT_EDIT_HABIT){
-                        Habit habit = result.getData().getParcelableExtra("HABIT");
-                        int position = result.getData().getIntExtra("position", 0);
-                        mainUser.replaceHabit(position, habit);
-                        refreshTodayFragment();
-                    }
-                }
-            }
+            result -> {}
     );
 
 

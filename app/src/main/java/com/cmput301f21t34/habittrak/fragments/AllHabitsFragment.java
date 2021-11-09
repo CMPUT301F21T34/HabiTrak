@@ -3,6 +3,7 @@ package com.cmput301f21t34.habittrak.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
+
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -54,6 +55,7 @@ public class AllHabitsFragment extends Fragment {
 
         habitsDisplayList = new ArrayList<>();
         this.mainUser = mainUser;
+        this.adapter = new TodayHabitRecyclerAdapter(habitsDisplayList);
 
 
     }
@@ -72,7 +74,6 @@ public class AllHabitsFragment extends Fragment {
 
         // Sets up the recycler view with a list of all habits, and
         // an array list for the recycler to use for display - Dakota
-        this.adapter = new TodayHabitRecyclerAdapter(habitsDisplayList);
         adapter.setHabitClickListener(new TodayHabitRecyclerAdapter.HabitClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -83,7 +84,7 @@ public class AllHabitsFragment extends Fragment {
                 viewHabitResultLauncher.launch(intent);
             }
         });
-        this.habitRecycler = new HabitRecycler(habitRecyclerView, layoutManager, habitsDisplayList, mainUser.getHabitList());
+        habitRecycler = new HabitRecycler(habitRecyclerView, layoutManager, habitsDisplayList, mainUser.getHabitList());
         habitRecycler.setAdapter(adapter);
 
         return view;
@@ -110,7 +111,7 @@ public class AllHabitsFragment extends Fragment {
      */
     public void refreshAllFragment() {
 
-        Log.d("TodayListFragment", "refreshing habit list");
+        Log.d("AllHabitsFragment", "refreshing habit list");
         // Populate today view with Today's habits.
 
         habitsDisplayList.clear(); // Make sure is clear
@@ -127,17 +128,7 @@ public class AllHabitsFragment extends Fragment {
 
     ActivityResultLauncher<Intent> viewHabitResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == RESULT_EDIT_HABIT){
-                        Habit habit = result.getData().getParcelableExtra("HABIT");
-                        int position = result.getData().getIntExtra("position", 0);
-                        mainUser.replaceHabit(position, habit);
-                        refreshAllFragment();
-                    }
-                }
-            }
+            result -> {}
     );
 
 

@@ -164,7 +164,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginLeft="16dp"
             android:textColor="?android:textColorPrimary"
-            android:text="Selected Date is :" />
+            android:text="Selected Date:" />
 
 
         <TextView

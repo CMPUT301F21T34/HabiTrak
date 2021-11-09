@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.cmput301f21t34.habittrak.user.Habit;
@@ -42,6 +43,7 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
     TextInputEditText habitReason;
     MaterialButton datePickerButton;
     TextView startDate;
+    TextView visibilityText;
     Calendar calendar;
     MaterialButton saveButton;
     MaterialButton mondayButton;
@@ -92,6 +94,7 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
         sundayButton = findViewById(R.id.sunday_button);
         saveButton = findViewById(R.id.view_save_habit);
         publicSwitch = findViewById(R.id.view_public_switch);
+        visibilityText = findViewById(R.id.view_habit_visibility_text);
 
         tealColor = ContextCompat.getColor(getBaseContext(), R.color.teal_200);
 
@@ -100,11 +103,16 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
         String reason = habit.getReason();
         calendar = habit.getStartDate();
         Boolean isPublic = habit.isPublic();
+        Log.d("View_Habit", Boolean.toString(isPublic));
         setDaysSelector();
 
         // set data
         habitName.setText(name);
         habitReason.setText(reason);
+        if (!isPublic){
+            publicSwitch.setChecked(false);
+            visibilityText.setText("Private");
+        }
 
         // setting date
         String setDateText = "Selected Date: " + getDate(calendar);
@@ -124,18 +132,27 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
         fridayButton.setOnClickListener(this);
         saturdayButton.setOnClickListener(this);
         sundayButton.setOnClickListener(this);
+        publicSwitch.setOnClickListener(this);
 
         // material button listener
-        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
-            @Override
-            public void onPositiveButtonClick(Object selection) {
-                calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-                calendar.setTimeInMillis((long) selection);
-                String date = "Selected Date is : " + getDate(calendar);
-                startDate.setText(date);
-            }
+        materialDatePicker.addOnPositiveButtonClickListener(selection -> {
+            calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            calendar.setTimeInMillis((long) selection);
+            String date = "Selected Date is : " + getDate(calendar);
+            startDate.setText(date);
         });
 
+        // switch listener
+        publicSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (b){
+                habit.makePublic();
+                visibilityText.setText("Public");
+            }
+            else {
+                habit.makePrivate();
+                visibilityText.setText("Private");
+            }
+        });
 
     }
 
@@ -165,7 +182,6 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
         else if (view.getId() == R.id.sunday_button){
             changeButtonState(view, sundayButton, 6);
         }
-
     }
 
     public void setDaysSelector(){

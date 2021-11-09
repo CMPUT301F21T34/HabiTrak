@@ -130,7 +130,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
                 intent.putExtra("mainUser", mainUser); // passes mainUser through intent
                 startActivity(intent);
                 bottomNav.setSelectedItemId(R.id.navbar_menu_today);
-                addHabitButton.setVisibility(View.INVISIBLE);
+                addHabitButton.setVisibility(View.VISIBLE);
 
                 return false;
         }

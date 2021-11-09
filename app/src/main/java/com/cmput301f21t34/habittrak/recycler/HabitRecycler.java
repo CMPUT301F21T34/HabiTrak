@@ -48,8 +48,6 @@ public class HabitRecycler {
         recyclerView.setLayoutManager(layoutManager);
 
         // Sets up our adapter with our displayHabits
-        adapter = new TodayHabitRecyclerAdapter(displayHabits);
-        recyclerView.setAdapter(adapter);
 
         // Sets up our simpleCallBack that manages the moving of objects in
         // the recycler view
@@ -84,8 +82,7 @@ public class HabitRecycler {
         recyclerView.setLayoutManager(layoutManager);
 
         // Sets up our adapter with our displayHabits
-        adapter = new TodayHabitRecyclerAdapter(displayHabits);
-        recyclerView.setAdapter(adapter);
+
 
         // Sets up our simpleCallBack that manages the moving of objects in
         // the recycler view
@@ -235,6 +232,7 @@ public class HabitRecycler {
      */
     public void setAdapter(TodayHabitRecyclerAdapter adapter){
         this.adapter = adapter;
+        recyclerView.setAdapter(adapter);
     }
 
 

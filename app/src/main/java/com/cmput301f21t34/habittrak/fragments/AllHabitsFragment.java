@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.cmput301f21t34.habittrak.R;
@@ -85,7 +86,7 @@ public class AllHabitsFragment extends Fragment {
 
             @Override
             public void menuButtonOnClick(View view, int position) {
-
+                showMenu(view, position);
             }
         });
         // creates a new habitRecycler class with the view and data
@@ -129,4 +130,26 @@ public class AllHabitsFragment extends Fragment {
             result -> {}
     );
 
+    /**
+     * showMenu
+     *
+     * create a menu when Image Button is clicked
+     * @param view view from the adapter to create the menu
+     * @param position position of habit from adapter
+     */
+    public void showMenu(View view, int position){
+        PopupMenu menu = new PopupMenu(getContext(), view);
+        menu.getMenuInflater().inflate(R.menu.social_popup_menu, menu.getMenu());
+        menu.getMenu().add("Remove");
+        menu.show();
+
+        menu.setOnMenuItemClickListener(menuItem -> {
+            if (menuItem.getTitle().equals("Remove")) {
+                Log.d("MenuItem", "Remove Clicked");
+            } else {
+                Log.d("MenuItem", "Block Clicked");
+            }
+            return true;
+        });
+    }
 }

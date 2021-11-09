@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -74,6 +75,7 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
         this.mainUser = intent.getParcelableExtra("mainUser");
         this.habitPosition = intent.getIntExtra("position", 0);
         this.habit = mainUser.getHabit(habitPosition);
+        Log.d("VIEW_HABIT", Integer.toString(habitPosition));
         // getting views
         habitName = findViewById(R.id.view_habit_name_edit_text);
         habitReason = findViewById(R.id.view_habit_reason_edit_text);
@@ -90,13 +92,17 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
 
         tealColor = ContextCompat.getColor(getBaseContext(), R.color.teal_200);
 
-        // set data from habit
+        // get data from habit
         String name = habit.getTitle();
         String reason = habit.getReason();
         Calendar date = habit.getStartDate();
         Boolean isPublic = habit.isPublic();
         setDaysSelector();
 
+        // set data
+        habitName.setText(name);
+        habitReason.setText(reason);
+        
         // setting date
         String setDateText = "Selected Date: " + getDate(date);
         startDate.setText(setDateText);

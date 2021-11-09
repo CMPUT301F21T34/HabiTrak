@@ -40,6 +40,7 @@ import java.util.TimeZone;
  */
 public class ViewEditHabit extends AppCompatActivity implements View.OnClickListener{
 
+    public static int RESULT_CODE = 2000;
     TextInputEditText habitName;
     TextInputEditText habitReason;
     MaterialButton datePickerButton;
@@ -191,7 +192,7 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
                 Intent result = new Intent();
                 result.putExtra("HABIT", habit);
                 result.putExtra("position", habitPosition);
-                setResult(2000, result);
+                setResult(RESULT_CODE, result);
             }
             else{
                 Toast.makeText(getBaseContext(), "Empty Text Fields", Toast.LENGTH_SHORT).show();

@@ -131,7 +131,10 @@ public class AllHabitsFragment extends Fragment {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     if (result.getResultCode() == RESULT_EDIT_HABIT){
-                        // add result code here
+                        Habit habit = result.getData().getParcelableExtra("HABIT");
+                        int position = result.getData().getIntExtra("position", 0);
+                        mainUser.replaceHabit(position, habit);
+                        refreshAllFragment();
                     }
                 }
             }

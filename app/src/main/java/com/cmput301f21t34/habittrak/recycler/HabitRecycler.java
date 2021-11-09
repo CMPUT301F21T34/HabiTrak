@@ -51,11 +51,7 @@ public class HabitRecycler {
 
         // Sets up our simpleCallBack that manages the moving of objects in
         // the recycler view
-        this.simpleCallback = recycler(locked);
 
-        // Sets up touch handling with the recycler view
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
 
     }
 
@@ -84,13 +80,7 @@ public class HabitRecycler {
         // Sets up our adapter with our displayHabits
 
 
-        // Sets up our simpleCallBack that manages the moving of objects in
-        // the recycler view
-        this.simpleCallback = recycler(locked);
 
-        // Sets up touch handling with the recycler view
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
 
 
     }
@@ -233,6 +223,13 @@ public class HabitRecycler {
     public void setAdapter(TodayHabitRecyclerAdapter adapter){
         this.adapter = adapter;
         recyclerView.setAdapter(adapter);
+
+        this.simpleCallback = recycler(locked);
+
+        // Sets up touch handling with the recycler view
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
     }
 
 

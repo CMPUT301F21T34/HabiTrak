@@ -12,8 +12,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.SocialAdapter;
+import com.cmput301f21t34.habittrak.user.DatabasePointer;
 import com.cmput301f21t34.habittrak.user.User;
 
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ import java.util.ArrayList;
  * @since 2021-11-1
  */
 public class FollowersFragment extends Fragment {
+    DatabaseManager dm = new DatabaseManager();
     ImageButton imageButton;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
@@ -52,18 +55,19 @@ public class FollowersFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.habi_followers_fragment, container, false);
 
-        // Sample Data
+        /*// Sample Data
         User sample1 = new User("Henry");
         User sample2 = new User("Jakob");
         ArrayList<User> userArrayList = new ArrayList<>();
         userArrayList.add(sample1);
-        userArrayList.add(sample2);
+        userArrayList.add(sample2);*/
 
         // setting up recycler view
         recyclerView = view.findViewById(R.id.followers_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        socialAdapter = new SocialAdapter(userArrayList, new SocialAdapter.ClickListener() {
+        ArrayList<DatabasePointer> profiles = dm.getFollowerList(mainUser.getEmail());     // Users that follow mainUser
+        socialAdapter = new SocialAdapter(profiles, new SocialAdapter.ClickListener() {
             @Override
             public void menuButtonOnClick(View view, int position) {
                 Log.d("Menu", "Clicked " + position);

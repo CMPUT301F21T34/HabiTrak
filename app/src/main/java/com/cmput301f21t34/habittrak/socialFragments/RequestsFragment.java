@@ -11,8 +11,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.SocialAdapter;
+import com.cmput301f21t34.habittrak.user.DatabasePointer;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 
@@ -29,6 +31,7 @@ import java.util.ArrayList;
  * @since 2021-11-01
  */
 public class RequestsFragment extends Fragment {
+    DatabaseManager dm = new DatabaseManager();
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     SocialAdapter socialAdapter;
@@ -51,20 +54,20 @@ public class RequestsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.habi_requests_fragment, container, false);
 
-        // Sample Data
-
+        /*// Sample Data
         User sample1 = new User("hello123");
         User sample2 = new User("another User");
         ArrayList<User> userArrayList = new ArrayList<>();
         userArrayList.add(sample1);
-        userArrayList.add(sample2);
+        userArrayList.add(sample2);*/
 
 
         // setting up recycler view
         recyclerView = view.findViewById(R.id.requests_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        socialAdapter = new SocialAdapter(userArrayList, new SocialAdapter.ClickListener() {
+        ArrayList<DatabasePointer> profiles = dm.getFollowRequestedList(mainUser.getEmail());     // Users that request to follow mainUser
+        socialAdapter = new SocialAdapter(profiles, new SocialAdapter.ClickListener() {
             @Override
             public void menuButtonOnClick(View view, int position) {
                 Log.d("Menu", "Clicked " + position);

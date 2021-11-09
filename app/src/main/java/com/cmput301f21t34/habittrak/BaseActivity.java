@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.cmput301f21t34.habittrak.user.DatabasePointer;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.User;
 import com.cmput301f21t34.habittrak.fragments.AllHabitsFragment;
@@ -102,10 +103,16 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         });
 
 
-        
 
 
 
+        // TEST
+        DatabaseManager testdm = new DatabaseManager();
+        testdm.updateFollower(mainUser, new DatabasePointer("e2"), false);
+        testdm.updateFollower(new User("e3"), new DatabasePointer(mainUser.getEmail()),false);
+        testdm.updateFollowerReq(mainUser, new DatabasePointer("e4"), false);
+        testdm.updateFollowerReq(new User("e5"), new DatabasePointer(mainUser.getEmail()), false);
+        // TEST
     }
 
     /**

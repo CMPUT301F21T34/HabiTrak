@@ -60,7 +60,7 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
     private MaterialDatePicker materialDatePicker;
     private SwitchMaterial publicSwitch;
     private boolean[] daysOfWeek;
-    private int whiteColor = Color.WHITE;
+    private final int whiteColor = Color.WHITE;
     private int tealColor;
 
     // data variables

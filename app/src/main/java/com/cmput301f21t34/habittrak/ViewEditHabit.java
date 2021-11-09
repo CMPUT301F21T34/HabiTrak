@@ -17,6 +17,7 @@ import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Calendar;
@@ -51,6 +52,7 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
     MaterialButton saturdayButton;
     MaterialButton sundayButton;
     MaterialDatePicker materialDatePicker;
+    SwitchMaterial publicSwitch;
     boolean[] daysOfWeek;
     int whiteColor = Color.WHITE;
     int tealColor;
@@ -89,22 +91,23 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
         saturdayButton = findViewById(R.id.saturday_button);
         sundayButton = findViewById(R.id.sunday_button);
         saveButton = findViewById(R.id.view_save_habit);
+        publicSwitch = findViewById(R.id.view_public_switch);
 
         tealColor = ContextCompat.getColor(getBaseContext(), R.color.teal_200);
 
         // get data from habit
         String name = habit.getTitle();
         String reason = habit.getReason();
-        Calendar date = habit.getStartDate();
+        calendar = habit.getStartDate();
         Boolean isPublic = habit.isPublic();
         setDaysSelector();
 
         // set data
         habitName.setText(name);
         habitReason.setText(reason);
-        
+
         // setting date
-        String setDateText = "Selected Date: " + getDate(date);
+        String setDateText = "Selected Date: " + getDate(calendar);
         startDate.setText(setDateText);
 
         // setting up date picker
@@ -112,6 +115,15 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
         materialDateBuilder.setTitleText("SELECT A DATE");
         materialDatePicker = materialDateBuilder.build();
 
+        // setting listeners
+        datePickerButton.setOnClickListener(this);
+        mondayButton.setOnClickListener(this);
+        tuesdayButton.setOnClickListener(this);
+        wednesdayButton.setOnClickListener(this);
+        thursdayButton.setOnClickListener(this);
+        fridayButton.setOnClickListener(this);
+        saturdayButton.setOnClickListener(this);
+        sundayButton.setOnClickListener(this);
 
         // material button listener
         materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {

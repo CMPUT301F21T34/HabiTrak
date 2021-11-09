@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.User;
@@ -133,6 +134,7 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
         saturdayButton.setOnClickListener(this);
         sundayButton.setOnClickListener(this);
         publicSwitch.setOnClickListener(this);
+        saveButton.setOnClickListener(this);
 
         // material button listener
         materialDatePicker.addOnPositiveButtonClickListener(selection -> {
@@ -181,6 +183,18 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
         }
         else if (view.getId() == R.id.sunday_button){
             changeButtonState(view, sundayButton, 6);
+        }
+        else if (view.getId() == R.id.view_save_habit){
+            if (checkField(habitName.getText()) && checkField(habitReason.getText())){
+                habit.setStartDate(calendar);
+                habit.getOnDaysObj().setAll(daysOfWeek);
+                mainUser.replaceHabit(habitPosition, habit);
+                Toast.makeText(getBaseContext(), "Changes Saved", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                Toast.makeText(getBaseContext(), "Empty Text Fields", Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 

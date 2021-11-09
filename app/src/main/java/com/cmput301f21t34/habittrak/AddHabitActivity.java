@@ -35,26 +35,26 @@ import java.util.TimeZone;
  */
 public class AddHabitActivity extends AppCompatActivity {
 
-    //TODO: make attribute explicitly private
-    TextInputEditText habitName;
-    TextInputEditText habitReason;
-    MaterialButton datePickerButton;
-    TextView startDate;
-    TextView visibilityText;
-    Calendar calendar;
-    MaterialButton saveButton;
-    MaterialButton mondayButton;
-    MaterialButton tuesdayButton;
-    MaterialButton wednesdayButton;
-    MaterialButton thursdayButton;
-    MaterialButton fridayButton;
-    MaterialButton saturdayButton;
-    MaterialButton sundayButton;
-    SwitchMaterial publicSwitch;
-    boolean[] daysOfWeek = new boolean[]{true, true, true, true, true, true, true};;
-    boolean isPublic = true;
-    int whiteColor = Color.WHITE;
-    int tealColor;
+    public static final String TAG = "Add_Habit";
+    private TextInputEditText habitName;
+    private TextInputEditText habitReason;
+    private MaterialButton datePickerButton;
+    private TextView startDate;
+    private TextView visibilityText;
+    private Calendar calendar;
+    private MaterialButton saveButton;
+    private MaterialButton mondayButton;
+    private MaterialButton tuesdayButton;
+    private MaterialButton wednesdayButton;
+    private MaterialButton thursdayButton;
+    private MaterialButton fridayButton;
+    private MaterialButton saturdayButton;
+    private MaterialButton sundayButton;
+    private SwitchMaterial publicSwitch;
+    private boolean[] daysOfWeek = new boolean[]{true, true, true, true, true, true, true};;
+    private boolean isPublic = true;
+    private final int whiteColor = Color.WHITE;
+    private int tealColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +93,7 @@ public class AddHabitActivity extends AppCompatActivity {
         // setting date
         calendar = Calendar.getInstance();
         String setDateText = "Selected Date is : " + getDate(calendar);
-        Log.d("date", setDateText);
+        Log.d(TAG, setDateText);
         startDate.setText(setDateText);
 
 
@@ -110,14 +110,11 @@ public class AddHabitActivity extends AppCompatActivity {
             }
         });
 
-        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
-            @Override
-            public void onPositiveButtonClick(Object selection) {
-                calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-                calendar.setTimeInMillis((long) selection);
-                String date = "Selected Date is : " + getDate(calendar);
-                startDate.setText(date);
-            }
+        materialDatePicker.addOnPositiveButtonClickListener(selection -> {
+            calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            calendar.setTimeInMillis((long) selection);
+            String date = "Selected Date is : " + getDate(calendar);
+            startDate.setText(date);
         });
 
         // switcher listener
@@ -228,10 +225,9 @@ public class AddHabitActivity extends AppCompatActivity {
 
     /**
      * get the String value from calendar
-     * @param calendar
+     * @param calendar date to convert to string
      * @return string value of type Month, Day
      */
-
     public String getDate(Calendar calendar){
         String month = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
         String day = Integer.toString(calendar.get(Calendar.DAY_OF_MONTH));
@@ -240,39 +236,34 @@ public class AddHabitActivity extends AppCompatActivity {
 
     /**
      * Check if the fields are  filled or not
-     * @param name
+     * @param name Editable name to check if empty
      * @return boolean whether filled or not
      */
-
     public boolean checkField(Editable name){
-        Boolean fieldCheck = false;
-        String field = name.toString();
 
-        if (field.trim().length() > 0 ){
-            fieldCheck = true;
-        }
-
-        return fieldCheck;
+        return name.toString().trim().length() > 0;
     }
 
     /**
      * finish activity if all fields are filled
+     *
+     * @author Pranav
+     * @author Dakota
      */
     public void finishActivityWithResult(){
         String name = habitName.getText().toString();
         String reason = habitReason.getText().toString();
 
         Habit newHabit = new Habit(name, reason, calendar);
+        newHabit.getOnDaysObj().setAll(daysOfWeek);
+        // set isPublic of habit
         if (isPublic){
             newHabit.makePublic();
         }
         else {
             newHabit.makePrivate();
         }
-        newHabit.getOnDaysObj().setAll(daysOfWeek);
 
-        //Bundle newHabitBundle = new Bundle();
-        //newHabitBundle.putParcelable("newHabit", newHabit);
         Intent result = new Intent();
         result.putExtra("newHabit", newHabit);
         setResult(BaseActivity.RESULT_NEW_HABIT, result);

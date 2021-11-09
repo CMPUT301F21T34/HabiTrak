@@ -157,11 +157,10 @@ public class TodayListFragment extends Fragment {
 
 
         menu.setOnMenuItemClickListener(menuItem -> {
-            if (menuItem.getTitle().equals("Remove")) {
-                Log.d("MenuItem", "Remove Clicked");
-            } else {
-                Log.d("MenuItem", "Block Clicked");
-            }
+            Habit habit = habitsDisplayList.get(position);
+            mainUser.removeHabit(habit);
+            refreshTodayFragment();
+            Log.d(TAG,"Habit Removed");
             return true;
         });
     }

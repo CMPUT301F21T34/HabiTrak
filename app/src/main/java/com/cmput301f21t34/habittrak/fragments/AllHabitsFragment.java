@@ -144,11 +144,10 @@ public class AllHabitsFragment extends Fragment {
         menu.show();
 
         menu.setOnMenuItemClickListener(menuItem -> {
-            if (menuItem.getTitle().equals("Remove")) {
-                Log.d("MenuItem", "Remove Clicked");
-            } else {
-                Log.d("MenuItem", "Block Clicked");
-            }
+            Habit habit = habitsDisplayList.get(position);
+            mainUser.removeHabit(habit);
+            refreshAllFragment();
+            Log.d(TAG,"Habit Removed");
             return true;
         });
     }

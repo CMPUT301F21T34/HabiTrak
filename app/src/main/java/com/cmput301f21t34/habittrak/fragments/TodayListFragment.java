@@ -36,6 +36,7 @@ import com.cmput301f21t34.habittrak.TodayHabitList;
 import com.cmput301f21t34.habittrak.user.HabitList;
 
 import com.cmput301f21t34.habittrak.user.User;
+import com.google.android.material.checkbox.MaterialCheckBox;
 
 import java.util.ArrayList;
 
@@ -100,7 +101,6 @@ public class TodayListFragment extends Fragment {
 
             @Override
             public void checkBoxOnClick(View view, int position) {
-                Log.d(TAG, "Checkbox clicked");
                 onCheckBoxClick(view, position);
             }
         });
@@ -172,6 +172,12 @@ public class TodayListFragment extends Fragment {
 
 
     public void onCheckBoxClick(View view, int position){
+        MaterialCheckBox checkBox = (MaterialCheckBox) view;
+        if (checkBox.isChecked()){
+            //TODO: add logic if habit event is already completed
+            Log.d(TAG, "checkbox checked");
+            checkBox.setEnabled(false);
+        }
 
     }
 

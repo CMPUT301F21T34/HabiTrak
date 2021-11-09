@@ -34,6 +34,7 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
     public interface HabitClickListener{
         void onItemClick(View view, int position);
         void menuButtonOnClick(View view,  int position);
+        void checkBoxOnClick(View view, int position);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -55,6 +56,7 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
             checkBox = (CheckBox) view.findViewById(R.id.today_listview_checkbox);
             menuButton = (ImageButton) view.findViewById(R.id.habit_menu);
             menuButton.setOnClickListener(this);
+            checkBox.setOnClickListener(this);
 
         }
 
@@ -62,6 +64,9 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
         public void onClick(View view) {
             if (view.getId() == R.id.habit_menu){
                 habitClickListener.menuButtonOnClick(view, getAdapterPosition());
+            }
+            else if (view.getId() == R.id.today_listview_checkbox){
+                habitClickListener.checkBoxOnClick(view, getAdapterPosition());
             }
             else {
                 habitClickListener.onItemClick(view, getAdapterPosition());

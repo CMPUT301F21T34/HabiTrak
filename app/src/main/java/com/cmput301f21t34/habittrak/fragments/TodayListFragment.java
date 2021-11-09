@@ -97,6 +97,12 @@ public class TodayListFragment extends Fragment {
             public void menuButtonOnClick(View view, int position) {
                 showMenu(view, position);
             }
+
+            @Override
+            public void checkBoxOnClick(View view, int position) {
+                Log.d(TAG, "Checkbox clicked");
+                // add checkbox function here
+            }
         });
         // creates a new habitRecycler class with the view and data
         habitRecycler = new HabitRecycler(habitRecyclerView, layoutManager, habitsDisplayList, mainUser.getHabitList(), true);

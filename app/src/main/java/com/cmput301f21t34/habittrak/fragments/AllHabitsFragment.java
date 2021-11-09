@@ -88,6 +88,11 @@ public class AllHabitsFragment extends Fragment {
             public void menuButtonOnClick(View view, int position) {
                 showMenu(view, position);
             }
+
+            @Override
+            public void checkBoxOnClick(View view, int position) {
+                // empty function as no checkbox in this fragment
+            }
         });
         // creates a new habitRecycler class with the view and data
         habitRecycler = new HabitRecycler(habitRecyclerView, layoutManager, habitsDisplayList, mainUser.getHabitList());

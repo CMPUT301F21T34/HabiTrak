@@ -91,6 +91,11 @@ public class TodayListFragment extends Fragment {
                 intent.putExtra("position", habit.getIndex());
                 viewHabitResultLauncher.launch(intent);
             }
+
+            @Override
+            public void menuButtonOnClick(View view, int position) {
+
+            }
         });
         // creates a new habitRecycler class with the view and data
         habitRecycler = new HabitRecycler(habitRecyclerView, layoutManager, habitsDisplayList, mainUser.getHabitList(), true);

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,12 +32,14 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
 
     public interface HabitClickListener{
         void onItemClick(View view, int position);
+        void menuButtonOnClick(View view,  int position);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView habitName;
         private final TextView habitDesc;
         private final CheckBox checkBox;
+        private final ImageButton menuButton;
 
         /**
          * Provide a reference to the type of views that you are using
@@ -49,12 +52,19 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
             habitName = (TextView) view.findViewById(R.id.today_listview_habit_name);
             habitDesc = (TextView) view.findViewById(R.id.today_listview_habit_desc);
             checkBox = (CheckBox) view.findViewById(R.id.today_listview_checkbox);
+            menuButton = (ImageButton) view.findViewById(R.id.habit_menu);
+            menuButton.setOnClickListener(this);
 
         }
 
         @Override
         public void onClick(View view) {
-            habitClickListener.onItemClick(view, getAdapterPosition());
+            if (view.getId() == R.id.habit_menu){
+                habitClickListener.menuButtonOnClick(view, getAdapterPosition());
+            }
+            else {
+                habitClickListener.onItemClick(view, getAdapterPosition());
+            }
         }
 
         public TextView getHabitDesc() {

@@ -1,5 +1,6 @@
 package com.cmput301f21t34.habittrak.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.cmput301f21t34.habittrak.R;
+import com.cmput301f21t34.habittrak.ViewEditHabit;
 import com.cmput301f21t34.habittrak.recycler.HabitRecycler;
 import com.cmput301f21t34.habittrak.recycler.TodayHabitRecyclerAdapter;
 import com.cmput301f21t34.habittrak.user.Habit;
@@ -70,7 +72,11 @@ public class AllHabitsFragment extends Fragment {
         adapter.setHabitClickListener(new TodayHabitRecyclerAdapter.HabitClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Toast.makeText(getContext(),Integer.toString(position), Toast.LENGTH_SHORT).show();
+                Habit habit = habitsDisplayList.get(position);
+                Intent intent = new Intent(getContext(), ViewEditHabit.class);
+                intent.putExtra("mainUser", mainUser);
+                intent.putExtra("position", habit.getIndex());
+                startActivity(intent);
             }
         });
         this.habitRecycler = new HabitRecycler(habitRecyclerView, layoutManager, habitsDisplayList, mainUser.getHabitList());

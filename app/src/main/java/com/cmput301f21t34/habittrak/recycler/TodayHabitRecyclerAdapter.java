@@ -1,5 +1,6 @@
 package com.cmput301f21t34.habittrak.recycler;
 
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.user.Habit;
+import com.cmput301f21t34.habittrak.user.HabitEvent;
 import com.google.android.material.checkbox.MaterialCheckBox;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * TodayHabitRecyclerAdapter
@@ -114,6 +117,18 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
             }
 
         }
+
+        /**
+         * checkCheckbox
+         *
+         * sets the checkbox state to checked and un clickable
+         */
+        public void checkCheckbox(){
+            checkBox.setChecked(true);
+            checkBox.setEnabled(false);
+            Log.d("Adapter", "check checkbox");
+        }
+
     }
 
     /**
@@ -154,13 +169,38 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
         Habit habit = habits.get(position);
-
+        // set texts
         viewHolder.getHabitName().setText(habit.getTitle());
         viewHolder.getHabitDesc().setText(habit.getReason());
+        // set checkbox visibility
         viewHolder.checkBoxVisibility(viewCheckbox);
+        // set checkbox value if checkbox is visible
+        if (viewCheckbox) {
+            Calendar date = Calendar.getInstance();
+            ArrayList<HabitEvent> events = habit.getHabitEvents();
+            for (int i = 0; i < events.size(); i++) {
+                Log.d("Adapter", Integer.toString(events.size()));
+                if (sameDay(events.get(i).getCompletedDate(), date)) {
+                    viewHolder.checkCheckbox();
+                    break;
+                }
+            }
+        }
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
+    /**
+     * sameDay
+     * @param d1 calender instance
+     * @param d2 another calender instance to compare
+     * @return true if day is same in both calendar
+     */
+    public boolean sameDay(Calendar d1, Calendar d2){
+        return d1.get(Calendar.YEAR) == d2.get(Calendar.YEAR) &&
+                d1.get(Calendar.MONTH) == d2.get(Calendar.MONTH) &&
+                d1.get(Calendar.DAY_OF_MONTH) == d2.get(Calendar.DAY_OF_MONTH);
+    }
+
+
     @Override
     public int getItemCount() {
         return habits.size();

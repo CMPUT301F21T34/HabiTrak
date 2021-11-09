@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.user.Habit;
+import com.google.android.material.checkbox.MaterialCheckBox;
 
 import java.util.ArrayList;
 
@@ -40,7 +41,7 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView habitName;
         private final TextView habitDesc;
-        private final CheckBox checkBox;
+        private final MaterialCheckBox checkBox;
         private final ImageButton menuButton;
 
         /**
@@ -53,7 +54,7 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
 
             habitName = (TextView) view.findViewById(R.id.today_listview_habit_name);
             habitDesc = (TextView) view.findViewById(R.id.today_listview_habit_desc);
-            checkBox = (CheckBox) view.findViewById(R.id.today_listview_checkbox);
+            checkBox = (MaterialCheckBox) view.findViewById(R.id.today_listview_checkbox);
             menuButton = (ImageButton) view.findViewById(R.id.habit_menu);
             menuButton.setOnClickListener(this);
             checkBox.setOnClickListener(this);

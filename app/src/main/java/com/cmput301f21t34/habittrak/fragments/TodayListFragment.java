@@ -101,7 +101,7 @@ public class TodayListFragment extends Fragment {
             @Override
             public void checkBoxOnClick(View view, int position) {
                 Log.d(TAG, "Checkbox clicked");
-                // add checkbox function here
+                onCheckBoxClick(view, position);
             }
         });
         // creates a new habitRecycler class with the view and data
@@ -170,5 +170,9 @@ public class TodayListFragment extends Fragment {
         });
     }
 
+
+    public void onCheckBoxClick(View view, int position){
+
+    }
 
 }

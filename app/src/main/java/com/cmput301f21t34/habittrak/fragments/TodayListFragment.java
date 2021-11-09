@@ -50,7 +50,7 @@ public class TodayListFragment extends Fragment {
 
 
     // Attributes //
-    public static int RESULT_EDIT_HABIT = 2000;
+    public static String TAG = "Today_List";
     // These are for the Recycler view
     private RecyclerView habitRecyclerView;
     private RecyclerView.LayoutManager layoutManager;
@@ -63,12 +63,10 @@ public class TodayListFragment extends Fragment {
 
     // constructor
     public TodayListFragment(User mainUser) {
-
         habitsDisplayList = new ArrayList<>();
         this.mainUser = mainUser;
         adapter = new TodayHabitRecyclerAdapter(habitsDisplayList);
-
-        Log.d("TodayList", "New Frag Created");
+        Log.d(TAG, "New Frag Created");
     }
 
     @Override
@@ -77,14 +75,13 @@ public class TodayListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.habi_all_habits_fragment, container, false);
 
-        Log.d("TodayList", "New View Created");
+        Log.d(TAG, "New View Created");
         // Sets up views and manager for recycler view
         habitRecyclerView = view.findViewById(R.id.all_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
 
 
-        // Sets up the recycler view with a list of all habits, and
-        // an array list for the recycler to use for display - Dakota
+        // set the click listener interface for the adapter
         adapter.setHabitClickListener(new TodayHabitRecyclerAdapter.HabitClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -95,23 +92,18 @@ public class TodayListFragment extends Fragment {
                 viewHabitResultLauncher.launch(intent);
             }
         });
+        // creates a new habitRecycler class with the view and data
         habitRecycler = new HabitRecycler(habitRecyclerView, layoutManager, habitsDisplayList, mainUser.getHabitList(), true);
         habitRecycler.setAdapter(adapter);
-
-
-
 
         return view;
     }
 
     @Override
     public void onResume() {
-
         super.onResume();
-
         // Refreshes Frag
         refreshTodayFragment();
-
     }
 
 
@@ -122,35 +114,23 @@ public class TodayListFragment extends Fragment {
      *
      * @author Dakota
      */
-
     public void refreshTodayFragment() {
-
-
         // Populate today view with Today's habits.
-
         habitsDisplayList.clear();// Make sure is clear
-
         HabitList mainUserHabits = mainUser.getHabitList(); // get HabitsList
 
-
         // Iterates through all habits
-
         for (int index = 0; index < mainUserHabits.size(); index++){
 
             // Checks to see if they should be displayed
             if (mainUserHabits.get(index).getOnDaysObj().isOnDay() && mainUserHabits.get(index).isHabitStart()){ // If a habit is active today add
-
                 habitsDisplayList.add(mainUserHabits.get(index));
                 // ensure index are parallel when populating from established list
                 adapter.notifyDataSetChanged();
-
-
             }
         }
-
-
     }
-
+    // activity result launcher for view/edit habit
     ActivityResultLauncher<Intent> viewHabitResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {}

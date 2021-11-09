@@ -41,29 +41,31 @@ import java.util.TimeZone;
 public class ViewEditHabit extends AppCompatActivity implements View.OnClickListener{
 
     public static int RESULT_CODE = 2000;
-    TextInputEditText habitName;
-    TextInputEditText habitReason;
-    MaterialButton datePickerButton;
-    TextView startDate;
-    TextView visibilityText;
-    Calendar calendar;
-    MaterialButton saveButton;
-    MaterialButton mondayButton;
-    MaterialButton tuesdayButton;
-    MaterialButton wednesdayButton;
-    MaterialButton thursdayButton;
-    MaterialButton fridayButton;
-    MaterialButton saturdayButton;
-    MaterialButton sundayButton;
-    MaterialDatePicker materialDatePicker;
-    SwitchMaterial publicSwitch;
-    boolean[] daysOfWeek;
-    int whiteColor = Color.WHITE;
-    int tealColor;
 
-    User mainUser;
-    Habit habit;
-    int habitPosition;
+    // Views
+    private TextInputEditText habitName;
+    private TextInputEditText habitReason;
+    private MaterialButton datePickerButton;
+    private TextView startDate;
+    private TextView visibilityText;
+    private Calendar calendar;
+    private MaterialButton saveButton;
+    private MaterialButton mondayButton;
+    private MaterialButton tuesdayButton;
+    private MaterialButton wednesdayButton;
+    private MaterialButton thursdayButton;
+    private MaterialButton fridayButton;
+    private MaterialButton saturdayButton;
+    private MaterialButton sundayButton;
+    private MaterialDatePicker materialDatePicker;
+    private SwitchMaterial publicSwitch;
+    private boolean[] daysOfWeek;
+    private int whiteColor = Color.WHITE;
+    private int tealColor;
+
+    // data variables
+    private Habit habit;
+    private int habitPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +83,7 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
         this.habit = intent.getParcelableExtra("HABIT");
         this.habitPosition = intent.getIntExtra("position", 0);
         Log.d("VIEW_HABIT", Integer.toString(habitPosition));
+
         // getting views
         habitName = findViewById(R.id.view_habit_name_edit_text);
         habitReason = findViewById(R.id.view_habit_reason_edit_text);
@@ -97,7 +100,7 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
         publicSwitch = findViewById(R.id.view_public_switch);
         visibilityText = findViewById(R.id.view_habit_visibility_text);
 
-        tealColor = ContextCompat.getColor(getBaseContext(), R.color.teal_200);
+        tealColor = ContextCompat.getColor(getBaseContext(), R.color.teal_200); // color for buttons
 
         // get data from habit
         String name = habit.getTitle();
@@ -105,7 +108,7 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
         calendar = habit.getStartDate();
         Boolean isPublic = habit.isPublic();
         Log.d("View_Habit", Boolean.toString(isPublic));
-        setDaysSelector();
+        setDaysSelector();  // set days selector values
 
         // set data
         habitName.setText(name);
@@ -205,6 +208,13 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    /**
+     * setDaysSelector
+     *
+     * @author Pranav
+     *
+     * sets the state of the days of week buttons
+     */
     public void setDaysSelector(){
         daysOfWeek = habit.getOnDaysObj().getAll();
         setButtonState(mondayButton, daysOfWeek[0]);
@@ -215,6 +225,16 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
         setButtonState(saturdayButton, daysOfWeek[5]);
         setButtonState(sundayButton, daysOfWeek[6]);
     }
+
+    /**
+     * setButtonState
+     *
+     * @author Pranav
+     *
+     * set the button on/off state
+     * @param button MaterialButton for setting state
+     * @param state bool value for on/off state
+     */
 
     public void setButtonState(MaterialButton button, Boolean state){
         if(state){

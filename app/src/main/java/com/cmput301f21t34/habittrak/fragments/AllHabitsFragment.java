@@ -42,7 +42,7 @@ public class AllHabitsFragment extends Fragment {
 
 
     // Attributes //
-    public static final int RESULT_EDIT_HABIT = 2000;
+    public static String TAG = "All_Habits";
     // These are for the Recycler view
     private RecyclerView habitRecyclerView;
     private RecyclerView.LayoutManager layoutManager;
@@ -72,8 +72,7 @@ public class AllHabitsFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
 
 
-        // Sets up the recycler view with a list of all habits, and
-        // an array list for the recycler to use for display - Dakota
+        // set the click listener interface for the adapter
         adapter.setHabitClickListener(new TodayHabitRecyclerAdapter.HabitClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -84,6 +83,7 @@ public class AllHabitsFragment extends Fragment {
                 viewHabitResultLauncher.launch(intent);
             }
         });
+        // creates a new habitRecycler class with the view and data
         habitRecycler = new HabitRecycler(habitRecyclerView, layoutManager, habitsDisplayList, mainUser.getHabitList());
         habitRecycler.setAdapter(adapter);
 
@@ -93,12 +93,9 @@ public class AllHabitsFragment extends Fragment {
 
     @Override
     public void onResume() {
-
         super.onResume();
-
         // Refreshes Frag
         refreshAllFragment();
-
     }
 
 
@@ -111,25 +108,20 @@ public class AllHabitsFragment extends Fragment {
      */
     public void refreshAllFragment() {
 
-        Log.d("AllHabitsFragment", "refreshing habit list");
+        Log.d(TAG, "refreshing habit list");
         // Populate today view with Today's habits.
-
         habitsDisplayList.clear(); // Make sure is clear
-
         HabitList mainUserHabits = mainUser.getHabitList(); // get HabitsList
-
         habitsDisplayList.addAll(mainUserHabits);
-
         // tells the adapter in recycler that the dataset has changed
         adapter.notifyDataSetChanged();
 
     }
 
-
+    // activity result launcher for view/edit activity
     ActivityResultLauncher<Intent> viewHabitResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {}
     );
-
 
 }

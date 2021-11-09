@@ -24,7 +24,6 @@ import java.util.ArrayList;
  * @version 1.0
  * @since 2020-10-27
  */
-
 public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRecyclerAdapter.ViewHolder>{
 
     private ArrayList<Habit> habits;
@@ -71,6 +70,12 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
         }
     }
 
+    /**
+     * setHabitClickListener
+     *
+     * function to set the click listener
+     * @param habitClickListener interface for onItemClick
+     */
     public void setHabitClickListener(HabitClickListener habitClickListener) {
         TodayHabitRecyclerAdapter.habitClickListener = habitClickListener;
     }

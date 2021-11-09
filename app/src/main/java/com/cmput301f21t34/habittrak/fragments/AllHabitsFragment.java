@@ -3,6 +3,10 @@ package com.cmput301f21t34.habittrak.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,7 +41,7 @@ public class AllHabitsFragment extends Fragment {
 
 
     // Attributes //
-
+    public static final int RESULT_EDIT_HABIT = 2000;
     // These are for the Recycler view
     private RecyclerView habitRecyclerView;
     private RecyclerView.LayoutManager layoutManager;
@@ -74,9 +78,9 @@ public class AllHabitsFragment extends Fragment {
             public void onItemClick(View view, int position) {
                 Habit habit = habitsDisplayList.get(position);
                 Intent intent = new Intent(getContext(), ViewEditHabit.class);
-                intent.putExtra("mainUser", mainUser);
+                intent.putExtra("HABIT", habit);
                 intent.putExtra("position", habit.getIndex());
-                startActivity(intent);
+                viewHabitResultLauncher.launch(intent);
             }
         });
         this.habitRecycler = new HabitRecycler(habitRecyclerView, layoutManager, habitsDisplayList, mainUser.getHabitList());
@@ -119,4 +123,19 @@ public class AllHabitsFragment extends Fragment {
         adapter.notifyDataSetChanged();
 
     }
+
+
+    ActivityResultLauncher<Intent> viewHabitResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == RESULT_EDIT_HABIT){
+                        // add result code here
+                    }
+                }
+            }
+    );
+
+
 }

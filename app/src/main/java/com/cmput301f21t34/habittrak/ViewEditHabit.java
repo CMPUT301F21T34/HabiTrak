@@ -77,9 +77,8 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
 
         // get data
         Intent intent = getIntent();
-        this.mainUser = intent.getParcelableExtra("mainUser");
+        this.habit = intent.getParcelableExtra("HABIT");
         this.habitPosition = intent.getIntExtra("position", 0);
-        this.habit = mainUser.getHabit(habitPosition);
         Log.d("VIEW_HABIT", Integer.toString(habitPosition));
         // getting views
         habitName = findViewById(R.id.view_habit_name_edit_text);
@@ -188,8 +187,11 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
             if (checkField(habitName.getText()) && checkField(habitReason.getText())){
                 habit.setStartDate(calendar);
                 habit.getOnDaysObj().setAll(daysOfWeek);
-                mainUser.replaceHabit(habitPosition, habit);
                 Toast.makeText(getBaseContext(), "Changes Saved", Toast.LENGTH_SHORT).show();
+                Intent result = new Intent();
+                result.putExtra("HABIT", habit);
+                result.putExtra("position", habitPosition);
+                setResult(2000, result);
             }
             else{
                 Toast.makeText(getBaseContext(), "Empty Text Fields", Toast.LENGTH_SHORT).show();

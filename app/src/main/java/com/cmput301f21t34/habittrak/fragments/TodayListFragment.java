@@ -131,10 +131,9 @@ public class TodayListFragment extends Fragment {
             // Checks to see if they should be displayed
             if (mainUserHabits.get(index).getOnDaysObj().isOnDay() && mainUserHabits.get(index).isHabitStart()){ // If a habit is active today add
                 habitsDisplayList.add(mainUserHabits.get(index));
-                // ensure index are parallel when populating from established list
-                adapter.notifyDataSetChanged();
             }
         }
+        adapter.notifyDataSetChanged();
     }
     // activity result launcher for view/edit habit
     ActivityResultLauncher<Intent> viewHabitResultLauncher = registerForActivityResult(

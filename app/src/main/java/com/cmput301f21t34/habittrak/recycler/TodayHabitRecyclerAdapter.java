@@ -29,6 +29,7 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
 
     private ArrayList<Habit> habits;
     private static HabitClickListener habitClickListener;
+    private boolean viewCheckbox = true;
 
     public interface HabitClickListener{
         void onItemClick(View view, int position);
@@ -78,6 +79,23 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
         public CheckBox getCheckBox() {
             return checkBox;
         }
+
+        /**
+         * checkBoxVisibility
+         *
+         * @author Pranav
+         *  set the visibility fo the checkbox depending where the recycler is being used
+         * @param isVisible true if visible else false
+         */
+        public void checkBoxVisibility(boolean isVisible){
+            if (isVisible){
+                checkBox.setVisibility(View.VISIBLE);
+            }
+            else{
+                checkBox.setVisibility(View.INVISIBLE);
+            }
+
+        }
     }
 
     /**
@@ -96,8 +114,9 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
      * @param data ArrayList<Habit> containing the data to populate views to be used
      * by RecyclerView.
      */
-    public TodayHabitRecyclerAdapter(ArrayList<Habit> data){
+    public TodayHabitRecyclerAdapter(ArrayList<Habit> data, boolean viewCheckbox){
         habits = data;
+        this.viewCheckbox = viewCheckbox;
     }
 
     // Create new views (invoked by the layout manager)
@@ -120,6 +139,7 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
 
         viewHolder.getHabitName().setText(habit.getTitle());
         viewHolder.getHabitDesc().setText(habit.getReason());
+        viewHolder.checkBoxVisibility(viewCheckbox);
     }
 
     // Return the size of your dataset (invoked by the layout manager)

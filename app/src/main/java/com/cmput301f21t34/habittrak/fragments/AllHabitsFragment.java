@@ -56,7 +56,7 @@ public class AllHabitsFragment extends Fragment {
 
         habitsDisplayList = new ArrayList<>();
         this.mainUser = mainUser;
-        this.adapter = new TodayHabitRecyclerAdapter(habitsDisplayList);
+        this.adapter = new TodayHabitRecyclerAdapter(habitsDisplayList, false);
 
 
     }

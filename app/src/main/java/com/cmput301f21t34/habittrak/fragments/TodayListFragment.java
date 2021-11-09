@@ -66,7 +66,7 @@ public class TodayListFragment extends Fragment {
     public TodayListFragment(User mainUser) {
         habitsDisplayList = new ArrayList<>();
         this.mainUser = mainUser;
-        adapter = new TodayHabitRecyclerAdapter(habitsDisplayList);
+        adapter = new TodayHabitRecyclerAdapter(habitsDisplayList, true);
         Log.d(TAG, "New Frag Created");
     }
 

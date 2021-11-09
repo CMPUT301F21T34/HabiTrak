@@ -68,10 +68,22 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
             }
         }
 
+        /**
+         * getHabitDesc
+         *
+         * habit reason getter function
+         * @return return the textview of Habit reason
+         */
         public TextView getHabitDesc() {
             return habitDesc;
         }
 
+        /**
+         * getHabitName
+         *
+         * habit name getter function
+         * @return return the textview of Habit name
+         */
         public TextView getHabitName() {
             return habitName;
         }

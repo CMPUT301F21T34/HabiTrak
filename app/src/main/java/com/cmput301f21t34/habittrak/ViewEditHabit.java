@@ -186,6 +186,8 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
         }
         else if (view.getId() == R.id.view_save_habit){
             if (checkField(habitName.getText()) && checkField(habitReason.getText())){
+                habit.setTitle(habitName.getText().toString());
+                habit.setReason(habitReason.getText().toString());
                 habit.setStartDate(calendar);
                 habit.getOnDaysObj().setAll(daysOfWeek);
                 Toast.makeText(getBaseContext(), "Changes Saved", Toast.LENGTH_SHORT).show();
@@ -193,6 +195,7 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
                 result.putExtra("HABIT", habit);
                 result.putExtra("position", habitPosition);
                 setResult(RESULT_CODE, result);
+                this.finish();
             }
             else{
                 Toast.makeText(getBaseContext(), "Empty Text Fields", Toast.LENGTH_SHORT).show();
@@ -257,14 +260,7 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
      * @return boolean whether filled or not
      */
     public boolean checkField(Editable name){
-        Boolean fieldCheck = false;
-        String field = name.toString();
-
-        if (field.trim().length() > 0 ){
-            fieldCheck = true;
-        }
-
-        return fieldCheck;
+        return name.toString().trim().length() > 0;
     }
 
     @Override

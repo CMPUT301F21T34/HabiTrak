@@ -1,5 +1,6 @@
 package com.cmput301f21t34.habittrak;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -53,10 +54,15 @@ public class AddHabitActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Toolbar toolbar = findViewById(R.id.add_habit_toolbar);
-        setSupportActionBar(toolbar);
         setContentView(R.layout.activity_add_habit);
+
+        // add back button to toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.add_habit_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
 
         // Getting Views //
         startDate = findViewById(R.id.add_habit_selected_date);
@@ -249,4 +255,9 @@ public class AddHabitActivity extends AppCompatActivity {
         this.finish();
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 }

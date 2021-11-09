@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 
@@ -18,6 +19,7 @@ import com.cmput301f21t34.habittrak.user.Habit;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Calendar;
@@ -38,6 +40,7 @@ public class AddHabitActivity extends AppCompatActivity {
     TextInputEditText habitReason;
     MaterialButton datePickerButton;
     TextView startDate;
+    TextView visibilityText;
     Calendar calendar;
     MaterialButton saveButton;
     MaterialButton mondayButton;
@@ -47,7 +50,9 @@ public class AddHabitActivity extends AppCompatActivity {
     MaterialButton fridayButton;
     MaterialButton saturdayButton;
     MaterialButton sundayButton;
+    SwitchMaterial publicSwitch;
     boolean[] daysOfWeek = new boolean[]{true, true, true, true, true, true, true};;
+    boolean isPublic = true;
     int whiteColor = Color.WHITE;
     int tealColor;
 
@@ -77,6 +82,8 @@ public class AddHabitActivity extends AppCompatActivity {
         fridayButton = findViewById(R.id.friday_button);
         saturdayButton = findViewById(R.id.saturday_button);
         sundayButton = findViewById(R.id.sunday_button);
+        publicSwitch = findViewById(R.id.add_public_switch);
+        visibilityText = findViewById(R.id.add_habit_visibility_text);
 
         // getting color
         // TODO: change the setting for dark mode as well
@@ -110,6 +117,18 @@ public class AddHabitActivity extends AppCompatActivity {
                 calendar.setTimeInMillis((long) selection);
                 String date = "Selected Date is : " + getDate(calendar);
                 startDate.setText(date);
+            }
+        });
+
+        // switcher listener
+        publicSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (b){
+                isPublic = true;
+                visibilityText.setText("Public");
+            }
+            else{
+                isPublic = false;
+                visibilityText.setText("Private");
             }
         });
 
@@ -244,7 +263,12 @@ public class AddHabitActivity extends AppCompatActivity {
         String reason = habitReason.getText().toString();
 
         Habit newHabit = new Habit(name, reason, calendar);
-
+        if (isPublic){
+            newHabit.makePublic();
+        }
+        else {
+            newHabit.makePrivate();
+        }
         newHabit.getOnDaysObj().setAll(daysOfWeek);
 
         //Bundle newHabitBundle = new Bundle();

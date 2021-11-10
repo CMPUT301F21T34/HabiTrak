@@ -111,7 +111,7 @@ public class SignUpFragment extends Fragment {
 
                         // Kick user to sign in page
 
-                        goToLogin();
+                        toLogin();
 
 
                     } else {
@@ -135,9 +135,11 @@ public class SignUpFragment extends Fragment {
         return view;
     }
 
-    private void goToLogin(){
-        getActivity().getSupportFragmentManager()
-                .popBackStack();
+    private void toLogin() {
+        LoginFragment loginFragment = new LoginFragment(null, mAuth);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.login_fragment_container, loginFragment, "loginFrag")
+                .commit();
     }
 
     /**

@@ -60,11 +60,7 @@ public class LoginFragment extends Fragment {
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SignUpFragment signUpFragment = new SignUpFragment(mAuth);
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.login_fragment_container, signUpFragment, "signupFrag")
-                        .addToBackStack(null)
-                        .commit();
+                toSignUp();
             }
         });
 
@@ -170,4 +166,13 @@ public class LoginFragment extends Fragment {
         startActivity(intent);
         getActivity().finish();
     }
+
+    private void toSignUp() {
+        SignUpFragment signUpFragment = new SignUpFragment(mAuth);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.login_fragment_container, signUpFragment, "signupFrag")
+                .addToBackStack(null)
+                .commit();
+    }
+
 }

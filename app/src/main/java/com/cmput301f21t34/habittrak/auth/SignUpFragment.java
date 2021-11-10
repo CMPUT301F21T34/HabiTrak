@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.cmput301f21t34.habittrak.BaseActivity;
 import com.cmput301f21t34.habittrak.DatabaseManager;
@@ -37,7 +38,7 @@ public class SignUpFragment extends Fragment {
 
     private final String TAG = "SignUpFragment";
 
-    Auth mAuth = new Auth(getContext());
+    Auth mAuth;
 
     TextInputLayout emailLayout;
     TextInputEditText emailEditText;
@@ -49,8 +50,11 @@ public class SignUpFragment extends Fragment {
     DatabaseManager db = new DatabaseManager();
     User currentUser;
 
-    public SignUpFragment() {
+    public SignUpFragment(Auth auth) {
         /* Required empty public constructor */
+
+        this.mAuth = auth;
+
     }
 
     @Override
@@ -77,28 +81,19 @@ public class SignUpFragment extends Fragment {
             usernameLayout.setError(null);
             passwordLayout.setError(null);
 
-            boolean fieldsFull = true;
-            if (isEmpty(emailEditText)) {
-                fieldsFull = false;
-                emailLayout.setError("Email Required");
-            }
-            if (isEmpty(usernameEditText)) {
-                fieldsFull = false;
-                usernameLayout.setError("Username Required");
-            }
-            if (isEmpty(passwordEditText)) {
-                fieldsFull = false;
-                passwordLayout.setError("Password Required");
-            }
+            // check if fields are full
+            if (fieldsFull()) {
 
-            // check email
-            if (fieldsFull) {
 
-                String email = emailEditText.toString();
-                String password = passwordEditText.toString();
+                // Gets values of edit texts
+                String email = emailEditText.getText().toString();
+                Log.d("SignUp", "email: " + email);
+                String username = usernameEditText.getText().toString();
+                String password = passwordEditText.getText().toString();
 
-                Log.d(TAG, "fieldsfull");
-                if (!db.isUniqueEmail(emailEditText.toString())) {
+
+                // Check that email is unique
+                if (false){//!db.isUniqueEmail(email)) { db.isUnique is always false
                     emailLayout.setError("Email Already in Use");
                 } else {
 
@@ -109,17 +104,26 @@ public class SignUpFragment extends Fragment {
                     if (authedEmail != null){
                         // Create account in db ONLY on success
                         db.createNewUser(authedEmail,
-                                usernameEditText.toString(),
-                                "not_required_to_store");
+                                username,
+                                "not_required_to_store"); // We should not store password in db
 
                         Log.d(TAG, "Fields Full and email unique");
 
-                        // get the new user
-                        currentUser = db.getUser(authedEmail);
-                        startHomePage(view);
+                        // Kick user to sign in page
+
+                        goToLogin();
+
+
+                    } else {
+
+                        // Failure
+
+                        Toast.makeText(getContext(), "Sign Up Failed", Toast.LENGTH_SHORT);
+
+
                     }
 
-                    
+
 
 
                 }
@@ -130,6 +134,39 @@ public class SignUpFragment extends Fragment {
 
         return view;
     }
+
+    private void goToLogin(){
+        getActivity().getSupportFragmentManager()
+                .popBackStack();
+    }
+
+    /**
+     * checks if the fields are full or not
+     *
+     * @author Dakota
+     * @return boolean true if they are full, false else wise
+     */
+    private boolean fieldsFull(){
+
+
+        boolean fieldsFull = true;
+        if (isEmpty(emailEditText)) {
+            fieldsFull = false;
+            emailLayout.setError("Email Required");
+        }
+        if (isEmpty(usernameEditText)) {
+            fieldsFull = false;
+            usernameLayout.setError("Username Required");
+        }
+        if (isEmpty(passwordEditText)) {
+            fieldsFull = false;
+            passwordLayout.setError("Password Required");
+        }
+
+        return fieldsFull;
+    }
+
+
 
     /**
      * isEmpty

@@ -34,9 +34,11 @@ import com.google.android.material.textfield.TextInputLayout;
 public class LoginFragment extends Fragment {
 
     private User mainUser;
+    private Auth mAuth;
 
-    public LoginFragment(User mainUser){
+    public LoginFragment(User mainUser, Auth auth){
         this.mainUser = mainUser; // Passes User object
+        this.mAuth = auth;
     }
 
     @Nullable
@@ -58,7 +60,7 @@ public class LoginFragment extends Fragment {
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SignUpFragment signUpFragment = new SignUpFragment();
+                SignUpFragment signUpFragment = new SignUpFragment(mAuth);
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.login_fragment_container, signUpFragment, "signupFrag")
                         .addToBackStack(null)

@@ -1071,7 +1071,7 @@ public class DatabaseManager {
             UUIDList.add(listOfMap.get(i).get("email"));
         }*/
 
-        listOfMap.forEach(item -> item.get("email"));
+        listOfMap.forEach(item -> UUIDList.add(item.get("email")));
 
         return UUIDList;
     }

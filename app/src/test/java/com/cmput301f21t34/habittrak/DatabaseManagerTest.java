@@ -2,7 +2,6 @@ package com.cmput301f21t34.habittrak;
 
 import org.junit.jupiter.api.Test;
 
-import com.cmput301f21t34.habittrak.user.DatabasePointer;
 import com.cmput301f21t34.habittrak.user.User;
 
 /**
@@ -12,7 +11,6 @@ import com.cmput301f21t34.habittrak.user.User;
  * @version 1.0
  * @since 2021-11-03
  * @see DatabaseManager
- * @see DatabasePointer
  */
 public class DatabaseManagerTest {
 

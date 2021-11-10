@@ -96,8 +96,15 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         addHabitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // TODO: remove this and change it back to habit activity
+                // for testing AddHabitEventsActivity
+                Intent remove =new Intent(BaseActivity.this,AddHabitEventActivity.class);
+                startActivity(remove);
+
+//
+                /*
                 Intent intent = new Intent(view.getContext(), AddHabitActivity.class);
-                addHabitActivityLauncher.launch(intent);
+                addHabitActivityLauncher.launch(intent);*/
             }
         });
 

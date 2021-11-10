@@ -1,6 +1,7 @@
 package com.cmput301f21t34.habittrak.user;
 
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -31,7 +32,7 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
 
     private Calendar completedDate;
     private Location location;
-    private File photograph;
+    private Uri photograph;
 
     // redundant constructor
 
@@ -40,12 +41,12 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
         this.completedDate = Calendar.getInstance();
 
         this.location = new Location("");
-        this.photograph = new File("");
+        this.photograph = null;
 
 
     }
 
-    public HabitEvent(String comment, Calendar date, Location loc, File photo){
+    public HabitEvent(String comment, Calendar date, Location loc, Uri photo){
 
         this.photograph = photo;
         this.location = loc;
@@ -92,7 +93,7 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
         // Sets path
         String photographPath = habitEventBundle.getString("photograph");
 
-        this.photograph = new File(photographPath);
+        this.photograph = null;
     }
 
 
@@ -122,7 +123,7 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
         return completedDate;
     }
 
-    public File getPhotograph() {
+    public Uri getPhotograph() {
         return photograph;
     }
 
@@ -156,7 +157,7 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
         this.location = location;
     }
 
-    public void setPhotograph(File photograph) {
+    public void setPhotograph(Uri photograph) {
         this.photograph = photograph;
     }
 

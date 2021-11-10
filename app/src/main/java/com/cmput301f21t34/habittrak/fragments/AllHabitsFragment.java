@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
@@ -17,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.ViewEditHabit;
@@ -30,7 +27,7 @@ import com.cmput301f21t34.habittrak.user.User;
 import java.util.ArrayList;
 
 /**
- * AllHabitsFragment
+ * AllHabitsFragment.
  *
  * @author Pranav
  * @author Dakota
@@ -142,7 +139,7 @@ public class AllHabitsFragment extends Fragment {
      * @param view view from the adapter to create the menu
      * @param position position of habit from adapter
      */
-    public void showMenu(View view, int position){
+    public void showMenu(View view, int position) {
         PopupMenu menu = new PopupMenu(getContext(), view);
         menu.getMenuInflater().inflate(R.menu.social_popup_menu, menu.getMenu());
         menu.getMenu().add("Remove");

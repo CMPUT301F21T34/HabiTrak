@@ -1,6 +1,5 @@
 package com.cmput301f21t34.habittrak.recycler;
 
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,23 +63,25 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
 
         }
 
+        /**
+         * listener function for the button and checkbox in the recycler.
+         *
+         * @param view view of the clicked button, checkbox or the recycler view
+         */
         @Override
-        public void onClick(View view) {
-            if (view.getId() == R.id.habit_menu){
+        public void onClick(final View view) {
+            if (view.getId() == R.id.habit_menu) {
                 habitClickListener.menuButtonOnClick(view, getAdapterPosition());
-            }
-            else if (view.getId() == R.id.today_listview_checkbox){
+            } else if (view.getId() == R.id.today_listview_checkbox) {
                 habitClickListener.checkBoxOnClick(view, getAdapterPosition());
-            }
-            else {
+            } else {
                 habitClickListener.onItemClick(view, getAdapterPosition());
             }
         }
 
         /**
-         * getHabitDesc
          *
-         * habit reason getter function
+         * habit reason getter function.
          * @return return the textview of Habit reason
          */
         public TextView getHabitDesc() {
@@ -88,9 +89,8 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
         }
 
         /**
-         * getHabitName
          *
-         * habit name getter function
+         * habit name getter function.
          * @return return the textview of Habit name
          */
         public TextView getHabitName() {
@@ -102,28 +102,28 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
         }
 
         /**
-         * checkBoxVisibility
          *
+         * set the visibility fo the checkbox depending where the recycler is being used.
          * @author Pranav
-         *  set the visibility fo the checkbox depending where the recycler is being used
+         *
          * @param isVisible true if visible else false
          */
-        public void checkBoxVisibility(boolean isVisible){
-            if (isVisible){
+        public void checkBoxVisibility(final boolean isVisible) {
+            if (isVisible) {
                 checkBox.setVisibility(View.VISIBLE);
-            }
-            else{
+            } else {
                 checkBox.setVisibility(View.INVISIBLE);
             }
 
         }
 
         /**
-         * checkCheckbox
          *
-         * sets the checkbox state to checked and un clickable
+         * sets the checkbox state to checked and un clickable.
+         * @author Pranav
+         *
          */
-        public void checkCheckbox(){
+        public void checkCheckbox() {
             checkBox.setChecked(true);
             checkBox.setEnabled(false);
             Log.d("Adapter", "check checkbox");
@@ -132,22 +132,21 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
     }
 
     /**
-     * setHabitClickListener
      *
-     * function to set the click listener
+     * function to set the click listener.
      * @param habitClickListener interface for onItemClick
      */
-    public void setHabitClickListener(HabitClickListener habitClickListener) {
+    public void setHabitClickListener(final HabitClickListener habitClickListener) {
         TodayHabitRecyclerAdapter.habitClickListener = habitClickListener;
     }
 
     /**
      * Initialize the dataset of the Adapter.
      *
-     * @param data ArrayList<Habit> containing the data to populate views to be used
-     * by RecyclerView.
+     * @param data ArrayList<Habit> containing the data to populate views
+     * @param viewCheckbox to show the checkbox or not
      */
-    public TodayHabitRecyclerAdapter(ArrayList<Habit> data, boolean viewCheckbox){
+    public TodayHabitRecyclerAdapter(final ArrayList<Habit> data, final boolean viewCheckbox) {
         habits = data;
         this.viewCheckbox = viewCheckbox;
     }
@@ -189,15 +188,15 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
     }
 
     /**
-     * sameDay
+     * check if the calendar dates occur on the same day.
      * @param d1 calender instance
      * @param d2 another calender instance to compare
      * @return true if day is same in both calendar
      */
-    public boolean sameDay(Calendar d1, Calendar d2){
-        return d1.get(Calendar.YEAR) == d2.get(Calendar.YEAR) &&
-                d1.get(Calendar.MONTH) == d2.get(Calendar.MONTH) &&
-                d1.get(Calendar.DAY_OF_MONTH) == d2.get(Calendar.DAY_OF_MONTH);
+    public boolean sameDay(final Calendar d1, final Calendar d2) {
+        return d1.get(Calendar.YEAR) == d2.get(Calendar.YEAR)
+                && d1.get(Calendar.MONTH) == d2.get(Calendar.MONTH)
+                && d1.get(Calendar.DAY_OF_MONTH) == d2.get(Calendar.DAY_OF_MONTH);
     }
 
 

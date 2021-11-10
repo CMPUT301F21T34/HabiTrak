@@ -28,7 +28,7 @@ public class HabitRecycler {
 
 
     /**
-     * Standard Constructor for a recyclable view of habits
+     * Standard Constructor for a recyclable view of habits.
      *
      * @author Dakota
      * @param recyclerView The RecyclerView to use
@@ -36,7 +36,7 @@ public class HabitRecycler {
      * @param displayHabits An ArrayList<Habit> for using as a display list
      * @param habits A HabitList for getting the Habits from
      */
-    public HabitRecycler(RecyclerView recyclerView, RecyclerView.LayoutManager layoutManager, ArrayList<Habit> displayHabits, HabitList habits){
+    public HabitRecycler(RecyclerView recyclerView, RecyclerView.LayoutManager layoutManager, ArrayList<Habit> displayHabits, HabitList habits) {
 
         // Sets up two list of habits, the ones to display and the HabitList of all habits
         this.displayHabits = displayHabits;
@@ -210,17 +210,17 @@ public class HabitRecycler {
      *
      * @author Dakota
      */
-    public void notifyDataSetChanged(){
+    public void notifyDataSetChanged() {
         this.adapter.notifyDataSetChanged();
     }
 
     /**
-     * Allows to set adapter
+     * Allows to set adapter.
      *
      * @author Dakota
      * @param adapter TodayHabitRecyclerAdapter to set
      */
-    public void setAdapter(TodayHabitRecyclerAdapter adapter){
+    public void setAdapter(TodayHabitRecyclerAdapter adapter) {
         this.adapter = adapter;
         recyclerView.setAdapter(adapter);
 
@@ -231,6 +231,7 @@ public class HabitRecycler {
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
     }
+
 
 
 

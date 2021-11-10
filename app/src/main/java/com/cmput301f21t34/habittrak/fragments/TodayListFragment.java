@@ -3,13 +3,10 @@ package com.cmput301f21t34.habittrak.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,10 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 
 import com.cmput301f21t34.habittrak.ViewEditHabit;
 import com.cmput301f21t34.habittrak.recycler.HabitRecycler;
@@ -28,7 +22,6 @@ import com.cmput301f21t34.habittrak.recycler.TodayHabitRecyclerAdapter;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.R;
 
-import com.cmput301f21t34.habittrak.TodayHabitList;
 
 
 
@@ -134,7 +127,8 @@ public class TodayListFragment extends Fragment {
         for (int index = 0; index < mainUserHabits.size(); index++){
 
             // Checks to see if they should be displayed
-            if (mainUserHabits.get(index).getOnDaysObj().isOnDay() && mainUserHabits.get(index).isHabitStart()){ // If a habit is active today add
+            if (mainUserHabits.get(index).getOnDaysObj().isOnDay()
+                    && mainUserHabits.get(index).isHabitStart()) { // If a habit is active today add
                 habitsDisplayList.add(mainUserHabits.get(index));
             }
         }
@@ -147,13 +141,13 @@ public class TodayListFragment extends Fragment {
     );
 
     /**
-     * showMenu
+     * showMenu.
      *
      * create a menu when Image Button is clicked
      * @param view view from the adapter to create the menu
      * @param position position of habit from adapter
      */
-    public void showMenu(View view, int position){
+    public void showMenu(View view, int position) {
         PopupMenu menu = new PopupMenu(getContext(), view);
         menu.getMenuInflater().inflate(R.menu.social_popup_menu, menu.getMenu());
         menu.getMenu().add("Remove");
@@ -170,9 +164,16 @@ public class TodayListFragment extends Fragment {
     }
 
 
-    public void onCheckBoxClick(View view, int position){
+    /**
+     * onCheckBoxClick.
+     *
+     * listener function for checkbox clicking. Start a add new habit event activity.
+     * @param view view of the checkbox
+     * @param position position of the clicked button in the adapter
+     */
+    public void onCheckBoxClick(View view, int position) {
         MaterialCheckBox checkBox = (MaterialCheckBox) view;
-        if (checkBox.isChecked()){
+        if (checkBox.isChecked()) {
             //TODO: add logic if habit event is already completed
             Log.d(TAG, "checkbox checked");
             checkBox.setEnabled(false);

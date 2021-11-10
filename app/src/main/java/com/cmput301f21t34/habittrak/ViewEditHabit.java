@@ -10,15 +10,12 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cmput301f21t34.habittrak.user.Habit;
-import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -28,21 +25,21 @@ import java.util.TimeZone;
 
 
 /**
- * ViewEditHabit
+ * ViewEditHabit.
  *
  *
  * @author Pranav
  *
- * View and Edit selected habit from Base Fragments
+ * View and Edit selected habit from Base Fragments.
  *
  * @version 1.0
  * @since 2021-11-08
  */
-public class ViewEditHabit extends AppCompatActivity implements View.OnClickListener{
+public class ViewEditHabit extends AppCompatActivity implements View.OnClickListener {
 
     public static int RESULT_CODE = 2000;
 
-    // Views
+
     private TextInputEditText habitName;
     private TextInputEditText habitReason;
     private MaterialButton datePickerButton;
@@ -163,32 +160,25 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.view_start_date_button){
+        if (view.getId() == R.id.view_start_date_button) {
             materialDatePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
-        }
-        else if (view.getId() == R.id.monday_button){
+        } else if (view.getId() == R.id.monday_button) {
             changeButtonState(view, mondayButton, 0);
-        }
-        else if (view.getId() == R.id.tuesday_button){
+        } else if (view.getId() == R.id.tuesday_button) {
             changeButtonState(view, tuesdayButton, 1);
-        }
-        else if (view.getId() == R.id.wednesday_button){
+        } else if (view.getId() == R.id.wednesday_button) {
             changeButtonState(view, wednesdayButton, 2);
-        }
-        else if (view.getId() == R.id.thursday_button){
+        } else if (view.getId() == R.id.thursday_button) {
             changeButtonState(view, thursdayButton, 3);
-        }
-        else if (view.getId() == R.id.friday_button){
+        } else if (view.getId() == R.id.friday_button) {
             changeButtonState(view, fridayButton, 4);
-        }
-        else if (view.getId() == R.id.saturday_button){
+        } else if (view.getId() == R.id.saturday_button) {
             changeButtonState(view, saturdayButton, 5);
-        }
-        else if (view.getId() == R.id.sunday_button){
+        } else if (view.getId() == R.id.sunday_button) {
             changeButtonState(view, sundayButton, 6);
-        }
-        else if (view.getId() == R.id.view_save_habit){
-            if (checkField(habitName.getText()) && checkField(habitReason.getText())){
+        } else if (view.getId() == R.id.view_save_habit) {
+
+            if (checkField(habitName.getText()) && checkField(habitReason.getText())) {
                 habit.setTitle(habitName.getText().toString());
                 habit.setReason(habitReason.getText().toString());
                 habit.setStartDate(calendar);
@@ -200,8 +190,7 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
                 Log.d("VIEW_HABIT", "SENDING RESULT");
                 setResult(RESULT_CODE, result);
                 this.finish();
-            }
-            else{
+            } else {
                 Toast.makeText(getBaseContext(), "Empty Text Fields", Toast.LENGTH_SHORT).show();
             }
 
@@ -209,13 +198,13 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
     }
 
     /**
-     * setDaysSelector
+     * setDaysSelector.
      *
      * @author Pranav
      *
-     * sets the state of the days of week buttons
+     * sets the state of the days of week buttons.
      */
-    public void setDaysSelector(){
+    public void setDaysSelector() {
         daysOfWeek = habit.getOnDaysObj().getAll();
         setButtonState(mondayButton, daysOfWeek[0]);
         setButtonState(tuesdayButton, daysOfWeek[1]);
@@ -227,7 +216,7 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
     }
 
     /**
-     * setButtonState
+     * setButtonState.
      *
      * @author Pranav
      *
@@ -235,8 +224,7 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
      * @param button MaterialButton for setting state
      * @param state bool value for on/off state
      */
-
-    public void setButtonState(MaterialButton button, Boolean state){
+    public void setButtonState(MaterialButton button, Boolean state) {
         if(state){
             button.setBackgroundColor(tealColor);
         }
@@ -246,18 +234,17 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
     }
 
     /**
-     * Change the color of the button and the arraylist for days of week
+     * Change the color of the button and the arraylist for days of week.
      * @param view Button View
      * @param button to change the color
      * @param position which day to change
      * @author Pranav
      */
-    public void changeButtonState(View view, MaterialButton button, int position){
-        if(daysOfWeek[position]){
+    public void changeButtonState(View view, MaterialButton button, int position) {
+        if(daysOfWeek[position]) {
             button.setBackgroundColor(whiteColor);
             daysOfWeek[position] = false;
-        }
-        else{
+        } else {
             button.setBackgroundColor(tealColor);
             daysOfWeek[position] = true;
         }
@@ -269,18 +256,18 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
      * @param calendar
      * @return string value of type Month, Day
      */
-    public String getDate(Calendar calendar){
+    public String getDate(Calendar calendar) {
         String month = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
         String day = Integer.toString(calendar.get(Calendar.DAY_OF_MONTH));
         return month + ", " + day;
     }
 
     /**
-     * Check if the fields are  filled or not
+     * Check if the fields are  filled or not.
      * @param name
      * @return boolean whether filled or not
      */
-    public boolean checkField(Editable name){
+    public boolean checkField(Editable name) {
         return name.toString().trim().length() > 0;
     }
 

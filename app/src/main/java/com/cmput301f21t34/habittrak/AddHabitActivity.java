@@ -1,6 +1,6 @@
 package com.cmput301f21t34.habittrak;
 
-import androidx.appcompat.app.ActionBar;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -11,14 +11,12 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -119,11 +117,10 @@ public class AddHabitActivity extends AppCompatActivity {
 
         // switcher listener
         publicSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
-            if (b){
+            if (b) {
                 isPublic = true;
                 visibilityText.setText("Public");
-            }
-            else{
+            } else {
                 isPublic = false;
                 visibilityText.setText("Private");
             }
@@ -137,17 +134,13 @@ public class AddHabitActivity extends AppCompatActivity {
                 String name = habitName.getText().toString();
                 if(!checkField(habitName.getText())){
                     habitName.setError("Input Required");
-                }
-
-                //TODO: make reason field optional
-                else if (!checkField(habitReason.getText())){
+                } else if (!checkField(habitReason.getText())){
                     habitReason.setError("Input Required");
-                }
-                else{
+                } else{
                     finishActivityWithResult();
                 }
 
-
+                //TODO: make reason field optional
             }
         });
 
@@ -212,11 +205,10 @@ public class AddHabitActivity extends AppCompatActivity {
      */
 
     public void changeButtonState(View view, MaterialButton button, int position){
-        if(daysOfWeek[position]){
+        if(daysOfWeek[position]) {
             button.setBackgroundColor(whiteColor);
             daysOfWeek[position] = false;
-        }
-        else{
+        } else {
             button.setBackgroundColor(tealColor);
             daysOfWeek[position] = true;
         }
@@ -257,10 +249,9 @@ public class AddHabitActivity extends AppCompatActivity {
         Habit newHabit = new Habit(name, reason, calendar);
         newHabit.getOnDaysObj().setAll(daysOfWeek);
         // set isPublic of habit
-        if (isPublic){
+        if (isPublic) {
             newHabit.makePublic();
-        }
-        else {
+        } else {
             newHabit.makePrivate();
         }
 

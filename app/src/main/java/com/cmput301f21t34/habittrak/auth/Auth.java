@@ -80,7 +80,6 @@ public class Auth {
      */
     public String signUp(String email, String password){
 
-        authUser = null;
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener((Activity) context, new OnCompleteListener<AuthResult>() {
@@ -89,14 +88,13 @@ public class Auth {
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
                         if ( task.isSuccessful() ) {
+
                             // Sign Up was successful
-                            authUser = mAuth.getCurrentUser();
                             sendSignInEmail(email);
 
                         } else {
 
                             // Sign Up failed
-                            authUser = null;
                             Toast.makeText(context, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
 
@@ -109,10 +107,17 @@ public class Auth {
             }
         });
 
+        authUser = mAuth.getCurrentUser();
+
         if (authUser != null){
+
+            Log.d("SignUp", "Auth.signUp() returning: " + authUser.getEmail());
             return authUser.getEmail();
         }
+
         return null;
+
+
     }
 
     /**

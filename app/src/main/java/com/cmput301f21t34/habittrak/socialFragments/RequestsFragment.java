@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.SocialAdapter;
-import com.cmput301f21t34.habittrak.user.DatabasePointer;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 
@@ -66,7 +65,7 @@ public class RequestsFragment extends Fragment {
         recyclerView = view.findViewById(R.id.requests_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        ArrayList<DatabasePointer> profiles = dm.getFollowRequestedList(mainUser.getEmail());     // Users that request to follow mainUser
+        ArrayList<String> profiles = dm.getFollowRequestedList(mainUser.getEmail());     // Users that request to follow mainUser
         socialAdapter = new SocialAdapter(profiles, new SocialAdapter.ClickListener() {
             @Override
             public void menuButtonOnClick(View view, int position) {

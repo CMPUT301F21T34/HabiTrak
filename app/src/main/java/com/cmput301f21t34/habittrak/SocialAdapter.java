@@ -9,7 +9,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cmput301f21t34.habittrak.user.DatabasePointer;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
@@ -28,13 +27,13 @@ import java.util.ArrayList;
  * @since 2021-11-01
  */
 public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder> {
-    private final ArrayList<DatabasePointer> profiles;
+    private final ArrayList<String> profiles;   // UUIDS (emails as of 10/11)
     private final ClickListener listener;
     private final boolean buttonVisibility;
     private final String buttonText;
 
     // class constructor
-    public SocialAdapter(ArrayList<DatabasePointer> users, ClickListener listener, boolean visible, String buttonText) {
+    public SocialAdapter(ArrayList<String> users, ClickListener listener, boolean visible, String buttonText) {
         this.profiles = users;
         this.listener = listener;
         this.buttonVisibility = visible;
@@ -54,9 +53,9 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
     public void onBindViewHolder(@NonNull SocialAdapter.ViewHolder holder, int position) {
         // Get user info from database
         DatabaseManager dm = new DatabaseManager();
-        DatabasePointer dp = profiles.get(position);
-        holder.getUsername().setText(dm.getUserName(dp.getEmail()));
-        holder.getUserBio().setText(dm.getUserBio(dp.getEmail()));
+        String UUID = profiles.get(position);
+        holder.getUsername().setText(dm.getUserName(UUID));
+        holder.getUserBio().setText(dm.getUserBio(UUID));
 
         // Button setup
         holder.listenerRef = this.listener;

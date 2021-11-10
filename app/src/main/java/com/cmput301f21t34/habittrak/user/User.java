@@ -197,7 +197,7 @@ public class User implements Parcelable {
         this.followerList = userBundle.getStringArrayList("followerList");
         this.followingList = userBundle.getStringArrayList("followingList");
         this.followingReqList = userBundle.getStringArrayList("followingReqList");
-        this.followingReqList = userBundle.getStringArrayList("followerReqList");
+        this.followerReqList = userBundle.getStringArrayList("followerReqList");
         this.blockList = userBundle.getStringArrayList("blockList");
         this.blockedByList = userBundle.getStringArrayList("blockedByList");
 

@@ -28,6 +28,10 @@ import com.google.android.material.tabs.TabLayout;
  * @since 2021-10-27
  */
 public class SocialActivity extends AppCompatActivity {
+    FollowersFragment followersFragment;
+    FollowingFragment followingFragment;
+    RequestsFragment requestsFragment;
+    SearchFragment searchFragment;
     TabLayout socialTab;
     User mainUser;
     ViewPager2 viewPager;
@@ -60,6 +64,12 @@ public class SocialActivity extends AppCompatActivity {
         socialTab.addTab(socialTab.newTab().setText("Following"));
         socialTab.addTab(socialTab.newTab().setText("Requests"));
         socialTab.addTab(socialTab.newTab().setText("Search"));
+
+        // Initialise Fragments
+        followersFragment = new FollowersFragment(mainUser);
+        followingFragment = new FollowingFragment(mainUser);
+        requestsFragment = new RequestsFragment(mainUser);
+        searchFragment = new SearchFragment(mainUser);
 
         // tab listener
         socialTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -115,20 +125,19 @@ public class SocialActivity extends AppCompatActivity {
         public Fragment createFragment(int position) {
             switch (position) {
                 case 0:
-                    return new FollowersFragment(mainUser);
+                    return followersFragment;
                 case 1:
-                    return new FollowingFragment(mainUser);
+                    return followingFragment;
                 case 2:
-                    return new RequestsFragment(mainUser);
+                    return requestsFragment;
                 default:
-                    return new SearchFragment(mainUser);
+                    return searchFragment;
             }
         }
 
         @Override
         public int getItemCount() {
-            // Hardcoded, use lists
-            return socialTab.getTabCount(); // this should do it vs the previous hardcoded solution TODO remove comments once verified works
+            return socialTab.getTabCount();
         }
     }
 }

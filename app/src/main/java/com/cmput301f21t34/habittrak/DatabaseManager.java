@@ -1067,11 +1067,7 @@ public class DatabaseManager {
     public ArrayList<String> toUUIDList(ArrayList<HashMap<String, String>> listOfMap) {
         ArrayList<String> UUIDList = new ArrayList<>();
 
-        /*for (int i = 0; i < listOfMap.size(); i++) {
-            UUIDList.add(listOfMap.get(i).get("email"));
-        }*/
-
-        listOfMap.forEach(item -> item.get("email"));
+        listOfMap.forEach(item -> UUIDList.add(item.get("email")));
 
         return UUIDList;
     }

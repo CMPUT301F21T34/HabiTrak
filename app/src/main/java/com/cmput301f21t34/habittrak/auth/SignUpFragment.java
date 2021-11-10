@@ -37,6 +37,8 @@ public class SignUpFragment extends Fragment {
 
     private final String TAG = "SignUpFragment";
 
+    Auth mAuth = new Auth(getContext());
+
     TextInputLayout emailLayout;
     TextInputEditText emailEditText;
     TextInputLayout usernameLayout;
@@ -92,14 +94,17 @@ public class SignUpFragment extends Fragment {
             // check email
             if (fieldsFull) {
                 Log.d(TAG, "fieldsfull");
-                if (!db.isUniqueEmail(emailEditText.getText().toString())) {
+                if (!db.isUniqueEmail(emailEditText.toString())) {
                     emailLayout.setError("Email Already in Use");
                 } else {
-                    db.createNewUser(emailEditText.getText().toString(),
-                            usernameEditText.getText().toString(),
-                            passwordEditText.getText().toString());
+
+                    //mAuth.signUp()
+
+                    db.createNewUser(emailEditText.toString(),
+                            usernameEditText.toString(),
+                            passwordEditText.toString());
                     Log.d(TAG, "Fields Full and email unique");
-                    currentUser = db.getUser(emailEditText.getText().toString());
+                    currentUser = db.getUser(emailEditText.toString());
                     startHomePage(view);
                 }
             }

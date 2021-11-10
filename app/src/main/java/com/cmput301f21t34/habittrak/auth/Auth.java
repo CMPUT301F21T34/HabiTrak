@@ -13,6 +13,7 @@ import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -23,6 +24,16 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.concurrent.Executor;
 
+/**
+ * Authentication class for interacting with Firebase Auth
+ *
+ * @author Dakota
+ * @version 1.0
+ * @see FirebaseAuth
+ * @see FirebaseUser
+ * @see 'https://firebase.google.com/docs/auth'
+ * @since 2021-11-10
+ */
 public class Auth {
 
     private FirebaseAuth mAuth;
@@ -79,6 +90,7 @@ public class Auth {
                         if ( task.isSuccessful() ) {
                             // Sign Up was successful
                             authUser = mAuth.getCurrentUser();
+                            sendSignInEmail(email);
 
                         } else {
 
@@ -136,7 +148,8 @@ public class Auth {
                                 // alert and give option to resend email
                                 boolean sendEmail = alertNotVerified();
 
-                                if (sendEmail) { authUser.sendEmailVerification(); }
+                                // sends the email
+                                if (sendEmail) { sendSignInEmail(authUser.getEmail()); }
 
                             }
 
@@ -217,6 +230,69 @@ public class Auth {
 
     }
 
+    public void changeEmail(String newEmail){
+
+        authUser = mAuth.getCurrentUser();
+
+        if (authUser != null){
+
+            // Makes the user email verify before email is changed
+            authUser.verifyBeforeUpdateEmail(newEmail)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                // Email to change to  new email sent
+                                Toast.makeText(context, "Email updated", Toast.LENGTH_SHORT);
+
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Catches exceptions
+                    if (exception instanceof FirebaseAuthRecentLoginRequiredException) {
+                        // Re-auth User
+                        if(reAuthEmail()) {
+                            // If success, then change password
+                            changeEmail(newEmail);
+                            // else exit
+                        }
+                    }
+                }
+
+            });
+
+        }
+
+    }
+
+
+    private void sendSignInEmail(String email){
+
+        // see: https://firebase.google.com/docs/auth/android/email-link-auth
+
+        authUser = mAuth.getCurrentUser();
+
+        String url = "http://habittrak.firebaseapp.com/finishSignUp?cartId=1000";
+        ActionCodeSettings actionCodeSettings = ActionCodeSettings.newBuilder()
+                .setUrl(url)
+                .setHandleCodeInApp(true)
+                .setAndroidPackageName("com.cmput301f21t34.habittrak", false, "12")
+                .build();
+
+        mAuth.sendSignInLinkToEmail(email, actionCodeSettings)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()){
+                            // success
+                        }
+                    }
+                });
+
+    }
 
     /**
      * Re-Auths user with email auth provider

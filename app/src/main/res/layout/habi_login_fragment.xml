@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical"
-    tools:context=".LoginFragment">
+    tools:context=".auth.LoginFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

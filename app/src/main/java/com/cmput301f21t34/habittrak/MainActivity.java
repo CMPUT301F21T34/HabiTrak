@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 
+import com.cmput301f21t34.habittrak.auth.LoginFragment;
 import com.cmput301f21t34.habittrak.user.User;
 
 /**

@@ -1,4 +1,4 @@
-package com.cmput301f21t34.habittrak;
+package com.cmput301f21t34.habittrak.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,15 +12,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.cmput301f21t34.habittrak.user.Habit;
+import com.cmput301f21t34.habittrak.BaseActivity;
+import com.cmput301f21t34.habittrak.DatabaseManager;
+import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-
-import java.util.Calendar;
-import java.util.TimeZone;
-import java.util.GregorianCalendar;
 
 
 /**

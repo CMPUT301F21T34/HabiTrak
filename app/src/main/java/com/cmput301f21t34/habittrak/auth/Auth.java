@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -101,7 +102,12 @@ public class Auth {
 
                         }
                     }
-                });
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("SignUp", "Exception thrown: " + e.toString());
+            }
+        });
 
         if (authUser != null){
             return authUser.getEmail();

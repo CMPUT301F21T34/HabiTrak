@@ -53,19 +53,11 @@ public class RequestsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.habi_requests_fragment, container, false);
 
-        /*// Sample Data
-        User sample1 = new User("hello123");
-        User sample2 = new User("another User");
-        ArrayList<User> userArrayList = new ArrayList<>();
-        userArrayList.add(sample1);
-        userArrayList.add(sample2);*/
-
-
         // setting up recycler view
         recyclerView = view.findViewById(R.id.requests_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        ArrayList<String> profiles = dm.getFollowRequestedList(mainUser.getEmail());     // Users that request to follow mainUser
+        ArrayList<String> profiles = mainUser.getFollowerReqList();     // Users that request to follow mainUser
         socialAdapter = new SocialAdapter(profiles, new SocialAdapter.ClickListener() {
             @Override
             public void menuButtonOnClick(View view, int position) {

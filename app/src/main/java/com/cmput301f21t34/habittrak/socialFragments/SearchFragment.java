@@ -51,13 +51,6 @@ public class SearchFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.habi_search_fragment, container, false);
 
-        // Sample Data
-        User sample1 = new User("hello123");
-        User sample2 = new User("another User");
-        ArrayList<User> userArrayList = new ArrayList<>();
-        userArrayList.add(sample1);
-        userArrayList.add(sample2);
-
         // setting up recycler view
         recyclerView = view.findViewById(R.id.search_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());

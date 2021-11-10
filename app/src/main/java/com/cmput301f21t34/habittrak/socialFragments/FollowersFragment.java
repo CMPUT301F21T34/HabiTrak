@@ -54,18 +54,11 @@ public class FollowersFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.habi_followers_fragment, container, false);
 
-        /*// Sample Data
-        User sample1 = new User("Henry");
-        User sample2 = new User("Jakob");
-        ArrayList<User> userArrayList = new ArrayList<>();
-        userArrayList.add(sample1);
-        userArrayList.add(sample2);*/
-
         // setting up recycler view
         recyclerView = view.findViewById(R.id.followers_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        ArrayList<String> profiles = dm.getFollowerList(mainUser.getEmail());     // Users that follow mainUser
+        ArrayList<String> profiles = mainUser.getFollowerList();        // Users that follow mainUser
         socialAdapter = new SocialAdapter(profiles, new SocialAdapter.ClickListener() {
             @Override
             public void menuButtonOnClick(View view, int position) {

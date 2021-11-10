@@ -4,15 +4,21 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.concurrent.Executor;
@@ -91,6 +97,14 @@ public class Auth {
         return null;
     }
 
+    /**
+     * Attempts to log in a user by a given email and password
+     *
+     * @author Dakota
+     * @param email String of email to log into
+     * @param password String of password corresponding to email
+     * @return String of email on success, null on failure
+     */
     public String logIn (String email, String password){
 
         authUser = null;
@@ -134,7 +148,7 @@ public class Auth {
                                     Toast.LENGTH_SHORT).show();
 
                         }
-                        
+
                     }
                 });
 
@@ -143,6 +157,119 @@ public class Auth {
         }
         return null;
 
+    }
+
+    public void resetPassword(String email){
+
+        mAuth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(context, "Email Sent", Toast.LENGTH_SHORT);
+                        }
+                    }
+                });
+
+    }
+
+    /**
+     * Attempts to change current logged in user to a new password
+     *
+     * @author Dakota
+     * @param newPassword String new password to change to
+     */
+    public void changePassword(String newPassword){
+
+        authUser = mAuth.getCurrentUser();
+
+        if (authUser != null) {
+
+
+            // Updates users password
+            authUser.updatePassword(newPassword)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                // Password changed
+                                Toast.makeText(context, "Password updated", Toast.LENGTH_SHORT);
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Catches exceptions
+                            if (exception instanceof FirebaseAuthRecentLoginRequiredException) {
+                                // Re-auth User
+                                if(reAuthEmail()) {
+                                    // If success, then change password
+                                    changePassword(newPassword);
+                                    // else exit
+                                }
+                            }
+                        }
+
+                    });
+
+        }
+
+    }
+
+
+    /**
+     * Re-Auths user with email auth provider
+     * This is used for secure events when the user hasn't logged in in awhile
+     *
+     * @author Dakota
+     * @return true on success, false on failure
+     */
+    private boolean reAuthEmail(){
+
+        authUser = mAuth.getCurrentUser();
+
+        // must use final boolean[] as variable is set by inner class
+        final boolean[] reAuthed = new boolean[1];
+
+        String[] credentials = getCredentials();
+
+        if (credentials[0] == null){
+            // If the user canceled the reAuth Alert
+            return false;
+        }
+
+        // Sets up AuthCredential for reAuth from received credentials
+        AuthCredential authCredentials = EmailAuthProvider
+                .getCredential(credentials[0], credentials[1]);
+
+        // Re Auths user
+        authUser.reauthenticate(authCredentials)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()){
+                            // If successful set reAuthed to true
+                            reAuthed[0] = true;
+                        } else {
+                            Toast.makeText(context, "Authentication Failed", Toast.LENGTH_SHORT);
+                            // else reAuthed false
+                            reAuthed[0] = false;
+                        }
+                    }
+                });
+
+        // returns result
+        return reAuthed[0];
+
+    }
+
+    /**
+     * signs a user out
+     * @author Dakota
+     */
+    public void signOut(){
+        mAuth.signOut();
     }
 
     /**
@@ -156,6 +283,8 @@ public class Auth {
 
         // final boolean[] to be set by inner class (builder)
         final boolean[] sendEmail = new boolean[1];
+
+        // Builds alert
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
@@ -179,6 +308,57 @@ public class Auth {
         });
 
         return sendEmail[0];
+
+    }
+
+    /**
+     * quickly gets user credentials with an alert dialogue.
+     * This is used for reAuthing if a user has been logged in for
+     * a long time.
+     *
+     * @author Dakota
+     * @return String[2] where [0] is the email, and [1] is the password.
+     *      both will be null if user cancels.
+     */
+    private String[] getCredentials(){
+
+        final String[] credentials = new String[2];
+
+        // views for user to edit
+        final EditText email = new EditText(context);
+        final EditText password = new EditText(context);
+
+        // Builds Alert Dialogue
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        builder
+                .setTitle("Re-Authentication Required");
+
+        // sets the Edit Texts
+        builder
+                .setView(email)
+                .setView(password);
+
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // sets the text fields to array
+                credentials[0] = email.toString();
+                credentials[1] = password.toString();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // sets to null on cancel
+                credentials[0] = null;
+                credentials[1] = null;
+            }
+        });
+
+        return credentials;
 
     }
 

@@ -93,19 +93,35 @@ public class SignUpFragment extends Fragment {
 
             // check email
             if (fieldsFull) {
+
+                String email = emailEditText.toString();
+                String password = passwordEditText.toString();
+
                 Log.d(TAG, "fieldsfull");
                 if (!db.isUniqueEmail(emailEditText.toString())) {
                     emailLayout.setError("Email Already in Use");
                 } else {
 
-                    //mAuth.signUp()
+                    // This signs up the user and returns the email signed up with
+                    String authedEmail = mAuth.signUp(email, password);
 
-                    db.createNewUser(emailEditText.toString(),
-                            usernameEditText.toString(),
-                            passwordEditText.toString());
-                    Log.d(TAG, "Fields Full and email unique");
-                    currentUser = db.getUser(emailEditText.toString());
-                    startHomePage(view);
+                    // authedEmail is null on failure
+                    if (authedEmail != null){
+                        // Create account in db ONLY on success
+                        db.createNewUser(authedEmail,
+                                usernameEditText.toString(),
+                                "not_required_to_store");
+
+                        Log.d(TAG, "Fields Full and email unique");
+
+                        // get the new user
+                        currentUser = db.getUser(authedEmail);
+                        startHomePage(view);
+                    }
+
+                    
+
+
                 }
             }
 

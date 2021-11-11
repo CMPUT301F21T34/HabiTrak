@@ -38,7 +38,10 @@ import com.google.android.material.navigation.NavigationBarView;
 
 public class BaseActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
 
-    final String TAG = "BaseActivity";
+    final String TAG = "Base_Activity";
+    // Result codes from activity
+    public static final int RESULT_NEW_HABIT = 1000;
+    public static final int RESULT_EDIT_HABIT = 2000;
 
     /**
      * Function called when activity is created
@@ -49,19 +52,13 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
     //TODO: Explicitly make attributes private
     NavigationBarView bottomNav;
     User mainUser;// = new User(); // Creates dummy user for testing purposes
-
+    // navigation fragments
     TodayListFragment todayFrag;
     ProfileFragment profileFrag;
     EventsFragment eventsFrag;
     AllHabitsFragment allHabitsFrag;
 
     MaterialButton addHabitButton;
-
-
-    public static final int RESULT_NEW_HABIT = 1000; // Custom Activity Result
-
-
-
 
 
     @Override
@@ -76,23 +73,18 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
         addHabitButton = findViewById(R.id.base_add_habit_button);
 
-
-
         // Initializes Fragments //
         todayFrag = new TodayListFragment(mainUser);
         profileFrag = new ProfileFragment(mainUser);
         eventsFrag = new EventsFragment(mainUser);
         allHabitsFrag = new AllHabitsFragment(mainUser);
 
-
-
         // Sets up Nav Bar //
         bottomNav = findViewById(R.id.bottom_nav); // Sets Nav to bottom nav res
         bottomNav.setOnItemSelectedListener(this);  // Sets listener to this class
         bottomNav.setSelectedItemId(R.id.navbar_menu_today); // Sets initial selected item
 
-
-
+        // add habit listener
         addHabitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -107,11 +99,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
                 addHabitActivityLauncher.launch(intent);
             }
         });
-
-
-        
-
-
 
     }
 
@@ -150,7 +137,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
                 intent.putExtra("mainUser", mainUser); // passes mainUser through intent
                 startActivity(intent);
                 bottomNav.setSelectedItemId(R.id.navbar_menu_today);
-                addHabitButton.setVisibility(View.INVISIBLE);
+                addHabitButton.setVisibility(View.VISIBLE);
 
                 return false;
         }
@@ -161,26 +148,28 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        // result from add habit activity
         if (resultCode == RESULT_NEW_HABIT) {
             Habit newHabit = intent.getParcelableExtra("newHabit");
-
             Log.d(TAG, "adding new habit: " + newHabit.getTitle());
-
             mainUser.getHabitList().add(newHabit);
-
             Log.d(TAG, "!newHabit Absolute Index: " + String.valueOf(newHabit.getIndex()));
-
             Log.d(TAG, "new habit: " + mainUser.getHabit(mainUser.getHabitList().size() - 1).getTitle());
-
             Log.d(TAG, "size: " + String.valueOf(mainUser.getHabitList().size()));
-
             todayFrag.refreshTodayFragment(); // refresh view
-
-
         }
-
+        // result from view/edit habit activity
+        else if (resultCode == RESULT_EDIT_HABIT){
+            Habit habit = intent.getParcelableExtra("HABIT");
+            int position = intent.getIntExtra("position", 0);
+            mainUser.replaceHabit(position, habit);
+            todayFrag.refreshTodayFragment();
+            allHabitsFrag.refreshAllFragment();
+        }
         super.onActivityResult(requestCode, resultCode, intent);
     }
+
+    // activity result launcher for add habit activity
     ActivityResultLauncher<Intent> addHabitActivityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.cmput301f21t34.habittrak.fragments.SocialFragment;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.User;
 import com.cmput301f21t34.habittrak.fragments.AllHabitsFragment;
@@ -145,10 +146,11 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
                 return true;
             case R.id.navbar_menu_social:
 
-                Intent intent = new Intent(getBaseContext(), SocialActivity.class);
-                intent.putExtra("mainUser", mainUser); // passes mainUser through intent
-                startActivity(intent);
-                bottomNav.setSelectedItemId(R.id.navbar_menu_today);
+//                bottomNav.setSelectedItemId(R.id.navbar_menu_today);
+//                Intent intent = new Intent(getBaseContext(), SocialActivity.class);
+//                intent.putExtra("mainUser", mainUser); // passes mainUser through intent
+//                startActivity(intent);
+                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new SocialFragment(mainUser)).commit();
                 addHabitButton.setVisibility(View.INVISIBLE);
 
                 return false;
@@ -156,7 +158,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
         return false;
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {

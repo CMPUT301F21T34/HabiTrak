@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.recycler.HabitRecycler;
 import com.cmput301f21t34.habittrak.user.Habit;
+import com.cmput301f21t34.habittrak.user.HabitList;
 import com.cmput301f21t34.habittrak.user.User;
 
 import java.util.ArrayList;
@@ -63,5 +64,38 @@ public class EventsFragment extends Fragment {
 
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+
+        super.onResume();
+
+        // Refreshes Frag
+        refreshAllFragment();
+
+    }
+
+    /**
+     * refreshAllFragment
+     *
+     * @author Dakota
+     *
+     * refresh the habitsdata list to update the data
+     */
+    public void refreshAllFragment() {
+
+        Log.d("TodayListFragment", "refreshing habit list");
+        // Populate today view with Today's habits.
+
+        habitsDisplayList.clear(); // Make sure is clear
+
+        HabitList mainUserHabits = mainUser.getHabitList(); // get HabitsList
+
+        habitsDisplayList.addAll(mainUserHabits);
+
+        // tells the adapter in recycler that the dataset has changed
+        habitRecycler.notifyDataSetChanged();
+
     }
 }

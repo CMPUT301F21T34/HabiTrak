@@ -7,8 +7,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
@@ -47,15 +45,6 @@ public class SocialFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.activity_social, container, false);
-
-        // add back button to toolbar
-//        Toolbar toolbar = view.findViewById(R.id.social_toolbar);
-//        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-//        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-//
-//        Toolbar oldToolbar = getActivity().findViewById(R.id.toolbar);
-//        oldToolbar.setVisibility(View.GONE);
 
         // setting views
         socialTab = view.findViewById(R.id.social_tab_layout);
@@ -106,12 +95,6 @@ public class SocialFragment extends Fragment {
 
         return view;
     }
-
-//    public boolean onSupportNavigateUp() {
-//        // Adding the back button and
-//        getActivity().onBackPressed();
-//        return true;
-//    }
 
     /**
      * ViewStateAdapter

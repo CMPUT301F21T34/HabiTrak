@@ -1,25 +1,23 @@
 package com.cmput301f21t34.habittrak;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.cmput301f21t34.habittrak.fragments.SocialFragment;
-import com.cmput301f21t34.habittrak.user.Habit;
-import com.cmput301f21t34.habittrak.user.User;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.cmput301f21t34.habittrak.fragments.AllHabitsFragment;
 import com.cmput301f21t34.habittrak.fragments.EventsFragment;
 import com.cmput301f21t34.habittrak.fragments.ProfileFragment;
+import com.cmput301f21t34.habittrak.fragments.SocialFragment;
 import com.cmput301f21t34.habittrak.fragments.TodayListFragment;
-
-
+import com.cmput301f21t34.habittrak.user.Habit;
+import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -29,83 +27,63 @@ import com.google.android.material.navigation.NavigationBarView;
  * BaseActivity
  *
  * @author Pranav
- *
+ * <p>
  * Base Acitivity after logging in.
  * Hold the topbar, bottomnav bar and the base fragments
- *
  * @version 1.0
  * @since 2021-10-16
  */
-
 public class BaseActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
 
+    public static final int RESULT_NEW_HABIT = 1000;        // Custom Activity Result
     final String TAG = "BaseActivity";
-
-    /**
-     * Function called when activity is created
-     * @param savedInstanceState savedInstances
-     */
-
-
     //TODO: Explicitly make attributes private
     NavigationBarView bottomNav;
-    User mainUser;// = new User(); // Creates dummy user for testing purposes
-
+    User mainUser;      // Creates dummy user for testing purposes
     TodayListFragment todayFrag;
     ProfileFragment profileFrag;
     EventsFragment eventsFrag;
     AllHabitsFragment allHabitsFrag;
-
-    MaterialButton addHabitButton;
-
     SocialFragment socialFrag;
+    MaterialButton addHabitButton;
+    ActivityResultLauncher<Intent> addHabitActivityLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+            }
+    );
 
-    public static final int RESULT_NEW_HABIT = 1000; // Custom Activity Result
-
-
-
-
-
+    /**
+     * Function called when activity is created
+     *
+     * @param savedInstanceState savedInstances
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
 
-        // Gets Intents //
+        // Gets Intents
         Intent intent = getIntent();
-
-        this.mainUser = intent.getParcelableExtra("mainUser"); // Gets mainUser from intent
+        this.mainUser = intent.getParcelableExtra("mainUser");      // Gets mainUser from intent
 
         addHabitButton = findViewById(R.id.base_add_habit_button);
 
-
-
-        // Initializes Fragments //
+        // Initializes Fragments
         todayFrag = new TodayListFragment(mainUser);
         profileFrag = new ProfileFragment(mainUser);
         eventsFrag = new EventsFragment(mainUser);
         allHabitsFrag = new AllHabitsFragment(mainUser);
-
         socialFrag = new SocialFragment(mainUser);
 
-        // Sets up Nav Bar //
-        bottomNav = findViewById(R.id.bottom_nav); // Sets Nav to bottom nav res
-        bottomNav.setOnItemSelectedListener(this);  // Sets listener to this class
-        bottomNav.setSelectedItemId(R.id.navbar_menu_today); // Sets initial selected item
+        // Sets up Nav Bar
+        bottomNav = findViewById(R.id.bottom_nav);              // Sets Nav to bottom nav res
+        bottomNav.setOnItemSelectedListener(this);              // Sets listener to this class
+        bottomNav.setSelectedItemId(R.id.navbar_menu_today);    // Sets initial selected item
 
-
-
-        addHabitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), AddHabitActivity.class);
-                addHabitActivityLauncher.launch(intent);
-            }
+        addHabitButton.setOnClickListener(view -> {
+            Intent intent1 = new Intent(view.getContext(), AddHabitActivity.class);
+            addHabitActivityLauncher.launch(intent1);
         });
-
-
-
-
 
         // TEST
         /*DatabaseManager testdm = new DatabaseManager();
@@ -127,7 +105,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.navbar_menu_today:
                 addHabitButton.setVisibility(View.VISIBLE);
@@ -146,17 +123,10 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, profileFrag).commit();
                 return true;
             case R.id.navbar_menu_social:
-
-//                bottomNav.setSelectedItemId(R.id.navbar_menu_today);
-//                Intent intent = new Intent(getBaseContext(), SocialActivity.class);
-//                intent.putExtra("mainUser", mainUser); // passes mainUser through intent
-//                startActivity(intent);
-                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, socialFrag).commit();
                 addHabitButton.setVisibility(View.INVISIBLE);
-
+                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, socialFrag).commit();
                 return true;
         }
-
         return false;
     }
 
@@ -176,17 +146,9 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
             Log.d(TAG, "size: " + String.valueOf(mainUser.getHabitList().size()));
 
             todayFrag.refreshTodayFragment(); // refresh view
-
-
         }
 
         super.onActivityResult(requestCode, resultCode, intent);
     }
-    ActivityResultLauncher<Intent> addHabitActivityLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-            }
-    );
-
 
 }

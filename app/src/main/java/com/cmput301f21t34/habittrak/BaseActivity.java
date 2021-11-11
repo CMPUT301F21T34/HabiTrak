@@ -58,6 +58,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
     MaterialButton addHabitButton;
 
+    SocialFragment socialFrag;
 
     public static final int RESULT_NEW_HABIT = 1000; // Custom Activity Result
 
@@ -85,7 +86,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         eventsFrag = new EventsFragment(mainUser);
         allHabitsFrag = new AllHabitsFragment(mainUser);
 
-
+        socialFrag = new SocialFragment(mainUser);
 
         // Sets up Nav Bar //
         bottomNav = findViewById(R.id.bottom_nav); // Sets Nav to bottom nav res
@@ -150,10 +151,10 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 //                Intent intent = new Intent(getBaseContext(), SocialActivity.class);
 //                intent.putExtra("mainUser", mainUser); // passes mainUser through intent
 //                startActivity(intent);
-                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new SocialFragment(mainUser)).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, socialFrag).commit();
                 addHabitButton.setVisibility(View.INVISIBLE);
 
-                return false;
+                return true;
         }
 
         return false;

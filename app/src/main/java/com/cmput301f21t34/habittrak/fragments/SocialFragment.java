@@ -62,7 +62,7 @@ public class SocialFragment extends Fragment {
         viewPager = view.findViewById(R.id.social_view_pager);
 
         // setting up the adapter
-        FragmentManager fm = getActivity().getSupportFragmentManager();
+        FragmentManager fm = getChildFragmentManager();
         ViewStateAdapter viewStateAdapter = new ViewStateAdapter(fm, getLifecycle());
         viewPager.setAdapter(viewStateAdapter);
 

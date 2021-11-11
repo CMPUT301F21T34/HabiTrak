@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HabitTrak">
         <activity
+            android:name=".ViewHabitEvents"
+            android:exported="true" />
+        <activity
             android:name=".ViewEditHabit"
             android:exported="true" />
         <activity

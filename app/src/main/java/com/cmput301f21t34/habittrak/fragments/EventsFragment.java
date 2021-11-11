@@ -17,6 +17,7 @@ import android.widget.PopupMenu;
 
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.ViewEditHabit;
+import com.cmput301f21t34.habittrak.ViewHabitEvents;
 import com.cmput301f21t34.habittrak.recycler.HabitRecycler;
 import com.cmput301f21t34.habittrak.recycler.TodayHabitRecyclerAdapter;
 import com.cmput301f21t34.habittrak.user.Habit;
@@ -71,10 +72,10 @@ public class EventsFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 Habit habit = habitsDisplayList.get(position);
-                Intent intent = new Intent(getContext(), ViewEditHabit.class);
+                Intent intent = new Intent(getContext(), ViewHabitEvents.class);
                 intent.putExtra("HABIT", habit);
                 intent.putExtra("position", habit.getIndex());
-                viewHabitResultLauncher.launch(intent);
+                startActivity(intent);
             }
 
             @Override
@@ -100,20 +101,20 @@ public class EventsFragment extends Fragment {
         super.onResume();
 
         // Refreshes Frag
-        refreshAllFragment();
+        refreshEventFragment();
 
     }
 
     /**
-     * refreshAllFragment
+     * refreshEventFragment
      *
      * @author Dakota
      *
      * refresh the habitsdata list to update the data
      */
-    public void refreshAllFragment() {
+    public void refreshEventFragment() {
 
-        Log.d("TodayListFragment", "refreshing habit list");
+        Log.d("EventsFragment", "refreshing habit list");
         // Populate today view with Today's habits.
 
         habitsDisplayList.clear(); // Make sure is clear
@@ -126,12 +127,6 @@ public class EventsFragment extends Fragment {
         habitRecycler.notifyDataSetChanged();
 
     }
-
-    // activity result launcher for view/edit activity
-    ActivityResultLauncher<Intent> viewHabitResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {}
-    );
 
     /**
      * showMenu
@@ -149,7 +144,7 @@ public class EventsFragment extends Fragment {
         menu.setOnMenuItemClickListener(menuItem -> {
             Habit habit = habitsDisplayList.get(position);
             mainUser.removeHabit(habit);
-            refreshAllFragment();
+            refreshEventFragment();
             Log.d(TAG,"Habit Removed");
             return true;
         });

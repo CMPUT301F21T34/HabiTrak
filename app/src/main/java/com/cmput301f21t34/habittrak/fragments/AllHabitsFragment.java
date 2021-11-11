@@ -25,7 +25,7 @@ import java.util.ArrayList;
  * @author Pranav
  * @author Dakota
  *
- * Fragment for displaying all the user's habits
+ * Fragment for displaying all the user's habits, viewing and editing them when clicked
  *
  * @version 1.0
  */

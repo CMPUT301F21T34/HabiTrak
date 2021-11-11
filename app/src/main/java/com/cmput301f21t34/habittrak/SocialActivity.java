@@ -130,7 +130,7 @@ public class SocialActivity extends AppCompatActivity{
 
     @Override
     public boolean onSupportNavigateUp() {
-        // Adding the back button and
+        // Adding the back button
         onBackPressed();
         return true;
     }

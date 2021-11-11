@@ -14,7 +14,13 @@
         android:theme="@style/Theme.HabitTrak">
         <activity
             android:name=".ViewHabitEvents"
-            android:exported="true" />
+            android:exported="true"
+            android:parentActivityName=".BaseActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.cmput301f21t34.habittrak.BaseActivity"/>
+        </activity>
+
         <activity
             android:name=".ViewEditHabit"
             android:exported="true" />

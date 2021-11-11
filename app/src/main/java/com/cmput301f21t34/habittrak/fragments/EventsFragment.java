@@ -75,7 +75,7 @@ public class EventsFragment extends Fragment {
                 Intent intent = new Intent(getContext(), ViewHabitEvents.class);
                 intent.putExtra("HABIT", habit);
                 intent.putExtra("position", habit.getIndex());
-                startActivity(intent);
+                viewEventsResultLauncher.launch(intent);
             }
 
             @Override
@@ -127,6 +127,12 @@ public class EventsFragment extends Fragment {
         habitRecycler.notifyDataSetChanged();
 
     }
+
+    // activity result launcher for view/edit events activity
+    ActivityResultLauncher<Intent> viewEventsResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {}
+    );
 
     /**
      * showMenu

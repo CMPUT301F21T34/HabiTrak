@@ -16,9 +16,14 @@ import com.cmput301f21t34.habittrak.BaseActivity;
 import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.user.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 /**
@@ -34,28 +39,64 @@ import com.google.android.material.textfield.TextInputLayout;
 public class LoginFragment extends Fragment {
 
     private User mainUser;
-    private Auth mAuth;
+    private DatabaseManager db;
+    private Auth mAuth;  // This is our Auth Helper Class
+    private FirebaseUser authUser;
 
-    public LoginFragment(User mainUser, Auth auth){
+    private View view;
+
+    TextInputLayout usernameLayout;
+    TextInputEditText usernameEditText;
+    TextInputLayout passwordLayout;
+    TextInputEditText passwordEditText;
+    MaterialButton loginButton;
+    MaterialButton signupButton;
+
+
+
+    public LoginFragment(User mainUser){
         this.mainUser = mainUser; // Passes User object
-        this.mAuth = auth;
+
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.habi_login_fragment, container, false);
+        view = inflater.inflate(R.layout.habi_login_fragment, container, false);
 
         // Variables of the UI elements
-        TextInputLayout usernameLayout = view.findViewById(R.id.username_text_input);
-        TextInputEditText usernameEditText = view.findViewById(R.id.username_edit_text);
-        TextInputLayout passwordLayout = view.findViewById(R.id.password_text_input);
-        TextInputEditText passwordEditText = view.findViewById(R.id.password_edit_text);
-        MaterialButton loginButton = view.findViewById(R.id.login_button);
-        MaterialButton signupButton = view.findViewById(R.id.signup_button);
+
+        // UI
+        usernameLayout = view.findViewById(R.id.username_text_input);
+        usernameEditText = view.findViewById(R.id.username_edit_text);
+        passwordLayout = view.findViewById(R.id.password_text_input);
+        passwordEditText = view.findViewById(R.id.password_edit_text);
+        loginButton = view.findViewById(R.id.login_button);
+        signupButton = view.findViewById(R.id.signup_button);
+
+        db = new DatabaseManager();
+
+        mAuth = new Auth(null, getActivity());
 
 
+
+
+
+
+
+
+
+        // Continue to onResume
+        Log.d("LogIn", "Continuing to onResume");
+
+        return view;
+
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
 
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,35 +106,87 @@ public class LoginFragment extends Fragment {
         });
 
 
+
         // Password validator
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // BYPASS LOGIN FOR NOW
-                startHomePage(view, getUser(usernameEditText.getText().toString()));
-                // BYPASS LOGIN FOR NOW
 
                 passwordLayout.setError(null);
                 usernameLayout.setError(null);
 
-                if (!userExists(usernameEditText.getText())) {
-                    usernameLayout.setError("This email does not exist!");
+                String email = usernameEditText.getText().toString();
+                String password = passwordEditText.getText().toString();
+
+                if (email != "" && password != ""){
+
+                    runLogin(email, password);
+
+                } else {
+
+                    usernameLayout.setError("Fields Cannot be Empty");
+                    passwordLayout.setError("Fields Cannot be Empty");
+
                 }
-                else if (!isPasswordValid(passwordEditText.getText(), usernameEditText.getText())) {
-                    passwordLayout.setError("Incorrect password!");
-                }
-                else {
-                    passwordLayout.setError(null);
-                    usernameLayout.setError(null);
-                    User currentUser = getUser(usernameEditText.getText().toString());
-                    startHomePage(view, currentUser);
-                }
+
+                Log.d("LogIn", "Click finished");
+
+
             }
+
+
+
         });
 
-
-        return view;
     }
+
+
+    ///
+
+
+    private void runLogin(String email, String password){
+        // This is the firebase auth
+        // Must be used as they don't get put on top of the stack but are called later
+        FirebaseAuth fAuth = mAuth.getAuth();
+
+
+        fAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()){
+
+                            authUser = fAuth.getCurrentUser();
+                            Log.d("LogIn", "Success: " + fAuth.getCurrentUser().getEmail());
+
+                            if (authUser.isEmailVerified()){
+
+
+                                mainUser = db.getUser(authUser.getEmail());
+                                startHomePage(null, mainUser);
+
+                            } else {
+
+                                usernameLayout.setError("Email not Verified");
+                                passwordLayout.setError(null);
+
+                                mAuth.alertNotVerified(authUser);
+
+                            }
+
+
+                        } else {
+
+                            usernameLayout.setError(null);
+                            passwordLayout.setError("Incorrect Password");
+
+
+                        }
+                    }
+                });
+    }
+
+    ///
 
     /**
      * Password validation.

@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,6 +25,7 @@ import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Authentication class for interacting with Firebase Auth
@@ -39,15 +41,25 @@ public class Auth {
 
     private FirebaseAuth mAuth;
     private Context context;
+    private String authEmail;
+    private boolean working = false; // If we are waiting on Firebase
     FirebaseUser authUser;
 
-    public Auth(Context context){
+    public Auth(FirebaseUser authUser, Context context){
 
         this.context = context;
         mAuth = FirebaseAuth.getInstance();
+        this.authUser = authUser;
 
     }
 
+    public FirebaseUser getAuthUser() {
+        return authUser;
+    }
+
+    public FirebaseAuth getAuth() {
+        return mAuth;
+    }
 
     /**
      * Gets the current logged in user's email. If no user is logged
@@ -58,15 +70,16 @@ public class Auth {
      */
     public String getLoggedIn(){
 
-        authUser = null; // Makes sure it's clear
-        authUser = mAuth.getCurrentUser();
 
         if (authUser != null){
-            return authUser.getEmail();
+            this.authEmail = authUser.getEmail();
+        } else {
+            this.authEmail = null;
         }
-        return null;
+        return authEmail;
 
     }
+
 
     /**
      * Try's to sign up a particular email and password combination
@@ -107,15 +120,53 @@ public class Auth {
             }
         });
 
-        authUser = mAuth.getCurrentUser();
+        return getLoggedIn();
 
-        if (authUser != null){
 
-            Log.d("SignUp", "Auth.signUp() returning: " + authUser.getEmail());
-            return authUser.getEmail();
-        }
+    }
 
-        return null;
+    /**
+     * Attempts to log in a user by a given email and password
+     *
+     * @author Dakota
+     * @param email String of email to log into
+     * @param password String of password corresponding to email
+     * @return String of email on success, null on failure
+     */
+    public FirebaseUser logInCall (String email, String password){
+
+        Log.d("LogIn", "auth called");
+
+
+        this.working = true;
+        // Authenticates
+
+        // Note this does not get added to the top of the stack
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()){
+
+                            authUser = mAuth.getCurrentUser();
+                            Log.d("LogIn", "Success: " + mAuth.getCurrentUser().getEmail());
+
+
+                        } else {
+
+                            authUser = null;
+
+                            Log.d("LogIn", "Failure");
+
+                        }
+                    }
+                });
+
+        Log.d("LogIn", "Exiting logInCall: ");
+
+        return authUser;
+
+
 
 
     }
@@ -130,57 +181,23 @@ public class Auth {
      */
     public String logIn (String email, String password){
 
-        authUser = null;
-
         // Make's sure a user isn't already logged in
-        String userEmail = getLoggedIn();
-        if (userEmail != null){
-            return userEmail;
-        }
+        signOut();
 
-        // Authenticates
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener((Activity) context, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+        // The reason we call it this way, is because of stack order.
+        // These all must be called in their own methods where returnAuthUser
+        // Gets the success of logInCall AFTER logInCall has been called
+        logInCall(email, password);
 
-                        if (task.isSuccessful()){
-                            // User provided valid credentials
 
-                            authUser = mAuth.getCurrentUser();
+        // Waits until we are no longer working to auth
 
-                            // Check if they are verified
-                            boolean verified = authUser.isEmailVerified();
+        return getLoggedIn();
+    }
 
-                            if (!verified) {
-                                // If not verified refuse them to log in
-                                authUser = null;
-
-                                // alert and give option to resend email
-                                boolean sendEmail = alertNotVerified();
-
-                                // sends the email
-                                if (sendEmail) { sendSignInEmail(authUser.getEmail()); }
-
-                            }
-
-                        } else {
-                            // User provided invalid credentials
-
-                            authUser = null;
-                            Toast.makeText(context, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-
-                        }
-
-                    }
-                });
-
-        if (authUser != null){
-            return authUser.getEmail();
-        }
-        return null;
-
+    public boolean isVerified(){
+        if (authUser == null) { return false; }
+        return authUser.isEmailVerified();
     }
 
     public void resetPassword(String email){
@@ -205,6 +222,7 @@ public class Auth {
      */
     public void changePassword(String newPassword){
 
+        // Should be fine
         authUser = mAuth.getCurrentUser();
 
         if (authUser != null) {
@@ -280,11 +298,11 @@ public class Auth {
     }
 
 
+
     private void sendSignInEmail(String email){
 
         // see: https://firebase.google.com/docs/auth/android/email-link-auth
 
-        authUser = mAuth.getCurrentUser();
 
         String url = "http://habittrak.firebaseapp.com/finishSignUp?cartId=1000";
         ActionCodeSettings actionCodeSettings = ActionCodeSettings.newBuilder()
@@ -359,6 +377,16 @@ public class Auth {
         mAuth.signOut();
     }
 
+    public String getEmail(){
+
+
+        if ( authUser != null){
+            return authUser.getEmail();
+        }
+
+       return null;
+    }
+
     /**
      * Alerts the user that their account email is not verified and asks
      * if they would like a new email to be sent
@@ -366,7 +394,9 @@ public class Auth {
      * @author Dakota
      * @return boolean true if they would like a new email, false else wise
      */
-    private boolean alertNotVerified(){
+    public boolean alertNotVerified(FirebaseUser authUser){
+
+        Log.d("NotVer", "alert called");
 
         // final boolean[] to be set by inner class (builder)
         final boolean[] sendEmail = new boolean[1];
@@ -383,18 +413,20 @@ public class Auth {
             @Override
             public void onClick(DialogInterface dialogInterface, int id) {
                 // Send new email
-                sendEmail[0] = true;
+                authUser.sendEmailVerification();
             }
         });
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+            public void onClick(DialogInterface dialogInterface, int id) {
                 // Don't send new email
-                sendEmail[0] = false;
+
             }
         });
 
-        return sendEmail[0];
+        builder.show();
+
+        return true;
 
     }
 

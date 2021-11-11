@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mAuth = new Auth(this);
+        mAuth = new Auth(null,this);
         User mainUser = null;
 
 
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity{
     private void goToLogin(){
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.login_fragment_container, new LoginFragment(null, mAuth))
+                .add(R.id.login_fragment_container, new LoginFragment(null))
                 .commit();
     }
 

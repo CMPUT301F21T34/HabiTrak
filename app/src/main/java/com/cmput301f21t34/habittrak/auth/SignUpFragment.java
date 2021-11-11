@@ -1,5 +1,6 @@
 package com.cmput301f21t34.habittrak.auth;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -18,9 +19,15 @@ import com.cmput301f21t34.habittrak.BaseActivity;
 import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.user.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * SignUpFragment
@@ -98,27 +105,7 @@ public class SignUpFragment extends Fragment {
                 } else {
 
                     // This signs up the user and returns the email signed up with
-                    String authedEmail = mAuth.signUp(email, password);
-
-                    // authedEmail is null on failure
-                    if (authedEmail != null){
-                        // Create account in db ONLY on success
-                        db.createNewUser(authedEmail,
-                                username,
-                                "not_required_to_store"); // We should not store password in db
-
-                        Log.d(TAG, "Fields Full and email unique");
-
-                        // Kick user to sign in page
-
-                        toLogin();
-
-
-                    } else {
-
-                        // Failure
-
-                        Toast.makeText(getContext(), "Sign Up Failed", Toast.LENGTH_SHORT);
+                    runSignUp(email, username, password);
 
 
                     }
@@ -127,16 +114,52 @@ public class SignUpFragment extends Fragment {
 
 
                 }
-            }
+            });
 
             // if everything correct then start base activity
-        });
 
         return view;
     }
 
+    private void runSignUp(String email, String username, String password){
+        FirebaseAuth fAuth = mAuth.getAuth();
+        fAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener((Activity) getActivity(), new OnCompleteListener<AuthResult>() {
+
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+
+                        if ( task.isSuccessful() ) {
+
+                            // Sign Up was successful
+                            FirebaseUser authUser = fAuth.getCurrentUser();
+
+                            db.createNewUser(authUser.getEmail(), username, "Redundant");
+                            fAuth.getCurrentUser().sendEmailVerification();
+
+                            Toast.makeText(getActivity(), "Success",
+                                    Toast.LENGTH_SHORT).show();
+
+                            toLogin();
+
+                        } else {
+
+                            // Sign Up failed
+                            Toast.makeText(getActivity(), "Authentication failed",
+                                    Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("SignUp", "Exception thrown: " + e.toString());
+            }
+        });
+    }
+
     private void toLogin() {
-        LoginFragment loginFragment = new LoginFragment(null, mAuth);
+        LoginFragment loginFragment = new LoginFragment(null);
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.login_fragment_container, loginFragment, "loginFrag")
                 .commit();

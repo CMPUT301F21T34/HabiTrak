@@ -62,6 +62,7 @@ public class SocialFragment extends Fragment {
         socialTab.addTab(socialTab.newTab().setText("Search"));
 
         // Initialise Fragments
+        // TODO maybe move these into base onCreate if doesn't cause issues with things not updating because this is called repeatedly possibly leading to reduced performance
         followersFragment = new FollowersFragment(mainUser);
         followingFragment = new FollowingFragment(mainUser);
         requestsFragment = new RequestsFragment(mainUser);

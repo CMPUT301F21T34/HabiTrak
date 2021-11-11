@@ -309,22 +309,23 @@ public class DatabaseManager {
                 bio = (String) document.get("Biography");
             }
 
-            user = new User(email);
-
-            user.setPassword(password);
-            user.setUsername(name);
-            user.setHabitList(habitList);
-            user.setFollowerList(followerList);
-            user.setFollowingList(followingList);
-            user.setBlockList(blockList);
-            user.setBlockedByList(blockedByList);
-            user.setFollowingReqList(followReqList);
-            user.setFollowerReqList(followRequestedList);
+            user = new User(
+                    name,
+                    password,
+                    email,
+                    bio,
+                    habitList,
+                    followerList,
+                    followingList,
+                    followReqList,
+                    followRequestedList,
+                    blockList,
+                    blockedByList
+                    );
             return user;
-        } catch (Exception ignored) {
-        }
-        user = new User();
-        return user;
+        } catch (Exception ignored) {}
+
+        return new User(email);
     }
 
     /**

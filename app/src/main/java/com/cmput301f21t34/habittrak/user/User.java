@@ -193,7 +193,7 @@ public class User implements Parcelable {
                 userBundle.getParcelableArrayList("habitList")
         );
 
-        // DatabasePointer Lists //
+        // Lists of UUIDs
         this.followerList = userBundle.getStringArrayList("followerList");
         this.followingList = userBundle.getStringArrayList("followingList");
         this.followingReqList = userBundle.getStringArrayList("followingReqList");

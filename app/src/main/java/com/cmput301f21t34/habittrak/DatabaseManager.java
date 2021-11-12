@@ -509,167 +509,115 @@ public class DatabaseManager {
     }
 
     /**
-     * getFollowerList
-     * gets the follower list of the provided email
+     * getUUIDList
+     * Gets the specified list owned by the specified user from the database
      *
-     * @param email -Type String; The email of the user who's followerList is to be retrieved
-     * @return Follower list
-     * @author Tauseef
+     * @param listName String, name of the list to retrieve
+     * @param UUID     String, UUID of the user who owns said list
+     * @return ArrayList<String>, the list if successful, otherwise an empty list
+     * @author Kaaden, Henry, Tauseef
      */
-    public ArrayList<String> getFollowerList(String email) {
-
-        ArrayList<String> returnFollowerList = new ArrayList<>();
-
+    private ArrayList<String> getUUIDList(String listName, String UUID) {
         try {
-            DocumentReference docref = database.collection("users").document(email);
-            Task<DocumentSnapshot> task = docref.get();
-            while (!task.isComplete()) ;
-            DocumentSnapshot document = task.getResult();
+            DocumentReference documentReference = database.collection("users").document(UUID);
+            Task<DocumentSnapshot> task = documentReference.get();
 
+            while (!task.isComplete()) ; // wait
+
+            DocumentSnapshot document = task.getResult();
             if (document.getData() != null) {
-                returnFollowerList = (ArrayList<String>) document.get("followerList");
+                return (ArrayList<String>) document.get(listName);
             }
         } catch (Exception ignored) {
         }
-        return returnFollowerList;
+
+        return new ArrayList<>();
+    }
+
+    /**
+     * getFollowerList
+     * Gets the followerList of the user with the provided UUID,
+     * a list of UUIDs of users who follow this user
+     *
+     * @param UUID String, UUID of the user whose followerList is to be retrieved
+     * @return ArrayList<String>, the followerList if successful, otherwise an empty list
+     * @author Tauseef
+     * @author Kaaden
+     */
+    public ArrayList<String> getFollowerList(String UUID) {
+        return getUUIDList("followerList", UUID);
     }
 
     /**
      * getFollowingList
-     * <p>
-     * gets the following list of the provided email
+     * Gets the followingList of the user with the provided UUID,
+     * a list of UUIDs of users who follow this user
      *
-     * @param email -Type String; The email of the user who's followingList is to be retrieved
-     * @return Following list
+     * @param UUID String, UUID of the user whose followingList is to be retrieved
+     * @return ArrayList<String>, the followingList if successful, otherwise an empty list
      * @author Tauseef
+     * @author Kaaden
      */
-    public ArrayList<String> getFollowingList(String email) {
-
-        ArrayList<String> returnFollowingList = new ArrayList<>();
-
-        try {
-            DocumentReference docref = database.collection("users").document(email);
-            Task<DocumentSnapshot> task = docref.get();
-            while (!task.isComplete()) ;
-            DocumentSnapshot document = task.getResult();
-
-            if (document.getData() != null) {
-                returnFollowingList = (ArrayList<String>) document.get("followingList");
-
-            }
-        } catch (Exception ignored) {
-        }
-        return returnFollowingList;
+    public ArrayList<String> getFollowingList(String UUID) {
+        return getUUIDList("followingList", UUID);
     }
 
     /**
      * getFollowReqList
-     * returns followReq list of the provided email (The followReq list contains all the users email
-     * the main user(the one with the id) has requested to follow)
+     * Gets the followReqList of the user with the provided UUID,
+     * a list of UUIDs of users that this user has requested to follow
      *
-     * @param email -Type String; The email email of the user who's follow req list is to be retrieved
-     * @return ArrayList<Database_Pointer> Follow req list
+     * @param UUID String, UUID of the user whose followReqList is to be retrieved
+     * @return ArrayList<String>, the followReqList if successful, otherwise an empty list
      * @author Tauseef
+     * @author Kaaden
      */
-    public ArrayList<String> getFollowReqList(String email) {
-
-        ArrayList<String> returnFollowReqList = new ArrayList<>();
-
-        try {
-            DocumentReference docref = database.collection("users").document(email);
-            Task<DocumentSnapshot> task = docref.get();
-            while (!task.isComplete()) ;
-            DocumentSnapshot document = task.getResult();
-
-            if (document.getData() != null) {
-                returnFollowReqList = (ArrayList<String>) document.get("followReqList");
-            }
-        } catch (Exception ignored) {
-        }
-        return returnFollowReqList;
+    public ArrayList<String> getFollowReqList(String UUID) {
+        return getUUIDList("followReqList", UUID);
     }
 
 
     /**
      * getFollowRequestedList
-     * returns followRequested list of the provided email (The followReq list contains all the users email
-     * that have requested to follow the main user(the one with the id)
+     * Gets the followRequestedList of the user with the provided UUID,
+     * a list of UUIDs of users that have requested to follow this user
      *
-     * @param email -Type String; The email email of the user who's follow requested list is to be retrieved
-     * @return ArrayList<Database_Pointer>
+     * @param UUID String, UUID of the user whose followRequestedList is to be retrieved
+     * @return ArrayList<String>, the followRequestedList if successful, otherwise an empty list
      * @author Tauseef
+     * @author Kaaden
      */
-    public ArrayList<String> getFollowRequestedList(String email) {
-
-        ArrayList<String> returnFollowRequestedList = new ArrayList<>();
-
-        try {
-            DocumentReference docref = database.collection("users").document(email);
-            Task<DocumentSnapshot> task = docref.get();
-            while (!task.isComplete()) ;
-            DocumentSnapshot document = task.getResult();
-
-            if (document.getData() != null) {
-                returnFollowRequestedList = (ArrayList<String>) document.get("followRequestedList");
-            }
-        } catch (Exception ignored) {
-        }
-        return returnFollowRequestedList;
+    public ArrayList<String> getFollowRequestedList(String UUID) {
+        return getUUIDList("followRequestedList", UUID);
     }
 
 
     /**
      * getBlockList
-     * returns the block list of the provided email (The block list contains all the users email
-     * that the user have blocked
+     * Gets the blockList of the user with the provided UUID,
+     * a list of UUIDs of users that this user has blocked
      *
-     * @param email -Type String; The email email of the user who's block list is to be retrieved
-     * @return ArrayList<Database_Pointer> Block List
+     * @param UUID String, UUID of the user whose blockList is to be retrieved
+     * @return ArrayList<String>, the blockList if successful, otherwise an empty list
      * @author Tauseef
+     * @author Kaaden
      */
-    public ArrayList<String> getBlockList(String email) {
-
-        ArrayList<String> returnBlockList = new ArrayList<>();
-
-        try {
-            DocumentReference docref = database.collection("users").document(email);
-            Task<DocumentSnapshot> task = docref.get();
-            while (!task.isComplete()) ;
-            DocumentSnapshot document = task.getResult();
-
-            if (document.getData() != null) {
-                returnBlockList = (ArrayList<String>) document.get("blockList");
-            }
-        } catch (Exception ignored) {
-        }
-        return returnBlockList;
+    public ArrayList<String> getBlockList(String UUID) {
+        return getUUIDList("blockList", UUID);
     }
 
     /**
      * getBlockedByList
-     * returns blockedBylist of the provided email (The BlockedBy list contains all the users email
-     * that have blocked the user)
+     * Gets the blockList of the user with the provided UUID,
+     * a list of UUIDs of users that have blocked this user
      *
-     * @param email -Type String; The email email of the user who's blockedBy list is to be retrieved
-     * @return ArrayList<Database_Pointer> BlockedByList
+     * @param UUID String, UUID of the user whose blockedByList is to be retrieved
+     * @return ArrayList<String>, the blockedByList if successful, otherwise an empty list
      * @author Tauseef
+     * @author Kaaden
      */
-    public ArrayList<String> getBlockedByList(String email) {
-
-        ArrayList<String> returnBlockedByList = new ArrayList<>();
-
-        try {
-            DocumentReference docref = database.collection("users").document(email);
-            Task<DocumentSnapshot> task = docref.get();
-            while (!task.isComplete()) ;
-            DocumentSnapshot document = task.getResult();
-
-            if (document.getData() != null) {
-                returnBlockedByList = (ArrayList<String>) document.get("blockedByList");
-            }
-        } catch (Exception ignored) {
-        }
-        return returnBlockedByList;
+    public ArrayList<String> getBlockedByList(String UUID) {
+        return getUUIDList("blockedByList", UUID);
     }
 
     // TODO no one should be updating everything at once, its just inefficient, we should break this down into more precise functions

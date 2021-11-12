@@ -451,7 +451,7 @@ public class DatabaseManager {
      * Converts an array of HashMap (data from the database) to an array of HabitEvent objects
      *
      * @param hashMapList -Type ArrayList<HashMap<String,Object>> the array of HashMap to be converted
-     * @return ArrayList<HabitEvent>
+     * @return ArrayList<Habit_Event>
      * @author Tauseef
      */
     public ArrayList<HabitEvent> toHabitEventList(ArrayList<HashMap<String, Object>> hashMapList) {
@@ -468,7 +468,7 @@ public class DatabaseManager {
      * Converts HashMap from database to HabitEvent object
      *
      * @param hashmap -Type HashMap<String,Object> the HashMap to be converted
-     * @return HabitEvent
+     * @return Habit_Event
      * @author Tauseef
      */
     public HabitEvent toHabitEvent(HashMap<String, Object> hashmap) {
@@ -524,7 +524,7 @@ public class DatabaseManager {
      * gets the follower list of the provided email
      *
      * @param email -Type String; The email of the user who's followerList is to be retrieved
-     * @return ArrayList<String> Follower List
+     * @return Follower list
      * @author Tauseef
      */
     public ArrayList<String> getFollowerList(String email) {
@@ -552,7 +552,7 @@ public class DatabaseManager {
      * gets the following list of the provided email
      *
      * @param email -Type String; The email of the user who's followingList is to be retrieved
-     * @return ArrayList<String> Following List
+     * @return Following list
      * @author Tauseef
      */
     public ArrayList<String> getFollowingList(String email) {
@@ -580,7 +580,7 @@ public class DatabaseManager {
      * the main user(the one with the id) has requested to follow)
      *
      * @param email -Type String; The email email of the user who's follow req list is to be retrieved
-     * @return ArrayList<String> Follow Req List
+     * @return ArrayList<Database_Pointer> Follow req list
      * @author Tauseef
      */
     public ArrayList<String> getFollowReqList(String email) {
@@ -609,7 +609,7 @@ public class DatabaseManager {
      * that have requested to follow the main user(the one with the id)
      *
      * @param email -Type String; The email email of the user who's follow requested list is to be retrieved
-     * @return ArrayList<String> Follow Requested List
+     * @return ArrayList<Database_Pointer>
      * @author Tauseef
      */
     public ArrayList<String> getFollowRequestedList(String email) {
@@ -638,7 +638,7 @@ public class DatabaseManager {
      * that the user have blocked
      *
      * @param email -Type String; The email email of the user who's block list is to be retrieved
-     * @return ArrayList<String> Block List
+     * @return ArrayList<Database_Pointer> Block List
      * @author Tauseef
      */
     public ArrayList<String> getBlockList(String email) {
@@ -666,7 +666,7 @@ public class DatabaseManager {
      * that have blocked the user)
      *
      * @param email -Type String; The email email of the user who's blockedBy list is to be retrieved
-     * @return ArrayList<String> BlockedBy List
+     * @return ArrayList<Database_Pointer> BlockedByList
      * @author Tauseef
      */
     public ArrayList<String> getBlockedByList(String email) {
@@ -1079,9 +1079,9 @@ public class DatabaseManager {
     /**
      * habitToDatabase
      * <p>
-     * Convert HabitList (ArrayList of Habit) to an ArrayList of HabitDatabase that is more compatible with the database
+     * Convert Habit in Habit_List<Habit> to a new object that is compatitble with the database
      *
-     * @param habits- Type HabitList; the Habit_list that has to be converted to HabitDatabase
+     * @param habits- Type Habit_List; the Habit_list that has to be converted to HabitDatabase
      *                so that its compatible with the database
      * @return ArrayList<HabitDatabase>; a habit list compatible with the database
      * @author Henry
@@ -1105,13 +1105,11 @@ public class DatabaseManager {
 
     /**
      * databaseToHabit
-     * <p>
-     * Convert ArrayList<HabitDatabase> to HabitList
      *
-     * @param habitsFromDatabase - Type Arraylist<HabitDatabase>; the ArrayList of HabitDatabase
-     *                           that is to be converted to HabitList
-     * @return HabitList;
-     * Returns a HabitList given the list of habits from the database.
+     * @param habitsFromDatabase - Type Arraylist<HabitDatabase>; the arraylist of HabitDatabase
+     *                           that is to be converted to Habit_List
+     * @return Habit_List;
+     * Returns a Habit_List given the habitList from Database.
      * @author Henry
      */
     public HabitList databaseToHabit(ArrayList<HabitDatabase> habitsFromDatabase) {

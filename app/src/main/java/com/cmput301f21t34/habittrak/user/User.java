@@ -193,11 +193,11 @@ public class User implements Parcelable {
                 userBundle.getParcelableArrayList("habitList")
         );
 
-        // DatabasePointer Lists //
+        // Lists of UUIDs
         this.followerList = userBundle.getStringArrayList("followerList");
         this.followingList = userBundle.getStringArrayList("followingList");
         this.followingReqList = userBundle.getStringArrayList("followingReqList");
-        this.followingReqList = userBundle.getStringArrayList("followerReqList");
+        this.followerReqList = userBundle.getStringArrayList("followerReqList");
         this.blockList = userBundle.getStringArrayList("blockList");
         this.blockedByList = userBundle.getStringArrayList("blockedByList");
 
@@ -232,9 +232,7 @@ public class User implements Parcelable {
     }
 
     public void setHabitList(HabitList habitList) {
-
         this.habitList = habitList;
-
     }
 
     public ArrayList<String> getFollowerList() {
@@ -292,7 +290,6 @@ public class User implements Parcelable {
     public String getBiography() {
         return biography;
     }
-    // add methods have to adjust the database
 
     public void setBiography(String biography) {
         this.biography = biography;
@@ -318,19 +315,136 @@ public class User implements Parcelable {
         return this.habitList.get(index);
     }
 
-    public void addFollower(String newFollower) {
-        //TODO: Database Implementation
-        this.followerList.add(newFollower);
+    /** addFollower
+     * adds a follower to this user's followerList if not already present
+     *
+     * @param UUID String, the UUID of the user to add
+     * @author Kaaden
+     */
+    public void addFollower(String UUID) {
+        if (!followerList.contains(UUID)) {
+            followerList.add(UUID);
+        }
     }
 
-    public void addFollowerReq(String newFollowReq) {
-        //TODO: Database Implementation
-        this.followingReqList.add(newFollowReq);
+    /** addFollowing
+     * adds a followee to this user's followingList if not already present
+     *
+     * @param UUID String, UUID of the user to add
+     * @author Kaaden
+     */
+    public void addFollowing(String UUID) {
+        if (!followingList.contains(UUID)) {
+            followingList.add(UUID);
+        }
     }
 
-    public void addFollowing(String newFollowing) {
-        //TODO: Database Implementation
-        this.followingList.add(newFollowing);
+    /** addFollowerReq
+     * adds a follow-requester to this user's followerReqList if not already present
+     *
+     * @param UUID String, the UUID of the user to add
+     * @author Kaaden
+     */
+    public void addFollowerReq(String UUID) {
+        if (!followerReqList.contains(UUID)) {
+            followerReqList.add(UUID);
+        }
+    }
+
+    /** addFollowingReq
+     * adds a follow-requestee to this user's followingReqList if not already present
+     *
+     * @param UUID String, the UUID of the user to add
+     * @author Kaaden
+     */
+    public void addFollowingReq(String UUID) {
+        if (!followingReqList.contains(UUID)) {
+            followingReqList.add(UUID);
+        }
+    }
+
+    /** addBlock
+     * adds a blockee to this user's blockList if not already present
+     *
+     * @param UUID String, the UUID of the user to add
+     * @author Kaaden
+     */
+    public void addBlock(String UUID) {
+        if (!blockList.contains(UUID)) {
+            blockList.add(UUID);
+        }
+    }
+
+    /** addBlockedBy
+     * adds a blocker to this user's blockedByList if not already present
+     *
+     * @param UUID String, the UUID of the user to add
+     * @author Kaaden
+     */
+    public void addBlockedBy(String UUID) {
+        if (!blockedByList.contains(UUID)) {
+            blockedByList.add(UUID);
+        }
+    }
+
+    /** removeFollower
+     * Remove all occurrences of a follower in this user's followerList
+     *
+     * @param UUID String, the UUID of the user(s) to remove
+     * @return boolean, true if any removals occurred, false otherwise
+     */
+    public boolean removeFollower(String UUID) {
+        return followerList.removeIf(follower -> follower.equals(UUID));
+    }
+
+    /** removeFollowing
+     * Remove all occurrences of a followee in this user's followingList
+     *
+     * @param UUID String, the UUID of the user(s) to remove
+     * @return boolean, true if any removals occurred, false otherwise
+     */
+    public boolean removeFollowing(String UUID) {
+        return followingList.removeIf(followee -> followee.equals(UUID));
+    }
+
+    /** removeFollowerReq
+     * Remove all occurrences of a follow-requester in this user's followerReqList
+     *
+     * @param UUID String, the UUID of the user(s) to remove
+     * @return boolean, true if any removals occurred, false otherwise
+     */
+    public boolean removeFollowerReq(String UUID) {
+        return followerReqList.removeIf(followRequester -> followRequester.equals(UUID));
+    }
+
+    /** removeFollowingReq
+     * Remove all occurrences of a follow-requestee in this user's followingReqList
+     *
+     * @param UUID String, the UUID of the user(s) to remove
+     * @return boolean, true if any removals occurred, false otherwise
+     */
+    public boolean removeFollowingReq(String UUID) {
+        return followingReqList.removeIf(followRequestee -> followRequestee.equals(UUID));
+    }
+
+    /** removeBlock
+     * Remove all occurrences of a blockee in this user's blockList
+     *
+     * @param UUID String, the UUID of the user(s) to remove
+     * @return boolean, true if any removals occurred, false otherwise
+     */
+    public boolean removeBlock(String UUID) {
+        return blockList.removeIf(blockee -> blockee.equals(UUID));
+    }
+
+    /** removeBlockedBy
+     * Remove all occurrences of a blocker in this user's blockedByList
+     *
+     * @param UUID String, the UUID of the user(s) to remove
+     * @return boolean, true if any removals occurred, false otherwise
+     */
+    public boolean removeBlockedBy(String UUID) {
+        return blockedByList.removeIf(blocker -> blocker.equals(UUID));
     }
 
     /**
@@ -414,15 +528,4 @@ public class User implements Parcelable {
         parcel.writeBundle(userBundle); // writes bundle to parcel
     }
 
-    public boolean removeFollower(String follower) {
-        return this.followerList.removeIf(UUID -> UUID.equals(follower));
-    }
-
-    public boolean removeFollowerReq(String followReq) {
-        return this.followingReqList.removeIf(UUID -> UUID.equals(followReq));
-    }
-
-    public boolean removeFollowing(String following) {
-        return this.followingList.removeIf(UUID -> UUID.equals(following));
-    }
 }

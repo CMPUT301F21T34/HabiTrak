@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.SocialAdapter;
 import com.cmput301f21t34.habittrak.user.User;
@@ -25,22 +26,22 @@ import java.util.ArrayList;
  *
  * @author Pranav
  * @author Kaaden
- *
+ * <p>
  * Fragment for displaying users followers
- *
- * @see SocialAdapter
  * @version 1.0
+ * @see SocialAdapter
  * @since 2021-11-1
  */
 public class FollowersFragment extends Fragment {
-
-    SocialAdapter socialAdapter;
+    DatabaseManager dm = new DatabaseManager();
+    ImageButton imageButton;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
-    ImageButton imageButton;
+    SocialAdapter socialAdapter;
+    User mainUser;
 
-    public FollowersFragment() {
-        // Required empty public constructor
+    public FollowersFragment(User mainUser) {
+        this.mainUser = mainUser;
     }
 
     @Override
@@ -53,18 +54,12 @@ public class FollowersFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.habi_followers_fragment, container, false);
 
-        // Sample Data
-        User sample1 = new User("Henry");
-        User sample2 = new User("Jakob");
-        ArrayList<User> userArrayList = new ArrayList<>();
-        userArrayList.add(sample1);
-        userArrayList.add(sample2);
-
         // setting up recycler view
         recyclerView = view.findViewById(R.id.followers_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        socialAdapter = new SocialAdapter(userArrayList, new SocialAdapter.ClickListener() {
+        ArrayList<String> profiles = mainUser.getFollowerList();        // Users that follow mainUser
+        socialAdapter = new SocialAdapter(profiles, new SocialAdapter.ClickListener() {
             @Override
             public void menuButtonOnClick(View view, int position) {
                 Log.d("Menu", "Clicked " + position);
@@ -84,12 +79,12 @@ public class FollowersFragment extends Fragment {
 
     /**
      * showMenu
-     *
+     * <p>
      * listener function for ImageButton in Recycler View
      *
-     * @see SocialAdapter
      * @param view
      * @param userPosition position of the clicked menu in the adapter
+     * @see SocialAdapter
      */
     public void showMenu(View view, int userPosition) {
         PopupMenu menu = new PopupMenu(getContext(), view);

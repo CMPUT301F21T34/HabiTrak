@@ -87,10 +87,10 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
         // TEST
         /*DatabaseManager testdm = new DatabaseManager();
-        testdm.updateFollower(mainUser, "e2", false);
-        testdm.updateFollower(new User("e3"), mainUser.getEmail(),false);
-        testdm.updateFollowerReq(mainUser, "e4", false);
-        testdm.updateFollowerReq(new User("e5"), mainUser.getEmail(), false);*/
+        testdm.updateFollow(mainUser.getEmail(), "e2", false);
+        testdm.updateFollow("e3", mainUser.getEmail(),false);
+        testdm.updateFollowRequest(mainUser.getEmail(), "e4", false);
+        testdm.updateFollowRequest("e5", mainUser.getEmail(), false);*/
         // TEST
     }
 

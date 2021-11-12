@@ -443,7 +443,7 @@ public class User implements Parcelable {
      * @param UUID String, the UUID of the user(s) to remove
      * @return boolean, true if any removals occurred, false otherwise
      */
-    public boolean removeBlockedBy(String UUID) {git 
+    public boolean removeBlockedBy(String UUID) {
         return blockedByList.removeIf(blocker -> blocker.equals(UUID));
     }
 

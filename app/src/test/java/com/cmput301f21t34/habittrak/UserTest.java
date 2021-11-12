@@ -143,30 +143,30 @@ public class UserTest {
     }
 
     /**
-     * addFollowerReqTest
-     * Tests if followerReq is correctly added to the user
+     * addFollowingReqTest
+     * Tests if followingReq is correctly added to the user
      *
      * @author Henry
      */
     @Test
-    public void addFollowerReqTest() {
+    public void addFollowingReqTest() {
         User user = mockUser();
 
-        // Add new followerreq then check size
+        // Add new followingreq then check size
         assertEquals(0, user.getFollowingReqList().size());
 
-        // Adds mock follower to user
+        // Adds mock followee to user
         String follower1 = getMockFol1();
-        user.addFollowerReq(follower1);
+        user.addFollowingReq(follower1);
 
         assertEquals(1, user.getFollowingReqList().size());
 
         String follower2 = getMockFol2();
-        user.addFollowerReq(follower2);
+        user.addFollowingReq(follower2);
 
         assertEquals(2, user.getFollowingReqList().size());
 
-        // Compare added followerreq (user object)
+        // Compare added followingreq (user object)
 
         assertEquals(follower1, user.getFollowingReqList().get(0));
         assertEquals(follower2, user.getFollowingReqList().get(1));
@@ -190,11 +190,11 @@ public class UserTest {
 
         // Remove followerreq1 then check size
         assertTrue(user.removeFollowerReq(follower1));
-        assertEquals(1, user.getFollowingReqList().size());
-        assertEquals(follower2, user.getFollowingReqList().get(0)); // followerreq at index 0 should now be followerreq2
+        assertEquals(1, user.getFollowerReqList().size());
+        assertEquals(follower2, user.getFollowerReqList().get(0)); // followerreq at index 0 should now be followerreq2
         // Remove followerreq2, size should be 0
         assertTrue(user.removeFollowerReq(follower2));
-        assertEquals(0, user.getFollowingReqList().size());
+        assertEquals(0, user.getFollowerReqList().size());
     }
 
     /**

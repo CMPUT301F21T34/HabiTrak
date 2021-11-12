@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.cmput301f21t34.habittrak.fragments.AllHabitsFragment;
 import com.cmput301f21t34.habittrak.fragments.EventsFragment;
 import com.cmput301f21t34.habittrak.fragments.ProfileFragment;
+import com.cmput301f21t34.habittrak.fragments.SocialFragment;
 import com.cmput301f21t34.habittrak.fragments.TodayListFragment;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.User;
@@ -32,7 +33,6 @@ import com.google.android.material.navigation.NavigationBarView;
  * @version 1.0
  * @since 2021-10-16
  */
-
 public class BaseActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
 
     // Result codes from activity
@@ -46,6 +46,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
     ProfileFragment profileFrag;
     EventsFragment eventsFrag;
     AllHabitsFragment allHabitsFrag;
+    SocialFragment socialFrag;
     MaterialButton addHabitButton;
     ActivityResultLauncher<Intent> addHabitActivityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -65,7 +66,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
         // Gets Intents
         Intent intent = getIntent();
-        this.mainUser = intent.getParcelableExtra("mainUser"); // Gets mainUser from intent
+        mainUser = intent.getParcelableExtra("mainUser");      // Gets mainUser from intent
 
         addHabitButton = findViewById(R.id.base_add_habit_button);
 
@@ -74,17 +75,17 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         profileFrag = new ProfileFragment(mainUser);
         eventsFrag = new EventsFragment(mainUser);
         allHabitsFrag = new AllHabitsFragment(mainUser);
+        socialFrag = new SocialFragment(mainUser);
 
-        // Sets up Nav Bar //
-        bottomNav = findViewById(R.id.bottom_nav); // Sets Nav to bottom nav res
-        bottomNav.setOnItemSelectedListener(this);  // Sets listener to this class
-        bottomNav.setSelectedItemId(R.id.navbar_menu_today); // Sets initial selected item
+        // Sets up Nav Bar
+        bottomNav = findViewById(R.id.bottom_nav);              // Sets Nav to bottom nav res
+        bottomNav.setOnItemSelectedListener(this);              // Sets listener to this class
+        bottomNav.setSelectedItemId(R.id.navbar_menu_today);    // Sets initial selected item
 
         addHabitButton.setOnClickListener(view -> {
             Intent intent1 = new Intent(view.getContext(), AddHabitActivity.class);
             addHabitActivityLauncher.launch(intent1);
         });
-
     }
 
     /**
@@ -98,7 +99,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.navbar_menu_today:
                 addHabitButton.setVisibility(View.VISIBLE);
@@ -117,16 +117,10 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, profileFrag).commit();
                 return true;
             case R.id.navbar_menu_social:
-
-                Intent intent = new Intent(getBaseContext(), SocialActivity.class);
-                intent.putExtra("mainUser", mainUser); // passes mainUser through intent
-                startActivity(intent);
-                bottomNav.setSelectedItemId(R.id.navbar_menu_today);
-                addHabitButton.setVisibility(View.VISIBLE);
-
-                return false;
+                addHabitButton.setVisibility(View.INVISIBLE);
+                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, socialFrag).commit();
+                return true;
         }
-
         return false;
     }
 
@@ -152,6 +146,4 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         }
         super.onActivityResult(requestCode, resultCode, intent);
     }
-
-
 }

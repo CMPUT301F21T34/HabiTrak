@@ -79,17 +79,14 @@ public class DatabaseManager {
 
     /**
      * getAllUsers()
-     * <p>
-     * Fetches all users (identified by email) from the database
+     * Gets a list of the UUIDs of all users in the database
      *
-     * @return ArrayList<Database_Pointer>
+     * @return ArrayList<String>, if successful, a list of UUIDs of all users, otherwise an empty list
      * @author Henry
      * @author Kaaden
      */
     public ArrayList<String> getAllUsers() {
-
         ArrayList<String> users = new ArrayList<>();
-
         try {
             Task<QuerySnapshot> task = database.collection("users").get();
 
@@ -679,7 +676,7 @@ public class DatabaseManager {
 
                         if (remove) {
                             list.remove(listMember);
-                        } else if (contains) {  // Only add if not already a member
+                        } else if (!contains) {  // Only add if not already a member
                             list.add(listMember);
                         }
 

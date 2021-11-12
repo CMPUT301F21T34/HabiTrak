@@ -664,50 +664,38 @@ public class DatabaseManager {
      * @author Tauseef
      */
     private void updateUUIDList(String listName, String listHaver, String listMember, boolean remove) {
+        // Get the user, owner of the list to update, from the database
         DocumentReference userRef = database.collection("users").document(listHaver);
         userRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
-                    String TAG = "contain checker";
-                    int index = -1;
-                    boolean contains = false;
+                    // Get the list to update from the user
                     ArrayList<String> list = (ArrayList<String>) document.get(listName);
-                    Log.d(TAG, Integer.toString(list.size()));
-                    for (int i = 0; i < list.size(); i++) {
-                        if (list.get(i).equals(listMember)) {
-                            index = i;
-                            contains = true;
-                            Log.d(TAG, "from equals");
+                    if (list != null) {
+
+                        // Check if the relevant member is already stored
+                        boolean contains = list.contains(listMember);
+
+                        if (remove) {
+                            list.remove(listMember);
+                        } else if (contains) {  // Only add if not already a member
+                            list.add(listMember);
                         }
-                        Log.d(TAG, "inside for loop");
-                    }
-                    // Add only if not already a member of the list.
-                    if (!contains && !remove) {
-                        Log.d("Contains", "does not");
-                        List<String> fieldsToUpdate = new ArrayList<>();
-                        fieldsToUpdate.add(listName);
 
-                        list.add(listMember);
-
-                        HashMap<String, Object> data = new HashMap<>();
-                        data.put(listName, list);
-                        userRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
-                    } else if (contains && remove) {
-                        Log.d("Contains", "does not");
-                        List<String> fieldsToUpdate = new ArrayList<>();
-                        fieldsToUpdate.add(listName);
-
-                        list.remove(index);
-
-                        HashMap<String, Object> data = new HashMap<>();
-                        data.put(listName, list);
-                        userRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
+                        // Only send to database if changes made
+                        if (remove && contains || !remove && !contains) {
+                            List<String> fieldsToUpdate = new ArrayList<>();
+                            fieldsToUpdate.add(listName);
+                            HashMap<String, Object> data = new HashMap<>();
+                            data.put(listName, list);
+                            userRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
+                        }
 
                     }
                 }
             } else {
-                Log.d("Task", "get failed with ", task.getException());
+                Log.d("Task: " + task, " failed with: ", task.getException());
             }
         });
     }

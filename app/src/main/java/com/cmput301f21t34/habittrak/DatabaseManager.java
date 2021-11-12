@@ -286,24 +286,12 @@ public class DatabaseManager {
                 ArrayList<HashMap<String, Object>> requestedHabitList = (ArrayList<HashMap<String, Object>>) document.get("habitList");
                 ArrayList<HabitDatabase> requestedHabitDatabases = toHabitDatabaseList(requestedHabitList);
                 habitList = databaseToHabit(requestedHabitDatabases);
-                ArrayList<HashMap<String, String>> followerListMap = (ArrayList<HashMap<String, String>>) document.get("followerList");
-                followerList = toUUIDList(followerListMap);
-
-                ArrayList<HashMap<String, String>> followingListMap = (ArrayList<HashMap<String, String>>) document.get("followingList");
-                followingList = toUUIDList(followingListMap);
-
-                ArrayList<HashMap<String, String>> followReqListMap = (ArrayList<HashMap<String, String>>) document.get("followReqList");
-                followReqList = toUUIDList((followReqListMap));
-
-                ArrayList<HashMap<String, String>> followRequestedListMap = (ArrayList<HashMap<String, String>>) document.get("followRequestedList");
-                followRequestedList = toUUIDList((followRequestedListMap));
-
-                ArrayList<HashMap<String, String>> blockListMap = (ArrayList<HashMap<String, String>>) document.get("blockList");
-                blockList = toUUIDList((blockListMap));
-
-                ArrayList<HashMap<String, String>> blockedByListMap = (ArrayList<HashMap<String, String>>) document.get("blockedByList");
-                blockedByList = toUUIDList((blockedByListMap));
-
+                followerList = (ArrayList<String>) document.get("followerList");
+                followingList = (ArrayList<String>) document.get("followingList");
+                followReqList = (ArrayList<String>) document.get("followReqList");
+                followRequestedList = (ArrayList<String>) document.get("followRequestedList");
+                blockList = (ArrayList<String>) document.get("blockList");
+                blockedByList = (ArrayList<String>) document.get("blockedByList");
                 name = (String) document.get("Username");
                 password = (String) document.get("Password");
                 bio = (String) document.get("Biography");
@@ -539,8 +527,7 @@ public class DatabaseManager {
             DocumentSnapshot document = task.getResult();
 
             if (document.getData() != null) {
-                ArrayList<HashMap<String, String>> followerListMap = (ArrayList<HashMap<String, String>>) document.get("followerList");
-                returnFollowerList = toUUIDList(followerListMap);
+                returnFollowerList = (ArrayList<String>) document.get("followerList");
             }
         } catch (Exception ignored) {
         }
@@ -567,8 +554,8 @@ public class DatabaseManager {
             DocumentSnapshot document = task.getResult();
 
             if (document.getData() != null) {
-                ArrayList<HashMap<String, String>> followingListMap = (ArrayList<HashMap<String, String>>) document.get("followingList");
-                returnFollowingList = toUUIDList(followingListMap);
+                returnFollowingList = (ArrayList<String>) document.get("followingList");
+
             }
         } catch (Exception ignored) {
         }
@@ -595,8 +582,7 @@ public class DatabaseManager {
             DocumentSnapshot document = task.getResult();
 
             if (document.getData() != null) {
-                ArrayList<HashMap<String, String>> followReqListMap = (ArrayList<HashMap<String, String>>) document.get("followReqList");
-                returnFollowReqList = toUUIDList((followReqListMap));
+                returnFollowReqList = (ArrayList<String>) document.get("followReqList");
             }
         } catch (Exception ignored) {
         }
@@ -624,8 +610,7 @@ public class DatabaseManager {
             DocumentSnapshot document = task.getResult();
 
             if (document.getData() != null) {
-                ArrayList<HashMap<String, String>> followRequestedListMap = (ArrayList<HashMap<String, String>>) document.get("followRequestedList");
-                returnFollowRequestedList = toUUIDList((followRequestedListMap));
+                returnFollowRequestedList = (ArrayList<String>) document.get("followRequestedList");
             }
         } catch (Exception ignored) {
         }
@@ -653,8 +638,7 @@ public class DatabaseManager {
             DocumentSnapshot document = task.getResult();
 
             if (document.getData() != null) {
-                ArrayList<HashMap<String, String>> blockListMap = (ArrayList<HashMap<String, String>>) document.get("blockList");
-                returnBlockList = toUUIDList((blockListMap));
+                returnBlockList = (ArrayList<String>) document.get("blockList");
             }
         } catch (Exception ignored) {
         }
@@ -681,8 +665,7 @@ public class DatabaseManager {
             DocumentSnapshot document = task.getResult();
 
             if (document.getData() != null) {
-                ArrayList<HashMap<String, String>> blockedByListMap = (ArrayList<HashMap<String, String>>) document.get("blockedByList");
-                returnBlockedByList = toUUIDList((blockedByListMap));
+                returnBlockedByList = (ArrayList<String>) document.get("blockedByList");
             }
         } catch (Exception ignored) {
         }
@@ -737,9 +720,8 @@ public class DatabaseManager {
                     String TAG = "contain checker";
                     int index = -1;
                     boolean contains = false;
-                    ArrayList<HashMap<String, String>> followerListMap = (ArrayList<HashMap<String, String>>) document.get("followerList");
-                    Log.d(TAG, Integer.toString(followerListMap.size()));
-                    ArrayList<String> followerList = toUUIDList((followerListMap));
+                    ArrayList<String> followerList = (ArrayList<String>) document.get("followerList");
+                    Log.d(TAG, Integer.toString(followerList.size()));
                     for (int i = 0; i < followerList.size(); i++) {
                         if (followerList.get(i).equals(follower)) {
                             index = i;
@@ -786,12 +768,10 @@ public class DatabaseManager {
                     String TAG = "contain checker";
                     int index = -1;
                     boolean contains = false;
-                    ArrayList<HashMap<String, String>> followingListMap = (ArrayList<HashMap<String, String>>) document.get("followingList");
-                    ArrayList<String> followingList = toUUIDList((followingListMap));
-                    String following = followee;
+                    ArrayList<String> followingList = (ArrayList<String>) document.get("followingList");
                     // Updates only if follow relationship is not already present
                     for (int i = 0; i < followingList.size(); i++) {
-                        if (followingList.get(i).equals(following)) {
+                        if (followingList.get(i).equals(followee)) {
                             index = i;
                             contains = true;
                             Log.d(TAG, "from equals");
@@ -802,7 +782,7 @@ public class DatabaseManager {
                         List<String> fieldsToUpdate = new ArrayList<>();
                         fieldsToUpdate.add("followingList");
 
-                        followingList.add(following);
+                        followingList.add(followee);
 
                         HashMap<String, Object> data = new HashMap<>();
                         data.put("followingList", followingList);
@@ -846,8 +826,7 @@ public class DatabaseManager {
                     String TAG = "contain checker";
                     int index = -1;
                     boolean contains = false;
-                    ArrayList<HashMap<String, String>> followerReqListMap = (ArrayList<HashMap<String, String>>) document.get("followReqList");
-                    ArrayList<String> followerReqList = toUUIDList((followerReqListMap));
+                    ArrayList<String> followerReqList = (ArrayList<String>) document.get("followReqList");
                     for (int i = 0; i < followerReqList.size(); i++) {
                         if (followerReqList.get(i).equals(followRequester)) {
                             index = i;
@@ -892,12 +871,10 @@ public class DatabaseManager {
                     int index = -1;
                     String TAG = "contain checker";
                     boolean contains = false;
-                    ArrayList<HashMap<String, String>> followerRequestedListMap = (ArrayList<HashMap<String, String>>) document.get("followRequestedList");
-                    ArrayList<String> followerRequestedList = toUUIDList((followerRequestedListMap));
-                    String followerRequested = followRequestee;
+                    ArrayList<String> followerRequestedList = (ArrayList<String>) document.get("followRequestedList");
                     // Updates only if follow-request relationship is not already present
                     for (int i = 0; i < followerRequestedList.size(); i++) {
-                        if (followerRequestedList.get(i).equals(followerRequested)) {
+                        if (followerRequestedList.get(i).equals(followRequestee)) {
                             index = i;
                             contains = true;
                             Log.d(TAG, "from equals");
@@ -908,7 +885,7 @@ public class DatabaseManager {
                         List<String> fieldsToUpdate = new ArrayList<>();
                         fieldsToUpdate.add("followRequestedList");
 
-                        followerRequestedList.add(followerRequested);
+                        followerRequestedList.add(followRequestee);
 
                         HashMap<String, Object> data = new HashMap<>();
                         data.put("followRequestedList", followerRequestedList);
@@ -951,8 +928,7 @@ public class DatabaseManager {
                     int index = -1;
                     String TAG = "contain checker";
                     boolean contains = false;
-                    ArrayList<HashMap<String, String>> blockListMap = (ArrayList<HashMap<String, String>>) document.get("blockedByList");
-                    ArrayList<String> blockList = toUUIDList(blockListMap);
+                    ArrayList<String> blockList = (ArrayList<String>) document.get("blockedByList");
                     for (int i = 0; i < blockList.size(); i++) {
                         if (blockList.get(i).equals(blocker)) {
                             contains = true;
@@ -997,12 +973,10 @@ public class DatabaseManager {
                     String TAG = "contain checker";
                     int index = -1;
                     boolean contains = false;
-                    ArrayList<HashMap<String, String>> blockedByListMap = (ArrayList<HashMap<String, String>>) document.get("blockList");
-                    ArrayList<String> blockedByList = toUUIDList(blockedByListMap);
-                    String blockedBy = blockee;
+                    ArrayList<String> blockedByList = (ArrayList<String>) document.get("blockList");
                     // Updates only if block relationship is not already present
                     for (int i = 0; i < blockedByList.size(); i++) {
-                        if (blockedByList.get(i).equals(blockedBy)) {
+                        if (blockedByList.get(i).equals(blockee)) {
                             contains = true;
                             index = i;
                             Log.d(TAG, "from equals");
@@ -1013,7 +987,7 @@ public class DatabaseManager {
                         List<String> fieldsToUpdate = new ArrayList<>();
                         fieldsToUpdate.add("blockedByList");
 
-                        blockedByList.add(blockedBy);
+                        blockedByList.add(blockee);
 
                         HashMap<String, Object> data = new HashMap<>();
                         data.put("blockedByList", blockedByList);
@@ -1034,24 +1008,6 @@ public class DatabaseManager {
                 Log.d("Task", "get failed with ", task.getException());
             }
         });
-    }
-
-    /**
-     * toUUIDList
-     * <p>
-     * Converts an ArrayList<HashMap<String, String>> listOfMap to ArrayList<String> of UUIDs
-     *
-     * @param listOfMap - Type; The hashmap from the database that has to be converted.
-     * @return ArrayList<String>
-     * @author Henry
-     * @author Kaaden
-     */
-    public ArrayList<String> toUUIDList(ArrayList<HashMap<String, String>> listOfMap) {
-        ArrayList<String> UUIDList = new ArrayList<>();
-
-        listOfMap.forEach(item -> UUIDList.add(item.get("email")));
-
-        return UUIDList;
     }
 
     /**

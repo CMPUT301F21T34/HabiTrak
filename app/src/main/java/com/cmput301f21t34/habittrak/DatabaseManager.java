@@ -372,7 +372,7 @@ public class DatabaseManager {
      * gets the habit list of the provided user email
      *
      * @param email -Type String; The email email of the user who's habit list is to be retrieved
-     * @return habitList
+     * @return HabitList
      * @author Tauseef
      */
     public HabitList getHabitList(String email) {
@@ -399,7 +399,7 @@ public class DatabaseManager {
      * <p>
      * Converts an array of HashMap (data from the database) to an array of HabitDatabase objects
      *
-     * @param hashMapList -Type ArrayList<HashMap<String,Object>> the array of HashMap to be converted
+     * @param hashMapList -Type ArrayList<HashMap<String, Object>> the array of HashMap to be converted
      * @return ArrayList <HabitDatabase>
      * @author Tauseef
      */
@@ -416,7 +416,7 @@ public class DatabaseManager {
      * toHabitDatabase
      * Converts HashMap from database to HabitDatabase object
      *
-     * @param hashmap -Type HashMap<String,Object> the HashMap to be converted
+     * @param hashmap -Type HashMap<String, Object> the HashMap to be converted
      * @return HabitDatabase
      * @author Tauseef
      */
@@ -436,8 +436,8 @@ public class DatabaseManager {
      * toHabitEventList
      * Converts an array of HashMap (data from the database) to an array of HabitEvent objects
      *
-     * @param hashMapList -Type ArrayList<HashMap<String,Object>> the array of HashMap to be converted
-     * @return ArrayList<Habit_Event>
+     * @param hashMapList -Type ArrayList<HashMap<String, Object>> the array of HashMap to be converted
+     * @return ArrayList<HabitEvent>
      * @author Tauseef
      */
     public ArrayList<HabitEvent> toHabitEventList(ArrayList<HashMap<String, Object>> hashMapList) {
@@ -453,8 +453,8 @@ public class DatabaseManager {
      * toHabitEvent
      * Converts HashMap from database to HabitEvent object
      *
-     * @param hashmap -Type HashMap<String,Object> the HashMap to be converted
-     * @return Habit_Event
+     * @param hashmap -Type HashMap<String, Object> the HashMap to be converted
+     * @return HabitEvent
      * @author Tauseef
      */
     public HabitEvent toHabitEvent(HashMap<String, Object> hashmap) {
@@ -474,7 +474,7 @@ public class DatabaseManager {
      * toCalendar
      * Converts HashMap from database to Calendar object
      *
-     * @param hashmap -Type HashMap<String,Object> the HashMap to be converted
+     * @param hashmap -Type HashMap<String, Object> the HashMap to be converted
      * @return GregorianCalendar
      * @author Tauseef
      */
@@ -495,7 +495,7 @@ public class DatabaseManager {
      * <p>
      * Converts HashMap from database to TimeZone object
      *
-     * @param hashMap -Type HashMap<String,Object> the HashMap to be converted
+     * @param hashMap -Type HashMap<String, Object> the HashMap to be converted
      * @return TimeZone
      * @author Tauseef
      */
@@ -752,9 +752,9 @@ public class DatabaseManager {
     /**
      * habitToDatabase
      * <p>
-     * Convert Habit in Habit_List<Habit> to a new object that is compatitble with the database
+     * Convert HabitList<Habit> to an ArrayList<HabitDatabase> that is more compatitble with the database
      *
-     * @param habits- Type Habit_List; the Habit_list that has to be converted to HabitDatabase
+     * @param habits- Type HabitList; the Habitlist that has to be converted to HabitDatabase
      *                so that its compatible with the database
      * @return ArrayList<HabitDatabase>; a habit list compatible with the database
      * @author Henry
@@ -780,9 +780,9 @@ public class DatabaseManager {
      * databaseToHabit
      *
      * @param habitsFromDatabase - Type Arraylist<HabitDatabase>; the arraylist of HabitDatabase
-     *                           that is to be converted to Habit_List
-     * @return Habit_List;
-     * Returns a Habit_List given the habitList from Database.
+     *                           that is to be converted to HabitList
+     * @return HabitList;
+     * Returns a HabitList given the habit list (ArrayList<HabitDatabase>) from the database.
      * @author Henry
      */
     public HabitList databaseToHabit(ArrayList<HabitDatabase> habitsFromDatabase) {

@@ -134,7 +134,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                     mAuth.alertDelete(fUser, db); // runs delete
 
                 }
-                
+
                 startMainActivity();
 
                 break;

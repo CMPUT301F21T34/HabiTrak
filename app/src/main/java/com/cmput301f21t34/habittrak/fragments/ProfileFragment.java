@@ -15,11 +15,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.MainActivity;
 import com.cmput301f21t34.habittrak.R;
+import com.cmput301f21t34.habittrak.auth.Auth;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * ProfileFragment
@@ -37,6 +41,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     TextInputEditText nameEdit;
     TextInputEditText bioEdit;
     TextView emailView;
+
+    Auth mAuth;
+    DatabaseManager db = new DatabaseManager();
 
     public ProfileFragment(User mainUser) {
         this.mainUser = mainUser;
@@ -66,6 +73,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         nameEdit.setText(mainUser.getUsername());
         emailView.setText(mainUser.getEmail());
         bioEdit.setText(mainUser.getBiography());
+
+        mAuth = new Auth(null, getActivity());
 
         return view;
     }
@@ -99,10 +108,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                     mainUser.setBiography(newBio);
                 }
                 break;
+
             case R.id.logout:
-                // Logout button pressed //
-                // TODO: make sure database it updated
-                // TODO: make sure to remove any offline stored credientals
+
+                // sign out
+                mAuth.signOut();
 
                 // Send user back to main activity
                 startMainActivity();
@@ -115,11 +125,16 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                 break;
             case R.id.deleter:
 
-                // TODO: require reauth
-                // TODO: remove from database
-                // TODO: remove from account manager if needed
+                FirebaseAuth fAuth = mAuth.getAuth();
+                FirebaseUser fUser = fAuth.getCurrentUser();
 
-                // Send user back to main activity
+                // run alert to delete
+                if (fUser != null){
+                    // Then we have an account to delete
+                    mAuth.alertDelete(fUser, db); // runs delete
+
+                }
+                
                 startMainActivity();
 
                 break;

@@ -15,6 +15,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,16 +27,28 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitEvent;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+// Map libraries
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.location.FusedLocationProviderClient;
+
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 
 /**
  * @author Tauseef Nafee Fattah
@@ -44,11 +57,13 @@ import java.util.Date;
  */
 public class AddHabitEventActivity extends AppCompatActivity {
 
-    Button cameraBtn;
-    Button galleryBtn;
-    Button addBtn;
+    Button cameraButton;
+    Button galleryButton;
+    Button mapButton;
+    Button addButton;
     EditText commentText;
     ImageView image;
+    public static int RESULT_CODE = 2000;
     public static final int Camera_Permission_CODE = 100;
     public static final int Camera_REQUEST_CODE = 101;
     private StorageReference mStorageRef;
@@ -56,6 +71,10 @@ public class AddHabitEventActivity extends AppCompatActivity {
     HabitEvent habitEvent;
     DatabaseManager db;
     ActivityResultLauncher<Intent> cameraActivityResultLauncher;
+    private FusedLocationProviderClient fusedLocationClient;
+
+    // intent data variables
+    private Habit habit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,52 +82,89 @@ public class AddHabitEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_habit_event);
         mStorageRef = FirebaseStorage.getInstance().getReference();
         habitEvent = new HabitEvent();
-        cameraBtn = findViewById(R.id.CameraButton);
-        galleryBtn = findViewById(R.id.GalleryButton);
-        addBtn = findViewById(R.id.addHabitEventButton);
+        cameraButton = findViewById(R.id.CameraButton);
+        galleryButton = findViewById(R.id.GalleryButton);
+        mapButton = findViewById(R.id.mapButton);
+        addButton = findViewById(R.id.addHabitEventButton);
         commentText = findViewById(R.id.Comment);
         image = findViewById(R.id.photo);
         db = new DatabaseManager();
+
+        // get data
+
+        Intent intent = getIntent();
+        this.habit = intent.getParcelableExtra("HABIT");
 
         // the activity launcher for taking image using the phone camera
         cameraActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
-                if(result.getResultCode() == Activity.RESULT_OK && result.getData() != null){
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                     File f = new File(currentPhotoPath);
                     image.setImageURI(Uri.fromFile(f));
-                    Log.d("CAMERA","Absolute url is " + Uri.fromFile(f));
+                    Log.d("CAMERA", "Absolute url is " + Uri.fromFile(f));
                     Uri contentUri = Uri.fromFile(f);
-                    Log.d("CAMERA","ENTERING TO FIREBASE");
-                    habitEvent.setPhotograph(db.uploadImageToFirebase(f.getName(),contentUri,mStorageRef));
+                    Log.d("CAMERA", "ENTERING TO FIREBASE");
+                    habitEvent.setPhotograph(db.uploadImageToFirebase(f.getName(), contentUri, mStorageRef));
                     Log.d("CAMERA", "The uri is :" + habitEvent.getPhotograph());
-                    Log.d("CAMERA","Exited the FIREBASE");
+                    Log.d("CAMERA", "Exited the FIREBASE");
 
                     // to load the image using the uri use Picasso.get().load(he.getUri()).into(image);
-                }
-                else{
-                    Log.d("CAMERA","Failed onActivityResult if condition");
+                } else {
+                    Log.d("CAMERA", "Failed onActivityResult if condition");
 
                 }
 
             }
         });
 
-        cameraBtn.setOnClickListener(new View.OnClickListener() {
+        cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 askCameraPermission();
             }
         });
+
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+/*
+                if (ActivityCompat.checkSelfPermission(view.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(view.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                }
+                fusedLocationClient.getLastLocation()
+                        .addOnSuccessListener(new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                // Got last known location. In some rare situations this can be null.
+                                if (location != null) {
+                                    Intent map = new Intent(view.getContext(), MapsActivity.class);
+                                    // putExtra here
+                                    startActivity(map);
+                                }
+                            }
+                        });*/
+                Intent map = new Intent(view.getContext(), MapsActivity.class);
+                startActivity(map);
+            }
+        });
+
         // returning the habit event object after the user pressed the add button
-        addBtn.setOnClickListener(new View.OnClickListener() {
+        addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // return the habit event object back
                 habitEvent.setComment(commentText.getText().toString());
-                Intent intent = new Intent(AddHabitEventActivity.this,BaseActivity.class);
-                intent.putExtra("addHabitEvent",habitEvent);
-                setResult(Activity.RESULT_OK,intent);
+                Intent result = new Intent();
+                result.putExtra("HABIT_EVENT",habitEvent);
+                setResult(RESULT_CODE, result);
                 finish();
             }
         });
@@ -200,5 +256,4 @@ public class AddHabitEventActivity extends AppCompatActivity {
             }
         }
     }
-
 }

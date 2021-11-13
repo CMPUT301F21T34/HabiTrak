@@ -51,6 +51,7 @@ public class LoginFragment extends Fragment {
     TextInputEditText passwordEditText;
     MaterialButton loginButton;
     MaterialButton signupButton;
+    MaterialButton forgotButton;
 
 
 
@@ -74,6 +75,7 @@ public class LoginFragment extends Fragment {
         passwordEditText = view.findViewById(R.id.password_edit_text);
         loginButton = view.findViewById(R.id.login_button);
         signupButton = view.findViewById(R.id.signup_button);
+        forgotButton = view.findViewById(R.id.forgot_button);
 
         db = new DatabaseManager();
 
@@ -103,6 +105,11 @@ public class LoginFragment extends Fragment {
             public void onClick(View view) {
                 toSignUp();
             }
+        });
+
+        forgotButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) { toForgot(); }
         });
 
 
@@ -186,61 +193,9 @@ public class LoginFragment extends Fragment {
                 });
     }
 
-    ///
 
-    /**
-     * Password validation.
-     * TODO: Update the function and implement proper password validation. (Hash Checking needed)
-     * TODO: Move login validation, and checking to separate class outside frag - Dakota
-     * Current Credentials: user: admin pass: admin
-     * @param password password from input
-     * @param username username from input
-     * @return passwordOk boolean if the password is valid
-     */
-    public boolean isPasswordValid(@Nullable Editable password, @Nullable Editable username) {
 
-        DatabaseManager db = new DatabaseManager();
 
-        String pass = password.toString();
-        String user = username.toString();
-
-        return db.validCredentials(user, pass);
-    }
-
-    /**
-     * userExists
-     * Checks if the given username exists in the database
-     *
-     * @param email username from input
-     * @return true if there is such a username, false otherwise
-     */
-    public boolean userExists(@Nullable Editable email) {
-
-        DatabaseManager db = new DatabaseManager();
-
-        String user = email.toString();
-
-        boolean isInDatabase = !db.isUniqueEmail(user);
-
-        return isInDatabase;
-    }
-
-    /**
-     * getUser
-     * Returns a User object for the given username
-     * @param username username from input
-     * @return
-     */
-    public User getUser(@Nullable String username) {
-
-        DatabaseManager db = new DatabaseManager();
-
-        User user = db.getUser(username);
-
-        Log.d("LoginFrag", "User from db: " + user.getEmail());
-
-        return user;
-    }
 
     /**
      * startHomePage
@@ -266,6 +221,15 @@ public class LoginFragment extends Fragment {
                 .replace(R.id.login_fragment_container, signUpFragment, "signupFrag")
                 .addToBackStack(null)
                 .commit();
+    }
+
+    private void toForgot() {
+        ForgotFragment forgotFragment = new ForgotFragment(null);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.login_fragment_container, forgotFragment, "forgotFrag")
+                .addToBackStack(null)
+                .commit();
+
     }
 
 }

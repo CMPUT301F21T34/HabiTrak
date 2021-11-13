@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
+import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -427,6 +428,76 @@ public class Auth {
         builder.show();
 
         return true;
+
+    }
+
+    public boolean alertDelete(FirebaseUser authUser, DatabaseManager db) {
+
+        // Check if our authUser is null
+        if(authUser == null){
+            return false;
+        }
+
+        // else continue
+
+        // Build an alert
+        AlertDialog.Builder alert = new AlertDialog.Builder(context);
+
+        alert
+                .setMessage("This Cannot be undone!")
+                .setTitle("Delete Account?");
+
+        alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int id) {
+
+                // Confirm once more
+                AlertDialog.Builder confirmation = new AlertDialog.Builder(context);
+
+                confirmation
+                        .setMessage("Are you sure?")
+                        .setTitle("Confirm");
+
+                confirmation.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // Delete
+
+                        String email = authUser.getEmail();
+                        authUser.delete();
+                        db.deleteUser(email);
+
+                    }
+                });
+
+                confirmation.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // Cancel
+                    }
+                });
+
+                confirmation.show();
+
+            }
+        });
+
+        alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int id) {
+                // Cancel
+
+            }
+        });
+
+        alert.show();
+
+        // if delete was successful authUser should now be null
+        if (authUser == null){
+            return true;
+        } else {
+            return false;
+        }
 
     }
 

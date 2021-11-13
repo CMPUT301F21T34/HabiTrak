@@ -177,7 +177,7 @@ public class LoginFragment extends Fragment {
                                 usernameLayout.setError("Email not Verified");
                                 passwordLayout.setError(null);
 
-                                mAuth.alertNotVerified(authUser);
+                                mAuth.alertNotVerified(authUser).show();
 
                             }
 

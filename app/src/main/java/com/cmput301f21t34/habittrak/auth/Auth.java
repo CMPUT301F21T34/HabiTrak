@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -12,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 import com.cmput301f21t34.habittrak.DatabaseManager;
+import com.cmput301f21t34.habittrak.MainActivity;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -46,9 +48,9 @@ public class Auth {
     private boolean working = false; // If we are waiting on Firebase
     FirebaseUser authUser;
 
-    public Auth(FirebaseUser authUser, Context context){
+    public Auth(FirebaseUser authUser, Activity activity){
 
-        this.context = context;
+        this.context = activity;
         mAuth = FirebaseAuth.getInstance();
         this.authUser = authUser;
 
@@ -395,7 +397,7 @@ public class Auth {
      * @author Dakota
      * @return boolean true if they would like a new email, false else wise
      */
-    public boolean alertNotVerified(FirebaseUser authUser){
+    public AlertDialog.Builder alertNotVerified(FirebaseUser authUser){
 
         Log.d("NotVer", "alert called");
 
@@ -425,79 +427,76 @@ public class Auth {
             }
         });
 
-        builder.show();
 
-        return true;
+        return builder;
 
     }
 
-    public boolean alertDelete(FirebaseUser authUser, DatabaseManager db) {
+    public AlertDialog.Builder alertDeleteConfirm(FirebaseUser authUser, DatabaseManager db) {
+        AlertDialog.Builder confirmation = new AlertDialog.Builder(context);
 
-        // Check if our authUser is null
-        if(authUser == null){
-            return false;
-        }
+            confirmation
+                    .setMessage("Are you sure?")
+                    .setTitle("Confirm");
 
-        // else continue
+            confirmation.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    // Delete
 
-        // Build an alert
+                    String email = authUser.getEmail();
+                    authUser.delete();
+                    db.deleteUser(email);
+
+
+                }
+            });
+
+            confirmation.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    // Cancel
+                    dialogInterface.cancel();
+                }
+            });
+
+            return confirmation;
+
+    }
+
+    public AlertDialog.Builder alertDelete(FirebaseUser authUser, DatabaseManager db) {
+
+
+
+        // First Alert dismiss is a confirm, cancel is cancel
         AlertDialog.Builder alert = new AlertDialog.Builder(context);
 
-        alert
-                .setMessage("This Cannot be undone!")
-                .setTitle("Delete Account?");
+            alert
+                    .setMessage("This Cannot be undone!")
+                    .setTitle("Delete Account?");
 
-        alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int id) {
+            alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int id) {
 
-                // Confirm once more
-                AlertDialog.Builder confirmation = new AlertDialog.Builder(context);
+                    dialogInterface.dismiss();
 
-                confirmation
-                        .setMessage("Are you sure?")
-                        .setTitle("Confirm");
+                }
+            });
 
-                confirmation.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        // Delete
+            alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int id) {
+                    // Cancel
+                    dialogInterface.cancel();
 
-                        String email = authUser.getEmail();
-                        authUser.delete();
-                        db.deleteUser(email);
+                }
+            });
 
-                    }
-                });
 
-                confirmation.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        // Cancel
-                    }
-                });
 
-                confirmation.show();
+        return alert;
 
-            }
-        });
-
-        alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int id) {
-                // Cancel
-
-            }
-        });
-
-        alert.show();
-
-        // if delete was successful authUser should now be null
-        if (authUser == null){
-            return true;
-        } else {
-            return false;
-        }
 
     }
 

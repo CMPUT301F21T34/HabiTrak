@@ -1,5 +1,7 @@
 package com.cmput301f21t34.habittrak.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -130,12 +132,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
 
                 // run alert to delete
                 if (fUser != null){
-                    // Then we have an account to delete
-                    mAuth.alertDelete(fUser, db); // runs delete
+
+                    delete(fUser);
+
+
 
                 }
 
-                startMainActivity();
 
                 break;
         }
@@ -154,5 +157,59 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         startActivity(intent);
         mainUser = null; // Possibly redundant
         getActivity().finish();
+    }
+
+    private void delete(FirebaseUser authUser){
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+
+        alert
+                .setMessage("This Cannot be undone!")
+                .setTitle("Delete Account?");
+
+        alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int id) {
+
+                AlertDialog.Builder confirmation = new AlertDialog.Builder(getActivity());
+
+                confirmation
+                        .setMessage("Are you sure?")
+                        .setTitle("Confirm");
+
+                confirmation.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // Delete
+
+                        String email = authUser.getEmail();
+                        authUser.delete();
+                        db.deleteUser(email);
+                        startMainActivity();
+
+                    }
+                });
+
+                confirmation.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // Cancel
+                        dialogInterface.cancel();
+                    }
+                });
+
+                confirmation.show();
+
+            }
+        });
+
+        alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int id) {
+                // Cancel
+                dialogInterface.cancel();
+
+            }
+        });
+        alert.show();
     }
 }

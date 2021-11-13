@@ -76,7 +76,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         emailView.setText(mainUser.getEmail());
         bioEdit.setText(mainUser.getBiography());
 
-        mAuth = new Auth(null, getActivity());
+        mAuth = new Auth(getActivity(), db);
 
         return view;
     }

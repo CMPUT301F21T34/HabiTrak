@@ -19,15 +19,13 @@ import com.cmput301f21t34.habittrak.user.User;
  */
 public class MainActivity extends AppCompatActivity{
 
-    private Auth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mAuth = new Auth(null,this);
-        User mainUser = null;
+
 
 
         if (savedInstanceState != null) {

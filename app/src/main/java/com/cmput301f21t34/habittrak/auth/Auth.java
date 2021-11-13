@@ -44,189 +44,42 @@ public class Auth {
 
     private FirebaseAuth mAuth;
     private Context context;
-    private String authEmail;
-    private boolean working = false; // If we are waiting on Firebase
-    FirebaseUser authUser;
+    private DatabaseManager db;
 
-    public Auth(FirebaseUser authUser, Activity activity){
+
+    public Auth(Activity activity, DatabaseManager db){
 
         this.context = activity;
+        this.db = db;
         mAuth = FirebaseAuth.getInstance();
-        this.authUser = authUser;
+
 
     }
 
-    public FirebaseUser getAuthUser() {
-        return authUser;
-    }
 
     public FirebaseAuth getAuth() {
         return mAuth;
     }
 
-    /**
-     * Gets the current logged in user's email. If no user is logged
-     * in, returns null.
-     *
-     * @author Dakota
-     * @return String email of logged in user, null if no user is logged in
-     */
-    public String getLoggedIn(){
-
-
-        if (authUser != null){
-            this.authEmail = authUser.getEmail();
-        } else {
-            this.authEmail = null;
-        }
-        return authEmail;
-
-    }
-
-
-    /**
-     * Try's to sign up a particular email and password combination
-     * returning the String of the email signed up with on success and
-     * null on failure
-     *
-     * @author Dakota
-     * @param email String email to sign up with
-     * @param password String password to sign up with
-     * @return String email of account created or null on failure
-     */
-    public String signUp(String email, String password){
-
-
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener((Activity) context, new OnCompleteListener<AuthResult>() {
-
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-
-                        if ( task.isSuccessful() ) {
-
-                            // Sign Up was successful
-                            sendSignInEmail(email);
-
-                        } else {
-
-                            // Sign Up failed
-                            Toast.makeText(context, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e("SignUp", "Exception thrown: " + e.toString());
-            }
-        });
-
-        return getLoggedIn();
-
-
-    }
-
-    /**
-     * Attempts to log in a user by a given email and password
-     *
-     * @author Dakota
-     * @param email String of email to log into
-     * @param password String of password corresponding to email
-     * @return String of email on success, null on failure
-     */
-    public FirebaseUser logInCall (String email, String password){
-
-        Log.d("LogIn", "auth called");
-
-
-        this.working = true;
-        // Authenticates
-
-        // Note this does not get added to the top of the stack
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
-
-                            authUser = mAuth.getCurrentUser();
-                            Log.d("LogIn", "Success: " + mAuth.getCurrentUser().getEmail());
-
-
-                        } else {
-
-                            authUser = null;
-
-                            Log.d("LogIn", "Failure");
-
-                        }
-                    }
-                });
-
-        Log.d("LogIn", "Exiting logInCall: ");
-
-        return authUser;
 
 
 
 
-    }
-
-    /**
-     * Attempts to log in a user by a given email and password
-     *
-     * @author Dakota
-     * @param email String of email to log into
-     * @param password String of password corresponding to email
-     * @return String of email on success, null on failure
-     */
-    public String logIn (String email, String password){
-
-        // Make's sure a user isn't already logged in
-        signOut();
-
-        // The reason we call it this way, is because of stack order.
-        // These all must be called in their own methods where returnAuthUser
-        // Gets the success of logInCall AFTER logInCall has been called
-        logInCall(email, password);
 
 
-        // Waits until we are no longer working to auth
 
-        return getLoggedIn();
-    }
 
-    public boolean isVerified(){
-        if (authUser == null) { return false; }
-        return authUser.isEmailVerified();
-    }
-
-    public void resetPassword(String email){
-
-        mAuth.sendPasswordResetEmail(email)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(context, "Email Sent", Toast.LENGTH_SHORT);
-                        }
-                    }
-                });
-
-    }
 
     /**
      * Attempts to change current logged in user to a new password
      *
      * @author Dakota
+     * @param authUser Firebase user to change password
      * @param newPassword String new password to change to
      */
-    public void changePassword(String newPassword){
+    public void changePassword(FirebaseUser authUser, String newPassword){
 
-        // Should be fine
-        authUser = mAuth.getCurrentUser();
+
 
         if (authUser != null) {
 
@@ -248,23 +101,26 @@ public class Auth {
                             // Catches exceptions
                             if (exception instanceof FirebaseAuthRecentLoginRequiredException) {
                                 // Re-auth User
-                                if(reAuthEmail()) {
-                                    // If success, then change password
-                                    changePassword(newPassword);
-                                    // else exit
+                                reAuthEmail(authUser); // else exit
                                 }
                             }
-                        }
+                        });
 
-                    });
+
 
         }
 
     }
 
-    public void changeEmail(String newEmail){
-
-        authUser = mAuth.getCurrentUser();
+    /**
+     * changes users email
+     *
+     * TODO Make work
+     * @author Dakota
+     * @param authUser Firebase User to change
+     * @param newEmail String new email
+     */
+    public void changeEmail(FirebaseUser authUser, String newEmail){
 
         if (authUser != null){
 
@@ -286,11 +142,7 @@ public class Auth {
                     // Catches exceptions
                     if (exception instanceof FirebaseAuthRecentLoginRequiredException) {
                         // Re-auth User
-                        if(reAuthEmail()) {
-                            // If success, then change password
-                            changeEmail(newEmail);
-                            // else exit
-                        }
+                        reAuthEmail(authUser);
                     }
                 }
 
@@ -302,29 +154,7 @@ public class Auth {
 
 
 
-    private void sendSignInEmail(String email){
 
-        // see: https://firebase.google.com/docs/auth/android/email-link-auth
-
-
-        String url = "http://habittrak.firebaseapp.com/finishSignUp?cartId=1000";
-        ActionCodeSettings actionCodeSettings = ActionCodeSettings.newBuilder()
-                .setUrl(url)
-                .setHandleCodeInApp(true)
-                .setAndroidPackageName("com.cmput301f21t34.habittrak", false, "12")
-                .build();
-
-        mAuth.sendSignInLinkToEmail(email, actionCodeSettings)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()){
-                            // success
-                        }
-                    }
-                });
-
-    }
 
     /**
      * Re-Auths user with email auth provider
@@ -333,9 +163,7 @@ public class Auth {
      * @author Dakota
      * @return true on success, false on failure
      */
-    private boolean reAuthEmail(){
-
-        authUser = mAuth.getCurrentUser();
+    private boolean reAuthEmail(FirebaseUser authUser){
 
         // must use final boolean[] as variable is set by inner class
         final boolean[] reAuthed = new boolean[1];
@@ -380,15 +208,6 @@ public class Auth {
         mAuth.signOut();
     }
 
-    public String getEmail(){
-
-
-        if ( authUser != null){
-            return authUser.getEmail();
-        }
-
-       return null;
-    }
 
     /**
      * Alerts the user that their account email is not verified and asks
@@ -432,73 +251,7 @@ public class Auth {
 
     }
 
-    public AlertDialog.Builder alertDeleteConfirm(FirebaseUser authUser, DatabaseManager db) {
-        AlertDialog.Builder confirmation = new AlertDialog.Builder(context);
 
-            confirmation
-                    .setMessage("Are you sure?")
-                    .setTitle("Confirm");
-
-            confirmation.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    // Delete
-
-                    String email = authUser.getEmail();
-                    authUser.delete();
-                    db.deleteUser(email);
-
-
-                }
-            });
-
-            confirmation.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    // Cancel
-                    dialogInterface.cancel();
-                }
-            });
-
-            return confirmation;
-
-    }
-
-    public AlertDialog.Builder alertDelete(FirebaseUser authUser, DatabaseManager db) {
-
-
-
-        // First Alert dismiss is a confirm, cancel is cancel
-        AlertDialog.Builder alert = new AlertDialog.Builder(context);
-
-            alert
-                    .setMessage("This Cannot be undone!")
-                    .setTitle("Delete Account?");
-
-            alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int id) {
-
-                    dialogInterface.dismiss();
-
-                }
-            });
-
-            alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int id) {
-                    // Cancel
-                    dialogInterface.cancel();
-
-                }
-            });
-
-
-
-        return alert;
-
-
-    }
 
     /**
      * quickly gets user credentials with an alert dialogue.

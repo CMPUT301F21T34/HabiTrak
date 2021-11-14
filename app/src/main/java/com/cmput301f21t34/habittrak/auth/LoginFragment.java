@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -80,17 +81,7 @@ public class LoginFragment extends Fragment {
         db = new DatabaseManager();
 
         mAuth = new Auth(getActivity(), db);
-
-
-
-
-
-
-
-
-
-        // Continue to onResume
-        Log.d("LogIn", "Continuing to onResume");
+        
 
         return view;
 
@@ -125,18 +116,23 @@ public class LoginFragment extends Fragment {
                 String email = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
 
-                if (email != "" && password != ""){
-
+                try {
                     runLogin(email, password);
+                } catch (Exception e) {
 
-                } else {
+                    if (e instanceof IllegalArgumentException) {
+                        // Invalid entry
+                        usernameLayout.setError("Invalid Entry");
+                        passwordLayout.setError("Invalid Entry");
+                    }
 
-                    usernameLayout.setError("Fields Cannot be Empty");
-                    passwordLayout.setError("Fields Cannot be Empty");
+                    else {
+                        // Displays any other exceptions
+                        Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG);
+                    }
+
 
                 }
-
-                Log.d("LogIn", "Click finished");
 
 
             }
@@ -164,7 +160,6 @@ public class LoginFragment extends Fragment {
                         if (task.isSuccessful()){
 
                             authUser = fAuth.getCurrentUser();
-                            Log.d("LogIn", "Success: " + fAuth.getCurrentUser().getEmail());
 
                             if (authUser.isEmailVerified()){
 

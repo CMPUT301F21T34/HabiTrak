@@ -136,8 +136,8 @@ public class TodayListFragment extends Fragment {
         }
         adapter.notifyDataSetChanged();
     }
-    // activity result launcher for view/edit habit
-    ActivityResultLauncher<Intent> viewHabitResultLauncher = registerForActivityResult(
+    // activity result launcher for add habit event
+    ActivityResultLauncher<Intent> addHabitEventResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {}
     );
@@ -186,6 +186,6 @@ public class TodayListFragment extends Fragment {
         Habit habit = habitsDisplayList.get(position);
         Intent intent = new Intent(getContext(), AddHabitEventActivity.class);
         intent.putExtra("HABIT", habit);
-        viewHabitResultLauncher.launch(intent);
+        addHabitEventResultLauncher.launch(intent);
     }
 }

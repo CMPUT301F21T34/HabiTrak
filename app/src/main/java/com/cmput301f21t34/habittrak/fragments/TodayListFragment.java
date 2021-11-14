@@ -85,7 +85,7 @@ public class TodayListFragment extends Fragment {
                 Intent intent = new Intent(getContext(), ViewEditHabit.class);
                 intent.putExtra("HABIT", habit);
                 intent.putExtra("position", habit.getIndex());
-                viewHabitResultLauncher.launch(intent);
+                addHabitEventResultLauncher.launch(intent);
             }
 
             @Override

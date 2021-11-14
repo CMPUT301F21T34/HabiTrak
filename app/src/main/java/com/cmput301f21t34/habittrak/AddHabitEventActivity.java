@@ -49,13 +49,15 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 
 /**
  * @author Tauseef Nafee Fattah
  * Version: 1.0
- * TODO: Add the gallery functionality, the map (to get address) and need to set the completed date
+ * Takes a habit and returns the new habit event
+ * TODO: the map (to get address) and need to set the completed date
  */
 public class AddHabitEventActivity extends AppCompatActivity {
 
@@ -128,7 +130,8 @@ public class AddHabitEventActivity extends AppCompatActivity {
                     Log.d("CAMERA", "The uri is :" + habitEvent.getPhotograph());
                     Log.d("CAMERA", "Exited the FIREBASE");
 Log.d("CAMERA","Entering gallery stage");
-                    // save it to the gallery
+
+                    // save the image to the gallery
                     Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                     //Uri contentUri = Uri.fromFile(f);
                     mediaScanIntent.setData(contentUri);
@@ -196,11 +199,15 @@ Log.d("CAMERA","Entering gallery stage");
             @Override
             public void onClick(View view) {
                 // return the habit event object back
+                Log.d("CAMERA","pressed add button in habit event");
                 habitEvent.setComment(commentText.getText().toString());
-                habit.getHabitEvents().add(habitEvent);
+                ArrayList<HabitEvent> heList = habit.getHabitEvents();
+                heList.add(habitEvent);
+                habit.setHabitEvents(heList);
                 Intent result = new Intent();
-                result.putExtra("HABIT",habit);
+                result.putExtra("HABIT_EVENT",habitEvent);
                 setResult(RESULT_CODE, result);
+                Log.d("CAMERA","ready to finish");
                 finish();
             }
         });

@@ -13,6 +13,7 @@ import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -22,6 +23,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -57,6 +59,7 @@ import java.util.Date;
  */
 public class AddHabitEventActivity extends AppCompatActivity {
 
+    public static final int GALLERY_REQUEST_CODE = 105;
     Button cameraButton;
     Button galleryButton;
     Button mapButton;
@@ -71,6 +74,7 @@ public class AddHabitEventActivity extends AppCompatActivity {
     HabitEvent habitEvent;
     DatabaseManager db;
     ActivityResultLauncher<Intent> cameraActivityResultLauncher;
+    ActivityResultLauncher<Intent> galleryActivityResultLauncher;
     private FusedLocationProviderClient fusedLocationClient;
 
     // intent data variables
@@ -94,7 +98,22 @@ public class AddHabitEventActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         this.habit = intent.getParcelableExtra("HABIT");
+        // the activity to get an image from the gallery
+        galleryActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    Uri contentUri = result.getData().getData();
+                    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                    String imageFileName = "JPEG_" + timeStamp + "." + getFileExt(contentUri);
+                    Log.d("tag", "onActivityResult: Gallery Image Uri:  " + imageFileName);
+                    image.setImageURI(contentUri);
+                    habitEvent.setPhotograph(db.uploadImageToFirebase(imageFileName, contentUri, mStorageRef));
 
+
+                }
+            }
+        });
         // the activity launcher for taking image using the phone camera
         cameraActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
@@ -108,9 +127,17 @@ public class AddHabitEventActivity extends AppCompatActivity {
                     habitEvent.setPhotograph(db.uploadImageToFirebase(f.getName(), contentUri, mStorageRef));
                     Log.d("CAMERA", "The uri is :" + habitEvent.getPhotograph());
                     Log.d("CAMERA", "Exited the FIREBASE");
-
+Log.d("CAMERA","Entering gallery stage");
+                    // save it to the gallery
+                    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                    //Uri contentUri = Uri.fromFile(f);
+                    mediaScanIntent.setData(contentUri);
+                    AddHabitEventActivity.this.sendBroadcast(mediaScanIntent);
                     // to load the image using the uri use Picasso.get().load(he.getUri()).into(image);
-                } else {
+                    Log.d("CAMERA","Exiting gallery stage");
+                }
+
+                else {
                     Log.d("CAMERA", "Failed onActivityResult if condition");
 
                 }
@@ -122,6 +149,14 @@ public class AddHabitEventActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 askCameraPermission();
+            }
+        });
+        galleryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent gallery = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                //startActivityForResult(gallery, GALLERY_REQUEST_CODE);
+                galleryActivityResultLauncher.launch(gallery);
             }
         });
 
@@ -162,8 +197,9 @@ public class AddHabitEventActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // return the habit event object back
                 habitEvent.setComment(commentText.getText().toString());
+                habit.getHabitEvents().add(habitEvent);
                 Intent result = new Intent();
-                result.putExtra("HABIT_EVENT",habitEvent);
+                result.putExtra("HABIT",habit);
                 setResult(RESULT_CODE, result);
                 finish();
             }
@@ -224,7 +260,8 @@ public class AddHabitEventActivity extends AppCompatActivity {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        //File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
@@ -256,4 +293,18 @@ public class AddHabitEventActivity extends AppCompatActivity {
             }
         }
     }
+
+    /**
+     *
+     * @param contentUri Uri, the image uri
+     * @return String, returns the extension of the image file
+     */
+    private String getFileExt(Uri contentUri) {
+        ContentResolver c = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(c.getType(contentUri));
+    }
+
+
+
 }

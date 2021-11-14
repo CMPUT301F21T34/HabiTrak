@@ -85,7 +85,7 @@ public class TodayListFragment extends Fragment {
                 Intent intent = new Intent(getContext(), ViewEditHabit.class);
                 intent.putExtra("HABIT", habit);
                 intent.putExtra("position", habit.getIndex());
-                addHabitEventResultLauncher.launch(intent);
+                viewHabitResultLauncher.launch(intent);
             }
 
             @Override
@@ -136,6 +136,11 @@ public class TodayListFragment extends Fragment {
         }
         adapter.notifyDataSetChanged();
     }
+    // activity result launcher for view/edit habit
+    ActivityResultLauncher<Intent> viewHabitResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {}
+    );
     // activity result launcher for add habit event
     ActivityResultLauncher<Intent> addHabitEventResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),

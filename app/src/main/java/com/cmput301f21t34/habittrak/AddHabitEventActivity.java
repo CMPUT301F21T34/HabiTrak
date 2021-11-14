@@ -55,11 +55,12 @@ import java.util.Date;
 
 /**
  * @author Tauseef Nafee Fattah
+ * @author Henry
  * Version: 1.0
  * Takes a habit and returns the new habit event
  * TODO: the map (to get address) and need to set the completed date
  */
-public class AddHabitEventActivity extends AppCompatActivity {
+public class AddHabitEventActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final int GALLERY_REQUEST_CODE = 105;
     Button cameraButton;
@@ -68,7 +69,7 @@ public class AddHabitEventActivity extends AppCompatActivity {
     Button addButton;
     EditText commentText;
     ImageView image;
-    public static int RESULT_CODE = 2000;
+    public static int RESULT_CODE = 3000;
     public static final int Camera_Permission_CODE = 100;
     public static final int Camera_REQUEST_CODE = 101;
     private StorageReference mStorageRef;
@@ -97,7 +98,6 @@ public class AddHabitEventActivity extends AppCompatActivity {
         db = new DatabaseManager();
 
         // get data
-
         Intent intent = getIntent();
         this.habit = intent.getParcelableExtra("HABIT");
         // the activity to get an image from the gallery
@@ -129,7 +129,7 @@ public class AddHabitEventActivity extends AppCompatActivity {
                     habitEvent.setPhotograph(db.uploadImageToFirebase(f.getName(), contentUri, mStorageRef));
                     Log.d("CAMERA", "The uri is :" + habitEvent.getPhotograph());
                     Log.d("CAMERA", "Exited the FIREBASE");
-Log.d("CAMERA","Entering gallery stage");
+                    Log.d("CAMERA","Entering gallery stage");
 
                     // save the image to the gallery
                     Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
@@ -193,8 +193,11 @@ Log.d("CAMERA","Entering gallery stage");
                 startActivity(map);
             }
         });
+        addButton.setOnClickListener(this);
+
 
         // returning the habit event object after the user pressed the add button
+        /*
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -210,7 +213,7 @@ Log.d("CAMERA","Entering gallery stage");
                 Log.d("CAMERA","ready to finish");
                 finish();
             }
-        });
+        });*/
     }
 
     /**
@@ -311,7 +314,19 @@ Log.d("CAMERA","Entering gallery stage");
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(c.getType(contentUri));
     }
-
-
-
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.addHabitEventButton) {
+            Log.d("CAMERA", "pressed add button in habit event");
+            habitEvent.setComment(commentText.getText().toString());
+            ArrayList<HabitEvent> heList = habit.getHabitEvents();
+            heList.add(habitEvent);
+            habit.setHabitEvents(heList);
+            Intent result = new Intent();
+            result.putExtra("HABIT_EVENT", habitEvent);
+            setResult(RESULT_CODE, result);
+            Log.d("CAMERA", "ready to finish");
+            this.finish();
+        }
+    }
 }

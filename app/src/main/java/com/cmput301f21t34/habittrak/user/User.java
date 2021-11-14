@@ -13,13 +13,12 @@ import java.util.ArrayList;
  * User
  *
  * @author Dakota
- *
+ * <p>
  * User to kepp track of
- *
  * @version 1.3
- * @since 2021-10-16
  * @see HabitEvent
  * @see Habit
+ * @since 2021-10-16
  */
 public class User implements Parcelable {
 
@@ -28,33 +27,39 @@ public class User implements Parcelable {
     // Any changes need to be implement in writeToParcel and Parcel constructor
     // - Dakota
 
-    // TODO: Make username final in version after merge with Database
-    private String username;
+    // Creates User from parcel
+    public static final Parcelable.Creator<User> CREATOR
+            = new Parcelable.Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
 
     // Password does not need to be parse and may be eventually removed
     // TODO: Make password final in version after merge with Database
-
-    private String password;
-
-    private HabitList habitList; // Habit_List extends ArrayList<Habit>
-
-
     private final String email;
-
-    private ArrayList<DatabasePointer> followerList;
-    private ArrayList<DatabasePointer> followingList;
-    private ArrayList<DatabasePointer> followerReqList;
-
+    // TODO: Make username final in version after merge with Database
+    private String username;
+    private String password;
+    private HabitList habitList; // Habit_List extends ArrayList<Habit>
+    // Lists of users' UUIDS (emails)
+    private ArrayList<String> followerList;     // Users that follow this user
+    private ArrayList<String> followingList;    // Users this user follows
+    private ArrayList<String> followingReqList; // Users that this user requested to follow
     //TODO: make these attributes Parcelable
-    private ArrayList<DatabasePointer> followerRequestedList;
-    private ArrayList<DatabasePointer> blockList;
-    private ArrayList<DatabasePointer> blockedByList;
-
-    private String biography;
+    private ArrayList<String> followerReqList;  // Users that requested to follow this user
+    private ArrayList<String> blockList;        // Users that this user blocked
+    private ArrayList<String> blockedByList;    // Users that blocked this user
 
     // Constructors //
-
+    private String biography;
 
     public User(
 
@@ -64,14 +69,14 @@ public class User implements Parcelable {
             String biography,
 
             HabitList habitList,
-            ArrayList<DatabasePointer> followerList,
-            ArrayList<DatabasePointer> followingList,
-            ArrayList<DatabasePointer> followerReqList,
-            ArrayList<DatabasePointer> followerRequestedList,
-            ArrayList<DatabasePointer> blockList,
-            ArrayList<DatabasePointer> blockedByList
+            ArrayList<String> followerList,
+            ArrayList<String> followingList,
+            ArrayList<String> followingReqList,
+            ArrayList<String> followerReqList,
+            ArrayList<String> blockList,
+            ArrayList<String> blockedByList
 
-                ) {
+    ) {
 
         this.email = email;
         this.username = username;
@@ -81,8 +86,8 @@ public class User implements Parcelable {
         this.habitList = habitList;
         this.followerList = followerList;
         this.followingList = followingList;
+        this.followingReqList = followingReqList;
         this.followerReqList = followerReqList;
-        this.followerRequestedList = followerRequestedList;
         this.blockList = blockList;
         this.blockedByList = blockedByList;
 
@@ -94,9 +99,9 @@ public class User implements Parcelable {
      *
      * @param username String the Users username
      * @param password String the Users password (for auth)
-     * @param email String the Users email (for identification)
+     * @param email    String the Users email (for identification)
      */
-    public User(String username, String password, String email){
+    public User(String username, String password, String email) {
 
         this.username = username;
         this.password = password;
@@ -105,70 +110,71 @@ public class User implements Parcelable {
         this.biography = "";
 
         this.habitList = new HabitList();
-        this.followerList = new ArrayList<DatabasePointer>();
-        this.followingList = new ArrayList<DatabasePointer>();
-        this.followerReqList = new ArrayList<DatabasePointer>();
-        this.followerRequestedList = new ArrayList<DatabasePointer>();
-        this.blockList = new ArrayList<DatabasePointer>();
-        this.blockedByList = new ArrayList<DatabasePointer>();
+        this.followerList = new ArrayList<>();
+        this.followingList = new ArrayList<>();
+        this.followingReqList = new ArrayList<>();
+        this.followerReqList = new ArrayList<>();
+        this.blockList = new ArrayList<>();
+        this.blockedByList = new ArrayList<>();
 
 
     }
 
     /**
      * New User
-     *
+     * <p>
      * Creates a User with only a username
      *
      * @author Dakota
      */
-    public User(){
+    public User() {
         this.email = "dummyEmail";
         this.username = "dummyUser";
         this.password = "12345";
-        
+
         this.habitList = new HabitList();
-        this.followerList = new ArrayList<DatabasePointer>();
-        this.followingList = new ArrayList<DatabasePointer>();
-        this.followerReqList = new ArrayList<DatabasePointer>();
-        this.followerRequestedList = new ArrayList<DatabasePointer>();
-        this.blockList = new ArrayList<DatabasePointer>();
-        this.blockedByList = new ArrayList<DatabasePointer>();
+        this.followerList = new ArrayList<>();
+        this.followingList = new ArrayList<>();
+        this.followingReqList = new ArrayList<>();
+        this.followerReqList = new ArrayList<>();
+        this.blockList = new ArrayList<>();
+        this.blockedByList = new ArrayList<>();
         this.biography = "";
     }
-    
+
     /**
      * User
-     *
+     * <p>
      * Creates a User with the given email
      * User only has a username, an email and a password
      */
-    public User(String email){
+    public User(String email) {
         this.email = email;
         this.username = "dummyUser";
         this.password = "12345";
 
         this.habitList = new HabitList();
-        this.followerList = new ArrayList<DatabasePointer>();
-        this.followingList = new ArrayList<DatabasePointer>();
-        this.followerReqList = new ArrayList<DatabasePointer>();
-        this.followerRequestedList = new ArrayList<DatabasePointer>();
-        this.blockList = new ArrayList<DatabasePointer>();
-        this.blockedByList = new ArrayList<DatabasePointer>();
+        this.followerList = new ArrayList<>();
+        this.followingList = new ArrayList<>();
+        this.followingReqList = new ArrayList<>();
+        this.followerReqList = new ArrayList<>();
+        this.blockList = new ArrayList<>();
+        this.blockedByList = new ArrayList<>();
         this.biography = "";
     }
 
+
     /**
      * Parcel Constructor Class
-     *
+     * <p>
      * Constructs Habit from a parcel
      * Un-does writeToParcel method
      *
+     * @param parcel Parcel to construct from
      * @author Dakota
      * @see Parcelable
-     * @param parcel Parcel to construct from
      */
-    public User(Parcel parcel){
+    public User(Parcel parcel) {
 
         Bundle userBundle;
         userBundle = parcel.readBundle(User.class.getClassLoader());
@@ -187,255 +193,306 @@ public class User implements Parcelable {
                 userBundle.getParcelableArrayList("habitList")
         );
 
-        // DatabasePointer Lists //
-        this.followerList = userBundle.getParcelableArrayList(
-                "followerList"
-        );
-        this.followingList = userBundle.getParcelableArrayList(
-                "followingList"
-        );
-        this.followerReqList = userBundle.getParcelableArrayList(
-                "followerReqList"
-        );
-        this.followerReqList = userBundle.getParcelableArrayList(
-                "followerRequestedList"
-        );
-        this.blockList = userBundle.getParcelableArrayList(
-                "blockList"
-        );
-        this.blockedByList = userBundle.getParcelableArrayList(
-                "blockedByList"
-        );
-
+        // Lists of UUIDs
+        this.followerList = userBundle.getStringArrayList("followerList");
+        this.followingList = userBundle.getStringArrayList("followingList");
+        this.followingReqList = userBundle.getStringArrayList("followingReqList");
+        this.followerReqList = userBundle.getStringArrayList("followerReqList");
+        this.blockList = userBundle.getStringArrayList("blockList");
+        this.blockedByList = userBundle.getStringArrayList("blockedByList");
 
 
     }
-
 
     // getter methods
     public String getUsername() {
         return username;
     }
-    
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    /**
+     * @param password String The Users password
+     * @author Dakota
+     * @author Henry
+     * @deprecated assign password in constructor
+     */
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public HabitList getHabitList() {
         return habitList;
     }
-    
-    public ArrayList<DatabasePointer> getFollowerList() {
+
+    public void setHabitList(HabitList habitList) {
+        this.habitList = habitList;
+    }
+
+    public ArrayList<String> getFollowerList() {
         return followerList;
     }
 
-
-    
-    public ArrayList<DatabasePointer> getFollowerReqList() {
-        return followerReqList;
+    // Might not want to allow these //
+    public void setFollowerList(ArrayList<String> followerList) {
+        this.followerList = followerList;
     }
-    
-    public ArrayList<DatabasePointer> getFollowingList() {
+
+    public ArrayList<String> getFollowingReqList() {
+        return followingReqList;
+    }
+
+
+    // Database can modify these methods below //
+
+    public void setFollowingReqList(ArrayList<String> followingReqList) {
+        this.followingReqList = followingReqList;
+    }
+
+    public ArrayList<String> getFollowingList() {
         return followingList;
     }
-    
-    public ArrayList<DatabasePointer> getFollowerRequestedList() {
-        return followerRequestedList;
+
+    public void setFollowingList(ArrayList<String> followingList) {
+        this.followingList = followingList;
     }
-    
-    public ArrayList<DatabasePointer> getBlockList() {
+
+    public ArrayList<String> getFollowerReqList() {
+        return followerReqList;
+    }
+
+    public void setFollowerReqList(ArrayList<String> followerReqList) {
+        this.followerReqList = followerReqList;
+    }
+
+    public ArrayList<String> getBlockList() {
         return blockList;
     }
-    
-    public ArrayList<DatabasePointer> getBlockedByList() {
+
+    public void setBlockList(ArrayList<String> blockList) {
+        this.blockList = blockList;
+    }
+
+    public ArrayList<String> getBlockedByList() {
         return blockedByList;
+    }
+
+    public void setBlockedByList(ArrayList<String> blockedByList) {
+        this.blockedByList = blockedByList;
     }
 
     public String getBiography() {
         return biography;
     }
 
-
-    // Database can modify these methods below //
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-
-
-
-    /**
-     * @deprecated assign password in constructor
-     * @author Dakota
-     * @author Henry
-     * @param password String The Users password
-     */
-    public void setPassword (String password){
-        this.password = password;
-    }
-
-
-
-    public void setHabitList (HabitList habitList){
-
-        this.habitList = habitList;
-
-    }
-
-
-
-    // Might not want to allow these //
-    public void setFollowerList (
-            ArrayList <DatabasePointer> followerList
-
-    )
-    {
-        this.followerList = followerList;
-    }
-
-    public void setFollowingList (
-            ArrayList <DatabasePointer> followingList
-
-    )
-    {
-        this.followingList = followingList;
-    }
-
-    public void setFollowerReqList (
-            ArrayList <DatabasePointer> followerReqList
-
-    )
-    {
-        this.followerReqList = followerReqList;
-    }
-
-
-    public void setFollowerRequestedList (
-            ArrayList <DatabasePointer> followerRequestedList
-
-    )
-    {
-        this.followerRequestedList = followerRequestedList;
-    }
-
-
-    public void setBlockList (
-            ArrayList <DatabasePointer> blockList
-
-    )
-    {
-        this.blockList = blockList;
-    }
-
-
-    public void setBlockedByList (
-            ArrayList <DatabasePointer> blockedByList
-
-    )
-    {
-        this.blockedByList = blockedByList;
-    }
-
-    public void setBiography (
-            String biography
-    )
-    {
+    public void setBiography(String biography) {
         this.biography = biography;
     }
-    // add methods have to adjust the database
 
-
-    public void addHabit (Habit habit){
+    public void addHabit(Habit habit) {
         this.habitList.add(habit);
     }
 
     /**
      * removeHabit
-     *
+     * <p>
      * removes a given habit from the habitList
      *
      * @param habit Habit to remove
      * @return boolean true if succeeded, false else wise
      */
-    public boolean removeHabit (Habit habit){
+    public boolean removeHabit(Habit habit) {
         return this.habitList.remove(habit);
     }
 
-
-    public Habit getHabit ( int index){
+    public Habit getHabit(int index) {
         return this.habitList.get(index);
     }
 
-
-
-    public void addFollower (DatabasePointer newFollower){
-
-
-        //TODO: Database Implementation
-        this.followerList.add(newFollower);
-    }
-
-
-    public void addFollowerReq (DatabasePointer newFollowReq){
-
-
-        //TODO: Database Implementation
-        this.followerReqList.add(newFollowReq);
-    }
-
-
-    public void addFollowing (DatabasePointer newFollowing){
-
-
-        //TODO: Database Implementation
-        this.followingList.add(newFollowing);
-    }
-
-    /** getEmail
+    /** addFollower
+     * adds a follower to this user's followerList if not already present
      *
+     * @param UUID String, the UUID of the user to add
+     * @author Kaaden
+     */
+    public void addFollower(String UUID) {
+        if (!followerList.contains(UUID)) {
+            followerList.add(UUID);
+        }
+    }
+
+    /** addFollowing
+     * adds a followee to this user's followingList if not already present
+     *
+     * @param UUID String, UUID of the user to add
+     * @author Kaaden
+     */
+    public void addFollowing(String UUID) {
+        if (!followingList.contains(UUID)) {
+            followingList.add(UUID);
+        }
+    }
+
+    /** addFollowerReq
+     * adds a follow-requester to this user's followerReqList if not already present
+     *
+     * @param UUID String, the UUID of the user to add
+     * @author Kaaden
+     */
+    public void addFollowerReq(String UUID) {
+        if (!followerReqList.contains(UUID)) {
+            followerReqList.add(UUID);
+        }
+    }
+
+    /** addFollowingReq
+     * adds a follow-requestee to this user's followingReqList if not already present
+     *
+     * @param UUID String, the UUID of the user to add
+     * @author Kaaden
+     */
+    public void addFollowingReq(String UUID) {
+        if (!followingReqList.contains(UUID)) {
+            followingReqList.add(UUID);
+        }
+    }
+
+    /** addBlock
+     * adds a blockee to this user's blockList if not already present
+     *
+     * @param UUID String, the UUID of the user to add
+     * @author Kaaden
+     */
+    public void addBlock(String UUID) {
+        if (!blockList.contains(UUID)) {
+            blockList.add(UUID);
+        }
+    }
+
+    /** addBlockedBy
+     * adds a blocker to this user's blockedByList if not already present
+     *
+     * @param UUID String, the UUID of the user to add
+     * @author Kaaden
+     */
+    public void addBlockedBy(String UUID) {
+        if (!blockedByList.contains(UUID)) {
+            blockedByList.add(UUID);
+        }
+    }
+
+    /** removeFollower
+     * Remove all occurrences of a follower in this user's followerList
+     *
+     * @param UUID String, the UUID of the user(s) to remove
+     * @return boolean, true if any removals occurred, false otherwise
+     */
+    public boolean removeFollower(String UUID) {
+        return followerList.removeIf(follower -> follower.equals(UUID));
+    }
+
+    /** removeFollowing
+     * Remove all occurrences of a followee in this user's followingList
+     *
+     * @param UUID String, the UUID of the user(s) to remove
+     * @return boolean, true if any removals occurred, false otherwise
+     */
+    public boolean removeFollowing(String UUID) {
+        return followingList.removeIf(followee -> followee.equals(UUID));
+    }
+
+    /** removeFollowerReq
+     * Remove all occurrences of a follow-requester in this user's followerReqList
+     *
+     * @param UUID String, the UUID of the user(s) to remove
+     * @return boolean, true if any removals occurred, false otherwise
+     */
+    public boolean removeFollowerReq(String UUID) {
+        return followerReqList.removeIf(followRequester -> followRequester.equals(UUID));
+    }
+
+    /** removeFollowingReq
+     * Remove all occurrences of a follow-requestee in this user's followingReqList
+     *
+     * @param UUID String, the UUID of the user(s) to remove
+     * @return boolean, true if any removals occurred, false otherwise
+     */
+    public boolean removeFollowingReq(String UUID) {
+        return followingReqList.removeIf(followRequestee -> followRequestee.equals(UUID));
+    }
+
+    /** removeBlock
+     * Remove all occurrences of a blockee in this user's blockList
+     *
+     * @param UUID String, the UUID of the user(s) to remove
+     * @return boolean, true if any removals occurred, false otherwise
+     */
+    public boolean removeBlock(String UUID) {
+        return blockList.removeIf(blockee -> blockee.equals(UUID));
+    }
+
+    /** removeBlockedBy
+     * Remove all occurrences of a blocker in this user's blockedByList
+     *
+     * @param UUID String, the UUID of the user(s) to remove
+     * @return boolean, true if any removals occurred, false otherwise
+     */
+    public boolean removeBlockedBy(String UUID) {
+        return blockedByList.removeIf(blocker -> blocker.equals(UUID));
+    }
+
+    /**
+     * getEmail
+     * <p>
      * gets Email
      *
-     * @author Dakota
      * @return String email
+     * @author Dakota
      */
-    public String getEmail () {
+    public String getEmail() {
         return this.email;
-    }
-
-
-    // replace methods not sure if i need it or not
-    public void replaceHabit ( int index, Habit habit){
-        this.habitList.set(index, habit);
     }
 
 
     // These implement Parcelable for being passed through an intent
 
+    // replace methods not sure if i need it or not
+    public void replaceHabit(int index, Habit habit) {
+        this.habitList.set(index, habit);
+    }
+
     /**
      * Apart of Parcelable implementation, does nothing but is required
-     * @author Dakota
+     *
      * @return int 0
+     * @author Dakota
      */
     @Override
-    public int describeContents () {
+    public int describeContents() {
         return 0;
     }
 
     /**
      * writeToParcel
-     *
+     * <p>
      * Writes all the attributes to the parcel out
+     *
+     * @param parcel Parcel to be create
+     * @param flags  int, idk not important but required
      * @author Dakota
      * @see Parcelable
      * @see Parcel
      * @see Bundle
      * @see ClassLoader
-     * @param parcel Parcel to be create
-     * @param flags int, idk not important but required
      */
     @Override
-    public void writeToParcel (Parcel parcel,int flags){
+    public void writeToParcel(Parcel parcel, int flags) {
 
 
         Bundle userBundle = new Bundle(this.getClass().getClassLoader());
@@ -458,70 +515,17 @@ public class User implements Parcelable {
         userBundle.putString("email", this.getEmail());
 
         // requires Habit to implement Parcelable
-        userBundle.putParcelableArrayList("habitList", (ArrayList<Habit>) habitList);
+        userBundle.putParcelableArrayList("habitList", habitList);
 
 
-        userBundle.putParcelableArrayList("followerList", followerList);
-        userBundle.putParcelableArrayList("followingList", followingList);
-        userBundle.putParcelableArrayList("followerReqList", followerReqList);
-        userBundle.putParcelableArrayList("followerRequestedList", followerRequestedList);
-        userBundle.putParcelableArrayList("blockList", blockList);
-        userBundle.putParcelableArrayList("blockedByList", blockedByList);
+        userBundle.putStringArrayList("followerList", followerList);
+        userBundle.putStringArrayList("followingList", followingList);
+        userBundle.putStringArrayList("followingReqList", followingReqList);
+        userBundle.putStringArrayList("followerReqList", followerReqList);
+        userBundle.putStringArrayList("blockList", blockList);
+        userBundle.putStringArrayList("blockedByList", blockedByList);
 
         parcel.writeBundle(userBundle); // writes bundle to parcel
-
     }
 
-    // Creates User from parcel
-    public static final Parcelable.Creator<User> CREATOR
-            = new Parcelable.Creator<User>() {
-        @Override
-        public User createFromParcel(Parcel in) {
-            return new User(in);
-        }
-
-        @Override
-        public User[] newArray(int size) {
-            return new User[size];
-        }
-    };
-
-
-
-    public boolean removeFollower (DatabasePointer follower){
-
-        boolean success;
-        success = this.followerList.removeIf(
-
-                database_pointer ->
-                        database_pointer.getEmail().equals(follower.getEmail())
-
-        );
-
-        return success;
-    }
-
-
-    public boolean removeFollowerReq (DatabasePointer followReq){
-
-        boolean success = false;
-        success = this.followerReqList.removeIf(database_pointer -> {
-            if (database_pointer.getEmail() == followReq.getEmail()) {
-                return true;
-            }
-            return false;
-        });
-
-        return success;
-    }
-
-
-    public boolean removeFollowing (DatabasePointer following){
-
-        boolean success = false;
-
-        success = this.followingList.removeIf(database_pointer -> database_pointer.getEmail().equals(following.getEmail()));
-
-        return success;
-    }
 }

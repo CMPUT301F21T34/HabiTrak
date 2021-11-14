@@ -81,7 +81,7 @@ public class LoginFragment extends Fragment {
         db = new DatabaseManager();
 
         mAuth = new Auth(getActivity(), db);
-        
+
 
         return view;
 

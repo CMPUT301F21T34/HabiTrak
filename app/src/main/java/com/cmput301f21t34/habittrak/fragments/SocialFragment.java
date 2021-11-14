@@ -1,61 +1,57 @@
-package com.cmput301f21t34.habittrak;
+package com.cmput301f21t34.habittrak.fragments;
+
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.Lifecycle;
-import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.os.Bundle;
-
+import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.socialFragments.FollowersFragment;
 import com.cmput301f21t34.habittrak.socialFragments.FollowingFragment;
 import com.cmput301f21t34.habittrak.socialFragments.RequestsFragment;
 import com.cmput301f21t34.habittrak.socialFragments.SearchFragment;
+import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * SocialActivity
- *
- * @author Pranav
- * @author Kaaden
- * Hold the Social Activity fragments
- *
- * @version 1.0
- * @since 2021-10-27
- */
-public class SocialActivity extends AppCompatActivity{
-
+public class SocialFragment extends Fragment {
+    FollowersFragment followersFragment;
+    FollowingFragment followingFragment;
+    RequestsFragment requestsFragment;
+    SearchFragment searchFragment;
     TabLayout socialTab;
+    User mainUser;
     ViewPager2 viewPager;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_social);
+    public SocialFragment(User mainUser) {
+        this.mainUser = mainUser;
+    }
 
-        // add back button to toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.social_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.activity_social, container, false);
 
         // setting views
-        socialTab = findViewById(R.id.social_tab_layout);
-        viewPager = findViewById(R.id.social_view_pager);
+        socialTab = view.findViewById(R.id.social_tab_layout);
+        viewPager = view.findViewById(R.id.social_view_pager);
 
         // setting up the adapter
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getChildFragmentManager();
         ViewStateAdapter viewStateAdapter = new ViewStateAdapter(fm, getLifecycle());
         viewPager.setAdapter(viewStateAdapter);
 
@@ -64,6 +60,13 @@ public class SocialActivity extends AppCompatActivity{
         socialTab.addTab(socialTab.newTab().setText("Following"));
         socialTab.addTab(socialTab.newTab().setText("Requests"));
         socialTab.addTab(socialTab.newTab().setText("Search"));
+
+        // Initialise Fragments
+        // TODO maybe move these into base onCreate if doesn't cause issues with things not updating because this is called repeatedly possibly leading to reduced performance
+        followersFragment = new FollowersFragment(mainUser);
+        followingFragment = new FollowingFragment(mainUser);
+        requestsFragment = new RequestsFragment(mainUser);
+        searchFragment = new SearchFragment(mainUser);
 
         // tab listener
         socialTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -91,12 +94,14 @@ public class SocialActivity extends AppCompatActivity{
             }
         });
 
+        return view;
     }
 
     /**
      * ViewStateAdapter
-     *
+     * <p>
      * Adapter for the view pager
+     *
      * @author Pranav
      * @author Kaaden
      */
@@ -111,27 +116,19 @@ public class SocialActivity extends AppCompatActivity{
         public Fragment createFragment(int position) {
             switch (position) {
                 case 0:
-                    return new FollowersFragment();
+                    return followersFragment;
                 case 1:
-                    return new FollowingFragment();
+                    return followingFragment;
                 case 2:
-                    return new RequestsFragment();
+                    return requestsFragment;
                 default:
-                    return new SearchFragment();
+                    return searchFragment;
             }
         }
 
         @Override
         public int getItemCount() {
-            // Hardcoded, use lists
-            return socialTab.getTabCount(); // this should do it vs the previous hardcoded solution TODO remove comments once verified works
+            return socialTab.getTabCount();
         }
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        // Adding the back button and
-        onBackPressed();
-        return true;
     }
 }

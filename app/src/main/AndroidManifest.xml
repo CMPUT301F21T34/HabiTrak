@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HabitTrak">
         <activity
+            android:name=".SocialViewProfile"
+            android:exported="true" />
+        <activity
             android:name=".ViewEditHabit"
             android:exported="true" />
         <activity

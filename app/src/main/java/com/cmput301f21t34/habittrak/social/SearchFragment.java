@@ -42,14 +42,17 @@ import java.util.concurrent.ExecutorService;
  */
 public class SearchFragment extends Fragment {
     public static String TAG = "SEARCH_FRAGMENT";
-    DatabaseManager dm = new DatabaseManager();
-    RecyclerView recyclerView;
-    RecyclerView.LayoutManager layoutManager;
-    SocialAdapter socialAdapter;
-    ArrayList<String> displayList = new ArrayList<>();
-    ArrayList<String> bioList = new ArrayList<>();
-    User mainUser;
-    ShimmerFrameLayout loading;
+    private DatabaseManager dm = new DatabaseManager();
+    // Views
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private SocialAdapter socialAdapter;
+    private ShimmerFrameLayout loading;
+    // Data
+    private ArrayList<String> displayList = new ArrayList<>();
+    private ArrayList<String> bioList = new ArrayList<>();
+    private User mainUser;
+
 
 
     public SearchFragment(User mainUser) {
@@ -90,7 +93,7 @@ public class SearchFragment extends Fragment {
         recyclerView.setAdapter(socialAdapter);
 
 
-
+        // search box listener
         searchBox.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -126,7 +129,7 @@ public class SearchFragment extends Fragment {
         menu.show();
 
         menu.setOnMenuItemClickListener(menuItem -> {
-            if (menuItem.getTitle().equals("Remove")) {
+            if (menuItem.getTitle().equals("Block")) {
                 Log.d("MenuItem", "Remove Clicked");
             } else {
                 Log.d("MenuItem", "Block Clicked");

@@ -34,8 +34,8 @@ import java.util.ArrayList;
 public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder> implements Filterable{
     private ArrayList<String> profiles;   // UUIDS (emails as of 10/11)
     private ArrayList<String> bio;
-    private ArrayList<String> profilesCopy;
-    private ArrayList<String> bioCopy;
+    private final ArrayList<String> profilesCopy;
+    private final ArrayList<String> bioCopy;
     private final ClickListener listener;
     private final boolean buttonVisibility;
     private final String buttonText;
@@ -59,21 +59,22 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
                 String charString = charSequence.toString();
-                Log.d("Adapter","charString");
+                // is no input in searchView put the original list back
                 if (charString.isEmpty()){
                     profiles = profilesCopy;
                     bio = bioCopy;
                 } else {
+                    // filter username and bio bases if username contains the characters
                     ArrayList<String> filteredProfileList = new ArrayList<>();
-                    ArrayList<String> filtererdBioList = new ArrayList<>();
+                    ArrayList<String> filteredBioList = new ArrayList<>();
                     for (int i = 0; i < profilesCopy.size(); i++){
                         if (profilesCopy.get(i).toLowerCase().contains(charString)){
                             filteredProfileList.add(profilesCopy.get(i));
-                            filtererdBioList.add(bioCopy.get(i));
+                            filteredBioList.add(bioCopy.get(i));
                         }
                     }
                     profiles = filteredProfileList;
-                    bio = filtererdBioList;
+                    bio = filteredBioList;
                 }
 
                 FilterResults filterResults = new FilterResults();

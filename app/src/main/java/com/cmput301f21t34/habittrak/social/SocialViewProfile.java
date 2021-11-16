@@ -68,7 +68,7 @@ public class SocialViewProfile extends AppCompatActivity {
         getPublicHabits();
 
         // set recycler view
-        layoutManager = new LinearLayoutManager(getBaseContext());
+        layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         adapter = new TodayHabitRecyclerAdapter(displayList, false);
         adapter.setHabitClickListener(new TodayHabitRecyclerAdapter.HabitClickListener() {

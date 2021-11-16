@@ -1,5 +1,7 @@
 package com.cmput301f21t34.habittrak.social;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -55,6 +57,7 @@ public class SearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.habi_search_fragment, container, false);
+        SearchView searchBox = view.findViewById(R.id.social_search_box);
 
 
         // get all user list
@@ -77,12 +80,13 @@ public class SearchFragment extends Fragment {
         }, true, "Follow");
         recyclerView.setAdapter(socialAdapter);
 
-        // TODO search stuff
-        SearchView searchBox = view.findViewById(R.id.social_search_box);
+
+
         searchBox.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                return false;
+                socialAdapter.getFilter().filter(s);
+                return true;
             }
 
             @Override

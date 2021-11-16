@@ -1,5 +1,6 @@
 package com.cmput301f21t34.habittrak.recycler;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 //TODO: Send menu options in the adapter itself
+//TODO: change username to email
+//TODO: remove the database calls as it makes the app slower
 
 /**
  * SocialAdapter
@@ -31,7 +34,7 @@ import java.util.Locale;
  * @see RecyclerView
  * @since 2021-11-01
  */
-public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder> implements Filterable {
+public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder> implements Filterable{
     private ArrayList<String> profiles;   // UUIDS (emails as of 10/11)
     private ArrayList<String> newList;
     private final ClickListener listener;
@@ -46,32 +49,30 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         this.buttonText = buttonText;
         this.newList = users;
     }
-    // taken from https://stackoverflow.com/questions/30398247/how-to-filter-a-recyclerview-with-a-searchview
+
+
     @Override
     public Filter getFilter() {
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
-                final FilterResults onReturn = new FilterResults();
-                final ArrayList<String> results = new ArrayList<>();
-                if (profiles == null){
-                    profiles = new ArrayList<>(newList);
-                }
-                if (charSequence != null && charSequence.length() > 0){
-                    if (profiles != null && profiles.size() > 0){
-                        for (final String cd: profiles){
-                            if(cd.toLowerCase(Locale.ROOT)
-                            .contains(charSequence.toString().toLowerCase(Locale.ROOT)))
-                                results.add(cd);
-                        }
-                    }
-                    onReturn.values = results;
-                    onReturn.count = results.size();
+                String charString = charSequence.toString();
+                Log.d("Adapter","charString");
+                if (charString.isEmpty()){
+                    profiles = newList;
                 } else {
-                    onReturn.values = profiles;
-                    onReturn.count = profiles.size();
+                    ArrayList<String> filteredList = new ArrayList<>();
+                    for (String s: newList){
+                        if (s.toLowerCase().contains(charString))
+                            filteredList.add(s);
+                        Log.d("Adapter", s);
+                    }
+                    profiles = filteredList;
                 }
-                return  onReturn;
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = profiles;
+                return  filterResults;
             }
 
             @Override

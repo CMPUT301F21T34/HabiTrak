@@ -72,7 +72,7 @@ public class SearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.habi_search_fragment, container, false);
         SearchView searchBox = view.findViewById(R.id.social_search_box);
         loading = view.findViewById(R.id.shimmer_container);
-        loading.startShimmer();
+
 
         // setting up recycler view
         recyclerView = view.findViewById(R.id.search_recycler_view);
@@ -108,7 +108,13 @@ public class SearchFragment extends Fragment {
             }
         });
 
-        new SearchAsyncTask().execute();
+        if (displayList.isEmpty()) {
+            new SearchAsyncTask().execute();
+            loading.startShimmer();
+        } else {
+            loading.setVisibility(View.GONE);
+        }
+
         return view;
     }
 
@@ -130,8 +136,6 @@ public class SearchFragment extends Fragment {
 
         menu.setOnMenuItemClickListener(menuItem -> {
             if (menuItem.getTitle().equals("Block")) {
-                Log.d("MenuItem", "Remove Clicked");
-            } else {
                 Log.d("MenuItem", "Block Clicked");
             }
             return true;

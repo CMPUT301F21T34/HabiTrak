@@ -32,6 +32,10 @@ public class SocialFragment extends Fragment {
 
     public SocialFragment(User mainUser) {
         this.mainUser = mainUser;
+        this.followersFragment = new FollowersFragment(mainUser);
+        this.followingFragment = new FollowingFragment(mainUser);
+        this.requestsFragment = new RequestsFragment(mainUser);
+        this.searchFragment = new SearchFragment(mainUser);
     }
 
     @Override
@@ -63,10 +67,7 @@ public class SocialFragment extends Fragment {
 
         // Initialise Fragments
         // TODO maybe move these into base onCreate if doesn't cause issues with things not updating because this is called repeatedly possibly leading to reduced performance
-        followersFragment = new FollowersFragment(mainUser);
-        followingFragment = new FollowingFragment(mainUser);
-        requestsFragment = new RequestsFragment(mainUser);
-        searchFragment = new SearchFragment(mainUser);
+
 
         // tab listener
         socialTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

@@ -69,7 +69,7 @@ public class RequestsFragment extends Fragment {
             public void mainButtonOnClick(View view, int position) {
                 ButtonClicked(view, position);
             }
-        }, true, "Accept");
+        }, true, new ArrayList<String>(),"Accept");
         recyclerView.setAdapter(socialAdapter);
 
 

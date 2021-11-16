@@ -17,12 +17,9 @@ import com.cmput301f21t34.habittrak.R;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 //TODO: Send menu options in the adapter itself
 //TODO: change username to email
-//TODO: remove the database calls as it makes the app slower
-
 /**
  * SocialAdapter
  *
@@ -36,18 +33,23 @@ import java.util.Locale;
  */
 public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder> implements Filterable{
     private ArrayList<String> profiles;   // UUIDS (emails as of 10/11)
-    private ArrayList<String> newList;
+    private ArrayList<String> bio;
+    private ArrayList<String> profilesCopy;
+    private ArrayList<String> bioCopy;
     private final ClickListener listener;
     private final boolean buttonVisibility;
     private final String buttonText;
 
     // class constructor
-    public SocialAdapter(ArrayList<String> users, ClickListener listener, boolean visible, String buttonText) {
+    public SocialAdapter(ArrayList<String> users, ClickListener listener, boolean visible,
+                         ArrayList<String> bio, String buttonText) {
         this.profiles = users;
         this.listener = listener;
         this.buttonVisibility = visible;
         this.buttonText = buttonText;
-        this.newList = users;
+        this.profilesCopy = users;
+        this.bio = bio;
+        this.bioCopy = bio;
     }
 
 
@@ -59,15 +61,19 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
                 String charString = charSequence.toString();
                 Log.d("Adapter","charString");
                 if (charString.isEmpty()){
-                    profiles = newList;
+                    profiles = profilesCopy;
+                    bio = bioCopy;
                 } else {
-                    ArrayList<String> filteredList = new ArrayList<>();
-                    for (String s: newList){
-                        if (s.toLowerCase().contains(charString))
-                            filteredList.add(s);
-                        Log.d("Adapter", s);
+                    ArrayList<String> filteredProfileList = new ArrayList<>();
+                    ArrayList<String> filtererdBioList = new ArrayList<>();
+                    for (int i = 0; i < profilesCopy.size(); i++){
+                        if (profilesCopy.get(i).toLowerCase().contains(charString)){
+                            filteredProfileList.add(profilesCopy.get(i));
+                            filtererdBioList.add(bioCopy.get(i));
+                        }
                     }
-                    profiles = filteredList;
+                    profiles = filteredProfileList;
+                    bio = filtererdBioList;
                 }
 
                 FilterResults filterResults = new FilterResults();
@@ -96,10 +102,8 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull SocialAdapter.ViewHolder holder, int position) {
         // Get user info from database
-        DatabaseManager dm = new DatabaseManager();
-        String UUID = profiles.get(position);
-        holder.getUsername().setText(dm.getUserName(UUID));
-        holder.getUserBio().setText(dm.getUserBio(UUID));
+        holder.getUsername().setText(profiles.get(position));
+        holder.getUserBio().setText(bio.get(position));
 
         // Button setup
         holder.listenerRef = this.listener;

@@ -47,6 +47,7 @@ public class SearchFragment extends Fragment {
     RecyclerView.LayoutManager layoutManager;
     SocialAdapter socialAdapter;
     ArrayList<String> displayList = new ArrayList<>();
+    ArrayList<String> bioList = new ArrayList<>();
     User mainUser;
     ShimmerFrameLayout loading;
 
@@ -85,7 +86,7 @@ public class SearchFragment extends Fragment {
             public void mainButtonOnClick(View view, int position) {
                 ButtonClicked(view, position);
             }
-        }, true, "Follow");
+        }, true, bioList, "Follow");
         recyclerView.setAdapter(socialAdapter);
 
 
@@ -162,7 +163,9 @@ public class SearchFragment extends Fragment {
 
         for (String user: users){
             if(!blockedBy.contains(user) && !blockedUsers.contains(user)){
-                displayList.add(user);
+                displayList.add(dm.getUserName(user));
+                bioList.add(dm.getUserBio(user));
+                Log.d(TAG, user);
             }
         }
 
@@ -186,9 +189,9 @@ public class SearchFragment extends Fragment {
         @Override
         protected void onPostExecute(Void unused) {
             super.onPostExecute(unused);
+            socialAdapter.notifyDataSetChanged();
             loading.stopShimmer();
             loading.setVisibility(View.GONE);
-            socialAdapter.notifyDataSetChanged();
         }
     }
 }

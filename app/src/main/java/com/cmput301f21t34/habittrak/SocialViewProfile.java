@@ -72,7 +72,7 @@ public class SocialViewProfile extends AppCompatActivity {
         adapter.setHabitClickListener(new TodayHabitRecyclerAdapter.HabitClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                // setup on item click
+                onHabitClick(view, position);
             }
 
             @Override
@@ -103,5 +103,9 @@ public class SocialViewProfile extends AppCompatActivity {
                 displayList.add(habitList.get(i));
             }
         }
+    }
+
+    public void onHabitClick(View view, int position){
+        // start View Habit Activity.
     }
 }

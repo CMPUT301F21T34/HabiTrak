@@ -22,6 +22,7 @@ import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.recycler.SocialAdapter;
 import com.cmput301f21t34.habittrak.user.User;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.button.MaterialButton;
 
 import java.lang.reflect.Array;
@@ -47,6 +48,7 @@ public class SearchFragment extends Fragment {
     SocialAdapter socialAdapter;
     ArrayList<String> displayList = new ArrayList<>();
     User mainUser;
+    ShimmerFrameLayout loading;
 
 
     public SearchFragment(User mainUser) {
@@ -65,6 +67,8 @@ public class SearchFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.habi_search_fragment, container, false);
         SearchView searchBox = view.findViewById(R.id.social_search_box);
+        loading = view.findViewById(R.id.shimmer_container);
+        loading.startShimmer();
 
         // setting up recycler view
         recyclerView = view.findViewById(R.id.search_recycler_view);
@@ -182,6 +186,8 @@ public class SearchFragment extends Fragment {
         @Override
         protected void onPostExecute(Void unused) {
             super.onPostExecute(unused);
+            loading.stopShimmer();
+            loading.setVisibility(View.GONE);
             socialAdapter.notifyDataSetChanged();
         }
     }

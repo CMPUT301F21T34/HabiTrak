@@ -3,6 +3,8 @@ package com.cmput301f21t34.habittrak.recycler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -14,6 +16,7 @@ import com.cmput301f21t34.habittrak.R;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 //TODO: Send menu options in the adapter itself
 
@@ -28,8 +31,9 @@ import java.util.ArrayList;
  * @see RecyclerView
  * @since 2021-11-01
  */
-public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder> {
-    private final ArrayList<String> profiles;   // UUIDS (emails as of 10/11)
+public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder> implements Filterable {
+    private ArrayList<String> profiles;   // UUIDS (emails as of 10/11)
+    private ArrayList<String> newList;
     private final ClickListener listener;
     private final boolean buttonVisibility;
     private final String buttonText;
@@ -40,6 +44,43 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         this.listener = listener;
         this.buttonVisibility = visible;
         this.buttonText = buttonText;
+        this.newList = users;
+    }
+    // taken from https://stackoverflow.com/questions/30398247/how-to-filter-a-recyclerview-with-a-searchview
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                final FilterResults onReturn = new FilterResults();
+                final ArrayList<String> results = new ArrayList<>();
+                if (profiles == null){
+                    profiles = new ArrayList<>(newList);
+                }
+                if (charSequence != null && charSequence.length() > 0){
+                    if (profiles != null && profiles.size() > 0){
+                        for (final String cd: profiles){
+                            if(cd.toLowerCase(Locale.ROOT)
+                            .contains(charSequence.toString().toLowerCase(Locale.ROOT)))
+                                results.add(cd);
+                        }
+                    }
+                    onReturn.values = results;
+                    onReturn.count = results.size();
+                } else {
+                    onReturn.values = profiles;
+                    onReturn.count = profiles.size();
+                }
+                return  onReturn;
+            }
+
+            @Override
+            @SuppressWarnings("unchecked")
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                profiles = (ArrayList<String>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 
     @NonNull

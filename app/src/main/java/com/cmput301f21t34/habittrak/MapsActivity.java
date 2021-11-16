@@ -57,7 +57,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private CameraPosition cameraPosition;
 
     LocationRequest locationRequest = new LocationRequest();
-    Button confirmBtn;
+    Button confirmButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +66,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             cameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
         }*/
         // requesting location
-        confirmBtn = findViewById(R.id.confirmMapButton);
+        confirmButton = findViewById(R.id.confirmMapButton);
         locationRequest.setInterval(30000);
         locationRequest.setFastestInterval(5000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -81,7 +81,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-      /*  confirmBtn.setOnClickListener(new View.OnClickListener() {
+      /*  confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d("MAP","The confirm button has been pressed");

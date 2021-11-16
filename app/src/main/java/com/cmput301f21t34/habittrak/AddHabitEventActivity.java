@@ -116,6 +116,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
                 }
             }
         });
+
         // the activity launcher for taking image using the phone camera
         cameraActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
@@ -148,72 +149,40 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
             }
         });
 
-        cameraButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                askCameraPermission();
-            }
-        });
-        galleryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent gallery = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                //startActivityForResult(gallery, GALLERY_REQUEST_CODE);
-                galleryActivityResultLauncher.launch(gallery);
-            }
-        });
-
-        mapButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-/*
-                if (ActivityCompat.checkSelfPermission(view.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                        && ActivityCompat.checkSelfPermission(view.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                }
-                fusedLocationClient.getLastLocation()
-                        .addOnSuccessListener(new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                // Got last known location. In some rare situations this can be null.
-                                if (location != null) {
-                                    Intent map = new Intent(view.getContext(), MapsActivity.class);
-                                    // putExtra here
-                                    startActivity(map);
-                                }
-                            }
-                        });*/
-                Intent map = new Intent(view.getContext(), MapsActivity.class);
-                startActivity(map);
-            }
-        });
+        // setting listeners
+        cameraButton.setOnClickListener(this);
+        galleryButton.setOnClickListener(this);
+        mapButton.setOnClickListener(this);
         addButton.setOnClickListener(this);
+    }
 
-
-        // returning the habit event object after the user pressed the add button
-        /*
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // return the habit event object back
-                Log.d("CAMERA","pressed add button in habit event");
-                habitEvent.setComment(commentText.getText().toString());
-                ArrayList<HabitEvent> heList = habit.getHabitEvents();
-                heList.add(habitEvent);
-                habit.setHabitEvents(heList);
-                Intent result = new Intent();
-                result.putExtra("HABIT_EVENT",habitEvent);
-                setResult(RESULT_CODE, result);
-                Log.d("CAMERA","ready to finish");
-                finish();
-            }
-        });*/
+    // Handles behaviors of button clicks
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.addHabitEventButton) {
+            Log.d("CAMERA", "pressed add button in habit event");
+            habitEvent.setComment(commentText.getText().toString());
+            ArrayList<HabitEvent> heList = habit.getHabitEvents();
+            heList.add(habitEvent);
+            habit.setHabitEvents(heList);
+            Intent result = new Intent();
+            result.putExtra("HABIT_EVENT", habitEvent);
+            setResult(RESULT_CODE, result);
+            Log.d("CAMERA", "ready to finish");
+            this.finish();
+        }
+        else if (view.getId() == R.id.mapButton) {
+            Intent map = new Intent(view.getContext(), MapsActivity.class);
+            startActivity(map);
+        }
+        else if (view.getId() == R.id.GalleryButton) {
+            Intent gallery = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            //startActivityForResult(gallery, GALLERY_REQUEST_CODE);
+            galleryActivityResultLauncher.launch(gallery);
+        }
+        else if (view.getId() == R.id.CameraButton) {
+            askCameraPermission();
+        }
     }
 
     /**
@@ -313,20 +282,5 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
         ContentResolver c = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(c.getType(contentUri));
-    }
-    @Override
-    public void onClick(View view) {
-        if (view.getId() == R.id.addHabitEventButton) {
-            Log.d("CAMERA", "pressed add button in habit event");
-            habitEvent.setComment(commentText.getText().toString());
-            ArrayList<HabitEvent> heList = habit.getHabitEvents();
-            heList.add(habitEvent);
-            habit.setHabitEvents(heList);
-            Intent result = new Intent();
-            result.putExtra("HABIT_EVENT", habitEvent);
-            setResult(RESULT_CODE, result);
-            Log.d("CAMERA", "ready to finish");
-            this.finish();
-        }
     }
 }

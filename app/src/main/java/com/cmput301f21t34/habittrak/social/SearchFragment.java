@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f21t34.habittrak.R;
-import com.cmput301f21t34.habittrak.SocialAdapter;
+import com.cmput301f21t34.habittrak.recycler.SocialAdapter;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 

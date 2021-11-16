@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 
 import com.cmput301f21t34.habittrak.recycler.HabitRecycler;
+import com.cmput301f21t34.habittrak.recycler.SocialAdapter;
 import com.cmput301f21t34.habittrak.recycler.TodayHabitRecyclerAdapter;
 import com.cmput301f21t34.habittrak.user.User;
 import com.cmput301f21t34.habittrak.user.Habit;

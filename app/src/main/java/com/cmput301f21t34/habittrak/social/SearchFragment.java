@@ -32,11 +32,12 @@ import java.util.ArrayList;
  * @since 2021-11-01
  */
 public class SearchFragment extends Fragment {
+    public static String TAG = "SEARCH_FRAGMENT";
     DatabaseManager dm = new DatabaseManager();
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     SocialAdapter socialAdapter;
-    ArrayList<String> displayList;
+    ArrayList<String> displayList = new ArrayList<>();
     User mainUser;
 
     public SearchFragment(User mainUser) {
@@ -78,7 +79,18 @@ public class SearchFragment extends Fragment {
 
         // TODO search stuff
         SearchView searchBox = view.findViewById(R.id.social_search_box);
+        searchBox.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String s) {
+                socialAdapter.getFilter().filter(s);
+                return true;
+            }
+        });
         return view;
     }
 

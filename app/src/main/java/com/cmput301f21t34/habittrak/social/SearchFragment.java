@@ -1,8 +1,12 @@
 package com.cmput301f21t34.habittrak.social;
 
+import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +26,8 @@ import com.google.android.material.button.MaterialButton;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 
 /**
  * SearchFragment
@@ -42,6 +48,7 @@ public class SearchFragment extends Fragment {
     ArrayList<String> displayList = new ArrayList<>();
     User mainUser;
 
+
     public SearchFragment(User mainUser) {
         this.mainUser = mainUser;
     }
@@ -59,9 +66,6 @@ public class SearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.habi_search_fragment, container, false);
         SearchView searchBox = view.findViewById(R.id.social_search_box);
 
-
-        // get all user list
-        getAllUsers();
         // setting up recycler view
         recyclerView = view.findViewById(R.id.search_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
@@ -95,6 +99,8 @@ public class SearchFragment extends Fragment {
                 return true;
             }
         });
+
+        new SearchAsyncTask().execute();
         return view;
     }
 
@@ -154,8 +160,29 @@ public class SearchFragment extends Fragment {
             if(!blockedBy.contains(user) && !blockedUsers.contains(user)){
                 displayList.add(user);
             }
-
         }
 
+    }
+
+    /**
+     * SearchAsyncTask
+     *
+     * @author Pranav
+     *
+     * gets the data in background on another thread.
+     */
+    @SuppressLint("StaticFieldLeak")
+    public class SearchAsyncTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            getAllUsers();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            super.onPostExecute(unused);
+            socialAdapter.notifyDataSetChanged();
+        }
     }
 }

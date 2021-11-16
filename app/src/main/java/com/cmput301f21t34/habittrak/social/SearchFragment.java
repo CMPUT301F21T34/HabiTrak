@@ -12,11 +12,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.recycler.SocialAdapter;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -30,9 +32,11 @@ import java.util.ArrayList;
  * @since 2021-11-01
  */
 public class SearchFragment extends Fragment {
+    DatabaseManager dm = new DatabaseManager();
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     SocialAdapter socialAdapter;
+    ArrayList<String> displayList;
     User mainUser;
 
     public SearchFragment(User mainUser) {
@@ -51,11 +55,14 @@ public class SearchFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.habi_search_fragment, container, false);
 
+
+        // get all user list
+        getAllUsers();
         // setting up recycler view
         recyclerView = view.findViewById(R.id.search_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        socialAdapter = new SocialAdapter(new ArrayList<>(), new SocialAdapter.ClickListener() {
+        socialAdapter = new SocialAdapter(displayList, new SocialAdapter.ClickListener() {
             @Override
             public void menuButtonOnClick(View view, int position) {
                 Log.d("Menu", "Clicked " + position);
@@ -115,4 +122,24 @@ public class SearchFragment extends Fragment {
         Log.d("ListButton", "Clicked");
     }
 
+    /**
+     * getAllUsers.
+     *
+     * @author Pranav
+     *
+     * gets all users and removes the blocked and blocked by from the display list.
+     */
+    public void getAllUsers(){
+        ArrayList<String> users = dm.getAllUsers();
+        ArrayList<String> blockedUsers = mainUser.getBlockList();
+        ArrayList<String> blockedBy = mainUser.getBlockedByList();
+
+        for (String user: users){
+            if(!blockedBy.contains(user) && !blockedUsers.contains(user)){
+                displayList.add(user);
+            }
+
+        }
+
+    }
 }

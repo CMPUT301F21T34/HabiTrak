@@ -106,6 +106,6 @@ public class SocialViewProfile extends AppCompatActivity {
     }
 
     public void onHabitClick(View view, int position){
-        // start View Habit Activity.
+        // start View Habit Activity
     }
 }

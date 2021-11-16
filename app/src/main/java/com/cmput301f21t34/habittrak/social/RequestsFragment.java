@@ -1,4 +1,4 @@
-package com.cmput301f21t34.habittrak.socialFragments;
+package com.cmput301f21t34.habittrak.social;
 
 import android.os.Bundle;
 import android.util.Log;

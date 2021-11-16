@@ -14,10 +14,10 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.cmput301f21t34.habittrak.R;
-import com.cmput301f21t34.habittrak.socialFragments.FollowersFragment;
-import com.cmput301f21t34.habittrak.socialFragments.FollowingFragment;
-import com.cmput301f21t34.habittrak.socialFragments.RequestsFragment;
-import com.cmput301f21t34.habittrak.socialFragments.SearchFragment;
+import com.cmput301f21t34.habittrak.social.FollowersFragment;
+import com.cmput301f21t34.habittrak.social.FollowingFragment;
+import com.cmput301f21t34.habittrak.social.RequestsFragment;
+import com.cmput301f21t34.habittrak.social.SearchFragment;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.tabs.TabLayout;
 

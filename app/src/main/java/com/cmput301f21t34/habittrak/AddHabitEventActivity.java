@@ -78,6 +78,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
     DatabaseManager db;
     ActivityResultLauncher<Intent> cameraActivityResultLauncher;
     ActivityResultLauncher<Intent> galleryActivityResultLauncher;
+    ActivityResultLauncher<Intent> mapActivityResultLauncher;
     private FusedLocationProviderClient fusedLocationClient;
 
     // intent data variables
@@ -100,8 +101,11 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
         // get data
         Intent intent = getIntent();
         this.habit = intent.getParcelableExtra("HABIT");
+        Log.d("HABIT IN ADD EVENT", habit.getTitle());
         // the activity to get an image from the gallery
-        galleryActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        galleryActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
@@ -116,7 +120,9 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
         });
 
         // the activity launcher for taking image using the phone camera
-        cameraActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        cameraActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
@@ -147,6 +153,24 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
             }
         });
 
+        mapActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    double latitude = result.getData().getDoubleExtra("latitude", 0.000000);
+                    double longitude = result.getData().getDoubleExtra("longitude", 0.000000);
+                    Location eventLocation = new Location("gps");
+                    eventLocation.setLatitude(latitude);
+                    eventLocation.setLongitude(longitude);
+                    habitEvent.setLocation(eventLocation);
+                }
+                else {
+                    Log.d("MAP", "Failed onActivityResult if condition");
+                }
+
+            }
+        });
+
         // setting listeners
         cameraButton.setOnClickListener(this);
         galleryButton.setOnClickListener(this);
@@ -171,7 +195,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
         }
         else if (view.getId() == R.id.mapButton) {
             Intent map = new Intent(view.getContext(), MapsActivity.class);
-            startActivity(map);
+            mapActivityResultLauncher.launch(map);
         }
         else if (view.getId() == R.id.GalleryButton) {
             Intent gallery = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);

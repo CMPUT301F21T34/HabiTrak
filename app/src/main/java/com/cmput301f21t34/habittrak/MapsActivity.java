@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -101,14 +102,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        /*  confirmButton.setOnClickListener(new View.OnClickListener() {
+        confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d("MAP","The confirm button has been pressed");
-                // return the location
+                Intent result = new Intent();
+                result.putExtra("latitude", lastKnownLocation.getLatitude());
+                result.putExtra("longitude", lastKnownLocation.getLongitude());
+                setResult(RESULT_OK, result);
             }
-        });*/
-
+        });
     }
 
     /**
@@ -209,53 +212,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void getDeviceLocation() {
 
         String TAG = "MAP";
-        // CancellationTokenSource cts = new CancellationTokenSource();
         try {
-            /*
-            if (locationPermissionGranted) {
-                Log.d(TAG,"entered device location");
-
-                Task<Location> locationResult = fusedLocationProviderClient.
-                        //getCurrentLocation(PRIORITY_HIGH_ACCURACY,cts.getToken());
-              //  cts.cancel();
-                getLastLocation();
-
-                locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Location> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG,"entered device location successful");
-
-                            // Set the map's camera position to the current location of the device.
-                            lastKnownLocation = task.getResult();
-                            if (lastKnownLocation != null) {
-                                Log.d(TAG,"entered device location  lastKnownLocation successful");
-                                mMap.addMarker(new MarkerOptions().position(new LatLng(lastKnownLocation.getLatitude(),lastKnownLocation.getLongitude())));
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                                        new LatLng(lastKnownLocation.getLatitude(),
-                                                lastKnownLocation.getLongitude()), DEFAULT_ZOOM));
-                            }
-                            else{
-                                Log.d(TAG,"entered device location lastKnownLocation unsuccessful");
-                                mMap.moveCamera(CameraUpdateFactory
-                                        .newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
-                                mMap.addMarker(new MarkerOptions().position(defaultLocation));
-                                mMap.getUiSettings().setMyLocationButtonEnabled(false);
-                            }
-                        } else {
-                            Log.d(TAG, "Current location is null. Using defaults.");
-                            Log.e(TAG, "Exception: %s", task.getException());
-                            mMap.moveCamera(CameraUpdateFactory
-                                    .newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
-                            mMap.addMarker(new MarkerOptions().position(defaultLocation));
-                           // mMap.getUiSettings().setMyLocationButtonEnabled(false);
-                            mMap.getUiSettings().setMyLocationButtonEnabled(true);
-
-                        }
-                    }
-                });
-            }*/
-
             if (locationPermissionGranted) {
                 Log.d(TAG,"entered device location");
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, listener);

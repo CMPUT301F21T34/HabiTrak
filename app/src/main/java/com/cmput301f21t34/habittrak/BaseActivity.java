@@ -160,6 +160,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         // result from add habit event activity
         else if (resultCode == RESULT_NEW_HABIT_EVENT) {
             HabitEvent habitEvent = intent.getParcelableExtra("HABIT_EVENT");
+            Log.d("base event", habitEvent.getComment());
         }
 
         super.onActivityResult(requestCode, resultCode, intent);

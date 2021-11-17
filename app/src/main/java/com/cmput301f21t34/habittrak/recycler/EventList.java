@@ -16,6 +16,7 @@ import com.cmput301f21t34.habittrak.user.HabitEvent;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 
 //A custom list, adapted from lab code. Creates the view for each list item.
@@ -45,8 +46,19 @@ public class EventList extends ArrayAdapter<HabitEvent> {
         Calendar eventDate = event.getCompletedDate();
 
         comment.setText(event.getComment());
-        date.setText((CharSequence) eventDate);
+        date.setText(getDate(eventDate));
 
         return view;
+    }
+
+    /**
+     * get the String value from calendar
+     * @param calendar date to convert to string
+     * @return string value of type Month, Day
+     */
+    public String getDate(Calendar calendar){
+        String month = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
+        String day = Integer.toString(calendar.get(Calendar.DAY_OF_MONTH));
+        return month + ", " + day;
     }
 }

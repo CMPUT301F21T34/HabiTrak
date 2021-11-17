@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
 
+import com.cmput301f21t34.habittrak.AddHabitActivity;
+import com.cmput301f21t34.habittrak.AddHabitEventActivity;
 import com.cmput301f21t34.habittrak.ViewEditHabit;
 import com.cmput301f21t34.habittrak.recycler.HabitRecycler;
 import com.cmput301f21t34.habittrak.recycler.TodayHabitRecyclerAdapter;
@@ -139,6 +141,11 @@ public class TodayListFragment extends Fragment {
             new ActivityResultContracts.StartActivityForResult(),
             result -> {}
     );
+    // activity result launcher for add habit event
+    ActivityResultLauncher<Intent> addHabitEventResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {}
+    );
 
     /**
      * showMenu.
@@ -167,6 +174,9 @@ public class TodayListFragment extends Fragment {
     /**
      * onCheckBoxClick.
      *
+     * @author Pranav
+     * @author Henry
+     *
      * listener function for checkbox clicking. Start a add new habit event activity.
      * @param view view of the checkbox
      * @param position position of the clicked button in the adapter
@@ -178,7 +188,9 @@ public class TodayListFragment extends Fragment {
             Log.d(TAG, "checkbox checked");
             checkBox.setEnabled(false);
         }
-
+        Habit habit = habitsDisplayList.get(position);
+        Intent intent = new Intent(getContext(), AddHabitEventActivity.class);
+        intent.putExtra("HABIT", habit);
+        addHabitEventResultLauncher.launch(intent);
     }
-
 }

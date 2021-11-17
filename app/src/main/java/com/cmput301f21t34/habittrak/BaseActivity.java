@@ -17,6 +17,7 @@ import com.cmput301f21t34.habittrak.fragments.ProfileFragment;
 import com.cmput301f21t34.habittrak.fragments.SocialFragment;
 import com.cmput301f21t34.habittrak.fragments.TodayListFragment;
 import com.cmput301f21t34.habittrak.user.Habit;
+import com.cmput301f21t34.habittrak.user.HabitEvent;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationBarView;
@@ -38,6 +39,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
     // Result codes from activity
     public static final int RESULT_NEW_HABIT = 1000;
     public static final int RESULT_EDIT_HABIT = 2000;
+    public static final int RESULT_NEW_HABIT_EVENT = 3000;
     final String TAG = "Base_Activity";
     //TODO: Explicitly make attributes private
     NavigationBarView bottomNav;
@@ -82,9 +84,20 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         bottomNav.setOnItemSelectedListener(this);              // Sets listener to this class
         bottomNav.setSelectedItemId(R.id.navbar_menu_today);    // Sets initial selected item
 
-        addHabitButton.setOnClickListener(view -> {
-            Intent intent1 = new Intent(view.getContext(), AddHabitActivity.class);
-            addHabitActivityLauncher.launch(intent1);
+        // add habit listener
+        addHabitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: remove this and change it back to habit activity
+                // for testing AddHabitEventsActivity
+                /*Intent remove =new Intent(BaseActivity.this,AddHabitEventActivity.class);
+                startActivity(remove);
+
+                 */
+
+                Intent intent = new Intent(view.getContext(), AddHabitActivity.class);
+                addHabitActivityLauncher.launch(intent);
+            }
         });
     }
 
@@ -144,6 +157,11 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
             todayFrag.refreshTodayFragment();
             allHabitsFrag.refreshAllFragment();
         }
+        // result from add habit event activity
+        else if (resultCode == RESULT_NEW_HABIT_EVENT) {
+            HabitEvent habitEvent = intent.getParcelableExtra("HABIT_EVENT");
+        }
+
         super.onActivityResult(requestCode, resultCode, intent);
     }
 }

@@ -1,5 +1,6 @@
 package com.cmput301f21t34.habittrak;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -802,5 +805,25 @@ public class DatabaseManager {
             habitList.add(habit);
         }
         return habitList;
+    }
+    public Uri uploadImageToFirebase(String name, Uri contentUri, StorageReference mStorageRef) {
+        Uri returnedUri = null;
+        StorageReference picImage = mStorageRef.child("images/" + name);
+        UploadTask task = picImage.putFile(contentUri);
+        while (!task.isComplete()) ;
+        if (task.isSuccessful()) {
+            Task<Uri> uriTask = picImage.getDownloadUrl();
+            while (!uriTask.isComplete()) ;
+            if (uriTask.isSuccessful()) {
+                Uri uriTaskResult = uriTask.getResult();
+                returnedUri =  uriTaskResult;
+            } else {
+                Log.d("Uploading image to firebase", "couldn't get download url");
+
+            }
+        } else {
+            Log.d("Uploading image to firebase", "couldn't upload url");
+        }
+        return returnedUri;
     }
 }

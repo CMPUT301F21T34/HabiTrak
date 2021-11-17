@@ -12,7 +12,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
+import com.google.android.gms.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -48,15 +48,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ActivityMapsBinding binding;
     private LatLng loc;
     private FusedLocationProviderClient fusedLocationProviderClient;
+    private LocationListener listener;
+    private LocationManager locationManager;
     boolean locationPermissionGranted = false;
     private Location lastKnownLocation;
     private final LatLng defaultLocation = new LatLng(-33.8523341, 151.2106085);
+    private final int UPDATE_INTERVAL = 30000;
+    private final int FASTEST_INTERVAL = 5000;
     private static final int DEFAULT_ZOOM = 15;
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
     private CameraPosition cameraPosition;
 
-    LocationRequest locationRequest = new LocationRequest();
+    LocationRequest locationRequest;
     Button confirmButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,29 +69,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             lastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
             cameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
         }*/
-        // requesting location
+        // creating a location request object
+
         confirmButton = findViewById(R.id.confirmMapButton);
-        locationRequest.setInterval(30000);
-        locationRequest.setFastestInterval(5000);
+
+        locationRequest = LocationRequest.create();
+        locationRequest.setInterval(UPDATE_INTERVAL);
+        locationRequest.setFastestInterval(FASTEST_INTERVAL);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        //
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        // loc = new LatLng(lat, lon);
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-      /*  confirmButton.setOnClickListener(new View.OnClickListener() {
+
+        /*  confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d("MAP","The confirm button has been pressed");
                 // return the location
             }
         });*/
+
     }
 
     /**
@@ -183,7 +191,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         updateLocationUI();
     }
 
-
     /**
      * Gets the current location of the device, and positions the map's camera.
      * TODO: Need to get the current location for the first time. For the first time getLastLocation()
@@ -191,12 +198,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * TODO: uses the default location at this moment fix that
      */
     private void getDeviceLocation() {
-        /*
-         * Get the best and most recent location of the device, which may be null in rare
-         * cases when a location is not available.
-         */
+
         String TAG = "MAP";
-        CancellationTokenSource cts = new CancellationTokenSource();
+        // CancellationTokenSource cts = new CancellationTokenSource();
         try {
             if (locationPermissionGranted) {
                 Log.d(TAG,"entered device location");
@@ -241,10 +245,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                 });
             }
+/*
+            if (locationPermissionGranted) {
+                Log.d(TAG,"entered device location");
+                locationManager.requestLocationUpdates("gps", 0, 0, listener);
+                Log.d("YEP", "got manager");
+                Location location = locationManager.getLastKnownLocation("gps");
+                if (location != null){
+                    double latitude = location.getLatitude();
+                    double longitude = location.getLongitude();
+                    lastKnownLocation = new Location("gps");
+                    lastKnownLocation.setLatitude(latitude);
+                    lastKnownLocation.setLongitude(longitude);
+                }
+            }*/
         } catch (SecurityException e)  {
             Log.e("Exception: %s", e.getMessage(), e);
         }
     }
+
     private String getAddress(double LATITUDE, double LONGITUDE) {
         String strAdd = "";
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());

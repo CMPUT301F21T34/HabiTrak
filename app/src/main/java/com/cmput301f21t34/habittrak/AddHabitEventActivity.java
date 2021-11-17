@@ -111,8 +111,6 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
                     Log.d("tag", "onActivityResult: Gallery Image Uri:  " + imageFileName);
                     image.setImageURI(contentUri);
                     habitEvent.setPhotograph(db.uploadImageToFirebase(imageFileName, contentUri, mStorageRef));
-
-
                 }
             }
         });

@@ -8,12 +8,14 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import com.google.android.gms.location.LocationListener;
+import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -82,8 +84,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
+        // Setup location manager and location listener
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        LocationProvider provider = locationManager.getProvider(LocationManager.GPS_PROVIDER);
+        listener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                lastKnownLocation = location;
+                updateLocationUI();
+            }
+        };
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -114,13 +127,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         updateLocationUI();
         getDeviceLocation();
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            /**
-             * handles the click on the map to find new location
-             * @param latLng the latlng clicked on the map
-             */
             @Override
             public void onMapClick(@NonNull LatLng latLng) {
-
                 Log.d("MAP","inside the onclick function");
                 lastKnownLocation = new Location(LocationManager.GPS_PROVIDER);
                 lastKnownLocation.setLatitude(latLng.latitude);
@@ -135,6 +143,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
     }
+
     /**
      * Saves the state of the map when the activity is paused.
      */
@@ -202,6 +211,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String TAG = "MAP";
         // CancellationTokenSource cts = new CancellationTokenSource();
         try {
+            /*
             if (locationPermissionGranted) {
                 Log.d(TAG,"entered device location");
 
@@ -244,21 +254,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         }
                     }
                 });
-            }
-/*
+            }*/
+
             if (locationPermissionGranted) {
                 Log.d(TAG,"entered device location");
-                locationManager.requestLocationUpdates("gps", 0, 0, listener);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, listener);
                 Log.d("YEP", "got manager");
-                Location location = locationManager.getLastKnownLocation("gps");
-                if (location != null){
+                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                if (location != null) {
+                    Log.d("YEP", "not null");
                     double latitude = location.getLatitude();
                     double longitude = location.getLongitude();
                     lastKnownLocation = new Location("gps");
+                    Log.d("lat", String.valueOf(latitude));
+                    Log.d("long", String.valueOf(longitude));
                     lastKnownLocation.setLatitude(latitude);
                     lastKnownLocation.setLongitude(longitude);
+
+                    // Add marker for current location
+                    Log.d(TAG,"entered device location  lastKnownLocation successful");
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(lastKnownLocation.getLatitude(),lastKnownLocation.getLongitude())));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                            new LatLng(lastKnownLocation.getLatitude(),
+                                    lastKnownLocation.getLongitude()), DEFAULT_ZOOM));
                 }
-            }*/
+                else {
+                    Log.d(TAG,"entered device location lastKnownLocation unsuccessful");
+                    mMap.moveCamera(CameraUpdateFactory
+                            .newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
+                    mMap.addMarker(new MarkerOptions().position(defaultLocation));
+                    mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                }
+            }
         } catch (SecurityException e)  {
             Log.e("Exception: %s", e.getMessage(), e);
         }

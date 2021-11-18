@@ -67,7 +67,7 @@ public class AllHabitsFragment extends Fragment {
 
         // Sets up views and manager for recycler view
         habitRecyclerView = view.findViewById(R.id.all_recycler_view);
-        layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager = new LinearLayoutManager(getContext());
 
 
         // set the click listener interface for the adapter

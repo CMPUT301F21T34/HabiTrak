@@ -1,5 +1,6 @@
 package com.cmput301f21t34.habittrak.social;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,12 +34,14 @@ import java.util.ArrayList;
  * @since 2021-11-1
  */
 public class FollowersFragment extends Fragment {
-    DatabaseManager dm = new DatabaseManager();
-    ImageButton imageButton;
-    RecyclerView recyclerView;
-    RecyclerView.LayoutManager layoutManager;
-    SocialAdapter socialAdapter;
-    User mainUser;
+    private DatabaseManager dm = new DatabaseManager();
+    private ImageButton imageButton;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private SocialAdapter socialAdapter;
+    private ArrayList<String> followersList = new ArrayList<>();
+    private ArrayList<String> bioList = new ArrayList<>();
+    private User mainUser;
 
     public FollowersFragment(User mainUser) {
         this.mainUser = mainUser;
@@ -58,8 +61,9 @@ public class FollowersFragment extends Fragment {
         recyclerView = view.findViewById(R.id.followers_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        ArrayList<String> profiles = mainUser.getFollowerList();        // Users that follow mainUser
-        socialAdapter = new SocialAdapter(profiles, new SocialAdapter.ClickListener() {
+
+        // setting social adapter
+        socialAdapter = new SocialAdapter(followersList, new SocialAdapter.ClickListener() {
             @Override
             public void menuButtonOnClick(View view, int position) {
                 Log.d("Menu", "Clicked " + position);
@@ -70,11 +74,30 @@ public class FollowersFragment extends Fragment {
             public void mainButtonOnClick(View view, int position) {
                 // empty button not used.
             }
-        }, false, new ArrayList<>() ,"null");
+        }, false, bioList,"null");
+
         recyclerView.setAdapter(socialAdapter);
 
-
+        // set list if empty
+        if (followersList.isEmpty()){
+            new FollowersAsyncTask().execute();
+        }
         return view;
+    }
+
+    /**
+     * getUserList
+     *
+     * @author Pranav
+     *
+     * get the followers username and bio
+     */
+    public void getUserList(){
+        ArrayList<String> followersEmail = mainUser.getFollowerList();
+        for (String user: followersEmail){
+            followersList.add(dm.getUserName(user));
+            bioList.add(dm.getUserBio(user));
+        }
     }
 
     /**
@@ -104,4 +127,19 @@ public class FollowersFragment extends Fragment {
             return true;
         });
     }
+
+    public class FollowersAsyncTask extends AsyncTask<Void, Void, Void>{
+        @Override
+        protected Void doInBackground(Void... voids) {
+            getUserList();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            super.onPostExecute(unused);
+            socialAdapter.notifyDataSetChanged();
+        }
+    }
+
 }

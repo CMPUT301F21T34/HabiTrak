@@ -27,6 +27,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 
 /**
@@ -154,6 +155,13 @@ public class SignUpFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.e("SignUp", "Exception thrown: " + e.toString());
+                if (e instanceof FirebaseAuthWeakPasswordException){
+                    passwordLayout.setError("Must be greater than 6");
+                } else {
+                    emailLayout.setError(e.toString());
+                    passwordLayout.setError(e.toString());
+                }
+
             }
         });
     }

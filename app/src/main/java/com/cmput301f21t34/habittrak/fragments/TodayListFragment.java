@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 
 import com.cmput301f21t34.habittrak.ViewEditHabit;
@@ -51,6 +52,7 @@ public class TodayListFragment extends Fragment {
     private HabitRecycler habitRecycler;
     private ArrayList<Habit> habitsDisplayList;
     private TodayHabitRecyclerAdapter adapter;
+    private LinearLayout noDataLayout;
     private User mainUser;
 
 
@@ -72,8 +74,8 @@ public class TodayListFragment extends Fragment {
         Log.d(TAG, "New View Created");
         // Sets up views and manager for recycler view
         habitRecyclerView = view.findViewById(R.id.today_recycler_view);
+        noDataLayout = view.findViewById(R.id.today_no_data_view);
         layoutManager = new LinearLayoutManager(getContext());
-
 
 
         // set the click listener interface for the adapter
@@ -101,6 +103,8 @@ public class TodayListFragment extends Fragment {
         habitRecycler = new HabitRecycler(habitRecyclerView, layoutManager, habitsDisplayList, mainUser.getHabitList(), true);
         habitRecycler.setAdapter(adapter);
 
+        setLayoutVisibility();
+
         return view;
     }
 
@@ -109,6 +113,16 @@ public class TodayListFragment extends Fragment {
         super.onResume();
         // Refreshes Frag
         refreshTodayFragment();
+    }
+
+    public void setLayoutVisibility(){
+        if(habitsDisplayList.isEmpty()){
+            noDataLayout.setVisibility(View.VISIBLE);
+            habitRecycler.setRecyclerVisibility(false);
+        } else {
+            noDataLayout.setVisibility(View.GONE);
+            habitRecycler.setRecyclerVisibility(true);
+        }
     }
 
 
@@ -133,6 +147,7 @@ public class TodayListFragment extends Fragment {
                 habitsDisplayList.add(mainUserHabits.get(index));
             }
         }
+        setLayoutVisibility();
         adapter.notifyDataSetChanged();
     }
     // activity result launcher for view/edit habit

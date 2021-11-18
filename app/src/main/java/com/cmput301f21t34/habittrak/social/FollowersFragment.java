@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.recycler.SocialAdapter;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.cmput301f21t34.habittrak.user.User;
 
 import java.util.ArrayList;
@@ -34,11 +35,15 @@ import java.util.ArrayList;
  * @since 2021-11-1
  */
 public class FollowersFragment extends Fragment {
+    public static String TAG = "FOLLOWERS_FRAGMENT";
     private DatabaseManager dm = new DatabaseManager();
+    // views
     private ImageButton imageButton;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private SocialAdapter socialAdapter;
+    private ShimmerFrameLayout loading;
+    // data
     private ArrayList<String> followersList = new ArrayList<>();
     private ArrayList<String> bioList = new ArrayList<>();
     private User mainUser;
@@ -61,6 +66,7 @@ public class FollowersFragment extends Fragment {
         recyclerView = view.findViewById(R.id.followers_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
+        loading = view.findViewById(R.id.followers_shimmer_container);
 
         // setting social adapter
         socialAdapter = new SocialAdapter(followersList, new SocialAdapter.ClickListener() {
@@ -81,6 +87,9 @@ public class FollowersFragment extends Fragment {
         // set list if empty
         if (followersList.isEmpty()){
             new FollowersAsyncTask().execute();
+            loading.startShimmer();
+        } else {
+            loading.setVisibility(View.GONE);
         }
         return view;
     }
@@ -128,6 +137,11 @@ public class FollowersFragment extends Fragment {
         });
     }
 
+    /**
+     * FollowersAsyncTask
+     *
+     * gets the data in background
+     */
     public class FollowersAsyncTask extends AsyncTask<Void, Void, Void>{
         @Override
         protected Void doInBackground(Void... voids) {
@@ -139,6 +153,8 @@ public class FollowersFragment extends Fragment {
         protected void onPostExecute(Void unused) {
             super.onPostExecute(unused);
             socialAdapter.notifyDataSetChanged();
+            loading.stopShimmer();
+            loading.setVisibility(View.GONE);
         }
     }
 

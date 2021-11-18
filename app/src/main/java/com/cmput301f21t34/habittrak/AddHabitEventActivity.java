@@ -27,6 +27,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cmput301f21t34.habittrak.user.Habit;
@@ -69,6 +70,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
     Button addButton;
     EditText commentText;
     ImageView image;
+    TextView addressLine;
     public static int RESULT_CODE = 3000;
     public static final int Camera_Permission_CODE = 100;
     public static final int Camera_REQUEST_CODE = 101;
@@ -82,6 +84,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
     private FusedLocationProviderClient fusedLocationClient;
 
     // intent data variables
+
     private Habit habit;
 
     @Override
@@ -96,6 +99,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
         addButton = findViewById(R.id.addHabitEventButton);
         commentText = findViewById(R.id.Comment);
         image = findViewById(R.id.photo);
+        addressLine = findViewById(R.id.addressLineText);
         db = new DatabaseManager();
 
         // get data
@@ -163,6 +167,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
                     eventLocation.setLatitude(latitude);
                     eventLocation.setLongitude(longitude);
                     habitEvent.setLocation(eventLocation);
+                    addressLine.setText("The location has been selected Print the address");
                 }
                 else {
                     Log.d("MAP", "Failed onActivityResult if condition");
@@ -189,6 +194,11 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
             habit.setHabitEvents(heList);
             Intent result = new Intent();
             result.putExtra("HABIT_EVENT", habitEvent);
+            Log.d("ADDHABITEVENT", "The url is "+habitEvent.getPhotograph());
+            Log.d("ADDHABITEVENT", "The comment is "+habitEvent.getComment());
+            Log.d("ADDHABITEVENT", "The latitude is "+habitEvent.getLocation().getLatitude());
+            Log.d("ADDHABITEVENT", "The longitude is "+habitEvent.getLocation().getLongitude());
+
             setResult(RESULT_CODE, result);
             Log.d("CAMERA", "ready to finish");
             this.finish();

@@ -89,14 +89,10 @@ public class DatabaseManager {
         ArrayList<String> users = new ArrayList<>();
         try {
             Task<QuerySnapshot> task = database.collection("users").get();
-
-            while (!task.isComplete()) ;
-
+            while (!task.isComplete()) ; // wait
+            // Add each the id of each document (UUID of the user) to users
             Objects.requireNonNull(task.getResult()).forEach(document -> users.add(document.getId()));
-
-        } catch (Exception ignored) {
-        }
-
+        } catch (Exception ignored) {}
         return users;
     }
 
@@ -110,24 +106,16 @@ public class DatabaseManager {
      * @author Henry
      */
     public boolean isUniqueEmail(String email) {
-
-        boolean isUnique = false;
-
         final CollectionReference collectionReference = database.collection("users");
-
         try {
             DocumentReference docref = collectionReference.document(email);
             Task<DocumentSnapshot> task = docref.get();
             while (!task.isComplete()) ;
             DocumentSnapshot document = task.getResult();
-            if (!document.exists()) {
-                isUnique = true;
-                return isUnique;
-            }
+            return !document.exists(); // document for email doesn't exist means email unique
         } catch (Exception ignored) {
+            return false;
         }
-
-        return isUnique;
     }
 
     /**
@@ -140,19 +128,15 @@ public class DatabaseManager {
      * @author Kaaden
      */
     public boolean isUniqueUsername(String username) {
-        try {
-            // Get all usernames
-            ArrayList<String> allUserNames = new ArrayList<>();
-            Task<QuerySnapshot> task1 = database.collection("users").get();
-            while (!task1.isComplete()) ; // wait
-            for (QueryDocumentSnapshot document : task1.getResult()) {
-                allUserNames.add(document.get("username").toString());
+        // Go through all users
+        for (String UUID : getAllUsers()) {
+            // Check if any of their emails match the given
+            if (username.equals(getUserName(UUID))) {
+                return false;
             }
-
-            return !allUserNames.contains(username);
-        } catch (Exception ignored) {}
-
-        return false;
+        }
+        // If not then its unique
+        return true;
     }
 
     /**
@@ -638,7 +622,7 @@ public class DatabaseManager {
      * @author Kaaden
      */
     public void updateUsername(String UUID, String newUserName) {
-        //if (!isUniqueUsername(newUserName)) return;
+        //if (!isUniqueUsername(newUserName)) return; // Don't update if would cause duplicates
         HashMap<String, Object> data = new HashMap<>();
         data.put("Username", newUserName);
         List<String> fieldsToUpdate = new ArrayList<>();

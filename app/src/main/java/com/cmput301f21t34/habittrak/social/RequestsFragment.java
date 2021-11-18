@@ -1,5 +1,6 @@
 package com.cmput301f21t34.habittrak.social;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.recycler.SocialAdapter;
 import com.cmput301f21t34.habittrak.user.User;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
@@ -31,10 +33,15 @@ import java.util.ArrayList;
  */
 public class RequestsFragment extends Fragment {
     DatabaseManager dm = new DatabaseManager();
-    RecyclerView recyclerView;
-    RecyclerView.LayoutManager layoutManager;
-    SocialAdapter socialAdapter;
-    User mainUser;
+    // views
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private SocialAdapter socialAdapter;
+    private ShimmerFrameLayout loading;
+    // data
+    private ArrayList<String> displayList = new ArrayList<>();
+    private ArrayList<String> bioList = new ArrayList<>();
+    private User mainUser;
 
     public RequestsFragment(User mainUser) {
         this.mainUser = mainUser;
@@ -57,8 +64,10 @@ public class RequestsFragment extends Fragment {
         recyclerView = view.findViewById(R.id.requests_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        ArrayList<String> profiles = mainUser.getFollowerReqList();     // Users that request to follow mainUser
-        socialAdapter = new SocialAdapter(profiles, new SocialAdapter.ClickListener() {
+        loading = view.findViewById(R.id.requests_shimmer_container);
+
+        // setting social adapter
+        socialAdapter = new SocialAdapter(displayList, new SocialAdapter.ClickListener() {
             @Override
             public void menuButtonOnClick(View view, int position) {
                 Log.d("Menu", "Clicked " + position);
@@ -69,11 +78,32 @@ public class RequestsFragment extends Fragment {
             public void mainButtonOnClick(View view, int position) {
                 ButtonClicked(view, position);
             }
-        }, true, new ArrayList<String>(),"Accept");
+        }, true, bioList,"Accept");
         recyclerView.setAdapter(socialAdapter);
 
+        if (displayList.isEmpty()){
+            new RequestAsyncTask().execute();
+            loading.startShimmer();
+        } else {
+            loading.setVisibility(View.GONE);
+        }
 
         return view;
+    }
+
+    /**
+     * getUserList
+     *
+     * @author Pranav
+     *
+     * get the followers username and bio
+     */
+    public void getUserList(){
+        ArrayList<String> userEmail = mainUser.getFollowingReqList();
+        for(String user: userEmail){
+            displayList.add(dm.getUserName(user));
+            bioList.add(dm.getUserBio(user));
+        }
     }
 
     /**
@@ -116,6 +146,22 @@ public class RequestsFragment extends Fragment {
     public void ButtonClicked(View view, int userPosition) {
         MaterialButton button = view.findViewById(R.id.social_main_button);
         Log.d("ListButton", "Clicked");
+    }
+
+    public class RequestAsyncTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            getUserList();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            super.onPostExecute(unused);
+            socialAdapter.notifyDataSetChanged();
+            loading.stopShimmer();
+            loading.setVisibility(View.GONE);
+        }
     }
 
 }

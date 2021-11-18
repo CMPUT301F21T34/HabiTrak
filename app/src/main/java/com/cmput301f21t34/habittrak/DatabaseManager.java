@@ -132,27 +132,44 @@ public class DatabaseManager {
 
     /**
      * isUniqueUsername
-     * Checks to see if the provided username already exists
+     * <p>
+     * Checks to see if the user with the provided email already exists
      *
-     * @param username String, the username to check
-     * @return boolean, true if the username is unique, otherwise false
+     * @param username -Type String, the username to check
+     * @param email    - Type String, the email associated with the email
+     * @return boolean
      * @author Henry
-     * @author Kaaden
      */
-    public boolean isUniqueUsername(String username) {
+    public boolean isUniqueUsername(String username, String email) {
+
+        boolean isUnique = false;
+
+        final CollectionReference collectionReference = database.collection("users");
+
         try {
             // Get all usernames
             ArrayList<String> allUserNames = new ArrayList<>();
             Task<QuerySnapshot> task1 = database.collection("users").get();
-            while (!task1.isComplete()) ; // wait
+            while (!task1.isComplete()) ;
             for (QueryDocumentSnapshot document : task1.getResult()) {
                 allUserNames.add(document.get("username").toString());
             }
 
-            return !allUserNames.contains(username);
-        } catch (Exception ignored) {}
+            // Get username for given email, then compare
+            DocumentReference docref = collectionReference.document(email);
+            Task<DocumentSnapshot> task2 = docref.get();
+            while (!task2.isComplete()) ;
+            DocumentSnapshot document = task2.getResult();
+            String name = document.get("username").toString();
+            if (!allUserNames.contains(name)) {
+                isUnique = true;
+            }
+            return isUnique;
 
-        return false;
+        } catch (Exception ignored) {
+        }
+
+        return isUnique;
     }
 
     /**
@@ -628,37 +645,6 @@ public class DatabaseManager {
         collectionReference
                 .document(user.getEmail())
                 .set(data);
-    }
-
-    /**
-     * Updates the username of the user with the given UUID
-     *
-     * @param UUID String, the UUID of the user to update
-     * @param newUserName String, the name to update to
-     * @author Kaaden
-     */
-    public void updateUsername(String UUID, String newUserName) {
-        //if (!isUniqueUsername(newUserName)) return;
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("Username", newUserName);
-        List<String> fieldsToUpdate = new ArrayList<>();
-        fieldsToUpdate.add("Username");
-        database.collection("users").document(UUID).set(data, SetOptions.mergeFields(fieldsToUpdate));
-    }
-
-    /**
-     * Updates the biography of the user with the given UUID
-     *
-     * @param UUID String, the UUID of the user to update
-     * @param newBio String, the biography to update to
-     * @author Kaaden
-     */
-    public void updateBio(String UUID, String newBio) {
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("Biography", newBio);
-        List<String> fieldsToUpdate = new ArrayList<>();
-        fieldsToUpdate.add("Biography");
-        database.collection("users").document(UUID).set(data, SetOptions.mergeFields(fieldsToUpdate));
     }
 
     /**

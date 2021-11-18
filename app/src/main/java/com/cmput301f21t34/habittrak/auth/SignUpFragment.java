@@ -27,19 +27,20 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthEmailException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 
 /**
  * SignUpFragment
  *
+ * @author Dakota
  * @author Pranav
  * <p>
  * Sign Up frament for creating new users
  * @version 1.0
  * @see DatabaseManager
  * @see User
- * TODO: Add authentication
  * @since 2021-11-03
  */
 public class SignUpFragment extends Fragment {
@@ -157,7 +158,10 @@ public class SignUpFragment extends Fragment {
                 Log.e("SignUp", "Exception thrown: " + e.toString());
                 if (e instanceof FirebaseAuthWeakPasswordException){
                     passwordLayout.setError("Must be greater than 6");
-                } else {
+                } else if (e instanceof FirebaseAuthEmailException) {
+                    emailLayout.setError("Invalid Email Format");
+                }
+                else {
                     emailLayout.setError(e.toString());
                     passwordLayout.setError(e.toString());
                 }

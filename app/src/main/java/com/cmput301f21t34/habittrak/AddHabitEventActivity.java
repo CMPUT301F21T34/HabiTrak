@@ -167,7 +167,8 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
                     eventLocation.setLatitude(latitude);
                     eventLocation.setLongitude(longitude);
                     habitEvent.setLocation(eventLocation);
-                    addressLine.setText("The location has been selected Print the address");
+                    addressLine.setText("");
+                    addressLine.setText("The location has been selected Print the address"+ eventLocation.getLatitude());
                 }
                 else {
                     Log.d("MAP", "Failed onActivityResult if condition");
@@ -204,6 +205,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
             this.finish();
         }
         else if (view.getId() == R.id.mapButton) {
+            addressLine.setText("");
             Intent map = new Intent(view.getContext(), MapsActivity.class);
             mapActivityResultLauncher.launch(map);
         }

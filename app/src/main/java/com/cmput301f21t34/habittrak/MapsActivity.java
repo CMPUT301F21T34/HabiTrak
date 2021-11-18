@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -43,6 +44,7 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.List;
 import java.util.Locale;
+// TODO: set the address in the address text view and return the location after confirm button press
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -65,6 +67,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     LocationRequest locationRequest;
     Button confirmButton;
+    TextView addressTextView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +77,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }*/
         // creating a location request object
 
-        confirmButton = findViewById(R.id.confirmMapButton);
+
 
         locationRequest = LocationRequest.create();
         locationRequest.setInterval(UPDATE_INTERVAL);
@@ -82,6 +85,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        confirmButton = findViewById(R.id.confirm_button);
+        addressTextView = findViewById(R.id.addressText);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -110,6 +116,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 result.putExtra("latitude", lastKnownLocation.getLatitude());
                 result.putExtra("longitude", lastKnownLocation.getLongitude());
                 setResult(RESULT_OK, result);
+                finish();
             }
         });
     }
@@ -142,6 +149,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         new LatLng(lastKnownLocation.getLatitude(),
                                 lastKnownLocation.getLongitude()), DEFAULT_ZOOM));
                 Log.d("MAP","Got the location " + lastKnownLocation.getLongitude() + lastKnownLocation.getLatitude());
+                addressTextView.setText("INSIDE THE ONCLICK FUNCTION");
 
             }
         });
@@ -205,9 +213,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Gets the current location of the device, and positions the map's camera.
-     * TODO: Need to get the current location for the first time. For the first time getLastLocation()
-     * TODO: doesn't work. It works after the phone has location (eg: another app requested it before this one, in emulator send the location to the device)
-     * TODO: uses the default location at this moment fix that
      */
     private void getDeviceLocation() {
 
@@ -264,14 +269,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             "\n");
                 }
                 strAdd = strReturnedAddress.toString();
-                Log.w("My Current loction address",
+                Log.d("Address",
                         "" + strReturnedAddress.toString());
             } else {
-                Log.w("My Current loction address", "No Address returned!");
+                Log.d("Address", "No Address returned!");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.w("My Current loction address", "Canont get Address!");
+            Log.d("Address", "Canont get Address!");
         }
         return strAdd;
     }

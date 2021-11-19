@@ -446,7 +446,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             String state = addresses.get(0).getAdminArea();
             String country = addresses.get(0).getCountryName();
             String postalCode = addresses.get(0).getPostalCode();
-            String knownName = addresses.get(0).getFeatureName();
             address = address + addressLine.toString() + ", " + city.toString() + ", " + state.toString()
                     + ", " + country.toString() + ", " + postalCode.toString();
         } catch (Exception e) {

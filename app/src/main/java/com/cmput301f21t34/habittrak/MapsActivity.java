@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -41,6 +43,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 // TODO: set the address in the address text view and return the location after confirm button press
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -248,8 +255,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 lastKnownLocation.setLatitude(latLng.latitude);
                 lastKnownLocation.setLongitude(latLng.longitude);
                 updateLocationUI(lastKnownLocation);
+                String address = getAddress(latLng.latitude, latLng.longitude);
                 Log.d("MAPpppp","Got the location " + lastKnownLocation.getLongitude() + lastKnownLocation.getLatitude());
                // addressTextView.setText("INSIDE THE ONCLICK FUNCTION lat is " + lastKnownLocation.getLatitude()+"long is "+ lastKnownLocation.getLongitude());
+                Log.d("Address", address);
 
             }
         });
@@ -422,5 +431,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } catch (SecurityException e)  {
             Log.e("Exception: %s", e.getMessage());
         }
+    }
+
+    public String getAddress(double latitude, double longitude) {
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder = new Geocoder(this, Locale.getDefault());
+        String address = "";
+
+        try {
+            addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            String addressLine = addresses.get(0).getAddressLine(0);
+            String city = addresses.get(0).getLocality();
+            String state = addresses.get(0).getAdminArea();
+            String country = addresses.get(0).getCountryName();
+            String postalCode = addresses.get(0).getPostalCode();
+            String knownName = addresses.get(0).getFeatureName();
+            address = address + addressLine.toString() + ", " + city.toString() + ", " + state.toString()
+                    + ", " + country.toString() + ", " + postalCode.toString();
+        } catch (Exception e) {
+            Log.d("address failed", "yep");
+            e.printStackTrace();
+        }
+        return address;
     }
 }

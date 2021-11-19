@@ -70,10 +70,9 @@ public class TodayListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.habi_today_fragment, container, false);
-
         Log.d(TAG, "New View Created");
         // Sets up views and manager for recycler view
-        habitRecyclerView = view.findViewById(R.id.all_recycler_view);
+        habitRecyclerView = view.findViewById(R.id.today_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
 
 

@@ -1,5 +1,6 @@
-package com.cmput301f21t34.habittrak.socialFragments;
+package com.cmput301f21t34.habittrak.social;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,8 +13,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
-import com.cmput301f21t34.habittrak.SocialAdapter;
+import com.cmput301f21t34.habittrak.recycler.SocialAdapter;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.cmput301f21t34.habittrak.user.User;
 
 import java.util.ArrayList;
@@ -25,22 +28,28 @@ import java.util.ArrayList;
  *
  * @author Pranav
  * @author Kaaden
- *
+ * <p>
  * Fragment for displaying users followers
- *
- * @see SocialAdapter
  * @version 1.0
+ * @see SocialAdapter
  * @since 2021-11-1
  */
 public class FollowersFragment extends Fragment {
+    public static String TAG = "FOLLOWERS_FRAGMENT";
+    private DatabaseManager dm = new DatabaseManager();
+    // views
+    private ImageButton imageButton;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private SocialAdapter socialAdapter;
+    private ShimmerFrameLayout loading;
+    // data
+    private ArrayList<String> followersList = new ArrayList<>();
+    private ArrayList<String> bioList = new ArrayList<>();
+    private User mainUser;
 
-    SocialAdapter socialAdapter;
-    RecyclerView recyclerView;
-    RecyclerView.LayoutManager layoutManager;
-    ImageButton imageButton;
-
-    public FollowersFragment() {
-        // Required empty public constructor
+    public FollowersFragment(User mainUser) {
+        this.mainUser = mainUser;
     }
 
     @Override
@@ -53,18 +62,14 @@ public class FollowersFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.habi_followers_fragment, container, false);
 
-        // Sample Data
-        User sample1 = new User("Henry");
-        User sample2 = new User("Jakob");
-        ArrayList<User> userArrayList = new ArrayList<>();
-        userArrayList.add(sample1);
-        userArrayList.add(sample2);
-
         // setting up recycler view
         recyclerView = view.findViewById(R.id.followers_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        socialAdapter = new SocialAdapter(userArrayList, new SocialAdapter.ClickListener() {
+        loading = view.findViewById(R.id.followers_shimmer_container);
+
+        // setting social adapter
+        socialAdapter = new SocialAdapter(followersList, new SocialAdapter.ClickListener() {
             @Override
             public void menuButtonOnClick(View view, int position) {
                 Log.d("Menu", "Clicked " + position);
@@ -75,21 +80,43 @@ public class FollowersFragment extends Fragment {
             public void mainButtonOnClick(View view, int position) {
                 // empty button not used.
             }
-        }, false, "null");
+        }, false, bioList,"null");
+
         recyclerView.setAdapter(socialAdapter);
 
-
+        // set list if empty
+        if (followersList.isEmpty()){
+            new FollowersAsyncTask().execute();
+            loading.startShimmer();
+        } else {
+            loading.setVisibility(View.GONE);
+        }
         return view;
     }
 
     /**
-     * showMenu
+     * getUserList
      *
+     * @author Pranav
+     *
+     * get the followers username and bio
+     */
+    public void getUserList(){
+        ArrayList<String> followersEmail = mainUser.getFollowerList();
+        for (String user: followersEmail){
+            followersList.add(dm.getUserName(user));
+            bioList.add(dm.getUserBio(user));
+        }
+    }
+
+    /**
+     * showMenu
+     * <p>
      * listener function for ImageButton in Recycler View
      *
-     * @see SocialAdapter
      * @param view
      * @param userPosition position of the clicked menu in the adapter
+     * @see SocialAdapter
      */
     public void showMenu(View view, int userPosition) {
         PopupMenu menu = new PopupMenu(getContext(), view);
@@ -109,4 +136,26 @@ public class FollowersFragment extends Fragment {
             return true;
         });
     }
+
+    /**
+     * FollowersAsyncTask
+     *
+     * gets the data in background
+     */
+    public class FollowersAsyncTask extends AsyncTask<Void, Void, Void>{
+        @Override
+        protected Void doInBackground(Void... voids) {
+            getUserList();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            super.onPostExecute(unused);
+            socialAdapter.notifyDataSetChanged();
+            loading.stopShimmer();
+            loading.setVisibility(View.GONE);
+        }
+    }
+
 }

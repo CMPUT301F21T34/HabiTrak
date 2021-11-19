@@ -16,6 +16,8 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -52,6 +54,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -59,7 +63,7 @@ import java.util.Date;
  * @author Henry
  * Version: 1.0
  * Takes a habit and returns the new habit event
- * TODO: the map (to get address) and need to set the completed date
+ * TODO: need to set the completed date and fix the camera bug
  */
 public class AddHabitEventActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -106,6 +110,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
         Intent intent = getIntent();
         this.habit = intent.getParcelableExtra("HABIT");
         Log.d("HABIT IN ADD EVENT", habit.getTitle());
+
         // the activity to get an image from the gallery
         galleryActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -129,7 +134,9 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
                 new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
+                Log.d("CAMERA", "entered camera on activity result");
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    Log.d("CAMERA", "entered camera on activity result if condition");
                     File f = new File(currentPhotoPath);
                     image.setImageURI(Uri.fromFile(f));
                     Log.d("CAMERA", "Absolute url is " + Uri.fromFile(f));
@@ -168,7 +175,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
                     eventLocation.setLongitude(longitude);
                     habitEvent.setLocation(eventLocation);
                     addressLine.setText("");
-                    addressLine.setText("The location has been selected Print the address"+ eventLocation.getLatitude());
+                    addressLine.setText(getAddress(eventLocation.getLatitude(),eventLocation.getLongitude()));
                 }
                 else {
                     Log.d("MAP", "Failed onActivityResult if condition");
@@ -235,16 +242,19 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
     }
 
     /**
-     * creates the intent for taking picture with the camera
+     * creates the intent for taking picture with the camera and starts the activity
      */
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         Log.d("CAMERA","entered here1");
-
+// testing the if condition
+       // if(takePictureIntent.resolveActivity(getPackageManager()) != null){
+            Log.d("Camera","Entered the if condition in dispatchtakePictureIntent");
         // Create the File where the photo should go
         File photoFile = null;
         try {
             photoFile = createImageFile();
+            Log.d("Camera","Entered the if condition in dispatchtakePictureIntent after createImageFile");
         } catch (IOException ex) {
         }
 
@@ -262,6 +272,10 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
             cameraActivityResultLauncher.launch(takePictureIntent);
 
         }
+        else{
+            Log.d("CAMERA","The photofile is null");
+        }
+      //  }
     }
 
     /**
@@ -316,5 +330,32 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
         ContentResolver c = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(c.getType(contentUri));
+    }
+    /**
+     * returns the street address in the mentioned latitude and longitude
+     * @param latitude double, the latitude of the location
+     * @param longitude double, the longitude of the location
+     * @return String, the address of the location
+     */
+    public String getAddress(double latitude, double longitude) {
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder = new Geocoder(this, Locale.getDefault());
+        String address = "";
+
+        try {
+            addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            String addressLine = addresses.get(0).getAddressLine(0);
+            String city = addresses.get(0).getLocality();
+            String state = addresses.get(0).getAdminArea();
+            String country = addresses.get(0).getCountryName();
+            String postalCode = addresses.get(0).getPostalCode();
+            address = address + addressLine.toString() + ", " + city.toString() + ", " + state.toString()
+                    + ", " + country.toString() + ", " + postalCode.toString();
+        } catch (Exception e) {
+            Log.d("address failed", "yep");
+            e.printStackTrace();
+        }
+        return address;
     }
 }

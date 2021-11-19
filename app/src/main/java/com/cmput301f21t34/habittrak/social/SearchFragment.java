@@ -169,7 +169,7 @@ public class SearchFragment extends Fragment {
         ArrayList<String> blockedBy = mainUser.getBlockedByList();
 
         for (String user: users){
-            if(!blockedBy.contains(user) && !blockedUsers.contains(user) 
+            if(!blockedBy.contains(user) && !blockedUsers.contains(user)
                     && !user.equals(mainUser.getEmail())){
                 displayList.add(dm.getUserName(user));
                 bioList.add(dm.getUserBio(user));

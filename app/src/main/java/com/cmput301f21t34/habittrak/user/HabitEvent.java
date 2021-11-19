@@ -213,11 +213,14 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
 
 
         habitEventBundle.putParcelable("location", location);
-
-        String photographPath = photograph.getPath();
-        // Handles photograph
-        habitEventBundle.putString("photograph", photographPath);
-
+        if (photograph != null) {
+            String photographPath = photograph.getPath();
+            // Handles photograph
+            habitEventBundle.putString("photograph", photographPath);
+        }
+        else {
+            habitEventBundle.putString("photograph", null);
+        }
         parcel.writeBundle(habitEventBundle);
     }
 

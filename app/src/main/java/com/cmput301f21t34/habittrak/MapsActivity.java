@@ -175,6 +175,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
     }
+
     private void checkSettingsAndStartLocationUpdates(){
         // check location settings
 

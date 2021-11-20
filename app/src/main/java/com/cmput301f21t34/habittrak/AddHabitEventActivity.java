@@ -197,15 +197,15 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
         if (view.getId() == R.id.addHabitEventButton) {
             Log.d("CAMERA", "pressed add button in habit event");
             habitEvent.setComment(commentText.getText().toString());
-            ArrayList<HabitEvent> heList = habit.getHabitEvents();
-            heList.add(habitEvent);
-            habit.setHabitEvents(heList);
+            ArrayList<HabitEvent> currentEventList = habit.getHabitEvents();
+            currentEventList.add(habitEvent);
+            habit.setHabitEvents(currentEventList);
             Intent result = new Intent();
             result.putExtra("HABIT_EVENT", habitEvent);
-            Log.d("ADDHABITEVENT", "The url is "+habitEvent.getPhotograph());
-            Log.d("ADDHABITEVENT", "The comment is "+habitEvent.getComment());
-            Log.d("ADDHABITEVENT", "The latitude is "+habitEvent.getLocation().getLatitude());
-            Log.d("ADDHABITEVENT", "The longitude is "+habitEvent.getLocation().getLongitude());
+            Log.d("ADDHABITEVENT", "The url is "+ habitEvent.getPhotograph());
+            Log.d("ADDHABITEVENT", "The comment is "+ habitEvent.getComment());
+            Log.d("ADDHABITEVENT", "The latitude is "+ habitEvent.getLocation().getLatitude());
+            Log.d("ADDHABITEVENT", "The longitude is "+ habitEvent.getLocation().getLongitude());
 
             setResult(RESULT_CODE, result);
             Log.d("CAMERA", "ready to finish");

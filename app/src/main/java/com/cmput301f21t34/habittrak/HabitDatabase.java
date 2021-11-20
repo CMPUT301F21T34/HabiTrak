@@ -63,7 +63,7 @@ public class HabitDatabase {
         }
         this.onDaysObj = onDaysToSet;
     }
-    public void setOnDaysObj(ArrayList<Boolean> booleanArrayList){
+    public void setOnDaysObjFromDB(ArrayList<Boolean> booleanArrayList){
         this.onDaysObj = booleanArrayList;
     }
 

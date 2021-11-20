@@ -89,8 +89,8 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
     private FusedLocationProviderClient fusedLocationClient;
 
     // intent data variables
-
     private Habit habit;
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,9 +110,11 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
         // set the completed date of the habit event
         habitEvent.setCompletedDate(Calendar.getInstance());
 
-        // get data
+        // get data from clicked item
         Intent intent = getIntent();
         this.habit = intent.getParcelableExtra("HABIT");
+        this.email = intent.getStringExtra("USER");
+        Log.d("USER TO UPDATE", email);
         Log.d("HABIT IN ADD EVENT", habit.getTitle());
 
         // the activity to get an image from the gallery
@@ -207,6 +209,11 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
             ArrayList<HabitEvent> currentEventList = habit.getHabitEvents();
             currentEventList.add(habitEvent);
             habit.setHabitEvents(currentEventList);
+            // Propagate the changes to the database
+            DatabaseManager db = new DatabaseManager();
+            db.updateHabitList(email, habit);
+
+            // Pass the result back to BaseActivity
             Intent result = new Intent();
             result.putExtra("HABIT_EVENT", habitEvent);
             Log.d("ADDHABITEVENT", "The url is "+ habitEvent.getPhotograph());

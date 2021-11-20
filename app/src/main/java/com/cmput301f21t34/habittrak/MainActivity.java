@@ -23,9 +23,6 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
-
         if (savedInstanceState != null) {
             // get users credentials
             // validate credentials with database
@@ -44,6 +41,5 @@ public class MainActivity extends AppCompatActivity{
                 .add(R.id.login_fragment_container, new LoginFragment(null))
                 .commit();
     }
-
 }
 

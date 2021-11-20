@@ -430,7 +430,7 @@ public class DatabaseManager {
         habitDatabase.setTitle((String) hashmap.get("title"));
         habitDatabase.setisPublic((boolean) hashmap.get("isPublic"));
         habitDatabase.setHabitEvents(toHabitEventList((ArrayList<HashMap<String, Object>>) hashmap.get("habitEvents")));
-        habitDatabase.setOnDaysObj((ArrayList<Boolean>) hashmap.get("onDaysObj"));
+        habitDatabase.setOnDaysObjFromDB((ArrayList<Boolean>) hashmap.get("onDaysObj"));
         habitDatabase.setStartDate(toCalendar((HashMap<String, Object>) hashmap.get("startDate")));
         return habitDatabase;
     }
@@ -651,6 +651,15 @@ public class DatabaseManager {
     }
 
     /**
+     * Update the habit list of the given user
+     * We can add/remove/edit attributes of habitToUpdate
+     * @param userToUpdate
+     * @param habitToUpdate
+     */
+    public void updateHabitList(String userToUpdate, Habit habitToUpdate) {
+    }
+
+    /**
      * updateUUIDList
      * <p>
      * Add or remove member from a user's list.
@@ -806,6 +815,7 @@ public class DatabaseManager {
         }
         return habitList;
     }
+
     public Uri uploadImageToFirebase(String name, Uri contentUri, StorageReference mStorageRef) {
         Uri returnedUri = null;
         StorageReference picImage = mStorageRef.child("images/" + name);

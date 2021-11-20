@@ -26,6 +26,12 @@
                 android:value="com.cmput301f21t34.habittrak.BaseActivity" />
         </activity>
         <activity
+            android:name=".social.SocialViewHabit"
+            android:exported="true" />
+        <activity
+            android:name=".social.SocialViewProfile"
+            android:exported="true" />
+        <activity
             android:name=".ViewEditHabit"
             android:exported="true" />
         <activity

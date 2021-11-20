@@ -14,10 +14,10 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.cmput301f21t34.habittrak.R;
-import com.cmput301f21t34.habittrak.socialFragments.FollowersFragment;
-import com.cmput301f21t34.habittrak.socialFragments.FollowingFragment;
-import com.cmput301f21t34.habittrak.socialFragments.RequestsFragment;
-import com.cmput301f21t34.habittrak.socialFragments.SearchFragment;
+import com.cmput301f21t34.habittrak.social.FollowersFragment;
+import com.cmput301f21t34.habittrak.social.FollowingFragment;
+import com.cmput301f21t34.habittrak.social.RequestsFragment;
+import com.cmput301f21t34.habittrak.social.SearchFragment;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.tabs.TabLayout;
 
@@ -32,6 +32,10 @@ public class SocialFragment extends Fragment {
 
     public SocialFragment(User mainUser) {
         this.mainUser = mainUser;
+        this.followersFragment = new FollowersFragment(mainUser);
+        this.followingFragment = new FollowingFragment(mainUser);
+        this.requestsFragment = new RequestsFragment(mainUser);
+        this.searchFragment = new SearchFragment(mainUser);
     }
 
     @Override
@@ -63,10 +67,7 @@ public class SocialFragment extends Fragment {
 
         // Initialise Fragments
         // TODO maybe move these into base onCreate if doesn't cause issues with things not updating because this is called repeatedly possibly leading to reduced performance
-        followersFragment = new FollowersFragment(mainUser);
-        followingFragment = new FollowingFragment(mainUser);
-        requestsFragment = new RequestsFragment(mainUser);
-        searchFragment = new SearchFragment(mainUser);
+
 
         // tab listener
         socialTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

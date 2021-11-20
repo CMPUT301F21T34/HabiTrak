@@ -190,6 +190,7 @@ public class TodayListFragment extends Fragment {
         Habit habit = habitsDisplayList.get(position);
         Intent intent = new Intent(getContext(), AddHabitEventActivity.class);
         intent.putExtra("HABIT", habit);
+        intent.putExtra("position", habit.getIndex());
         intent.putExtra("USER", mainUser.getEmail());
         addHabitEventResultLauncher.launch(intent);
     }

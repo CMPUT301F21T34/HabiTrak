@@ -91,6 +91,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
     // intent data variables
     private Habit habit;
     private String email;
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +115,8 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
         Intent intent = getIntent();
         this.habit = intent.getParcelableExtra("HABIT");
         this.email = intent.getStringExtra("USER");
+        this.position = intent.getIntExtra("position", 0);
+
         Log.d("USER TO UPDATE", email);
         Log.d("HABIT IN ADD EVENT", habit.getTitle());
 
@@ -215,6 +218,8 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
             // Pass the result back to BaseActivity
             Intent result = new Intent();
             result.putExtra("HABIT_EVENT", habitEvent);
+            result.putExtra("HABIT", habit);
+            result.putExtra("position", position);
             Log.d("ADDHABITEVENT", "The url is "+ habitEvent.getPhotograph());
             Log.d("ADDHABITEVENT", "The comment is "+ habitEvent.getComment());
             Log.d("ADDHABITEVENT", "The latitude is "+ habitEvent.getLocation().getLatitude());

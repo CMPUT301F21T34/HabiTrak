@@ -1,16 +1,5 @@
 package com.cmput301f21t34.habittrak;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -26,159 +15,167 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cmput301f21t34.habittrak.user.Habit;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+
 import com.cmput301f21t34.habittrak.user.HabitEvent;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
-// Map libraries
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.location.FusedLocationProviderClient;
-
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-
-/**
- * @author Tauseef Nafee Fattah
- * @author Henry
- * Version: 1.0
- * Takes a habit and returns the new habit event
- * TODO: Fix the camera bug
- */
-public class AddHabitEventActivity extends AppCompatActivity implements View.OnClickListener {
-
-    public static final int GALLERY_REQUEST_CODE = 105;
-    Button cameraButton;
-    Button galleryButton;
-    Button mapButton;
-    Button addButton;
-    EditText commentText;
-    ImageView image;
-    TextView addressLine;
+public class ViewEditHabitEvents extends AppCompatActivity {
+    private TextInputEditText comment;
+    private TextView addressLine;
+    private ImageView image;
+    private MaterialButton galleryBtn;
+    private MaterialButton cameraBtn;
+    private MaterialButton saveHabitEventBtn;
+    private TextView completionDateCalendar;
     public static int RESULT_CODE = 3000;
     public static final int Camera_Permission_CODE = 100;
     public static final int Camera_REQUEST_CODE = 101;
     private StorageReference mStorageRef;
     String currentPhotoPath;
-    HabitEvent habitEvent;
+
     DatabaseManager db;
     ActivityResultLauncher<Intent> cameraActivityResultLauncher;
     ActivityResultLauncher<Intent> galleryActivityResultLauncher;
     ActivityResultLauncher<Intent> mapActivityResultLauncher;
-    private FusedLocationProviderClient fusedLocationClient;
 
-    // intent data variables
-    private Habit habit;
-    private String email;
-    private int position;
+
+    private HabitEvent habitEvent;
+    private String TAG = "EDIT_HABIT_EVENT";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_habit_event);
+        setContentView(R.layout.activity_view_edit_habit_events);
 
+        // initializing variable
         mStorageRef = FirebaseStorage.getInstance().getReference();
-
-        habitEvent = new HabitEvent();
-
-        cameraButton = findViewById(R.id.CameraButton);
-        galleryButton = findViewById(R.id.GalleryButton);
-        mapButton = findViewById(R.id.mapButton);
-        addButton = findViewById(R.id.addHabitEventButton);
-        commentText = findViewById(R.id.Comment);
-        image = findViewById(R.id.photo);
-        addressLine = findViewById(R.id.addressLineText);
-
         db = new DatabaseManager();
 
-        // set the completed date of the habit event
-        habitEvent.setCompletedDate(Calendar.getInstance());
+        // get data
 
-        // get data from clicked item
         Intent intent = getIntent();
-        this.habit = intent.getParcelableExtra("HABIT");
-        this.email = intent.getStringExtra("USER");
-        this.position = intent.getIntExtra("position", 0);
+        this.habitEvent = intent.getParcelableExtra("HABIT_EVENT_VIEW");
+        Log.d(TAG,"The completed date of the habit event is "+ habitEvent.getComment());
 
-        Log.d("USER TO UPDATE", email);
-        Log.d("HABIT IN ADD EVENT", habit.getTitle());
+        // get views
+        comment = findViewById(R.id.comment_edit_text);
+        addressLine = findViewById(R.id.address_line_edit);
+        image = findViewById(R.id.photo_edit);
+        galleryBtn = findViewById(R.id.gallery_button_edit);
+        cameraBtn = findViewById(R.id.camera_button_edit);
+        saveHabitEventBtn = findViewById(R.id.save_habit_event_edit);
+        completionDateCalendar = findViewById(R.id.completion_date_calendar);
+Log.d(TAG,"Got the views");
+        //get data from habit event
+        String commentHabitEvent = habitEvent.getComment();
+        Calendar completedDate = habitEvent.getCompletedDate();
+        Uri photoUri = habitEvent.getPhotograph();
+        Location locationHabitEvent = habitEvent.getLocation();
+Log.d(TAG,"got the data");
+        // set data to the fields
+        if (commentHabitEvent != null){
+            comment.setText(commentHabitEvent);
+        }
+        if (photoUri != null){
+            // set the photo
+            Picasso.get().load(photoUri).into(image);
+        }
+        else{
+            Log.d(TAG,"The uri is null");
+        }
+        if (locationHabitEvent != null){
+            // set the address
+            addressLine.setText(getAddress(locationHabitEvent.getLatitude(),locationHabitEvent.getLongitude()));
+        }
+Log.d(TAG,"set the data");
+        // set the date
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        completionDateCalendar.setText(format.format(completedDate.getTime()));
+//Log.d(TAG,"Set the dateeeee");
+        // setting up the activity launchers
 
         // the activity launcher to get an image from the gallery
         galleryActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
-            @Override
-            public void onActivityResult(ActivityResult result) {
-                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                    Uri contentUri = result.getData().getData();
-                    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                    String imageFileName = "JPEG_" + timeStamp + "." + getFileExt(contentUri);
-                    Log.d("tag", "onActivityResult: Gallery Image Uri:  " + imageFileName);
-                    image.setImageURI(contentUri);
-                    habitEvent.setPhotograph(db.uploadImageToFirebase(imageFileName, contentUri, mStorageRef));
-                }
-            }
-        });
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                            Uri contentUri = result.getData().getData();
+                            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                            String imageFileName = "JPEG_" + timeStamp + "." + getFileExt(contentUri);
+                            Log.d("tag", "onActivityResult: Gallery Image Uri:  " + imageFileName);
+                            image.setImageURI(contentUri);
+                            habitEvent.setPhotograph(db.uploadImageToFirebase(imageFileName, contentUri, mStorageRef));
+                        }
+                    }
+                });
 
         // the activity launcher for taking image using the phone camera
         cameraActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
-            @Override
-            public void onActivityResult(ActivityResult result) {
-                Log.d("CAMERA", "entered camera on activity result");
-                if (result.getResultCode() == Activity.RESULT_OK ) {
-                    Log.d("CAMERA", "entered camera on activity result if condition");
-                    File f = new File(currentPhotoPath);
-                    Log.d("CAMERA","Setting the image");
-                    image.setImageURI(Uri.fromFile(f));
-                    Log.d("CAMERA", "Absolute url is " + Uri.fromFile(f));
-                    Uri contentUri = Uri.fromFile(f);
-                    Log.d("CAMERA", "ENTERING TO FIREBASE");
-                    habitEvent.setPhotograph(db.uploadImageToFirebase(f.getName(), contentUri, mStorageRef));
-                    Log.d("CAMERA", "Exited the FIREBASE");
-                    Log.d("CAMERA", "The uri is :" + habitEvent.getPhotograph());
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        Log.d("CAMERA", "entered camera on activity result");
+                        if (result.getResultCode() == Activity.RESULT_OK ) {
+                            Log.d("CAMERA", "entered camera on activity result if condition");
+                            File f = new File(currentPhotoPath);
+                            Log.d("CAMERA","Setting the image");
+                            image.setImageURI(Uri.fromFile(f));
+                            Log.d("CAMERA", "Absolute url is " + Uri.fromFile(f));
+                            Uri contentUri = Uri.fromFile(f);
+                            Log.d("CAMERA", "ENTERING TO FIREBASE");
+                            habitEvent.setPhotograph(db.uploadImageToFirebase(f.getName(), contentUri, mStorageRef));
+                            Log.d("CAMERA", "Exited the FIREBASE");
+                            Log.d("CAMERA", "The uri is :" + habitEvent.getPhotograph());
 
-                    Log.d("CAMERA","Entering gallery stage");
+                            Log.d("CAMERA","Entering gallery stage");
 
-                    // save the image to the gallery
-                    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                    //Uri contentUri = Uri.fromFile(f);
-                    mediaScanIntent.setData(contentUri);
-                    AddHabitEventActivity.this.sendBroadcast(mediaScanIntent);
-                    // to load the image using the uri use Picasso.get().load(he.getUri()).into(image);
-                    Log.d("CAMERA","Exiting gallery stage");
-                }
+                            // save the image to the gallery
+                            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                            //Uri contentUri = Uri.fromFile(f);
+                            mediaScanIntent.setData(contentUri);
+                            ViewEditHabitEvents.this.sendBroadcast(mediaScanIntent);
+                            // to load the image using the uri use Picasso.get().load(he.getUri()).into(image);
+                            Log.d("CAMERA","Exiting gallery stage");
+                        }
 
-                else {
-                    Log.d("CAMERA", "Failed onActivityResult if condition");
+                        else {
+                            Log.d("CAMERA", "Failed onActivityResult if condition");
 
-                }
+                        }
 
-            }
-        });
-
+                    }
+                });
+/*
+// uncomment if we want allow the user to change address
+// in this case a map button and uncomment the onClickListener
         mapActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
@@ -198,69 +195,55 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
 
             }
         });
+*/
+        // handling the onclick listener
+        cameraBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                askCameraPermission();
+            }
+        });
+        galleryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent gallery = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                galleryActivityResultLauncher.launch(gallery);
+            }
+        });
+/*
+        mapBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent map = new Intent(view.getContext(), MapsActivity.class);
+                mapActivityResultLauncher.launch(map);
+            }
+        });
+*/
+        saveHabitEventBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                habitEvent.setComment(comment.getText().toString());
+                // create the intent to return the habit event
+                Intent result = new Intent();
+                result.putExtra("HABIT_EVENT_SAVE", habitEvent);
+                setResult(RESULT_CODE, result);
+                ViewEditHabitEvents.this.finish();
+            }
+        });
 
-        // setting listeners
-        cameraButton.setOnClickListener(this);
-        galleryButton.setOnClickListener(this);
-        mapButton.setOnClickListener(this);
-        addButton.setOnClickListener(this);
+
     }
 
-    // Handles behaviors of button clicks
-    @Override
-    public void onClick(View view) {
-        if (view.getId() == R.id.addHabitEventButton) {
-            Log.d("CAMERA", "pressed add button in habit event");
-            habitEvent.setComment(commentText.getText().toString());
-            ArrayList<HabitEvent> currentEventList = habit.getHabitEvents();
-            currentEventList.add(habitEvent);
-            habit.setHabitEvents(currentEventList);
-            // Propagate the changes to the database
-            DatabaseManager db = new DatabaseManager();
-            db.updateHabitList(email, habit);
 
-            // Pass the result back to BaseActivity
-            Intent result = new Intent();
-           // result.putExtra("HABIT_EVENT", habitEvent);
-            result.putExtra("HABIT", habit);
-            result.putExtra("position", position);
-            Log.d("ADDHABITEVENT", "The url is "+ habitEvent.getPhotograph());
-            Log.d("ADDHABITEVENT", "The comment is "+ habitEvent.getComment());
-            Log.d("ADDHABITEVENT", "The latitude is "+ habitEvent.getLocation().getLatitude());
-            Log.d("ADDHABITEVENT", "The longitude is "+ habitEvent.getLocation().getLongitude());
-            if(habitEvent.getPhotograph() == null){
-                Log.d("ADDHABITEVENT", "base the uri is null");
-            }
-            else {
-                Log.d("ADDHABITEVENT", "base the uri is not null");
-            }
-            result.putExtra("HABIT_EVENT",habitEvent);
-            setResult(RESULT_CODE, result);
-            Log.d("CAMERA", "ready to finish");
-            this.finish();
-        }
-        else if (view.getId() == R.id.mapButton) {
-            addressLine.setText("");
-            Intent map = new Intent(view.getContext(), MapsActivity.class);
-            mapActivityResultLauncher.launch(map);
-        }
-        else if (view.getId() == R.id.GalleryButton) {
-            Intent gallery = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            galleryActivityResultLauncher.launch(gallery);
-        }
-        else if (view.getId() == R.id.CameraButton) {
-            askCameraPermission();
-        }
-    }
 
     /**
      * Asks the user for permission to use the camera
      * and if the permission has already been granted starts the process of taking picture using the camera
      */
     private void askCameraPermission() {
-        if (ContextCompat.checkSelfPermission(AddHabitEventActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+        if (ContextCompat.checkSelfPermission(ViewEditHabitEvents.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
         {
-            ActivityCompat.requestPermissions(AddHabitEventActivity.this, new String[]{
+            ActivityCompat.requestPermissions(ViewEditHabitEvents.this, new String[]{
                     Manifest.permission.CAMERA}, Camera_Permission_CODE);
         }
         else{

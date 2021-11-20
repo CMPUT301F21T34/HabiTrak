@@ -88,12 +88,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         addHabitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: remove this and change it back to habit activity
-                // for testing AddHabitEventsActivity
-                /*Intent remove =new Intent(BaseActivity.this,AddHabitEventActivity.class);
-                startActivity(remove);
 
-                 */
 
                 Intent intent = new Intent(view.getContext(), AddHabitActivity.class);
                 addHabitActivityLauncher.launch(intent);
@@ -160,7 +155,12 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         // result from add habit event activity
         else if (resultCode == RESULT_NEW_HABIT_EVENT) {
             HabitEvent habitEvent = intent.getParcelableExtra("HABIT_EVENT");
-            Log.d("base event", habitEvent.getComment());
+            if(habitEvent.getPhotograph() == null){
+            Log.d("base event", " the uri is null");}
+            else{
+                Log.d("base event", " the uri is not null");
+
+        }
             Habit habit = intent.getParcelableExtra("HABIT");
             int position = intent.getIntExtra("position", 0);
             mainUser.replaceHabit(position, habit);

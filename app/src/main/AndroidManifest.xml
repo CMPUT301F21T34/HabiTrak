@@ -3,11 +3,10 @@
     package="com.cmput301f21t34.habittrak">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
 
     <application
         android:allowBackup="true"
@@ -16,7 +15,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HabitTrak">
-
+        <activity
+            android:name=".ViewEditHabitEvents"
+            android:exported="true" />
         <activity
             android:name=".ViewHabitEvents"
             android:exported="true"
@@ -53,10 +54,12 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
 
-        <meta-data android:name="com.google.android.geo.API_KEY" android:value="@string/google_maps_key"/>
-
-        <activity android:name="com.cmput301f21t34.habittrak.MapsActivity"
+        <activity
+            android:name=".MapsActivity"
             android:exported="true"
             android:label="@string/title_activity_maps" />
 
@@ -76,4 +79,3 @@
     </application>
 
 </manifest>
-

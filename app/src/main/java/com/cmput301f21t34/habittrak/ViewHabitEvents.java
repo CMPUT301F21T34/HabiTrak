@@ -1,13 +1,19 @@
 package com.cmput301f21t34.habittrak;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -38,6 +44,12 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
     private ArrayList<HabitEvent> eventDataList;
     private ArrayAdapter<HabitEvent> eventListAdapter;
     private Toolbar toolbar;
+    private Button editBtn;
+    private Button deleteBtn;
+
+    // activity launcher
+
+    ActivityResultLauncher<Intent> viewEditHabitEventActivityLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +62,10 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // get views
+        editBtn = findViewById(R.id.event_editor);
+        deleteBtn = findViewById(R.id.event_deleter);
 
         // get habit data from the intent
         Intent intent = getIntent();
@@ -66,11 +82,37 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
         eventListAdapter = new EventList(this, eventDataList);
         eventList.setAdapter(eventListAdapter);
 
+        // setting up the buttons listener
+        editBtn.setOnClickListener(this);
+        deleteBtn.setOnClickListener(this);
+
         //Create a click listener that will track the last event clcked
         eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 selectedEvent = (HabitEvent) adapterView.getItemAtPosition(i);
+                Log.d("ViewHabitEvents","clicked on a habit event");
+                Log.d("ViewHabitEvents",selectedEvent.getComment());
+            }
+        });
+        // creating edit events activity launcher
+        viewEditHabitEventActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == Activity.RESULT_OK){
+                    Log.d("ViewEditHabitEvents","In the on actiivty result");
+                    HabitEvent habitEvent = result.getData().getParcelableExtra("HABIT_EVENT_SAVE");
+                    Log.d("ViewHabitEvents","got the habit event  comment is "+ habitEvent.getComment());
+                    habit.addHabitEvent(habitEvent);
+                    // update in the database as well need the user email 'email'
+                    // after getting uncomment the 2 lines of code below
+                    // can you get user as well?
+                    // TODO: update the habit list in the database
+                    //            DatabaseManager db = new DatabaseManager();
+                    //            db.updateHabitList(email, habit);
+                    updateList();
+                }
             }
         });
     }
@@ -91,6 +133,14 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
                 break;
             //For edit event button press
             case R.id.event_editor:
+                // call view edit habit events
+                Log.d("ViewHabitEvents","inside the event_editor");
+                Log.d("ViewHabitEvents", " the comment is "+selectedEvent.getComment());
+                Intent intent = new Intent(view.getContext(),ViewEditHabitEvents.class);
+                intent.putExtra("HABIT_EVENT_VIEW", selectedEvent);
+                this.habit.removeHabitEvent(selectedEvent);
+                Log.d("ViewHabitEvents","Entering view edit habit event activity launcher");
+                viewEditHabitEventActivityLauncher.launch(intent);
                 break;
         }
     }

@@ -16,6 +16,8 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,6 +29,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cmput301f21t34.habittrak.user.Habit;
@@ -50,7 +53,10 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -58,7 +64,7 @@ import java.util.Date;
  * @author Henry
  * Version: 1.0
  * Takes a habit and returns the new habit event
- * TODO: the map (to get address) and need to set the completed date
+ * TODO: Fix the camera bug
  */
 public class AddHabitEventActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -69,6 +75,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
     Button addButton;
     EditText commentText;
     ImageView image;
+    TextView addressLine;
     public static int RESULT_CODE = 3000;
     public static final int Camera_Permission_CODE = 100;
     public static final int Camera_REQUEST_CODE = 101;
@@ -82,6 +89,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
     private FusedLocationProviderClient fusedLocationClient;
 
     // intent data variables
+
     private Habit habit;
 
     @Override
@@ -96,13 +104,18 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
         addButton = findViewById(R.id.addHabitEventButton);
         commentText = findViewById(R.id.Comment);
         image = findViewById(R.id.photo);
+        addressLine = findViewById(R.id.addressLineText);
         db = new DatabaseManager();
+
+        // set the completed date of the habit event
+        habitEvent.setCompletedDate(Calendar.getInstance());
 
         // get data
         Intent intent = getIntent();
         this.habit = intent.getParcelableExtra("HABIT");
         Log.d("HABIT IN ADD EVENT", habit.getTitle());
-        // the activity to get an image from the gallery
+
+        // the activity launcher to get an image from the gallery
         galleryActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
@@ -125,15 +138,19 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
                 new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
-                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                Log.d("CAMERA", "entered camera on activity result");
+                if (result.getResultCode() == Activity.RESULT_OK ) {
+                    Log.d("CAMERA", "entered camera on activity result if condition");
                     File f = new File(currentPhotoPath);
+                    Log.d("CAMERA","Setting the image");
                     image.setImageURI(Uri.fromFile(f));
                     Log.d("CAMERA", "Absolute url is " + Uri.fromFile(f));
                     Uri contentUri = Uri.fromFile(f);
                     Log.d("CAMERA", "ENTERING TO FIREBASE");
                     habitEvent.setPhotograph(db.uploadImageToFirebase(f.getName(), contentUri, mStorageRef));
-                    Log.d("CAMERA", "The uri is :" + habitEvent.getPhotograph());
                     Log.d("CAMERA", "Exited the FIREBASE");
+                    Log.d("CAMERA", "The uri is :" + habitEvent.getPhotograph());
+
                     Log.d("CAMERA","Entering gallery stage");
 
                     // save the image to the gallery
@@ -163,6 +180,8 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
                     eventLocation.setLatitude(latitude);
                     eventLocation.setLongitude(longitude);
                     habitEvent.setLocation(eventLocation);
+                    addressLine.setText("");
+                    addressLine.setText(getAddress(eventLocation.getLatitude(),eventLocation.getLongitude()));
                 }
                 else {
                     Log.d("MAP", "Failed onActivityResult if condition");
@@ -189,11 +208,17 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
             habit.setHabitEvents(heList);
             Intent result = new Intent();
             result.putExtra("HABIT_EVENT", habitEvent);
+            Log.d("ADDHABITEVENT", "The url is "+habitEvent.getPhotograph());
+            Log.d("ADDHABITEVENT", "The comment is "+habitEvent.getComment());
+            Log.d("ADDHABITEVENT", "The latitude is "+habitEvent.getLocation().getLatitude());
+            Log.d("ADDHABITEVENT", "The longitude is "+habitEvent.getLocation().getLongitude());
+
             setResult(RESULT_CODE, result);
             Log.d("CAMERA", "ready to finish");
             this.finish();
         }
         else if (view.getId() == R.id.mapButton) {
+            addressLine.setText("");
             Intent map = new Intent(view.getContext(), MapsActivity.class);
             mapActivityResultLauncher.launch(map);
         }
@@ -223,17 +248,18 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
     }
 
     /**
-     * creates the intent for taking picture with the camera
+     * creates the intent for taking picture with the camera and starts the activity
      */
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         Log.d("CAMERA","entered here1");
-
         // Create the File where the photo should go
         File photoFile = null;
         try {
             photoFile = createImageFile();
+            Log.d("Camera","Entered the if condition in dispatchtakePictureIntent after createImageFile");
         } catch (IOException ex) {
+            Log.d("CAMERA","Dispatch take picture intent exception: " + ex.getLocalizedMessage());
         }
 
         // Continue only if the File was successfully created
@@ -245,10 +271,11 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
 
             // starts the activity
-
-            //startActivityForResult(takePictureIntent, Camera_REQUEST_CODE);
             cameraActivityResultLauncher.launch(takePictureIntent);
 
+        }
+        else{
+            Log.d("CAMERA","The photofile is null");
         }
     }
 
@@ -304,5 +331,32 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
         ContentResolver c = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(c.getType(contentUri));
+    }
+    /**
+     * returns the street address in the mentioned latitude and longitude
+     * @param latitude double, the latitude of the location
+     * @param longitude double, the longitude of the location
+     * @return String, the address of the location
+     */
+    public String getAddress(double latitude, double longitude) {
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder = new Geocoder(this, Locale.getDefault());
+        String address = "";
+
+        try {
+            addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            String addressLine = addresses.get(0).getAddressLine(0);
+            String city = addresses.get(0).getLocality();
+            String state = addresses.get(0).getAdminArea();
+            String country = addresses.get(0).getCountryName();
+            String postalCode = addresses.get(0).getPostalCode();
+            address = address + addressLine.toString() + ", " + city.toString() + ", " + state.toString()
+                    + ", " + country.toString() + ", " + postalCode.toString();
+        } catch (Exception e) {
+            Log.d("address failed", "yep");
+            e.printStackTrace();
+        }
+        return address;
     }
 }

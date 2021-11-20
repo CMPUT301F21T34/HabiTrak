@@ -53,6 +53,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -63,7 +64,7 @@ import java.util.Locale;
  * @author Henry
  * Version: 1.0
  * Takes a habit and returns the new habit event
- * TODO: need to set the completed date and fix the camera bug
+ * TODO: Fix the camera bug
  */
 public class AddHabitEventActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -106,6 +107,9 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
         addressLine = findViewById(R.id.addressLineText);
         db = new DatabaseManager();
 
+        // set the completed date of the habit event
+        habitEvent.setCompletedDate(Calendar.getInstance());
+
         // get data
         Intent intent = getIntent();
         this.habit = intent.getParcelableExtra("HABIT");
@@ -135,16 +139,19 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
             @Override
             public void onActivityResult(ActivityResult result) {
                 Log.d("CAMERA", "entered camera on activity result");
-                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                //&& result.getData() != null
+                if (result.getResultCode() == Activity.RESULT_OK ) {
                     Log.d("CAMERA", "entered camera on activity result if condition");
                     File f = new File(currentPhotoPath);
+                    Log.d("CAMERA","Setting the image");
                     image.setImageURI(Uri.fromFile(f));
                     Log.d("CAMERA", "Absolute url is " + Uri.fromFile(f));
                     Uri contentUri = Uri.fromFile(f);
                     Log.d("CAMERA", "ENTERING TO FIREBASE");
                     habitEvent.setPhotograph(db.uploadImageToFirebase(f.getName(), contentUri, mStorageRef));
-                    Log.d("CAMERA", "The uri is :" + habitEvent.getPhotograph());
                     Log.d("CAMERA", "Exited the FIREBASE");
+                    Log.d("CAMERA", "The uri is :" + habitEvent.getPhotograph());
+
                     Log.d("CAMERA","Entering gallery stage");
 
                     // save the image to the gallery
@@ -256,6 +263,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
             photoFile = createImageFile();
             Log.d("Camera","Entered the if condition in dispatchtakePictureIntent after createImageFile");
         } catch (IOException ex) {
+            Log.d("CAMERA","Dispatch take picture intent exception: " + ex.getLocalizedMessage());
         }
 
         // Continue only if the File was successfully created
@@ -267,7 +275,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
 
             // starts the activity
-
+Log.d("CAMERA","Entering the camera launcher");
             //startActivityForResult(takePictureIntent, Camera_REQUEST_CODE);
             cameraActivityResultLauncher.launch(takePictureIntent);
 

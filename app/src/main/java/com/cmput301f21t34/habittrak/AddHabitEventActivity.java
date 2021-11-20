@@ -115,7 +115,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
         this.habit = intent.getParcelableExtra("HABIT");
         Log.d("HABIT IN ADD EVENT", habit.getTitle());
 
-        // the activity to get an image from the gallery
+        // the activity launcher to get an image from the gallery
         galleryActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
@@ -139,7 +139,6 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
             @Override
             public void onActivityResult(ActivityResult result) {
                 Log.d("CAMERA", "entered camera on activity result");
-                //&& result.getData() != null
                 if (result.getResultCode() == Activity.RESULT_OK ) {
                     Log.d("CAMERA", "entered camera on activity result if condition");
                     File f = new File(currentPhotoPath);
@@ -254,9 +253,6 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         Log.d("CAMERA","entered here1");
-// testing the if condition
-       // if(takePictureIntent.resolveActivity(getPackageManager()) != null){
-            Log.d("Camera","Entered the if condition in dispatchtakePictureIntent");
         // Create the File where the photo should go
         File photoFile = null;
         try {
@@ -275,15 +271,12 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
 
             // starts the activity
-Log.d("CAMERA","Entering the camera launcher");
-            //startActivityForResult(takePictureIntent, Camera_REQUEST_CODE);
             cameraActivityResultLauncher.launch(takePictureIntent);
 
         }
         else{
             Log.d("CAMERA","The photofile is null");
         }
-      //  }
     }
 
     /**

@@ -33,10 +33,11 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
     private Habit habit;
     private int habitPosition;
     private HabitEvent selectedEvent;
-    // List variables
-    public ListView eventList;
-    public ArrayList<HabitEvent> eventDataList;
-    public ArrayAdapter<HabitEvent> eventListAdapter;
+    // UI variables
+    private ListView eventList;
+    private ArrayList<HabitEvent> eventDataList;
+    private ArrayAdapter<HabitEvent> eventListAdapter;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,7 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_view_habit_events);
 
         // Set back button up
-        Toolbar toolbar = (Toolbar) findViewById(R.id.events_toolbar);
+        toolbar = findViewById(R.id.events_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -55,8 +56,11 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
         this.habit = intent.getParcelableExtra("HABIT");
         this.habitPosition = intent.getIntExtra("position", 0);
         Log.d("VIEW_HABIT", Integer.toString(habitPosition));
+        String name = this.habit.getTitle();
+        String nameFinisher = " Events";
 
         //Set up our list of events for display
+        toolbar.setTitle(name + nameFinisher);
         eventList = findViewById(R.id.event_list);
         eventDataList = habit.getHabitEvents();
         eventListAdapter = new EventList(this, eventDataList);
@@ -71,9 +75,24 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
         });
     }
 
+    public void updateList(){
+        eventDataList.clear();
+        eventDataList.addAll(this.habit.getHabitEvents());
+        eventListAdapter.notifyDataSetChanged();
+    }
+
     @Override
     public void onClick(View view) {
-
+        switch (view.getId()) {
+            //For delete event button press
+            case R.id.event_deleter:
+                this.habit.removeHabitEvent(selectedEvent);
+                updateList();
+                break;
+            //For edit event button press
+            case R.id.event_editor:
+                break;
+        }
     }
 
     @Override

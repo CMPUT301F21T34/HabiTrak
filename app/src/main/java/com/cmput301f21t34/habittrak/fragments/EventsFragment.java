@@ -21,6 +21,7 @@ import com.cmput301f21t34.habittrak.ViewHabitEvents;
 import com.cmput301f21t34.habittrak.recycler.HabitRecycler;
 import com.cmput301f21t34.habittrak.recycler.TodayHabitRecyclerAdapter;
 import com.cmput301f21t34.habittrak.user.Habit;
+import com.cmput301f21t34.habittrak.user.HabitEvent;
 import com.cmput301f21t34.habittrak.user.HabitList;
 import com.cmput301f21t34.habittrak.user.User;
 

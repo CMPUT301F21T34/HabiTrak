@@ -40,7 +40,7 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
         this.comment= "";
         this.completedDate = Calendar.getInstance();
 
-        this.location = new Location("");
+        this.location = null;
         this.photograph = null;
 
 
@@ -86,14 +86,23 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
         }
 
 
-
-        this.location = habitEventBundle.getParcelable("location");
-
+        Location parcelLocation = habitEventBundle.getParcelable("location");
+        if (parcelLocation != null) {
+            this.location = habitEventBundle.getParcelable("location");
+        }
+        else{
+            this.location = null;
+        }
 
         // Sets path
         String photographPath = habitEventBundle.getString("photograph");
+        if(photographPath != null){
+            this.photograph = Uri.parse(photographPath);
+        }
+        else{
+            this.photograph = null;
+        }
 
-        this.photograph = Uri.parse(photographPath);;
     }
 
 
@@ -211,8 +220,12 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
             habitEventBundle.putString("completedDateTimeZone", null);
         }
 
-
-        habitEventBundle.putParcelable("location", location);
+        if(location != null){
+            habitEventBundle.putParcelable("location", location);
+        }
+        else{
+            habitEventBundle.putParcelable("location", null);
+        }
         if (photograph != null) {
             String photographPath = photograph.toString();
             Log.d("EDIT_HAb","the path is "+photographPath);

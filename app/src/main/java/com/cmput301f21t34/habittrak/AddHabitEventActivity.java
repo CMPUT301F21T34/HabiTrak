@@ -224,10 +224,6 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
            // result.putExtra("HABIT_EVENT", habitEvent);
             result.putExtra("HABIT", habit);
             result.putExtra("position", position);
-            Log.d("ADDHABITEVENT", "The url is "+ habitEvent.getPhotograph());
-            Log.d("ADDHABITEVENT", "The comment is "+ habitEvent.getComment());
-            Log.d("ADDHABITEVENT", "The latitude is "+ habitEvent.getLocation().getLatitude());
-            Log.d("ADDHABITEVENT", "The longitude is "+ habitEvent.getLocation().getLongitude());
             if(habitEvent.getPhotograph() == null){
                 Log.d("ADDHABITEVENT", "base the uri is null");
             }

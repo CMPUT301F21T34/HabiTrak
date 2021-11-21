@@ -22,6 +22,8 @@ import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitEvent;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * ViewHabitEvents.
@@ -101,8 +103,8 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onActivityResult(ActivityResult result) {
                 if (result.getResultCode() == Activity.RESULT_OK){
-                    Log.d("ViewEditHabitEvents","In the on actiivty result");
-                    HabitEvent habitEvent = result.getData().getParcelableExtra("HABIT_EVENT_SAVE");
+                    Log.d("Edit_HabitEvents","In the on actiivty result");
+                    HabitEvent habitEvent = (HabitEvent) result.getData().getParcelableExtra("HABIT_EVENT_SAVE");
                     Log.d("Edit_HabitEvents","got the habit event  comment is "+ habitEvent.getComment());
                     Log.d("Edit_HA","The uri is " + habitEvent.getPhotograph());
                     Log.d("Edit_HA","The comment is " + habitEvent.getComment());
@@ -127,6 +129,7 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
     public void updateList(){
         eventDataList.clear();
         eventDataList.addAll(this.habit.getHabitEvents());
+//        Collections.sort(eventDataList,Collections.reverseOrder());
         eventListAdapter.notifyDataSetChanged();
     }
 

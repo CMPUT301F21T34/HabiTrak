@@ -107,8 +107,7 @@ Log.d(TAG,"got the data");
         returnedHabitEvent.setLocation(locationHabitEvent);
         Log.d(TAG,"The uri is " + returnedHabitEvent.getPhotograph());
         Log.d(TAG,"The comment is " + returnedHabitEvent.getComment());
-        Log.d(TAG,"The location is " + returnedHabitEvent.getLocation().toString());
-
+        
         // set data to the fields
         if (commentHabitEvent != null){
             comment.setText(commentHabitEvent);
@@ -124,6 +123,7 @@ Log.d(TAG,"got the data");
             addressLine.setText(getAddress(locationHabitEvent.getLatitude(),locationHabitEvent.getLongitude()));
         }
         else{
+            Log.d(TAG,"Address is not selelceted");
             addressLine.setText("No location selected");
         }
 Log.d(TAG,"set the data");

@@ -155,12 +155,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         // result from add habit event activity
         else if (resultCode == RESULT_NEW_HABIT_EVENT) {
             HabitEvent habitEvent = intent.getParcelableExtra("HABIT_EVENT");
-            if(habitEvent.getPhotograph() == null){
-            Log.d("base event", " the uri is null");}
-            else{
-                Log.d("base event", " the uri is not null");
 
-        }
             Habit habit = intent.getParcelableExtra("HABIT");
             int position = intent.getIntExtra("position", 0);
             mainUser.replaceHabit(position, habit);

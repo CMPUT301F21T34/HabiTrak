@@ -158,7 +158,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
                     Log.d("CAMERA", "ENTERING TO FIREBASE");
                     habitEvent.setPhotograph(db.uploadImageToFirebase(f.getName(), contentUri, mStorageRef));
                     Log.d("CAMERA", "Exited the FIREBASE");
-                    Log.d("CAMERA", "The uri is :" + habitEvent.getPhotograph());
+                    Log.d("Edit_HAbit", "The uri is :" + habitEvent.getPhotograph());
 
                     Log.d("CAMERA","Entering gallery stage");
 

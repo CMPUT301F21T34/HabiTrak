@@ -57,6 +57,7 @@ public class ViewEditHabitEvents extends AppCompatActivity {
     public static final int Camera_REQUEST_CODE = 101;
     private StorageReference mStorageRef;
     String currentPhotoPath;
+    private HabitEvent returnedHabitEvent;
 
     DatabaseManager db;
     ActivityResultLauncher<Intent> cameraActivityResultLauncher;
@@ -75,6 +76,7 @@ public class ViewEditHabitEvents extends AppCompatActivity {
         // initializing variable
         mStorageRef = FirebaseStorage.getInstance().getReference();
         db = new DatabaseManager();
+        returnedHabitEvent = new HabitEvent();
 
         // get data
 
@@ -91,12 +93,22 @@ public class ViewEditHabitEvents extends AppCompatActivity {
         saveHabitEventBtn = findViewById(R.id.save_habit_event_edit);
         completionDateCalendar = findViewById(R.id.completion_date_calendar);
 Log.d(TAG,"Got the views");
+
         //get data from habit event
         String commentHabitEvent = habitEvent.getComment();
         Calendar completedDate = habitEvent.getCompletedDate();
         Uri photoUri = habitEvent.getPhotograph();
         Location locationHabitEvent = habitEvent.getLocation();
 Log.d(TAG,"got the data");
+// setting the data to the new habit event
+        returnedHabitEvent.setCompletedDate(completedDate);
+        returnedHabitEvent.setPhotograph(photoUri);
+        returnedHabitEvent.setComment(commentHabitEvent);
+        returnedHabitEvent.setLocation(locationHabitEvent);
+        Log.d(TAG,"The uri is " + returnedHabitEvent.getPhotograph());
+        Log.d(TAG,"The comment is " + returnedHabitEvent.getComment());
+        Log.d(TAG,"The location is " + returnedHabitEvent.getLocation().toString());
+
         // set data to the fields
         if (commentHabitEvent != null){
             comment.setText(commentHabitEvent);
@@ -105,18 +117,20 @@ Log.d(TAG,"got the data");
             // set the photo
             Picasso.get().load(photoUri).into(image);
         }
-        else{
-            Log.d(TAG,"The uri is null");
-        }
+
         if (locationHabitEvent != null){
             // set the address
+
             addressLine.setText(getAddress(locationHabitEvent.getLatitude(),locationHabitEvent.getLongitude()));
+        }
+        else{
+            addressLine.setText("No location selected");
         }
 Log.d(TAG,"set the data");
         // set the date
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         completionDateCalendar.setText(format.format(completedDate.getTime()));
-//Log.d(TAG,"Set the dateeeee");
+Log.d(TAG,"Set the dateeeee");
         // setting up the activity launchers
 
         // the activity launcher to get an image from the gallery
@@ -131,7 +145,7 @@ Log.d(TAG,"set the data");
                             String imageFileName = "JPEG_" + timeStamp + "." + getFileExt(contentUri);
                             Log.d("tag", "onActivityResult: Gallery Image Uri:  " + imageFileName);
                             image.setImageURI(contentUri);
-                            habitEvent.setPhotograph(db.uploadImageToFirebase(imageFileName, contentUri, mStorageRef));
+                            returnedHabitEvent.setPhotograph(db.uploadImageToFirebase(imageFileName, contentUri, mStorageRef));
                         }
                     }
                 });
@@ -151,9 +165,9 @@ Log.d(TAG,"set the data");
                             Log.d("CAMERA", "Absolute url is " + Uri.fromFile(f));
                             Uri contentUri = Uri.fromFile(f);
                             Log.d("CAMERA", "ENTERING TO FIREBASE");
-                            habitEvent.setPhotograph(db.uploadImageToFirebase(f.getName(), contentUri, mStorageRef));
+                            returnedHabitEvent.setPhotograph(db.uploadImageToFirebase(f.getName(), contentUri, mStorageRef));
                             Log.d("CAMERA", "Exited the FIREBASE");
-                            Log.d("CAMERA", "The uri is :" + habitEvent.getPhotograph());
+                            Log.d("CAMERA", "The uri is :" + returnedHabitEvent.getPhotograph());
 
                             Log.d("CAMERA","Entering gallery stage");
 
@@ -185,7 +199,7 @@ Log.d(TAG,"set the data");
                     Location eventLocation = new Location("gps");
                     eventLocation.setLatitude(latitude);
                     eventLocation.setLongitude(longitude);
-                    habitEvent.setLocation(eventLocation);
+                    returnedHabitEvent.setLocation(eventLocation);
                     addressLine.setText("");
                     addressLine.setText(getAddress(eventLocation.getLatitude(),eventLocation.getLongitude()));
                 }
@@ -222,11 +236,17 @@ Log.d(TAG,"set the data");
         saveHabitEventBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                habitEvent.setComment(comment.getText().toString());
+                Log.d(TAG,"Save button pressed");
+                returnedHabitEvent.setComment(comment.getText().toString());
                 // create the intent to return the habit event
+                Log.d(TAG,"creating intent");
                 Intent result = new Intent();
-                result.putExtra("HABIT_EVENT_SAVE", habitEvent);
+                result.putExtra("HABIT_EVENT_SAVE", returnedHabitEvent);
                 setResult(RESULT_CODE, result);
+                Log.d(TAG,"finishing intent");
+                Log.d(TAG,"The uri is " + returnedHabitEvent.getPhotograph());
+                Log.d(TAG,"The comment is " + returnedHabitEvent.getComment());
+                Log.d(TAG,"The location is " + returnedHabitEvent.getLocation().toString());
                 ViewEditHabitEvents.this.finish();
             }
         });

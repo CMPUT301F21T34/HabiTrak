@@ -103,15 +103,22 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
                 if (result.getResultCode() == Activity.RESULT_OK){
                     Log.d("ViewEditHabitEvents","In the on actiivty result");
                     HabitEvent habitEvent = result.getData().getParcelableExtra("HABIT_EVENT_SAVE");
-                    Log.d("ViewHabitEvents","got the habit event  comment is "+ habitEvent.getComment());
-                    habit.addHabitEvent(habitEvent);
+                    Log.d("Edit_HabitEvents","got the habit event  comment is "+ habitEvent.getComment());
+                    Log.d("Edit_HA","The uri is " + habitEvent.getPhotograph());
+                    Log.d("Edit_HA","The comment is " + habitEvent.getComment());
+                    Log.d("Edit_HA","The location is " + habitEvent.getLocation().toString());
+
+                    ViewHabitEvents.this.habit.removeHabitEvent(selectedEvent);
+                    ViewHabitEvents.this.habit.addHabitEvent(habitEvent);
+                    Log.d("ViewEditHabitEvents","added the habit event and updating list");
+                    updateList();
                     // update in the database as well need the user email 'email'
                     // after getting uncomment the 2 lines of code below
                     // can you get user as well?
                     // TODO: update the habit list in the database
                     //            DatabaseManager db = new DatabaseManager();
                     //            db.updateHabitList(email, habit);
-                    updateList();
+
                 }
             }
         });
@@ -138,7 +145,7 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
                 Log.d("ViewHabitEvents", " the comment is "+selectedEvent.getComment());
                 Intent intent = new Intent(view.getContext(),ViewEditHabitEvents.class);
                 intent.putExtra("HABIT_EVENT_VIEW", selectedEvent);
-                this.habit.removeHabitEvent(selectedEvent);
+              //  this.habit.removeHabitEvent(selectedEvent);
                 Log.d("ViewHabitEvents","Entering view edit habit event activity launcher");
                 viewEditHabitEventActivityLauncher.launch(intent);
                 break;

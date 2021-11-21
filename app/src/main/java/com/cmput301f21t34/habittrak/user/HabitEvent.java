@@ -5,8 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
-import java.io.File;
 import java.util.Calendar;
 import java.util.TimeZone;
 
@@ -93,7 +93,7 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
         // Sets path
         String photographPath = habitEventBundle.getString("photograph");
 
-        this.photograph = null;
+        this.photograph = Uri.parse(photographPath);;
     }
 
 
@@ -214,7 +214,9 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
 
         habitEventBundle.putParcelable("location", location);
         if (photograph != null) {
-            String photographPath = photograph.getPath();
+            String photographPath = photograph.toString();
+            Log.d("EDIT_HAb","the path is "+photographPath);
+
             // Handles photograph
             habitEventBundle.putString("photograph", photographPath);
         }

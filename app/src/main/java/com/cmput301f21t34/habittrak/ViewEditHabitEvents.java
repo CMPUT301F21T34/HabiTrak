@@ -52,7 +52,7 @@ public class ViewEditHabitEvents extends AppCompatActivity {
     private MaterialButton cameraBtn;
     private MaterialButton saveHabitEventBtn;
     private TextView completionDateCalendar;
-    public static int RESULT_CODE = 3000;
+    public static int RESULT_CODE = 4000;
     public static final int Camera_Permission_CODE = 100;
     public static final int Camera_REQUEST_CODE = 101;
     private StorageReference mStorageRef;
@@ -107,7 +107,7 @@ Log.d(TAG,"got the data");
         returnedHabitEvent.setLocation(locationHabitEvent);
         Log.d(TAG,"The uri is " + returnedHabitEvent.getPhotograph());
         Log.d(TAG,"The comment is " + returnedHabitEvent.getComment());
-        
+
         // set data to the fields
         if (commentHabitEvent != null){
             comment.setText(commentHabitEvent);
@@ -243,17 +243,12 @@ Log.d(TAG,"Set the dateeeee");
                 Intent result = new Intent();
                 result.putExtra("HABIT_EVENT_SAVE", returnedHabitEvent);
                 setResult(RESULT_CODE, result);
-                Log.d(TAG,"finishing intent");
-                Log.d(TAG,"The uri is " + returnedHabitEvent.getPhotograph());
-                Log.d(TAG,"The comment is " + returnedHabitEvent.getComment());
-                Log.d(TAG,"The location is " + returnedHabitEvent.getLocation().toString());
                 ViewEditHabitEvents.this.finish();
             }
         });
 
 
     }
-
 
 
     /**

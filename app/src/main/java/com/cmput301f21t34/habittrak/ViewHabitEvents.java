@@ -33,6 +33,7 @@ import java.util.ArrayList;
  */
 public class ViewHabitEvents extends AppCompatActivity implements View.OnClickListener {
 
+    public static int RESULT_CODE = 5000;
     private static final int EDIT_HABIT_EVENT = 4000;
     // data variables
     private Habit habit;
@@ -45,6 +46,7 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
     private Toolbar toolbar;
     private Button editBtn;
     private Button deleteBtn;
+    private Button confirmBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,7 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
         // get views
         editBtn = findViewById(R.id.event_editor);
         deleteBtn = findViewById(R.id.event_deleter);
+        confirmBtn = findViewById(R.id.events_confirm_changes);
 
         // get habit data from the intent
         Intent intent = getIntent();
@@ -80,6 +83,7 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
         // setting up the buttons listener
         editBtn.setOnClickListener(this);
         deleteBtn.setOnClickListener(this);
+        confirmBtn.setOnClickListener(this);
 
         //Create a click listener that will track the last event clcked
         eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -148,6 +152,13 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
                     Toast.makeText(this, "Have to select a habit event", Toast.LENGTH_LONG).show();
                 }
                 break;
+            // Finish the activity and return the habit
+            case R.id.events_confirm_changes:
+                Intent result = new Intent();
+                result.putExtra("HABIT", habit);
+                result.putExtra("position", habitPosition);
+                setResult(RESULT_CODE, result);
+                this.finish();
         }
     }
 

@@ -40,6 +40,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
     public static final int RESULT_NEW_HABIT = 1000;
     public static final int RESULT_EDIT_HABIT = 2000;
     public static final int RESULT_NEW_HABIT_EVENT = 3000;
+    public static final int RESULT_HABIT_EVENTS = 5000;
     final String TAG = "Base_Activity";
     //TODO: Explicitly make attributes private
     NavigationBarView bottomNav;
@@ -159,6 +160,12 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
             int position = intent.getIntExtra("position", 0);
             mainUser.replaceHabit(position, habit);
             // TODO: Update all events list
+        }
+        // result from view habit events activity
+        else if (resultCode == RESULT_HABIT_EVENTS){
+            Habit habit = intent.getParcelableExtra("HABIT");
+            int position = intent.getIntExtra("position", 0);
+            mainUser.replaceHabit(position, habit);
         }
 
         super.onActivityResult(requestCode, resultCode, intent);

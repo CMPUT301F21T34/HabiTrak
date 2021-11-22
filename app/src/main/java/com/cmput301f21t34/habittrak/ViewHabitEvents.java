@@ -120,7 +120,7 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         if (resultCode == EDIT_HABIT_EVENT){
-            habit = (Habit) intent.getParcelableExtra("HABIT_SAVE");
+            habit = (Habit) intent.getParcelableExtra("HABIT");
             Log.d("EDITHAbit",habit.getTitle());
             selectedEvent = null;
             Log.d("ViewEditHabitEvents","added the habit event and updating list");
@@ -151,6 +151,7 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
                     Intent intent = new Intent(view.getContext(),ViewEditHabitEvents.class);
                     intent.putExtra("HABIT_EVENT_VIEW", selectedEvent);
                     intent.putExtra("HABIT_VIEW",habit);
+                    intent.putExtra("position", habitPosition);
 
                     editEventsResultLauncher.launch(intent);
                     updateList();

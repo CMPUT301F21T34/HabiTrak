@@ -60,6 +60,7 @@ public class ViewEditHabitEvents extends AppCompatActivity {
     String currentPhotoPath;
     private HabitEvent returnedHabitEvent;
     private Habit habit;
+    private int habitPosition;
 
     DatabaseManager db;
     ActivityResultLauncher<Intent> cameraActivityResultLauncher;
@@ -85,6 +86,7 @@ public class ViewEditHabitEvents extends AppCompatActivity {
         Intent intent = getIntent();
         this.habitEvent = intent.getParcelableExtra("HABIT_EVENT_VIEW");
         this.habit = intent.getParcelableExtra("HABIT_VIEW");
+        this.habitPosition = intent.getIntExtra("position", 0);
         Log.d(TAG,"The completed date of the habit event is "+ habitEvent.getComment());
         Log.d(TAG,"The habit is "+habit.getTitle());
 
@@ -249,7 +251,8 @@ Log.d(TAG,"Set the dateeeee");
                 habit.addHabitEvent(returnedHabitEvent);
                 Log.d(TAG,"The size of the habit event list is " + habit.getHabitEvents().size());
                 Intent result = new Intent();
-                result.putExtra("HABIT_SAVE", habit);
+                result.putExtra("HABIT", habit);
+                result.putExtra("position", habitPosition);
                 setResult(RESULT_CODE, result);
                 ViewEditHabitEvents.this.finish();
             }

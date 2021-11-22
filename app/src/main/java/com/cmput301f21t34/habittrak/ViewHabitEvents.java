@@ -96,6 +96,13 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
         });
     }
 
+    /**
+     * updateList
+     *
+     * refreshes the displayed list after a change
+     *
+     * @author Aron Rajabi
+     */
     public void updateList(){
         eventDataList.clear();
         eventDataList.addAll(this.habit.getHabitEvents());

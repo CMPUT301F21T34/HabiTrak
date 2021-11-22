@@ -348,12 +348,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         try {
             addresses = geocoder.getFromLocation(latitude, longitude, 1);
             String addressLine = addresses.get(0).getAddressLine(0);
+            /*
             String city = addresses.get(0).getLocality();
             String state = addresses.get(0).getAdminArea();
             String country = addresses.get(0).getCountryName();
             String postalCode = addresses.get(0).getPostalCode();
-            address = address + addressLine.toString() + ", " + city.toString() + ", " + state.toString()
-                    + ", " + country.toString() + ", " + postalCode.toString();
+             */
+            address = address + addressLine.toString();
         } catch (Exception e) {
             Log.d("address failed", "yep");
             e.printStackTrace();

@@ -1,6 +1,5 @@
 package com.cmput301f21t34.habittrak;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,9 +8,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,8 +20,6 @@ import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitEvent;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 
 /**
  * ViewHabitEvents.
@@ -113,12 +109,11 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         if (resultCode == EDIT_HABIT_EVENT){
-            HabitEvent habitEvent = (HabitEvent) intent.getParcelableExtra("HABIT_EVENT_SAVE");
-            Log.d("EDITHAbit",habitEvent.getComment());
-            this.habit.addHabitEvent(habitEvent);
-            this.habit.removeHabitEvent(selectedEvent);
-            //this.habit.addHabitEvent(habitEvent);
+            habit = (Habit) intent.getParcelableExtra("HABIT_SAVE");
+            Log.d("EDITHAbit",habit.getTitle());
+            selectedEvent = null;
             Log.d("ViewEditHabitEvents","added the habit event and updating list");
+            Log.d("EDIT_HA","The size of the habit event list is " + habit.getHabitEvents().size());
             updateList();
         }
     }
@@ -128,20 +123,30 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
         switch (view.getId()) {
             //For delete event button press
             case R.id.event_deleter:
-                this.habit.removeHabitEvent(selectedEvent);
-                updateList();
+                if (selectedEvent != null) {
+                    this.habit.removeHabitEvent(selectedEvent);
+                    updateList();
+                }
+                else{
+                    Toast.makeText(this, "Have to select a habit event", Toast.LENGTH_LONG).show();
+                }
                 break;
             //For edit event button press
             case R.id.event_editor:
                 // call view edit habit events
-                Log.d("ViewHabitEvents","inside the event_editor");
-                Log.d("ViewHabitEvents", " the comment is "+selectedEvent.getComment());
-                Intent intent = new Intent(view.getContext(),ViewEditHabitEvents.class);
-                intent.putExtra("HABIT_EVENT_VIEW", selectedEvent);
-              //  this.habit.removeHabitEvent(selectedEvent);
-                Log.d("ViewHabitEvents","Entering view edit habit event activity launcher");
-                editEventsResultLauncher.launch(intent);
-                updateList();
+                if(selectedEvent != null){
+
+                    this.habit.removeHabitEvent(selectedEvent);
+                    Intent intent = new Intent(view.getContext(),ViewEditHabitEvents.class);
+                    intent.putExtra("HABIT_EVENT_VIEW", selectedEvent);
+                    intent.putExtra("HABIT_VIEW",habit);
+
+                    editEventsResultLauncher.launch(intent);
+                    updateList();
+                }
+                else{
+                    Toast.makeText(this, "Have to select a habit event", Toast.LENGTH_LONG).show();
+                }
                 break;
         }
     }

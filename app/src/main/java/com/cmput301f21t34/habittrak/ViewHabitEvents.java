@@ -50,10 +50,6 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
     private Button editBtn;
     private Button deleteBtn;
 
-    // activity launcher
-
-    ActivityResultLauncher<Intent> viewEditHabitEventActivityLauncher;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,26 +94,6 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
                 Log.d("ViewHabitEvents",selectedEvent.getComment());
             }
         });
-        // creating edit events activity launcher
-        viewEditHabitEventActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-            @Override
-            public void onActivityResult(ActivityResult result) {
-                if (result.getResultCode() == Activity.RESULT_OK){
-                    Log.d("Edit_HabitEvents","In the on actiivty result");
-                    HabitEvent habitEvent = (HabitEvent) result.getData().getParcelableExtra("HABIT_EVENT_SAVE");
-                    Log.d("Edit_HabitEvents","got the habit event  comment is "+ habitEvent.getComment());
-                    habit.addHabitEvent(habitEvent);
-                    habit.removeHabitEvent(selectedEvent);
-
-//                  ViewHabitEvents.this.habit.addHabitEvent(habitEvent);
-                    Log.d("ViewEditHabitEvents","added the habit event and updating list");
-                    updateList();
-
-
-                }
-            }
-        });
     }
 
     public void updateList(){
@@ -126,6 +102,13 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
 //        Collections.sort(eventDataList,Collections.reverseOrder());
         eventListAdapter.notifyDataSetChanged();
     }
+
+    // Set up activity launcher
+    ActivityResultLauncher<Intent> editEventsResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {}
+    );
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
@@ -157,8 +140,8 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
                 intent.putExtra("HABIT_EVENT_VIEW", selectedEvent);
               //  this.habit.removeHabitEvent(selectedEvent);
                 Log.d("ViewHabitEvents","Entering view edit habit event activity launcher");
-               // viewEditHabitEventActivityLauncher.launch(intent);
-                startActivityForResult(intent,EDIT_HABIT_EVENT);
+                editEventsResultLauncher.launch(intent);
+                updateList();
                 break;
         }
     }

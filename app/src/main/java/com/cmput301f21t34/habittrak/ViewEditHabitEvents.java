@@ -29,6 +29,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
+import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitEvent;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -58,6 +59,7 @@ public class ViewEditHabitEvents extends AppCompatActivity {
     private StorageReference mStorageRef;
     String currentPhotoPath;
     private HabitEvent returnedHabitEvent;
+    private Habit habit;
 
     DatabaseManager db;
     ActivityResultLauncher<Intent> cameraActivityResultLauncher;
@@ -82,7 +84,10 @@ public class ViewEditHabitEvents extends AppCompatActivity {
 
         Intent intent = getIntent();
         this.habitEvent = intent.getParcelableExtra("HABIT_EVENT_VIEW");
+        this.habit = intent.getParcelableExtra("HABIT_VIEW");
         Log.d(TAG,"The completed date of the habit event is "+ habitEvent.getComment());
+        Log.d(TAG,"The habit is "+habit.getTitle());
+
 
         // get views
         comment = findViewById(R.id.comment_edit_text);
@@ -240,8 +245,11 @@ Log.d(TAG,"Set the dateeeee");
                 returnedHabitEvent.setComment(comment.getText().toString());
                 // create the intent to return the habit event
                 Log.d(TAG,"creating intent");
+                Log.d(TAG,"The size of the habit event list is " + habit.getHabitEvents().size());
+                habit.addHabitEvent(returnedHabitEvent);
+                Log.d(TAG,"The size of the habit event list is " + habit.getHabitEvents().size());
                 Intent result = new Intent();
-                result.putExtra("HABIT_EVENT_SAVE", returnedHabitEvent);
+                result.putExtra("HABIT_SAVE", habit);
                 setResult(RESULT_CODE, result);
                 ViewEditHabitEvents.this.finish();
             }

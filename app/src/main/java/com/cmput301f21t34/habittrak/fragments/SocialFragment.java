@@ -48,7 +48,7 @@ public class SocialFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.social_fragment, container, false);
+        View view = inflater.inflate(R.layout.habi_social_fragment, container, false);
 
         // setting views
         socialTab = view.findViewById(R.id.social_tab_layout);

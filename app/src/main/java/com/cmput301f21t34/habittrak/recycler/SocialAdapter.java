@@ -33,8 +33,8 @@ import java.util.ArrayList;
 public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder> implements Filterable {
     private final ArrayList<String> UUIDs;
     private ArrayList<String> UUIDsCopy;
-    private final ArrayList<String> profilesCopy;
-    private ArrayList<String> profiles;   // UUIDS (emails as of 10/11)
+    private final ArrayList<String> usernamesCopy;
+    private ArrayList<String> usernames;   // UUIDS (emails as of 10/11)
     private final ArrayList<String> bioCopy;
     private ArrayList<String> bio;
     private final ClickListener listener;
@@ -46,8 +46,8 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
                          ArrayList<String> bio, String buttonText) {
         this.UUIDs = UUIDs;
         this.UUIDsCopy = UUIDs;
-        this.profiles = usernames;
-        this.profilesCopy = usernames;
+        this.usernames = usernames;
+        this.usernamesCopy = usernames;
         this.listener = listener;
         this.buttonVisibility = visible;
         this.bio = bio;
@@ -67,31 +67,31 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
                 String charString = charSequence.toString();
                 // is no input in searchView put the original list back
                 if (charString.isEmpty()) {
-                    profiles = profilesCopy;
+                    usernames = usernamesCopy;
                     bio = bioCopy;
                 } else {
                     // filter username and bio bases if username contains the characters
                     ArrayList<String> filteredProfileList = new ArrayList<>();
                     ArrayList<String> filteredBioList = new ArrayList<>();
-                    for (int i = 0; i < profilesCopy.size(); i++) {
-                        if (profilesCopy.get(i).toLowerCase().contains(charString)) {
-                            filteredProfileList.add(profilesCopy.get(i));
+                    for (int i = 0; i < usernamesCopy.size(); i++) {
+                        if (usernamesCopy.get(i).toLowerCase().contains(charString)) {
+                            filteredProfileList.add(usernamesCopy.get(i));
                             filteredBioList.add(bioCopy.get(i));
                         }
                     }
-                    profiles = filteredProfileList;
+                    usernames = filteredProfileList;
                     bio = filteredBioList;
                 }
 
                 FilterResults filterResults = new FilterResults();
-                filterResults.values = profiles;
+                filterResults.values = usernames;
                 return filterResults;
             }
 
             @Override
             @SuppressWarnings("unchecked")
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                profiles = (ArrayList<String>) filterResults.values;
+                usernames = (ArrayList<String>) filterResults.values;
                 notifyDataSetChanged();
             }
         };
@@ -109,7 +109,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull SocialAdapter.ViewHolder holder, int position) {
         // Get user info from database
-        holder.getUsername().setText(profiles.get(position));
+        holder.getUsername().setText(usernames.get(position));
         holder.getUserBio().setText(bio.get(position));
 
         // Button setup
@@ -124,7 +124,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        return profiles.size();
+        return usernames.size();
     }
 
     public interface ClickListener {

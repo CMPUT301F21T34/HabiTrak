@@ -75,10 +75,10 @@ public class FollowingFragment extends Fragment {
             public void mainButtonOnClick(View view, int position) {
                 ButtonClicked(view, position);
             }
-        }, true, bioList,"Unfollow");
+        }, true, bioList, "Unfollow");
         recyclerView.setAdapter(socialAdapter);
 
-        if (displayList.isEmpty()){
+        if (displayList.isEmpty()) {
             new FollowingAsyncTask().execute();
             loading.startShimmer();
         } else {
@@ -91,12 +91,12 @@ public class FollowingFragment extends Fragment {
      * getUserList
      *
      * @author Pranav
-     *
+     * <p>
      * get the followers username and bio
      */
-    public void getUserList(){
+    public void getUserList() {
         ArrayList<String> userEmail = mainUser.getFollowingList();
-        for(String user: userEmail){
+        for (String user : userEmail) {
             displayList.add(dm.getUserName(user));
             bioList.add(dm.getUserBio(user));
         }

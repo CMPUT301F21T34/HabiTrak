@@ -78,10 +78,10 @@ public class RequestsFragment extends Fragment {
             public void mainButtonOnClick(View view, int position) {
                 ButtonClicked(view, position);
             }
-        }, true, bioList,"Accept");
+        }, true, bioList, "Accept");
         recyclerView.setAdapter(socialAdapter);
 
-        if (displayList.isEmpty()){
+        if (displayList.isEmpty()) {
             new RequestAsyncTask().execute();
             loading.startShimmer();
         } else {
@@ -95,12 +95,12 @@ public class RequestsFragment extends Fragment {
      * getUserList
      *
      * @author Pranav
-     *
+     * <p>
      * get the followers username and bio
      */
-    public void getUserList(){
+    public void getUserList() {
         ArrayList<String> userEmail = mainUser.getFollowingReqList();
-        for(String user: userEmail){
+        for (String user : userEmail) {
             displayList.add(dm.getUserName(user));
             bioList.add(dm.getUserBio(user));
         }

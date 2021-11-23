@@ -1,6 +1,5 @@
 package com.cmput301f21t34.habittrak.recycler;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
 import com.google.android.material.button.MaterialButton;
 
@@ -20,6 +18,7 @@ import java.util.ArrayList;
 
 //TODO: Send menu options in the adapter itself
 //TODO: change username to email
+
 /**
  * SocialAdapter
  *
@@ -31,14 +30,14 @@ import java.util.ArrayList;
  * @see RecyclerView
  * @since 2021-11-01
  */
-public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder> implements Filterable{
-    private ArrayList<String> profiles;   // UUIDS (emails as of 10/11)
-    private ArrayList<String> bio;
+public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder> implements Filterable {
     private final ArrayList<String> profilesCopy;
     private final ArrayList<String> bioCopy;
     private final ClickListener listener;
     private final boolean buttonVisibility;
     private final String buttonText;
+    private ArrayList<String> profiles;   // UUIDS (emails as of 10/11)
+    private ArrayList<String> bio;
 
     // class constructor
     public SocialAdapter(ArrayList<String> users, ClickListener listener, boolean visible,
@@ -60,15 +59,15 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
             protected FilterResults performFiltering(CharSequence charSequence) {
                 String charString = charSequence.toString();
                 // is no input in searchView put the original list back
-                if (charString.isEmpty()){
+                if (charString.isEmpty()) {
                     profiles = profilesCopy;
                     bio = bioCopy;
                 } else {
                     // filter username and bio bases if username contains the characters
                     ArrayList<String> filteredProfileList = new ArrayList<>();
                     ArrayList<String> filteredBioList = new ArrayList<>();
-                    for (int i = 0; i < profilesCopy.size(); i++){
-                        if (profilesCopy.get(i).toLowerCase().contains(charString)){
+                    for (int i = 0; i < profilesCopy.size(); i++) {
+                        if (profilesCopy.get(i).toLowerCase().contains(charString)) {
                             filteredProfileList.add(profilesCopy.get(i));
                             filteredBioList.add(bioCopy.get(i));
                         }
@@ -79,7 +78,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
 
                 FilterResults filterResults = new FilterResults();
                 filterResults.values = profiles;
-                return  filterResults;
+                return filterResults;
             }
 
             @Override

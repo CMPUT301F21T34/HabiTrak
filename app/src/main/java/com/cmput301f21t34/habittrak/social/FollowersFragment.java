@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.recycler.SocialAdapter;
-import com.facebook.shimmer.ShimmerFrameLayout;
 import com.cmput301f21t34.habittrak.user.User;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
 
@@ -80,12 +80,12 @@ public class FollowersFragment extends Fragment {
             public void mainButtonOnClick(View view, int position) {
                 // empty button not used.
             }
-        }, false, bioList,"null");
+        }, false, bioList, "null");
 
         recyclerView.setAdapter(socialAdapter);
 
         // set list if empty
-        if (followersList.isEmpty()){
+        if (followersList.isEmpty()) {
             new FollowersAsyncTask().execute();
             loading.startShimmer();
         } else {
@@ -98,12 +98,12 @@ public class FollowersFragment extends Fragment {
      * getUserList
      *
      * @author Pranav
-     *
+     * <p>
      * get the followers username and bio
      */
-    public void getUserList(){
+    public void getUserList() {
         ArrayList<String> followersEmail = mainUser.getFollowerList();
-        for (String user: followersEmail){
+        for (String user : followersEmail) {
             followersList.add(dm.getUserName(user));
             bioList.add(dm.getUserBio(user));
         }
@@ -139,10 +139,10 @@ public class FollowersFragment extends Fragment {
 
     /**
      * FollowersAsyncTask
-     *
+     * <p>
      * gets the data in background
      */
-    public class FollowersAsyncTask extends AsyncTask<Void, Void, Void>{
+    public class FollowersAsyncTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
             getUserList();

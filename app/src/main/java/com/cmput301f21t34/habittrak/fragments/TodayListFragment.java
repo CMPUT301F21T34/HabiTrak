@@ -117,12 +117,14 @@ public class TodayListFragment extends Fragment {
     }
 
     public void setLayoutVisibility(){
-        if(habitsDisplayList.isEmpty()){
-            noDataLayout.setVisibility(View.VISIBLE);
-            habitRecycler.setRecyclerVisibility(false);
-        } else {
-            noDataLayout.setVisibility(View.GONE);
-            habitRecycler.setRecyclerVisibility(true);
+        if(!(noDataLayout == null)){
+            if(habitsDisplayList.isEmpty()){
+                noDataLayout.setVisibility(View.VISIBLE);
+                habitRecycler.setRecyclerVisibility(false);
+            } else {
+                noDataLayout.setVisibility(View.GONE);
+                habitRecycler.setRecyclerVisibility(true);
+            }
         }
     }
 

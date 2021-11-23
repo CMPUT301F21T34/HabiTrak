@@ -94,6 +94,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
      */
     @Override
     public void onClick(View view) {
+
+        FirebaseAuth fAuth = mAuth.getAuth();
+        FirebaseUser fUser = fAuth.getCurrentUser();
+
         switch (view.getId()){
             //For confirm changes button press
             case R.id.confirmer:
@@ -102,15 +106,19 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                 String newUsername = nameEdit.getText().toString();
                 String newBio = bioEdit.getText().toString();
 
-                // If stored and written variables differ, update variables
-                if (!oldUsername.equals(newUsername)){
+                if (fUser != null) { // Only update if we have a user
 
-                    //db.setUsername(mainUser.getEmail(), newUsername);
-                    mainUser.setUsername(newUsername);
-                }
-                if (!oldBio.equals(newBio)){
-                    //db.setUserBio(mainUser.getEmail(), newBio)
-                    mainUser.setBiography(newBio);
+                    // If stored and written variables differ, update variables
+                    if (!oldUsername.equals(newUsername)) {
+
+                        db.updateUsername(fUser.getEmail(), newUsername);
+                        mainUser.setUsername(newUsername);
+                    }
+                    if (!oldBio.equals(newBio)) {
+
+                        db.updateBio(fUser.getEmail(), newBio);
+                        mainUser.setBiography(newBio);
+                    }
                 }
                 break;
 
@@ -130,8 +138,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                 break;
             case R.id.deleter:
 
-                FirebaseAuth fAuth = mAuth.getAuth();
-                FirebaseUser fUser = fAuth.getCurrentUser();
+
 
                 // run alert to delete
                 if (fUser != null){

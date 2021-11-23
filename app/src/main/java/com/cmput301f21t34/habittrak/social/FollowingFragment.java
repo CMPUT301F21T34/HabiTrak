@@ -40,8 +40,8 @@ public class FollowingFragment extends Fragment {
     private SocialAdapter socialAdapter;
     private ShimmerFrameLayout loading;
     // data
-    private ArrayList<String> displayList = new ArrayList<>();
-    private ArrayList<String> bioList = new ArrayList<>();
+    private ArrayList<String> followingUsernames = new ArrayList<>();
+    private ArrayList<String> followingBios = new ArrayList<>();
     private User mainUser;
 
     public FollowingFragment(User mainUser) {
@@ -64,7 +64,7 @@ public class FollowingFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         loading = view.findViewById(R.id.following_shimmer_container);
         // setting social adapter
-        socialAdapter = new SocialAdapter(displayList, new SocialAdapter.ClickListener() {
+        socialAdapter = new SocialAdapter(mainUser.getFollowingList(), followingUsernames, new SocialAdapter.ClickListener() {
             @Override
             public void menuButtonOnClick(View view, int position) {
                 Log.d("Menu", "Clicked " + position);
@@ -75,10 +75,10 @@ public class FollowingFragment extends Fragment {
             public void mainButtonOnClick(View view, int position) {
                 ButtonClicked(view, position);
             }
-        }, true, bioList, "Unfollow");
+        }, true, followingBios, "Unfollow");
         recyclerView.setAdapter(socialAdapter);
 
-        if (displayList.isEmpty()) {
+        if (followingUsernames.isEmpty()) {
             new FollowingAsyncTask().execute();
             loading.startShimmer();
         } else {
@@ -97,8 +97,8 @@ public class FollowingFragment extends Fragment {
     public void getUserList() {
         ArrayList<String> userEmail = mainUser.getFollowingList();
         for (String user : userEmail) {
-            displayList.add(dm.getUserName(user));
-            bioList.add(dm.getUserBio(user));
+            followingUsernames.add(dm.getUserName(user));
+            followingBios.add(dm.getUserBio(user));
         }
     }
 

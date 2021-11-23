@@ -31,26 +31,33 @@ import java.util.ArrayList;
  * @since 2021-11-01
  */
 public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder> implements Filterable {
+    private final ArrayList<String> UUIDs;
+    private ArrayList<String> UUIDsCopy;
     private final ArrayList<String> profilesCopy;
+    private ArrayList<String> profiles;   // UUIDS (emails as of 10/11)
     private final ArrayList<String> bioCopy;
+    private ArrayList<String> bio;
     private final ClickListener listener;
     private final boolean buttonVisibility;
     private final String buttonText;
-    private ArrayList<String> profiles;   // UUIDS (emails as of 10/11)
-    private ArrayList<String> bio;
 
     // class constructor
-    public SocialAdapter(ArrayList<String> users, ClickListener listener, boolean visible,
+    public SocialAdapter(ArrayList<String> UUIDs, ArrayList<String> usernames, ClickListener listener, boolean visible,
                          ArrayList<String> bio, String buttonText) {
-        this.profiles = users;
+        this.UUIDs = UUIDs;
+        this.UUIDsCopy = UUIDs;
+        this.profiles = usernames;
+        this.profilesCopy = usernames;
         this.listener = listener;
         this.buttonVisibility = visible;
-        this.buttonText = buttonText;
-        this.profilesCopy = users;
         this.bio = bio;
         this.bioCopy = bio;
+        this.buttonText = buttonText;
     }
 
+    public ArrayList<String> getUUIDs() {
+        return UUIDs;
+    }
 
     @Override
     public Filter getFilter() {

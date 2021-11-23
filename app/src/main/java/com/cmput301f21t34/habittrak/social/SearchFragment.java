@@ -42,8 +42,9 @@ public class SearchFragment extends Fragment {
     private SocialAdapter socialAdapter;
     private ShimmerFrameLayout loading;
     // Data
-    private ArrayList<String> displayList = new ArrayList<>();
-    private ArrayList<String> bioList = new ArrayList<>();
+    private ArrayList<String> UUIDs = new ArrayList<>();
+    private ArrayList<String> usernames = new ArrayList<>();
+    private ArrayList<String> bios = new ArrayList<>();
     private User mainUser;
 
 
@@ -70,7 +71,7 @@ public class SearchFragment extends Fragment {
         recyclerView = view.findViewById(R.id.search_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        socialAdapter = new SocialAdapter(displayList, new SocialAdapter.ClickListener() {
+        socialAdapter = new SocialAdapter(UUIDs, usernames, new SocialAdapter.ClickListener() {
             @Override
             public void menuButtonOnClick(View view, int position) {
                 Log.d("Menu", "Clicked " + position);
@@ -81,7 +82,7 @@ public class SearchFragment extends Fragment {
             public void mainButtonOnClick(View view, int position) {
                 ButtonClicked(view, position);
             }
-        }, true, bioList, "Follow");
+        }, true, bios, "Follow");
         recyclerView.setAdapter(socialAdapter);
 
 
@@ -100,7 +101,7 @@ public class SearchFragment extends Fragment {
             }
         });
 
-        if (displayList.isEmpty()) {
+        if (usernames.isEmpty()) {
             new SearchAsyncTask().execute();
             loading.startShimmer();
         } else {
@@ -163,8 +164,9 @@ public class SearchFragment extends Fragment {
         for (String user : users) {
             if (!blockedBy.contains(user) && !blockedUsers.contains(user)
                     && !user.equals(mainUser.getEmail())) {
-                displayList.add(dm.getUserName(user));
-                bioList.add(dm.getUserBio(user));
+                UUIDs.add(user);
+                usernames.add(dm.getUserName(user));
+                bios.add(dm.getUserBio(user));
                 Log.d(TAG, user);
             }
         }

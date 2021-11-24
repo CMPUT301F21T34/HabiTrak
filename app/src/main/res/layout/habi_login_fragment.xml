@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:layout_toStartOf="@id/signup_button"
-                android:text="Forgot" />
+                android:text="@string/forgot_button" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/signup_button"
@@ -81,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:layout_toStartOf="@id/login_button"
-                android:text="Sign Up" />
+                android:text="@string/sign_up_button" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/login_button"

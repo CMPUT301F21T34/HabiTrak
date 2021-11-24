@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/roboto"
         android:padding="16dp"
-        android:text="habitName"
+        android:text="@string/habit_row_default_name"
         android:textColor="?android:textColorPrimary"
         android:textStyle="bold" />
     <RelativeLayout
@@ -29,7 +29,7 @@
             android:fontFamily="@font/roboto"
             android:layout_marginStart="16dp"
             android:layout_marginTop="20dp"
-            android:text="habit description goes here" />
+            android:text="@string/habit_row_default_reason" />
 
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/today_listview_checkbox"

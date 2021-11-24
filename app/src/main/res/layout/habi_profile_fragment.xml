@@ -16,7 +16,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="User Profile"
+        android:text="@string/profile_title"
         android:textAlignment="center"
         android:textColor="?android:textColorPrimary"
         android:textSize="32sp"
@@ -35,7 +35,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="4dp"
-        android:text="Username:"
+        android:text="@string/username_title"
         android:textColor="?android:textColorPrimary"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -65,7 +65,7 @@
             android:layout_height="wrap_content"
             android:gravity="top|left"
             android:inputType="textPersonName"
-            android:text="Name" />
+            android:text="@string/username_default" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
@@ -74,7 +74,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:text="Email:"
+        android:text="@string/email_title"
         android:textColor="?android:textColorPrimary"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -89,7 +89,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:text="user_email"
+        android:text="@string/email_title"
         android:textColor="?android:textColorPrimary"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/bioHeader"
@@ -104,7 +104,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="4dp"
-        android:text="Biography:"
+        android:text="@string/biography_title"
         android:textColor="?android:textColorPrimary"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -132,7 +132,7 @@
             android:gravity="top|left"
             android:inputType="textMultiLine"
             android:scrollHorizontally="false"
-            android:text="Biography" />
+            android:text="@string/biography_default" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
@@ -154,7 +154,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Save Changes" />
+            android:text="@string/save_button" />
 
         <Button
             android:id="@+id/logout"
@@ -162,7 +162,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Log Out" />
+            android:text="@string/log_out_button" />
     </LinearLayout>
 
 
@@ -172,7 +172,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
-        android:text="Delete Account"
+        android:text="@string/delete_account_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintVertical_bias="1.0" />

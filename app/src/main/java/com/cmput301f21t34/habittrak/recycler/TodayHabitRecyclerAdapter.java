@@ -47,6 +47,7 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
         private final MaterialCheckBox checkBox;
         private final ImageButton menuButton;
         private final LinearProgressIndicator progressBar;
+        private final TextView streak;
 
         /**
          * Provide a reference to the type of views that you are using
@@ -61,6 +62,7 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
             checkBox = (MaterialCheckBox) view.findViewById(R.id.today_listview_checkbox);
             menuButton = (ImageButton) view.findViewById(R.id.habit_menu);
             progressBar = (LinearProgressIndicator) view.findViewById(R.id.habit_progress);
+            streak = (TextView) view.findViewById(R.id.habit_streak);
             menuButton.setOnClickListener(this);
             checkBox.setOnClickListener(this);
 
@@ -120,9 +122,16 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
 
         }
 
+        /**
+         * setProgress.
+         *
+         * set the progress bar value
+         * @param progress int value of the habit streak
+         */
         public void setProgress(int progress){
-            int barVal = (progress/30) * 100;
-            progressBar.setProgress(barVal);
+            progressBar.setProgress((progress * 100)/30);
+            String text = Integer.toString(progress) + "/30";
+            streak.setText(text);
         }
 
         /**
@@ -196,6 +205,7 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
 
         // set progress bar
         viewHolder.setProgress(habit.getStreak());
+        Log.d("Progess Bar", " " + habit.getStreak());
     }
 
     /**

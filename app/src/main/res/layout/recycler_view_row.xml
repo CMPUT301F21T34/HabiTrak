@@ -15,7 +15,9 @@
         android:text="habitName"
         android:textColor="?android:textColorPrimary"
         android:textStyle="bold" />
+
     <RelativeLayout
+        android:id="@+id/habit_relative_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="-20dp">
@@ -37,8 +39,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layoutDirection="rtl"
-            android:layout_marginTop="-16dp"
-            android:layout_marginEnd="40dp"
+            android:layout_marginTop="-10dp"
+            android:layout_marginEnd="50dp"
             android:layout_alignParentEnd="true"
             android:layout_toLeftOf="@id/habit_menu"/>
 
@@ -47,19 +49,40 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="-4dp"
+            android:layout_marginEnd="10dp"
+            android:scaleY="1.2"
+            android:scaleX="1.2"
             android:background="@drawable/social_more_options_menu_icon"/>
 
     </RelativeLayout>
 
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/habit_progress"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         android:layout_height="wrap_content"
-        android:progress="0"/>
+        android:orientation="horizontal">
 
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/habit_progress"
+            android:layout_width="match_parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="60dp"
+            android:paddingTop="7dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@id/habit_streak"
+            app:layout_constraintBaseline_toBottomOf="parent" />
+
+        <TextView
+            android:id="@+id/habit_streak"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="@font/roboto"
+            android:text="0/30"
+            app:layout_constraintStart_toEndOf="@+id/habit_progress"
+            app:layout_constraintBaseline_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"

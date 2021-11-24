@@ -59,7 +59,7 @@ public class HabitListTest {
     }
 
     @Test
-    public void deleteTest() {
+    public void removeTest() {
         HabitList mockList = mockHabitList();
         assertEquals(0, mockList.size());
 

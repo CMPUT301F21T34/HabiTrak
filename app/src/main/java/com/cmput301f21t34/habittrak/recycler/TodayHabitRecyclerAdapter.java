@@ -14,6 +14,7 @@ import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitEvent;
 import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,6 +46,7 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
         private final TextView habitDesc;
         private final MaterialCheckBox checkBox;
         private final ImageButton menuButton;
+        private final LinearProgressIndicator progressBar;
 
         /**
          * Provide a reference to the type of views that you are using
@@ -58,6 +60,7 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
             habitDesc = (TextView) view.findViewById(R.id.today_listview_habit_desc);
             checkBox = (MaterialCheckBox) view.findViewById(R.id.today_listview_checkbox);
             menuButton = (ImageButton) view.findViewById(R.id.habit_menu);
+            progressBar = (LinearProgressIndicator) view.findViewById(R.id.habit_progress);
             menuButton.setOnClickListener(this);
             checkBox.setOnClickListener(this);
 
@@ -115,6 +118,11 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
                 checkBox.setVisibility(View.INVISIBLE);
             }
 
+        }
+
+        public void setProgress(int progress){
+            int barVal = (progress/30) * 100;
+            progressBar.setProgress(barVal);
         }
 
         /**
@@ -185,6 +193,9 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
                 }
             }
         }
+
+        // set progress bar
+        viewHolder.setProgress(habit.getStreak());
     }
 
     /**

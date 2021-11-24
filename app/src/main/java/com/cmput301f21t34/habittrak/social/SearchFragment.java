@@ -42,14 +42,15 @@ public class SearchFragment extends Fragment {
     private SocialAdapter socialAdapter;
     private ShimmerFrameLayout loading;
     // Data
-    private ArrayList<String> UUIDs = new ArrayList<>();
+    private User mainUser;
+    private ArrayList<String> UUIDs;
     private ArrayList<String> usernames = new ArrayList<>();
     private ArrayList<String> bios = new ArrayList<>();
-    private User mainUser;
 
 
-    public SearchFragment(User mainUser) {
+    public SearchFragment(User mainUser, ArrayList<String> UUIDs) {
         this.mainUser = mainUser;
+        this.UUIDs = UUIDs;
     }
 
     @Override

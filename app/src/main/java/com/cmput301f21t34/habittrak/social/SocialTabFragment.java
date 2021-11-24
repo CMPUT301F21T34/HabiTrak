@@ -9,13 +9,11 @@ import java.util.ArrayList;
 
 public class SocialTabFragment extends Fragment {
     private DatabaseManager dm = new DatabaseManager();
+    // Data
     private User mainUser;
-    private ArrayList<String> UUIDs = new ArrayList<>();
+    private ArrayList<String> UUIDs;
     private ArrayList<String> usernames = new ArrayList<>();
     private ArrayList<String> bios = new ArrayList<>();
-
-    public SocialTabFragment() {
-    }
 
     public SocialTabFragment(User mainUser, ArrayList<String> UUIDs) {
         this.mainUser = mainUser;

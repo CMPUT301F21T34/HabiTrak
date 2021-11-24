@@ -21,6 +21,8 @@ import com.cmput301f21t34.habittrak.social.SearchFragment;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.ArrayList;
+
 public class SocialFragment extends Fragment {
     FollowersFragment followersFragment;
     FollowingFragment followingFragment;
@@ -32,10 +34,10 @@ public class SocialFragment extends Fragment {
 
     public SocialFragment(User mainUser) {
         this.mainUser = mainUser;
-        this.followersFragment = new FollowersFragment(mainUser);
-        this.followingFragment = new FollowingFragment(mainUser);
-        this.requestsFragment = new RequestsFragment(mainUser);
-        this.searchFragment = new SearchFragment(mainUser);
+        this.followersFragment = new FollowersFragment(mainUser, mainUser.getFollowerList());
+        this.followingFragment = new FollowingFragment(mainUser, mainUser.getFollowingList());
+        this.requestsFragment = new RequestsFragment(mainUser, mainUser.getFollowerReqList());
+        this.searchFragment = new SearchFragment(mainUser, new ArrayList<>());
     }
 
     @Override

@@ -33,18 +33,20 @@ import java.util.ArrayList;
  */
 public class RequestsFragment extends Fragment {
     DatabaseManager dm = new DatabaseManager();
-    // views
+    // Views
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private SocialAdapter socialAdapter;
     private ShimmerFrameLayout loading;
-    // data
+    // Data
+    private User mainUser;
+    private ArrayList<String> UUIDs;
     private ArrayList<String> usernames = new ArrayList<>();
     private ArrayList<String> bios = new ArrayList<>();
-    private User mainUser;
 
-    public RequestsFragment(User mainUser) {
+    public RequestsFragment(User mainUser, ArrayList<String> UUIDs) {
         this.mainUser = mainUser;
+        this.UUIDs = UUIDs;
     }
 
 

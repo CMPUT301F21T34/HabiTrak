@@ -113,6 +113,12 @@ public class HabitList extends ArrayList<Habit> {
         return removed;
     }
 
+    public void replace(Habit habit){
+        int index = habit.getIndex();
+        this.remove(index);
+        this.add(index, habit);
+    }
+
     public boolean remove( Habit toRemove ){
 
 

@@ -148,8 +148,8 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         // result from view/edit habit activity
         else if (resultCode == RESULT_EDIT_HABIT) {
             Habit habit = intent.getParcelableExtra("HABIT");
-            int position = intent.getIntExtra("position", 0);
-            mainUser.replaceHabit(position, habit);
+            int position = intent.getIntExtra("position", 0); // useless
+            mainUser.getHabitList().replace(habit);
             todayFrag.refreshTodayFragment();
             allHabitsFrag.refreshAllFragment();
 
@@ -159,15 +159,15 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
             HabitEvent habitEvent = intent.getParcelableExtra("HABIT_EVENT");
 
             Habit habit = intent.getParcelableExtra("HABIT");
-            int position = intent.getIntExtra("position", 0);
-            mainUser.replaceHabit(position, habit);
+            int position = intent.getIntExtra("position", 0); // useless
+            mainUser.getHabitList().replace(habit);
             // TODO: Update all events list
         }
         // result from view habit events activity
         else if (resultCode == RESULT_HABIT_EVENTS){
             Habit habit = intent.getParcelableExtra("HABIT");
-            int position = intent.getIntExtra("position", 0);
-            mainUser.replaceHabit(position, habit);
+            int position = intent.getIntExtra("position", 0); // useless
+            mainUser.getHabitList().replace(habit);
         }
 
         super.onActivityResult(requestCode, resultCode, intent);

@@ -1,6 +1,5 @@
 package com.cmput301f21t34.habittrak.social;
 
-import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,14 +23,12 @@ import com.google.android.material.button.MaterialButton;
 import java.util.ArrayList;
 
 /**
- * SearchFragment
+ * Fragment for displaying and searching all users
  *
+ * @see SearchView
+ * @see SocialAdapter
  * @author Pranav
  * @author Kaaden
- * @version 1.0
- * @see SocialAdapter
- * @see SearchView
- * @since 2021-11-01
  */
 public class SearchFragment extends Fragment {
     public static String TAG = "SEARCH_FRAGMENT";
@@ -47,7 +44,6 @@ public class SearchFragment extends Fragment {
     private ArrayList<String> usernames = new ArrayList<>();
     private ArrayList<String> bios = new ArrayList<>();
 
-
     public SearchFragment(User mainUser, ArrayList<String> UUIDs) {
         this.mainUser = mainUser;
         this.UUIDs = UUIDs;
@@ -56,7 +52,6 @@ public class SearchFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -64,11 +59,13 @@ public class SearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.habi_search_fragment, container, false);
-        SearchView searchBox = view.findViewById(R.id.social_search_box);
         loading = view.findViewById(R.id.shimmer_container);
+        loading.setVisibility(View.GONE); // Invisible by default
+        SearchView searchBox = view.findViewById(R.id.social_search_box);
 
+        populateList(); // Begin fetching data for display
 
-        // setting up recycler view
+        // Set up recycler view
         recyclerView = view.findViewById(R.id.search_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
@@ -102,38 +99,7 @@ public class SearchFragment extends Fragment {
             }
         });
 
-        if (usernames.isEmpty()) {
-            new SearchAsyncTask().execute();
-            loading.startShimmer();
-        } else {
-            loading.setVisibility(View.GONE);
-        }
-
         return view;
-    }
-
-    /**
-     * showMenu
-     * <p>
-     * listener function for ImageButton in Recycler View
-     *
-     * @param view
-     * @param userPosition position of the clicked menu in the adapter
-     * @see SocialAdapter
-     */
-    public void showMenu(View view, int userPosition) {
-        PopupMenu menu = new PopupMenu(getContext(), view);
-        menu.getMenuInflater().inflate(R.menu.social_popup_menu, menu.getMenu());
-        menu.getMenu().add("Block");
-        Log.d("image Button", "menu button clicked");
-        menu.show();
-
-        menu.setOnMenuItemClickListener(menuItem -> {
-            if (menuItem.getTitle().equals("Block")) {
-                Log.d("MenuItem", "Block Clicked");
-            }
-            return true;
-        });
     }
 
     /**
@@ -151,43 +117,73 @@ public class SearchFragment extends Fragment {
     }
 
     /**
-     * Populates usernames and bios to display, except those that are from users that block or are
-     * blocked by mainUser.
+     * showMenu
+     * <p>
+     * listener function for ImageButton in Recycler View
      *
-     * @author Kaaden
+     * @param view
+     * @param userPosition position of the clicked menu in the adapter
+     * @see SocialAdapter
      */
-    public void populateList() {
-        UUIDs = dm.getAllUsers();
-        UUIDs.removeAll(mainUser.getBlockList());
-        UUIDs.removeAll(mainUser.getBlockedByList());
-        UUIDs.remove(mainUser.getEmail());
-        UUIDs.forEach(UUID -> {
-            usernames.add(dm.getUserName(UUID));
-            bios.add(dm.getUserBio(UUID));
+    public void showMenu(View view, int userPosition) {
+        PopupMenu menu = new PopupMenu(getContext(), view);
+        menu.getMenuInflater().inflate(R.menu.social_popup_menu, menu.getMenu());
+        menu.getMenu().add("Block");
+        menu.show();
+
+        menu.setOnMenuItemClickListener(menuItem -> {
+            if (menuItem.getTitle().equals("Block")) {
+                Log.d("MenuItem", "Block Clicked");
+            }
+            return true;
         });
     }
 
     /**
-     * SearchAsyncTask
+     * Populates usernames and bios to display, except those that are from users that block or are
+     * blocked by mainUser
      *
-     * @author Pranav
-     * <p>
-     * gets the data in background on another thread.
+     * @author Kaaden
      */
-    @SuppressLint("StaticFieldLeak")
+    public void populateList() {
+        // Only populate if empty
+        if (usernames.isEmpty()) {
+            new SearchAsyncTask().execute();
+        }
+    }
+
+    /**
+     * Gets the data in background
+     */
     public class SearchAsyncTask extends AsyncTask<Void, Void, Void> {
         @Override
+        protected void onPreExecute() {
+            loading.setVisibility(View.VISIBLE);   // Appear visuals
+            loading.startShimmer();             // Visual effect
+        }
+
+        @Override
         protected Void doInBackground(Void... voids) {
-            populateList();
+            UUIDs = dm.getAllUsers();
+            // Remove unwanted users that might be present
+            UUIDs.removeAll(mainUser.getBlockList());
+            UUIDs.removeAll(mainUser.getBlockedByList());
+            UUIDs.remove(mainUser.getEmail());
+            // Save info
+            UUIDs.forEach(UUID -> {
+                usernames.add(dm.getUserName(UUID));
+                bios.add(dm.getUserBio(UUID));
+            });
             return null;
         }
 
         @Override
         protected void onPostExecute(Void unused) {
             super.onPostExecute(unused);
-            socialAdapter.notifyDataSetChanged();
-            loading.stopShimmer();
-            loading.setVisibility(View.GONE);
+            socialAdapter.notifyDataSetChanged();   // Tell display
+            loading.stopShimmer();                  // Stop visuals
+            loading.setVisibility(View.GONE);       // Disappear visuals
         }
     }
+
 }

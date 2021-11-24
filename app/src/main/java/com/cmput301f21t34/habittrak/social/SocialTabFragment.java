@@ -1,5 +1,6 @@
 package com.cmput301f21t34.habittrak.social;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,12 +46,43 @@ public class SocialTabFragment extends Fragment {
      * @author Kaaden
      */
     public void populateList() {
-        UUIDs.removeAll(mainUser.getBlockList());
-        UUIDs.removeAll(mainUser.getBlockedByList());
-        UUIDs.remove(mainUser.getEmail());
-        UUIDs.forEach(UUID -> {
-            usernames.add(dm.getUserName(UUID));
-            bios.add(dm.getUserBio(UUID));
-        });
+        // Only populate if empty
+        if (usernames.isEmpty()) {
+            new SocialAsyncTask().execute();
+        }
     }
+
+    /**
+     * Gets the data in background
+     */
+    public class SocialAsyncTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+//            loading.setVisibility(View.VISIBLE);   // Appear visuals
+//            loading.startShimmer();             // Visual effect
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            // Remove unwanted users that might be present
+            UUIDs.removeAll(mainUser.getBlockList());
+            UUIDs.removeAll(mainUser.getBlockedByList());
+            UUIDs.remove(mainUser.getEmail());
+            // Save info
+            UUIDs.forEach(UUID -> {
+                usernames.add(dm.getUserName(UUID));
+                bios.add(dm.getUserBio(UUID));
+            });
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            super.onPostExecute(unused);
+//            socialAdapter.notifyDataSetChanged();   // Tell display
+//            loading.stopShimmer();                  // Stop visuals
+//            loading.setVisibility(View.GONE);       // Disappear visuals
+        }
+    }
+
 }

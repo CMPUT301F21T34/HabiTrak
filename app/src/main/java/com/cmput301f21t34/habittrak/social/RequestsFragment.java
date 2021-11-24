@@ -94,12 +94,16 @@ public class RequestsFragment extends Fragment {
     }
 
     /**
-     * Populates usernames and bios
+     * Populates usernames and bios to display, except those that are from users that block or are
+     * blocked by mainUser
      *
      * @author Kaaden
      */
-    public void populateUsernamesAndBios() {
-        mainUser.getFollowerReqList().forEach(UUID -> {
+    public void populateList() {
+        UUIDs.removeAll(mainUser.getBlockList());
+        UUIDs.removeAll(mainUser.getBlockedByList());
+        UUIDs.remove(mainUser.getEmail());
+        UUIDs.forEach(UUID -> {
             usernames.add(dm.getUserName(UUID));
             bios.add(dm.getUserBio(UUID));
         });
@@ -150,7 +154,7 @@ public class RequestsFragment extends Fragment {
     public class RequestAsyncTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
-            populateUsernamesAndBios();
+            populateList();
             return null;
         }
 

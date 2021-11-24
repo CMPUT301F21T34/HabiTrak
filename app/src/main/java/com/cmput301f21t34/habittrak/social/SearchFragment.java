@@ -151,16 +151,17 @@ public class SearchFragment extends Fragment {
     }
 
     /**
-     * Populates usernames and bios from all users except those that block or are blocked mainUser
+     * Populates usernames and bios to display, except those that are from users that block or are
+     * blocked by mainUser.
      *
      * @author Kaaden
      */
-    public void populateUsernamesAndBios() {
-        ArrayList<String> users = dm.getAllUsers();
-        users.removeAll(mainUser.getBlockList());
-        users.removeAll(mainUser.getBlockedByList());
-        users.remove(mainUser.getEmail());
-        users.forEach(UUID -> {
+    public void populateList() {
+        UUIDs = dm.getAllUsers();
+        UUIDs.removeAll(mainUser.getBlockList());
+        UUIDs.removeAll(mainUser.getBlockedByList());
+        UUIDs.remove(mainUser.getEmail());
+        UUIDs.forEach(UUID -> {
             usernames.add(dm.getUserName(UUID));
             bios.add(dm.getUserBio(UUID));
         });
@@ -177,7 +178,7 @@ public class SearchFragment extends Fragment {
     public class SearchAsyncTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
-            populateUsernamesAndBios();
+            populateList();
             return null;
         }
 

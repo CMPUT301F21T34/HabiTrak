@@ -41,7 +41,6 @@ public class HabitList extends ArrayList<Habit> {
 
     }
 
-
     public void saveOrder(){
         int size = this.size();
 
@@ -120,8 +119,6 @@ public class HabitList extends ArrayList<Habit> {
     }
 
     public boolean remove( Habit toRemove ){
-
-
         boolean success;
         int index = toRemove.getIndex();
         if (this.get(index) == toRemove){
@@ -142,11 +139,5 @@ public class HabitList extends ArrayList<Habit> {
             return success;
 
         }
-
-
-
-
-
     }
-
 }

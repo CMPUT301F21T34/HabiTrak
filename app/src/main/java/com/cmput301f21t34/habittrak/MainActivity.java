@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity{
         }
 
 
-
         if (savedInstanceState != null) {
             // get users credentials
             // validate credentials with database

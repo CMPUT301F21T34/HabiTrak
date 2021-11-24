@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 
+import com.cmput301f21t34.habittrak.AddHabitActivity;
+import com.cmput301f21t34.habittrak.AddHabitEventActivity;
 import com.cmput301f21t34.habittrak.ViewEditHabit;
 import com.cmput301f21t34.habittrak.recycler.HabitRecycler;
 import com.cmput301f21t34.habittrak.recycler.TodayHabitRecyclerAdapter;
@@ -77,7 +79,6 @@ public class TodayListFragment extends Fragment {
         noDataLayout = view.findViewById(R.id.today_no_data_view);
         layoutManager = new LinearLayoutManager(getContext());
 
-
         // set the click listener interface for the adapter
         adapter.setHabitClickListener(new TodayHabitRecyclerAdapter.HabitClickListener() {
             @Override
@@ -116,12 +117,14 @@ public class TodayListFragment extends Fragment {
     }
 
     public void setLayoutVisibility(){
-        if(habitsDisplayList.isEmpty()){
-            noDataLayout.setVisibility(View.VISIBLE);
-            habitRecycler.setRecyclerVisibility(false);
-        } else {
-            noDataLayout.setVisibility(View.GONE);
-            habitRecycler.setRecyclerVisibility(true);
+        if(!(noDataLayout == null)){
+            if(habitsDisplayList.isEmpty()){
+                noDataLayout.setVisibility(View.VISIBLE);
+                habitRecycler.setRecyclerVisibility(false);
+            } else {
+                noDataLayout.setVisibility(View.GONE);
+                habitRecycler.setRecyclerVisibility(true);
+            }
         }
     }
 
@@ -155,6 +158,11 @@ public class TodayListFragment extends Fragment {
             new ActivityResultContracts.StartActivityForResult(),
             result -> {}
     );
+    // activity result launcher for add habit event
+    ActivityResultLauncher<Intent> addHabitEventResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {}
+    );
 
     /**
      * showMenu.
@@ -183,6 +191,9 @@ public class TodayListFragment extends Fragment {
     /**
      * onCheckBoxClick.
      *
+     * @author Pranav
+     * @author Henry
+     *
      * listener function for checkbox clicking. Start a add new habit event activity.
      * @param view view of the checkbox
      * @param position position of the clicked button in the adapter
@@ -194,7 +205,11 @@ public class TodayListFragment extends Fragment {
             Log.d(TAG, "checkbox checked");
             checkBox.setEnabled(false);
         }
-
+        Habit habit = habitsDisplayList.get(position);
+        Intent intent = new Intent(getContext(), AddHabitEventActivity.class);
+        intent.putExtra("HABIT", habit);
+        intent.putExtra("position", habit.getIndex());
+        intent.putExtra("USER", mainUser.getEmail());
+        addHabitEventResultLauncher.launch(intent);
     }
-
 }

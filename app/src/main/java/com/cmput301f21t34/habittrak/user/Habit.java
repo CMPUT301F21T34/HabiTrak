@@ -92,6 +92,8 @@ public class Habit implements Comparable<Habit>, Parcelable {
         this.reason = habitBundle.getString("reason");
         this.habitEvents = habitBundle.getParcelableArrayList("habitEvents");
 
+        this.index = habitBundle.getInt("index");
+
         // Handles Calendar //
         String completedDateTimeZone = habitBundle.getString("startDateTimeZone");
         if (completedDateTimeZone != null) {
@@ -555,7 +557,11 @@ public class Habit implements Comparable<Habit>, Parcelable {
         habitBundle.putString("title", title);
         habitBundle.putString("reason", reason);
 
+
         habitBundle.putInt("streak", this.streak);
+
+        habitBundle.putInt("index", index);
+
 
         // Requires Habit_Events to implement parcelable
         habitBundle.putParcelableArrayList("habitEvents", habitEvents);

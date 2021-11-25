@@ -14,6 +14,7 @@
         <!-- Heading Text Color -->
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">@color/white</item>
+        <item name="cardBackgroundColor">@color/dark_gray</item>
     </style>
 
     <style name="ShapeAppearanceOverlay.MyApp.Button.Rounded" parent="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon">

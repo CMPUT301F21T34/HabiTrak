@@ -80,7 +80,6 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void mainButtonOnClick(View view, int position) {
-                ButtonClicked(view, position);
             }
         }, bios, "none");
         recyclerView.setAdapter(socialAdapter);
@@ -102,20 +101,6 @@ public class SearchFragment extends Fragment {
         });
 
         return view;
-    }
-
-    /**
-     * ButtonClicked
-     * <p>
-     * listener for the button in Recycler View
-     *
-     * @param view
-     * @param userPosition
-     * @see SocialAdapter
-     */
-    public void ButtonClicked(View view, int userPosition) {
-        MaterialButton button = view.findViewById(R.id.social_main_button);
-        Log.d("ListButton", "Clicked");
     }
 
     /**

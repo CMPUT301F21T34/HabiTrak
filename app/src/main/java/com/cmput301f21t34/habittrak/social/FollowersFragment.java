@@ -75,26 +75,12 @@ public class FollowersFragment extends Fragment {
 
             @Override
             public void mainButtonOnClick(View view, int position) {
-                // empty button not used.
+                MaterialButton button = view.findViewById(R.id.social_main_button);
             }
         }, bios, "none");
         recyclerView.setAdapter(socialAdapter);
 
         return view;
-    }
-
-    /**
-     * ButtonClicked
-     * <p>
-     * listener for the button in Recycler View
-     *
-     * @param view
-     * @param userPosition
-     * @see SocialAdapter
-     */
-    public void ButtonClicked(View view, int userPosition) {
-        MaterialButton button = view.findViewById(R.id.social_main_button);
-        Log.d("ListButton", "Clicked");
     }
 
     /**

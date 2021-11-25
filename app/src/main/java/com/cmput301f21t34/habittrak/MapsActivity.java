@@ -42,6 +42,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 import java.util.List;
 import java.util.Locale;
@@ -63,6 +64,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private final int UPDATE_INTERVAL = 10000;
     private final int FASTEST_INTERVAL = 5000;
     private static final int DEFAULT_ZOOM = 15;
+    private CircularProgressIndicator loading;
     LocationRequest locationRequest;
     Button confirmButton;
     TextView addressTextView;
@@ -74,6 +76,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        loading = findViewById(R.id.map_loading);
         lastKnownLocation = new Location(LocationManager.GPS_PROVIDER);
 
         // creating a location request object
@@ -359,6 +362,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.d("address failed", "yep");
             e.printStackTrace();
         }
+        loading.setVisibility(View.GONE);
         return address;
     }
 }

@@ -104,9 +104,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
 
                 // If stored and written variables differ, update variables
                 if (!oldUsername.equals(newUsername)){
+
+                    //db.setUsername(mainUser.getEmail(), newUsername);
                     mainUser.setUsername(newUsername);
                 }
                 if (!oldBio.equals(newBio)){
+                    //db.setUserBio(mainUser.getEmail(), newBio)
                     mainUser.setBiography(newBio);
                 }
                 break;

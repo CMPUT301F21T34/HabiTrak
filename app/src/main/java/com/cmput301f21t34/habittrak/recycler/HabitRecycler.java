@@ -1,6 +1,7 @@
 package com.cmput301f21t34.habittrak.recycler;
 
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -233,7 +234,18 @@ public class HabitRecycler {
     }
 
 
-
+    /**
+     * setRecyclerVisibility.
+     *
+     * to show recycler or not if there is no data
+     * @param view to show the recycler or not
+     */
+    public void setRecyclerVisibility(boolean view) {
+        if (view)
+            recyclerView.setVisibility(View.VISIBLE);
+        else
+            recyclerView.setVisibility(View.GONE);
+    }
 
 
 

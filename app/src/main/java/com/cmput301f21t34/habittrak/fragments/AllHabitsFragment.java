@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 
 import com.cmput301f21t34.habittrak.R;
@@ -32,7 +33,7 @@ import java.util.ArrayList;
  * @author Pranav
  * @author Dakota
  *
- * Fragment for displaying all the user's habits
+ * Fragment for displaying all the user's habits, viewing and editing them when clicked
  *
  * @version 1.0
  */
@@ -47,6 +48,7 @@ public class AllHabitsFragment extends Fragment {
     private HabitRecycler habitRecycler;
     private ArrayList<Habit> habitsDisplayList;
     private TodayHabitRecyclerAdapter adapter;
+    private LinearLayout noDataLayout;
     private User mainUser;
 
     public AllHabitsFragment(User mainUser) {
@@ -67,7 +69,8 @@ public class AllHabitsFragment extends Fragment {
 
         // Sets up views and manager for recycler view
         habitRecyclerView = view.findViewById(R.id.all_recycler_view);
-        layoutManager = new LinearLayoutManager(getActivity());
+        noDataLayout = view.findViewById(R.id.all_habit_no_data_view);
+        layoutManager = new LinearLayoutManager(getContext());
 
 
         // set the click listener interface for the adapter
@@ -94,7 +97,7 @@ public class AllHabitsFragment extends Fragment {
         // creates a new habitRecycler class with the view and data
         habitRecycler = new HabitRecycler(habitRecyclerView, layoutManager, habitsDisplayList, mainUser.getHabitList());
         habitRecycler.setAdapter(adapter);
-
+        setLayoutVisibility();
         return view;
     }
 
@@ -104,6 +107,19 @@ public class AllHabitsFragment extends Fragment {
         super.onResume();
         // Refreshes Frag
         refreshAllFragment();
+    }
+
+    public void setLayoutVisibility(){
+        if (!(noDataLayout == null)){
+            if (habitsDisplayList.isEmpty()){
+                noDataLayout.setVisibility(View.VISIBLE);
+                habitRecycler.setRecyclerVisibility(false);
+            } else {
+                noDataLayout.setVisibility(View.GONE);
+                habitRecycler.setRecyclerVisibility(true);
+            }
+        }
+
     }
 
 
@@ -123,7 +139,7 @@ public class AllHabitsFragment extends Fragment {
         habitsDisplayList.addAll(mainUserHabits);
         // tells the adapter in recycler that the dataset has changed
         adapter.notifyDataSetChanged();
-
+        setLayoutVisibility();
     }
 
     // activity result launcher for view/edit activity

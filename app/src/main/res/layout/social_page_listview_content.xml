@@ -15,7 +15,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_height="wrap_content"
-            android:text="Useremail"
+            android:text="@string/email_hint"
             android:fontFamily="@font/roboto_black"
             android:textColor="?android:textColorPrimary"
             android:layout_alignParentStart="true" />
@@ -27,7 +27,7 @@
             android:layout_toStartOf="@+id/social_menu"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="16dp"
-            android:text="Follow"
+            android:text="@string/follow"
             android:textColor="?android:textColorSecondary"/>
 
         <ImageButton
@@ -42,7 +42,7 @@
             android:id="@+id/social_user_bio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="User Bio goes here"
+            android:text="@string/biography_default"
             android:layout_marginStart="16dp"
             android:layout_marginTop="48dp"
             android:textColor="?android:textColorPrimary"/>
@@ -52,6 +52,7 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginTop="10dp"
         android:background="?android:attr/listDivider" />
 
 </LinearLayout>

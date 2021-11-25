@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical"
-    android:background="?attr/colorOnPrimary"
     tools:context=".fragments.AllHabitsFragment">
 
 
@@ -28,7 +27,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="No Habits Added  "
+            android:text="@string/no_active_habits"
             android:fontFamily="@font/roboto_black"
             android:textColor="#808080"
             android:gravity="center"/>

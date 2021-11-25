@@ -6,9 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical"
-    tools:context=".fragments.TodayListFragment"
-    android:background="?attr/colorOnPrimary"
-    android:foreground="?attr/selectableItemBackground">
+    tools:context=".fragments.TodayListFragment">
 
     <LinearLayout
         android:id="@+id/today_no_data_view"

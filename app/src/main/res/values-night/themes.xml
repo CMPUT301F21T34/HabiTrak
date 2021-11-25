@@ -14,7 +14,6 @@
         <!-- Heading Text Color -->
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">@color/white</item>
-        <item name="strokeColor">@color/white</item>
     </style>
 
     <style name="ShapeAppearanceOverlay.MyApp.Button.Rounded" parent="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon">

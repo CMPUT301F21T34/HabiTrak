@@ -725,9 +725,9 @@ public class DatabaseManager {
      */
     public void updateFollowRequest(String followRequestee, String followRequester, boolean remove) {
         // Update followRequestee's followReqList
-        updateUUIDList("followReqList", followRequestee, followRequester, remove);
+        updateUUIDList("followRequestedList", followRequestee, followRequester, remove);
         // Update followRequester's followerRequestedList
-        updateUUIDList("followRequestedList", followRequester, followRequestee, remove);
+        updateUUIDList("followReqList", followRequester, followRequestee, remove);
     }
 
     /**

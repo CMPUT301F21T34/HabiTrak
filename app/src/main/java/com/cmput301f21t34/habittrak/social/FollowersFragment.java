@@ -66,7 +66,7 @@ public class FollowersFragment extends Fragment {
         recyclerView = view.findViewById(R.id.followers_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        socialAdapter = new SocialAdapter(UUIDs, usernames, new SocialAdapter.ClickListener() {
+        socialAdapter = new SocialAdapter(mainUser, UUIDs, usernames, new SocialAdapter.ClickListener() {
             @Override
             public void menuButtonOnClick(View view, int position) {
                 Log.d("Menu", "Clicked " + position);
@@ -77,7 +77,7 @@ public class FollowersFragment extends Fragment {
             public void mainButtonOnClick(View view, int position) {
                 // empty button not used.
             }
-        }, false, bios, "null");
+        }, false, bios, "none");
         recyclerView.setAdapter(socialAdapter);
 
         return view;

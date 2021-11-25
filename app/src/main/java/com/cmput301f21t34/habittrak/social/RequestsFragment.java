@@ -66,7 +66,7 @@ public class RequestsFragment extends Fragment {
         recyclerView = view.findViewById(R.id.requests_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        socialAdapter = new SocialAdapter(UUIDs, usernames, new SocialAdapter.ClickListener() {
+        socialAdapter = new SocialAdapter(mainUser, UUIDs, usernames, new SocialAdapter.ClickListener() {
             @Override
             public void menuButtonOnClick(View view, int position) {
                 Log.d("Menu", "Clicked " + position);
@@ -77,7 +77,7 @@ public class RequestsFragment extends Fragment {
             public void mainButtonOnClick(View view, int position) {
                 ButtonClicked(view, position);
             }
-        }, true, bios, "Accept");
+        }, true, bios, SocialAdapter.ACCEPT);
         recyclerView.setAdapter(socialAdapter);
 
         return view;

@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f21t34.habittrak.R;
+import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
@@ -20,30 +21,33 @@ import java.util.ArrayList;
 //TODO: change username to email
 
 /**
- * SocialAdapter
+ * Custom Recycler View Adapter for users on the social page
  *
  * @author Pranav
  * @author Kaaden
- * <p>
- * Custom Recycler View Adapter for users on the social page
- * @version 1.0
  * @see RecyclerView
- * @since 2021-11-01
  */
 public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder> implements Filterable {
+    private final User mainUser;
     private final ArrayList<String> UUIDs;
-    private ArrayList<String> UUIDsCopy;
     private final ArrayList<String> usernamesCopy;
-    private ArrayList<String> usernames;   // UUIDS (emails as of 10/11)
     private final ArrayList<String> bioCopy;
-    private ArrayList<String> bio;
     private final ClickListener listener;
     private final boolean buttonVisibility;
-    private final String buttonText;
+    private final String defaultButtonText;
+    private ArrayList<String> UUIDsCopy;
+    private ArrayList<String> usernames;   // UUIDS (emails as of 10/11)
+    private ArrayList<String> bio;
+    // Button values
+    public static  final String ACCEPT = "Accept";
+    public static  final String FOLLOW = "Follow";
+    public static  final String FOLLOW_BACK = "Follow Back";
+    public static  final String REQUESTED = "Requested";
+    public static  final String UNFOLLOW = "Unfollow";
 
-    // class constructor
-    public SocialAdapter(ArrayList<String> UUIDs, ArrayList<String> usernames, ClickListener listener, boolean visible,
-                         ArrayList<String> bio, String buttonText) {
+    public SocialAdapter(User mainUser, ArrayList<String> UUIDs, ArrayList<String> usernames, ClickListener listener, boolean visible,
+                         ArrayList<String> bio, String defaultButtonText) {
+        this.mainUser = mainUser;
         this.UUIDs = UUIDs;
         this.UUIDsCopy = UUIDs;
         this.usernames = usernames;
@@ -52,7 +56,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         this.buttonVisibility = visible;
         this.bio = bio;
         this.bioCopy = bio;
-        this.buttonText = buttonText;
+        this.defaultButtonText = defaultButtonText;
     }
 
     public ArrayList<String> getUUIDs() {
@@ -114,7 +118,34 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
 
         // Button setup
         holder.listenerRef = this.listener;
-        holder.setButtonText(buttonText);
+
+        // Set appropriate button text based on tab and relationships of main user with each user
+        if (defaultButtonText.equals(ACCEPT) || defaultButtonText.equals(UNFOLLOW)) {
+            // Requests and Following tabs
+            holder.setButtonText(defaultButtonText);
+        } else {
+            // Followers and Search tabs
+            if (mainUser.getFollowingList().contains(UUIDs.get(position))) {
+                // If main user follows a given user
+                holder.setButtonText(UNFOLLOW);
+            } else {
+                // Main user does not follow a given user
+                if (mainUser.getFollowingReqList().contains(UUIDs.get(position))) {
+                    // If main user has requested to follow a given user
+                    holder.setButtonText(REQUESTED);
+                } else {
+                    // Main user has not requested to follow a given user
+                    if (mainUser.getFollowerList().contains(UUIDs.get(position))) {
+                        // A given user follows main user
+                        holder.setButtonText(FOLLOW_BACK);
+                    } else {
+                        // A given user does not follow main user
+                        holder.setButtonText(FOLLOW);
+                    }
+                }
+            }
+        }
+
         if (buttonVisibility) {
             holder.makeButtonVisible();
         } else {
@@ -218,6 +249,6 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         public void setButtonText(String text) {
             mainButton.setText(text);
         }
-
     }
+
 }

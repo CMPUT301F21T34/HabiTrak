@@ -66,7 +66,7 @@ public class FollowingFragment extends Fragment {
         recyclerView = view.findViewById(R.id.following_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        socialAdapter = new SocialAdapter(UUIDs, usernames, new SocialAdapter.ClickListener() {
+        socialAdapter = new SocialAdapter(mainUser, UUIDs, usernames, new SocialAdapter.ClickListener() {
             @Override
             public void menuButtonOnClick(View view, int position) {
                 Log.d("Menu", "Clicked " + position);
@@ -77,7 +77,7 @@ public class FollowingFragment extends Fragment {
             public void mainButtonOnClick(View view, int position) {
                 ButtonClicked(view, position);
             }
-        }, true, bios, "Unfollow");
+        }, true, bios, SocialAdapter.UNFOLLOW);
         recyclerView.setAdapter(socialAdapter);
 
         return view;
@@ -94,6 +94,7 @@ public class FollowingFragment extends Fragment {
      */
     public void ButtonClicked(View view, int userPosition) {
         MaterialButton button = view.findViewById(R.id.social_main_button);
+        String test = button.getText().toString();
         Log.d("ListButton", "Clicked");
     }
 

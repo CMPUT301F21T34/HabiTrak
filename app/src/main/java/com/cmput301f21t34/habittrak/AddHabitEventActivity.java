@@ -34,6 +34,7 @@ import androidx.core.content.FileProvider;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitEvent;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -63,7 +64,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
     Button galleryButton;
     Button mapButton;
     Button addButton;
-    EditText commentText;
+    TextInputEditText commentText;
     ImageView image;
     TextView addressLine;
     public static int RESULT_CODE = 3000;

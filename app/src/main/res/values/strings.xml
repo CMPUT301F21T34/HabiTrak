@@ -65,5 +65,6 @@
     <string name="habit_row_default_reason">Reason goes here</string>
     <string name="habit_add_button">Add Habit</string>
     <string name="follow">Follow</string>
+    <string name="add_location">Add Location</string>
 
 </resources>

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".SocialActivity">
+    tools:context=".fragments.SocialFragment">
 
 <!--    <com.google.android.material.appbar.AppBarLayout-->
 <!--        android:layout_width="match_parent"-->
@@ -27,6 +27,7 @@
             android:layout_gravity="center"
             app:tabGravity="fill"
             app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
+            android:textColor="?android:textColorPrimary"
             app:tabMode="fixed">
         </com.google.android.material.tabs.TabLayout>
 

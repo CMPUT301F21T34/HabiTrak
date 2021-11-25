@@ -29,6 +29,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:fontFamily="@font/roboto"
+        android:textColor="?android:textColorPrimary"
         android:text="Habit Name"/>
 
     <TextView
@@ -38,6 +39,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:fontFamily="@font/roboto_black"
+        android:textColor="?android:textColorPrimary"
         android:text="Sameple Habit Name"/>
 
     <TextView
@@ -46,6 +48,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:fontFamily="@font/roboto"
+        android:textColor="?android:textColorPrimary"
         android:text="Habit Reason"/>
 
     <TextView
@@ -55,6 +58,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:fontFamily="@font/roboto_black"
+        android:textColor="?android:textColorPrimary"
         android:text="Sample Habit Reason"/>
 
     <TextView
@@ -63,6 +67,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:fontFamily="@font/roboto"
+        android:textColor="?android:textColorPrimary"
         android:text="Start Date: "/>
 
     <TextView
@@ -72,6 +77,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:fontFamily="@font/roboto_black"
+        android:textColor="?android:textColorPrimary"
         android:text="Sample Start Date"/>
 
     <TextView
@@ -80,6 +86,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:fontFamily="@font/roboto"
+        android:textColor="?android:textColorPrimary"
         android:text="Frequency"/>
 
     <include layout="@layout/weekdays_buttons"/>

@@ -4,9 +4,6 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.cmput301f21t34.habittrak.TimeIgnoringComparator;
-
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -35,9 +32,6 @@ public class Habit implements Comparable<Habit>, Parcelable {
     private Calendar bestStreakDate;
     private Calendar currentStreakDate; // We could also just figure this out without db.
 
-    // Does not need to be initialized by database, only tracked!
-    private int streak = 0;
-
     private String title;
     private String reason;
 
@@ -46,6 +40,8 @@ public class Habit implements Comparable<Habit>, Parcelable {
     private boolean isPublic = false; // If other users can see this habit
 
     private OnDays onDaysObj = new OnDays();
+
+    // Enum //
 
     // Constructors //
 
@@ -91,7 +87,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
         Bundle habitBundle;
         habitBundle = parcel.readBundle(Habit.class.getClassLoader());
 
-
+        this.index = habitBundle.getInt("index");
         this.title = habitBundle.getString("title");
         this.reason = habitBundle.getString("reason");
         this.habitEvents = habitBundle.getParcelableArrayList("habitEvents");
@@ -99,7 +95,6 @@ public class Habit implements Comparable<Habit>, Parcelable {
         this.index = habitBundle.getInt("index");
 
         // Handles Calendar //
-
         // Handles Start Day Calendar //
         String completedDateTimeZone = habitBundle.getString("startDateTimeZone");
         if (completedDateTimeZone != null) {
@@ -114,7 +109,6 @@ public class Habit implements Comparable<Habit>, Parcelable {
         }
 
 
-        this.streak = habitBundle.getInt("streak");
         // Handles Best Streak Calendar //
         String bestStreakDateTimeZone = habitBundle.getString("bestStreakDateTimeZone");
         if (bestStreakDateTimeZone != null) {
@@ -244,105 +238,6 @@ public class Habit implements Comparable<Habit>, Parcelable {
 
     public void setIndex(int index){
         this.index = index;
-    }
-
-    /**
-     * Gets the current streak
-     *
-     * @author Dakota
-     * @return int current streak of habit
-     */
-    public int getStreak(){ return this.streak; }
-
-    /**
-     * Checks the habit events to get the total streak
-     *
-     * @author Dakota
-     */
-    public void refreshStreak(){
-
-        refreshStreak(Calendar.getInstance());
-
-    }
-
-    /**
-     * Checks the habit events to get the total streak
-     * for a particular day
-     *
-     * @author Dakota
-     */
-    public void refreshStreak(Calendar firstDay){
-
-
-        Calendar day = Calendar.getInstance();
-
-        day.setTime(firstDay.getTime());
-        int streak = 0;
-
-        ArrayList<HabitEvent> events = getHabitEvents();
-
-        // Make sure events is sorted for optimal efficiency
-        events.sort(HabitEvent::compareTo);
-
-        boolean notCompleted = true;
-        while (notCompleted){
-
-            // If the particular day is a day that the habit is active
-            if (this.getOnDaysObj().isOnDay(day)){
-
-                // Checks if the current day has a corresponding event
-                int index = 0; // Must init before loop
-                for (; index < events.size(); index++){
-
-                    HabitEvent event = events.get(index);
-
-                    //TODO Find a better way maybe
-                    int comparison = new TimeIgnoringComparator().compare(event.getCompletedDate(), day);
-                    System.out.println(comparison);
-
-                    if ( comparison == 0){
-                        // Then the habit was completed that day
-                        streak++;
-                        break;
-
-                    }
-                    // Checks if we are missing a day, excluding the current day
-                    else if (
-                                    (comparison < 0)
-                            &&
-                                    (new TimeIgnoringComparator().compare(Calendar.getInstance(), day) != 0)
-                            ) {
-                        // We are missing an event aka the streak was broken
-                        notCompleted = false;
-                        break;
-
-                    }
-
-                }
-
-                if (index >= events.size()){
-                    // Ran out of events last search
-                    notCompleted = false;
-                }
-
-            }
-            // decrement the day by one a check that day
-            day.add(Calendar.DATE, -1);
-
-        }
-        // sets streak
-        this.streak = streak;
-
-    }
-
-    /**
-     * increments streak, for use with marking habit event complete to update
-     * streak counter quickly
-     *
-     * @author Dakota
-     */
-    public void incrementStreak(){
-        this.streak += 1;
     }
 
 
@@ -589,13 +484,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
 
         habitBundle.putString("title", title);
         habitBundle.putString("reason", reason);
-
-
-        habitBundle.putInt("streak", this.streak);
-
         habitBundle.putInt("index", index);
-
-
         // Requires Habit_Events to implement parcelable
         habitBundle.putParcelableArrayList("habitEvents", habitEvents);
 
@@ -632,6 +521,22 @@ public class Habit implements Comparable<Habit>, Parcelable {
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    public Calendar getBestStreakDate() {
+        return bestStreakDate;
+    }
+
+    public void setBestStreakDate(Calendar bestStreakDate) {
+        this.bestStreakDate = bestStreakDate;
+    }
+
+    public Calendar getCurrentStreakDate() {
+        return currentStreakDate;
+    }
+
+    public void setCurrentStreakDate(Calendar currentStreakDate) {
+        this.currentStreakDate = currentStreakDate;
     }
 
     private static class Creator implements Parcelable.Creator<Habit> {

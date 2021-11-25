@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import android.location.Location;
+import android.net.Uri;
 
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitEvent;
@@ -57,7 +58,7 @@ public class HabitTest {
         Habit habit = mockHabit();
         Calendar cal = Calendar.getInstance();
         boolean flag = false;
-        // Change Calendar.MONDAY/WEDNESDAY/FRIDAY if onDays changes
+
         if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY ||
                 cal.get(Calendar.DAY_OF_WEEK) == Calendar.WEDNESDAY ||
                 cal.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY)
@@ -65,9 +66,9 @@ public class HabitTest {
         // flag and isOnDay() should both return true if today is Monday, Wednesday or Friday
         // and both return false otherwise
 
+        // Notes: Change Calendar.MONDAY/WEDNESDAY/FRIDAY to desired week day if onDays changes
         assertEquals(flag,habit.getOnDaysObj().isOnDay());
     }
-
 
     /**
      * addHabitEventTest
@@ -82,7 +83,7 @@ public class HabitTest {
         Habit habit = mockHabit();
         HabitEvent event1 = new HabitEvent();
         Location loc = new Location("");
-        File photo = new File("");
+        Uri photo = null;
         Calendar completeDate = new GregorianCalendar(2021, 6, 1);
 
         HabitEvent event2 = new HabitEvent("event2", completeDate, loc, photo);
@@ -113,7 +114,7 @@ public class HabitTest {
         Habit habit = mockHabit();
         HabitEvent event1 = new HabitEvent();
         Location loc = new Location("");
-        File photo = new File("");
+        Uri photo = null;
         Calendar completeDate = new GregorianCalendar(2021, 6, 1);
         HabitEvent event2 = new HabitEvent("comment",
                 completeDate, loc, photo);

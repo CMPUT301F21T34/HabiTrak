@@ -104,7 +104,13 @@ Log.d(TAG,"Got the views");
         //get data from habit event
         String commentHabitEvent = habitEvent.getComment();
         Calendar completedDate = habitEvent.getCompletedDate();
-        Uri photoUri = habitEvent.getPhotograph();
+        Uri photoUri;
+        if(habitEvent.getPhotograph() != null) {
+            photoUri = Uri.parse(habitEvent.getPhotograph());
+        }
+        else{
+            photoUri = null;
+        }
         Location locationHabitEvent = habitEvent.getLocation();
 Log.d(TAG,"got the data");
 // setting the data to the new habit event
@@ -260,7 +266,19 @@ Log.d(TAG,"Set the dateeeee");
 
 
     }
-
+    @Override
+    public void onBackPressed(){
+        // handle the on back button press
+        Log.d(TAG,"The size of the habit event list is " + habit.getHabitEvents().size());
+        habit.addHabitEvent(habitEvent);
+        Log.d(TAG,"The size of the habit event list is " + habit.getHabitEvents().size());
+        Intent result = new Intent();
+        result.putExtra("HABIT", habit);
+        result.putExtra("position", habitPosition);
+        setResult(RESULT_CODE, result);
+        super.onBackPressed();
+        ViewEditHabitEvents.this.finish();
+    }
 
     /**
      * Asks the user for permission to use the camera

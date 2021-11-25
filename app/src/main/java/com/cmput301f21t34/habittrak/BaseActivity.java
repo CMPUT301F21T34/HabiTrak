@@ -160,8 +160,12 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
             Habit habit = intent.getParcelableExtra("HABIT");
             int position = intent.getIntExtra("position", 0); // useless
-            habit.incrementStreak();
+//            habit.incrementStreak();
             mainUser.getHabitList().replace(habit);
+            // Propagate the changes to the database
+            DatabaseManager db = new DatabaseManager();
+            // TODO: Change the email to uuid in the next line
+            db.updateHabitList(mainUser.getEmail(),mainUser.getHabitList());
             // TODO: Update all events list
         }
         // result from view habit events activity

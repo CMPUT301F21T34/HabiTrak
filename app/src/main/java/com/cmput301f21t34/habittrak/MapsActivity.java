@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,6 +43,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 import java.util.List;
 import java.util.Locale;
@@ -63,6 +65,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private final int UPDATE_INTERVAL = 10000;
     private final int FASTEST_INTERVAL = 5000;
     private static final int DEFAULT_ZOOM = 15;
+    private CircularProgressIndicator loading;
     LocationRequest locationRequest;
     Button confirmButton;
     TextView addressTextView;
@@ -74,6 +77,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        loading = findViewById(R.id.map_loading);
         lastKnownLocation = new Location(LocationManager.GPS_PROVIDER);
 
         // creating a location request object
@@ -124,6 +128,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View view) {
                 Log.d("MAP","The confirm button has been pressed");
                 Intent result = new Intent();
+                result.putExtra("permission",true);
                 result.putExtra("latitude", lastKnownLocation.getLatitude());
                 result.putExtra("longitude", lastKnownLocation.getLongitude());
                 setResult(RESULT_OK, result);
@@ -285,7 +290,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
                 else {
                     Log.d("MAPppp","location not granted");
-                    getLocationPermission();
+                    Toast.makeText(this, "The app needs the location permission to choose location", Toast.LENGTH_LONG).show();
+                    Intent result = new Intent();
+                    result.putExtra("permission",false);
+                    result.putExtra("latitude", 0.0000);
+                    result.putExtra("longitude", 0.0000);
+                    setResult(RESULT_OK, result);
+                    MapsActivity.this.finish();
+
                 }
             }
         }
@@ -359,6 +371,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.d("address failed", "yep");
             e.printStackTrace();
         }
+        loading.setVisibility(View.GONE);
         return address;
     }
 }

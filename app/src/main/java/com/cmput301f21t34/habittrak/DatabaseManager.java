@@ -1,5 +1,6 @@
 package com.cmput301f21t34.habittrak;
 
+import android.location.Location;
 import android.net.Uri;
 import android.util.Log;
 
@@ -399,6 +400,8 @@ public class DatabaseManager {
         habitDatabase.setHabitEvents(toHabitEventList((ArrayList<HashMap<String, Object>>) hashmap.get("habitEvents")));
         habitDatabase.setOnDaysObjFromDB((ArrayList<Boolean>) hashmap.get("onDaysObj"));
         habitDatabase.setStartDate(toCalendar((HashMap<String, Object>) hashmap.get("startDate")));
+        habitDatabase.setCurrentStreakDate(toCalendar((HashMap<String, Object>) hashmap.get("currentStreakDate")));
+        habitDatabase.setBestStreakDate(toCalendar((HashMap<String, Object>) hashmap.get("bestStreakDate")));
         return habitDatabase;
     }
 
@@ -429,15 +432,42 @@ public class DatabaseManager {
      */
     public HabitEvent toHabitEvent(HashMap<String, Object> hashmap) {
         HabitEvent event = new HabitEvent();
-        event.setComment((String) hashmap.get("comment"));
+        if(hashmap.get("comment") != null) {
+            event.setComment((String) hashmap.get("comment"));
+        }
+        else{
+            event.setComment(null);
+        }
 
-        //TODO: Figure out away to store a Location and Photograph
-        /*
-        event.setLocation((String) hashmap.get("location"));
-        event.setPhotograph((String) hashmap.get("photograph"));
-         */
+        if(hashmap.get("location") != null){
+            event.setLocation(toLocation((HashMap<String,Object>) hashmap.get("location")));
+        }
+        else{
+            event.setLocation(null);
+        }
+        if (hashmap.get("photograph") != null){
+            event.setPhotograph(Uri.parse((String) hashmap.get("photograph")));
+        }
+        else{
+            event.setPhotograph(null);
+        }
+
         event.setCompletedDate(toCalendar((HashMap<String, Object>) hashmap.get("completedDate")));
         return event;
+    }
+
+    /**
+     * toLocation
+     * Converts HashMap from database to Location object
+     * @param hashMap HashMap<String, Object> the HashMap to be converted
+     * @return Location, the location from the HashMap
+     */
+    private Location toLocation(HashMap<String,Object> hashMap){
+
+        Location loc = new Location((String) hashMap.get("provider"));
+        loc.setLatitude((double) (long) hashMap.get("latitude"));
+        loc.setLongitude((double) (long) hashMap.get("longitude"));
+        return loc;
     }
 
     /**
@@ -617,16 +647,7 @@ public class DatabaseManager {
                 .set(data);
     }
 
-    /**
 
-     * Update the habit list of the given user
-     * We can add/remove/edit attributes of habitToUpdate
-     * @param userToUpdate
-     * @param habitToUpdate
-     */
-    public void updateHabitList(String userToUpdate, Habit habitToUpdate) {
-
-    }
     /**
      * Updates the username of the user with the given UUID
      *
@@ -657,6 +678,22 @@ public class DatabaseManager {
         fieldsToUpdate.add("Biography");
         database.collection("users").document(UUID).set(data, SetOptions.mergeFields(fieldsToUpdate));
 
+    }
+
+    /**
+     * Update the habit list of the given user
+     * We can add/remove/edit attributes of habitToUpdate
+     * @param UUID String, the uuid of the user who's habit list is to be updated
+     * @param habitList HabitList, the habit list that is to be updated
+     */
+
+    public void updateHabitList(String UUID, HabitList habitList) {
+
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("habitList", habitToDatabase(habitList));
+            List<String> fieldsToUpdate = new ArrayList<>();
+            fieldsToUpdate.add("habitList");
+            database.collection("users").document(UUID).set(data, SetOptions.mergeFields(fieldsToUpdate));
     }
 
     /**
@@ -782,7 +819,8 @@ public class DatabaseManager {
             habitToDatabase.setStartDate(primitiveHabit.getStartDate());
             habitToDatabase.setHabitEvents(primitiveHabit.getHabitEvents());
             habitToDatabase.setOnDaysObj(primitiveHabit.getOnDaysObj());
-
+            habitToDatabase.setCurrentStreakDate(primitiveHabit.getCurrentStreakDate());
+            habitToDatabase.setBestStreakDate(primitiveHabit.getBestStreakDate());
             habitListToDatabase.add(habitToDatabase);
         }
         return habitListToDatabase;
@@ -807,7 +845,8 @@ public class DatabaseManager {
             habit.setReason(habitFromDatabase.getReason());
             habit.setStartDate(habitFromDatabase.getStartDate());
             habit.setHabitEvents(habitFromDatabase.getHabitEvents());
-
+            habit.setCurrentStreakDate(habitFromDatabase.getCurrentStreakDate());
+            habit.setBestStreakDate(habitFromDatabase.getBestStreakDate());
             ArrayList<Boolean> dbOnDays = habitFromDatabase.getOnDaysObj();
 
             habit.setOnDaysObj(new OnDays(dbOnDays));

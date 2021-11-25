@@ -17,6 +17,9 @@ public class HabitDatabase {
     private int index = 0;
     private String title, reason;
     private Calendar startDate;
+    private Calendar bestStreakDate;
+    private Calendar currentStreakDate; // We could also just figure this out without db.
+
     private ArrayList<HabitEvent> habitEvents;
     private boolean isPublic;
     private ArrayList<Boolean> onDaysObj;
@@ -67,4 +70,19 @@ public class HabitDatabase {
         this.onDaysObj = booleanArrayList;
     }
 
+    public Calendar getBestStreakDate() {
+        return bestStreakDate;
+    }
+
+    public void setBestStreakDate(Calendar bestStreakDate) {
+        this.bestStreakDate = bestStreakDate;
+    }
+
+    public Calendar getCurrentStreakDate() {
+        return currentStreakDate;
+    }
+
+    public void setCurrentStreakDate(Calendar currentStreakDate) {
+        this.currentStreakDate = currentStreakDate;
+    }
 }

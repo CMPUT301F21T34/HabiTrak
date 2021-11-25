@@ -1,16 +1,5 @@
 package com.cmput301f21t34.habittrak;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -32,22 +21,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitEvent;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
-// Map libraries
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.location.FusedLocationProviderClient;
-
 
 import java.io.File;
 import java.io.IOException;
@@ -58,13 +48,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+// Map libraries
+
 
 /**
  * @author Tauseef Nafee Fattah
  * @author Henry
  * Version: 1.0
  * Takes a habit and returns the new habit event
- * TODO: Fix the camera bug
  */
 public class AddHabitEventActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -73,7 +64,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
     Button galleryButton;
     Button mapButton;
     Button addButton;
-    EditText commentText;
+    TextInputEditText commentText;
     ImageView image;
     TextView addressLine;
     public static int RESULT_CODE = 3000;
@@ -97,6 +88,12 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_habit_event);
+
+        // set toolbar
+        Toolbar toolbar = findViewById(R.id.add_habit_event_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
@@ -183,14 +180,18 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
             @Override
             public void onActivityResult(ActivityResult result) {
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                    double latitude = result.getData().getDoubleExtra("latitude", 0.000000);
-                    double longitude = result.getData().getDoubleExtra("longitude", 0.000000);
-                    Location eventLocation = new Location("gps");
-                    eventLocation.setLatitude(latitude);
-                    eventLocation.setLongitude(longitude);
-                    habitEvent.setLocation(eventLocation);
-                    addressLine.setText("");
-                    addressLine.setText(getAddress(eventLocation.getLatitude(),eventLocation.getLongitude()));
+
+                    if(result.getData().getBooleanExtra("permission",false)) {
+                        double latitude = result.getData().getDoubleExtra("latitude", 0.000000);
+                        double longitude = result.getData().getDoubleExtra("longitude", 0.000000);
+
+                        Location eventLocation = new Location("gps");
+                        eventLocation.setLatitude(latitude);
+                        eventLocation.setLongitude(longitude);
+                        habitEvent.setLocation(eventLocation);
+                        addressLine.setText("");
+                        addressLine.setText(getAddress(eventLocation.getLatitude(), eventLocation.getLongitude()));
+                    }
                 }
                 else {
                     Log.d("MAP", "Failed onActivityResult if condition");
@@ -215,9 +216,9 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
             ArrayList<HabitEvent> currentEventList = habit.getHabitEvents();
             currentEventList.add(habitEvent);
             habit.setHabitEvents(currentEventList);
-            // Propagate the changes to the database
-            DatabaseManager db = new DatabaseManager();
-            db.updateHabitList(email, habit);
+
+            //DatabaseManager db = new DatabaseManager();
+            //db.updateHabitList(email, habit);
 
             // Pass the result back to BaseActivity
             Intent result = new Intent();
@@ -375,5 +376,11 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
             e.printStackTrace();
         }
         return address;
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

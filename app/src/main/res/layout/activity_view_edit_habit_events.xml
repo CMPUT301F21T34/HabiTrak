@@ -18,6 +18,17 @@
             app:titleTextColor="@android:color/white"
             app:title="View Habit Event"
             android:background="?attr/colorPrimary">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/save_habit_event_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="16dp"
+                android:text="Save Event"
+                app:strokeColor="@color/white"
+                android:textColor="@color/white"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -129,11 +140,5 @@
             android:textColor="?android:textColorPrimary"
             android:text=" " />
     </LinearLayout>
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/save_habit_event_edit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save Habit Event"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"/>
+
 </LinearLayout>

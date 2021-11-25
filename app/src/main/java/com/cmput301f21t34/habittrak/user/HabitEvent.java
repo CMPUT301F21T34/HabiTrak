@@ -32,7 +32,7 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
 
     private Calendar completedDate;
     private Location location;
-    private Uri photograph;
+    private String photograph;
 
     // redundant constructor
 
@@ -42,13 +42,11 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
 
         this.location = null;
         this.photograph = null;
-
-
     }
 
     public HabitEvent(String comment, Calendar date, Location loc, Uri photo){
 
-        this.photograph = photo;
+        this.photograph = photo.toString();
         this.location = loc;
         this.comment = comment;
         this.completedDate = date;
@@ -96,8 +94,8 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
 
         // Sets path
         String photographPath = habitEventBundle.getString("photograph");
-        if(photographPath != null){
-            this.photograph = Uri.parse(photographPath);
+        if (photographPath != null){
+            this.photograph = habitEventBundle.getString("photograph");
         }
         else{
             this.photograph = null;
@@ -132,15 +130,15 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
         return completedDate;
     }
 
-    public Uri getPhotograph() {
-        return photograph;
+    public String getPhotograph() {
+        return this.photograph;
     }
 
     public Location getLocation() {
         return location;
     }
 
-    public String getComment() {
+    public String getComment(){
         return comment;
     }
     //setter methods
@@ -162,12 +160,17 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
         this.completedDate = completedDate;
     }
 
-    public void setLocation(Location location) {
+    public void setLocation(Location location){
         this.location = location;
     }
 
     public void setPhotograph(Uri photograph) {
-        this.photograph = photograph;
+        if(photograph != null) {
+            this.photograph = photograph.toString();
+        }
+        else{
+            this.photograph = null;
+        }
     }
 
     /**
@@ -180,7 +183,7 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
      * @return int -1,0,1
      */
     @Override
-    public int compareTo(HabitEvent habitEvent) {
+    public int compareTo(HabitEvent habitEvent){
         return -this.completedDate.compareTo(habitEvent.completedDate);
     }
 
@@ -201,7 +204,7 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
      * @param flags
      */
     @Override
-    public void writeToParcel(Parcel parcel, int flags) {
+    public void writeToParcel(Parcel parcel, int flags){
 
 
         Bundle habitEventBundle = new Bundle(HabitEvent.class.getClassLoader());
@@ -227,11 +230,11 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
             habitEventBundle.putParcelable("location", null);
         }
         if (photograph != null) {
-            String photographPath = photograph.toString();
-            Log.d("EDIT_HAb","the path is "+photographPath);
+            String photographpath = photograph;
+            Log.d("EDIT_HAb","the path is "+photographpath);
 
             // Handles photograph
-            habitEventBundle.putString("photograph", photographPath);
+            habitEventBundle.putString("photograph", photographpath);
         }
         else {
             habitEventBundle.putString("photograph", null);
@@ -243,7 +246,7 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
 
 
     @Override
-    public int describeContents() {
+    public int describeContents(){
         return 0;
     }
 

@@ -1,4 +1,6 @@
 <resources>
+
+    <!-- Base -->
     <string name="app_name">HabitTrak</string>
     <string name="habi_app_name">habiTrak</string>
     <string name="habi_hint_username">Username</string>
@@ -6,6 +8,7 @@
     <string name="habi_button_next">Log In</string>
     <string name="hello_blank_fragment">Today Habits List Fragment</string>
     <string name="habi_hint_search">Search</string>
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -15,9 +18,60 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+
+    <string name="need_help">Need Help?</string>
+    <string name="no_habits_set_for_today">No Habits Active Today</string>
+    <string name="no_active_habits">You have no active habits</string>
     <string name="title_activity_maps">MapsActivity</string>
+<<<<<<< HEAD
     <string name="best_streak">Best Streak: </string>
     <string name="_30_day_streak">30-Day Streak</string>
     <string name="total_events_completed">Total Events Completed: </string>
     <string name="habit_overview">Habit Overview</string>
+=======
+    <string name="today">Today</string>
+    <string name="habits">Habits</string>
+    <string name="events">Events</string>
+    <string name="social">Social</string>
+    <string name="profile">Profile</string>
+
+    <!-- Adding, Saving, Editing Habit -->
+    <string name="habit_title_name">Habit Name</string>
+    <string name="habit_name_hint">set habit name</string>
+    <string name="habit_title_reason">Habit Reason</string>
+    <string name="habit_reason_hint">set reason</string>
+    <string name="habit_title_start_date">Start Date</string>
+    <string name="habit_title_visability">Public Visibility</string>
+    <string name="pick_date_button">PICK DATE</string>
+    <string name="habit_title_public">Public</string>
+    <string name="habit_title_frequency">Frequency</string>
+    <string name="save_habit_button">Save Habit</string>
+    <string name="habit_title_selected_date">Selected Date:</string>
+
+    <!-- Sign Up & Forgot Password -->
+    <string name="forgotten_password_title">Forgotten Password</string>
+    <string name="email_hint">email</string>
+    <string name="send_email_button">Send Email</string>
+    <string name="forgot_button">Forgot</string>
+    <string name="sign_up_button">Sign Up</string>
+    <string name="sign_up_title">Sign Up</string>
+
+    <!-- Profile -->
+    <string name="profile_title">User Profile</string>
+    <string name="username_title">Username:</string>
+    <string name="username_default">Username</string>
+    <string name="email_title">Email:</string>
+    <string name="biography_title">Biography:</string>
+    <string name="biography_default">Biography</string>
+    <string name="save_button">Save Changes</string>
+    <string name="log_out_button">Log Out</string>
+    <string name="delete_account_button">Delete Account</string>
+
+    <string name="habit_row_default_name">Habit Name</string>
+    <string name="habit_row_default_reason">Reason goes here</string>
+    <string name="habit_add_button">Add Habit</string>
+    <string name="follow">Follow</string>
+    <string name="add_location">Add Location</string>
+
+>>>>>>> origin/dev
 </resources>

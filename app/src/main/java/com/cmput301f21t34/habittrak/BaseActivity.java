@@ -160,6 +160,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
             Habit habit = intent.getParcelableExtra("HABIT");
             int position = intent.getIntExtra("position", 0); // useless
+            habit.incrementStreak();
             mainUser.getHabitList().replace(habit);
             // Propagate the changes to the database
             DatabaseManager db = new DatabaseManager();

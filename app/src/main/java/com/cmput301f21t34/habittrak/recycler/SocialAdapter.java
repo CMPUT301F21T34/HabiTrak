@@ -1,6 +1,5 @@
 package com.cmput301f21t34.habittrak.recycler;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
 import com.google.android.material.button.MaterialButton;
 
@@ -20,6 +18,7 @@ import java.util.ArrayList;
 
 //TODO: Send menu options in the adapter itself
 //TODO: change username to email
+
 /**
  * SocialAdapter
  *
@@ -31,27 +30,34 @@ import java.util.ArrayList;
  * @see RecyclerView
  * @since 2021-11-01
  */
-public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder> implements Filterable{
-    private ArrayList<String> profiles;   // UUIDS (emails as of 10/11)
-    private ArrayList<String> bio;
-    private final ArrayList<String> profilesCopy;
+public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder> implements Filterable {
+    private final ArrayList<String> UUIDs;
+    private ArrayList<String> UUIDsCopy;
+    private final ArrayList<String> usernamesCopy;
+    private ArrayList<String> usernames;   // UUIDS (emails as of 10/11)
     private final ArrayList<String> bioCopy;
+    private ArrayList<String> bio;
     private final ClickListener listener;
     private final boolean buttonVisibility;
     private final String buttonText;
 
     // class constructor
-    public SocialAdapter(ArrayList<String> users, ClickListener listener, boolean visible,
+    public SocialAdapter(ArrayList<String> UUIDs, ArrayList<String> usernames, ClickListener listener, boolean visible,
                          ArrayList<String> bio, String buttonText) {
-        this.profiles = users;
+        this.UUIDs = UUIDs;
+        this.UUIDsCopy = UUIDs;
+        this.usernames = usernames;
+        this.usernamesCopy = usernames;
         this.listener = listener;
         this.buttonVisibility = visible;
-        this.buttonText = buttonText;
-        this.profilesCopy = users;
         this.bio = bio;
         this.bioCopy = bio;
+        this.buttonText = buttonText;
     }
 
+    public ArrayList<String> getUUIDs() {
+        return UUIDs;
+    }
 
     @Override
     public Filter getFilter() {
@@ -60,32 +66,32 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
             protected FilterResults performFiltering(CharSequence charSequence) {
                 String charString = charSequence.toString();
                 // is no input in searchView put the original list back
-                if (charString.isEmpty()){
-                    profiles = profilesCopy;
+                if (charString.isEmpty()) {
+                    usernames = usernamesCopy;
                     bio = bioCopy;
                 } else {
                     // filter username and bio bases if username contains the characters
                     ArrayList<String> filteredProfileList = new ArrayList<>();
                     ArrayList<String> filteredBioList = new ArrayList<>();
-                    for (int i = 0; i < profilesCopy.size(); i++){
-                        if (profilesCopy.get(i).toLowerCase().contains(charString)){
-                            filteredProfileList.add(profilesCopy.get(i));
+                    for (int i = 0; i < usernamesCopy.size(); i++) {
+                        if (usernamesCopy.get(i).toLowerCase().contains(charString)) {
+                            filteredProfileList.add(usernamesCopy.get(i));
                             filteredBioList.add(bioCopy.get(i));
                         }
                     }
-                    profiles = filteredProfileList;
+                    usernames = filteredProfileList;
                     bio = filteredBioList;
                 }
 
                 FilterResults filterResults = new FilterResults();
-                filterResults.values = profiles;
-                return  filterResults;
+                filterResults.values = usernames;
+                return filterResults;
             }
 
             @Override
             @SuppressWarnings("unchecked")
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                profiles = (ArrayList<String>) filterResults.values;
+                usernames = (ArrayList<String>) filterResults.values;
                 notifyDataSetChanged();
             }
         };
@@ -103,7 +109,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull SocialAdapter.ViewHolder holder, int position) {
         // Get user info from database
-        holder.getUsername().setText(profiles.get(position));
+        holder.getUsername().setText(usernames.get(position));
         holder.getUserBio().setText(bio.get(position));
 
         // Button setup
@@ -118,7 +124,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        return profiles.size();
+        return usernames.size();
     }
 
     public interface ClickListener {

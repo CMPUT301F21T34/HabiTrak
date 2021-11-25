@@ -1,12 +1,8 @@
 package com.cmput301f21t34.habittrak.social;
 
 import android.annotation.SuppressLint;
-import android.app.SearchManager;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,10 +21,7 @@ import com.cmput301f21t34.habittrak.user.User;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.button.MaterialButton;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
 
 /**
  * SearchFragment
@@ -49,10 +42,10 @@ public class SearchFragment extends Fragment {
     private SocialAdapter socialAdapter;
     private ShimmerFrameLayout loading;
     // Data
-    private ArrayList<String> displayList = new ArrayList<>();
-    private ArrayList<String> bioList = new ArrayList<>();
+    private ArrayList<String> UUIDs = new ArrayList<>();
+    private ArrayList<String> usernames = new ArrayList<>();
+    private ArrayList<String> bios = new ArrayList<>();
     private User mainUser;
-
 
 
     public SearchFragment(User mainUser) {
@@ -78,7 +71,7 @@ public class SearchFragment extends Fragment {
         recyclerView = view.findViewById(R.id.search_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        socialAdapter = new SocialAdapter(displayList, new SocialAdapter.ClickListener() {
+        socialAdapter = new SocialAdapter(UUIDs, usernames, new SocialAdapter.ClickListener() {
             @Override
             public void menuButtonOnClick(View view, int position) {
                 Log.d("Menu", "Clicked " + position);
@@ -89,7 +82,7 @@ public class SearchFragment extends Fragment {
             public void mainButtonOnClick(View view, int position) {
                 ButtonClicked(view, position);
             }
-        }, true, bioList, "Follow");
+        }, true, bios, "Follow");
         recyclerView.setAdapter(socialAdapter);
 
 
@@ -108,7 +101,7 @@ public class SearchFragment extends Fragment {
             }
         });
 
-        if (displayList.isEmpty()) {
+        if (usernames.isEmpty()) {
             new SearchAsyncTask().execute();
             loading.startShimmer();
         } else {
@@ -157,39 +150,33 @@ public class SearchFragment extends Fragment {
     }
 
     /**
-     * getAllUsers.
+     * Populates usernames and bios from all users except those that block or are blocked mainUser
      *
-     * @author Pranav
-     *
-     * gets all users and removes the blocked and blocked by from the display list.
+     * @author Kaaden
      */
-    public void getAllUsers(){
+    public void populateUsernamesAndBios() {
         ArrayList<String> users = dm.getAllUsers();
-        ArrayList<String> blockedUsers = mainUser.getBlockList();
-        ArrayList<String> blockedBy = mainUser.getBlockedByList();
-
-        for (String user: users){
-            if(!blockedBy.contains(user) && !blockedUsers.contains(user)){
-                displayList.add(dm.getUserName(user));
-                bioList.add(dm.getUserBio(user));
-                Log.d(TAG, user);
-            }
-        }
-
+        users.removeAll(mainUser.getBlockList());
+        users.removeAll(mainUser.getBlockedByList());
+        users.remove(mainUser.getEmail());
+        users.forEach(UUID -> {
+            usernames.add(dm.getUserName(UUID));
+            bios.add(dm.getUserBio(UUID));
+        });
     }
 
     /**
      * SearchAsyncTask
      *
      * @author Pranav
-     *
+     * <p>
      * gets the data in background on another thread.
      */
     @SuppressLint("StaticFieldLeak")
     public class SearchAsyncTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
-            getAllUsers();
+            populateUsernamesAndBios();
             return null;
         }
 

@@ -182,8 +182,9 @@
         android:id="@+id/save_habit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="?android:textColorSecondary"
         android:text="@string/save_habit_button"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"/>
 
 </LinearLayout>

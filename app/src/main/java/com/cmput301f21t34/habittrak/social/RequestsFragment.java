@@ -39,8 +39,8 @@ public class RequestsFragment extends Fragment {
     private SocialAdapter socialAdapter;
     private ShimmerFrameLayout loading;
     // data
-    private ArrayList<String> displayList = new ArrayList<>();
-    private ArrayList<String> bioList = new ArrayList<>();
+    private ArrayList<String> usernames = new ArrayList<>();
+    private ArrayList<String> bios = new ArrayList<>();
     private User mainUser;
 
     public RequestsFragment(User mainUser) {
@@ -67,7 +67,7 @@ public class RequestsFragment extends Fragment {
         loading = view.findViewById(R.id.requests_shimmer_container);
 
         // setting social adapter
-        socialAdapter = new SocialAdapter(displayList, new SocialAdapter.ClickListener() {
+        socialAdapter = new SocialAdapter(mainUser.getFollowerReqList(), usernames, new SocialAdapter.ClickListener() {
             @Override
             public void menuButtonOnClick(View view, int position) {
                 Log.d("Menu", "Clicked " + position);
@@ -78,10 +78,10 @@ public class RequestsFragment extends Fragment {
             public void mainButtonOnClick(View view, int position) {
                 ButtonClicked(view, position);
             }
-        }, true, bioList,"Accept");
+        }, true, bios, "Accept");
         recyclerView.setAdapter(socialAdapter);
 
-        if (displayList.isEmpty()){
+        if (usernames.isEmpty()) {
             new RequestAsyncTask().execute();
             loading.startShimmer();
         } else {
@@ -92,18 +92,15 @@ public class RequestsFragment extends Fragment {
     }
 
     /**
-     * getUserList
+     * Populates usernames and bios
      *
-     * @author Pranav
-     *
-     * get the followers username and bio
+     * @author Kaaden
      */
-    public void getUserList(){
-        ArrayList<String> userEmail = mainUser.getFollowingReqList();
-        for(String user: userEmail){
-            displayList.add(dm.getUserName(user));
-            bioList.add(dm.getUserBio(user));
-        }
+    public void populateUsernamesAndBios() {
+        mainUser.getFollowerReqList().forEach(UUID -> {
+            usernames.add(dm.getUserName(UUID));
+            bios.add(dm.getUserBio(UUID));
+        });
     }
 
     /**
@@ -151,7 +148,7 @@ public class RequestsFragment extends Fragment {
     public class RequestAsyncTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
-            getUserList();
+            populateUsernamesAndBios();
             return null;
         }
 

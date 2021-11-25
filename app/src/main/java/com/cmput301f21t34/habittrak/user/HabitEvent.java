@@ -179,7 +179,7 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
      */
     @Override
     public int compareTo(HabitEvent habitEvent) {
-        return this.completedDate.compareTo(habitEvent.completedDate);
+        return -this.completedDate.compareTo(habitEvent.completedDate);
     }
 
     // Parcelable Implementation Code  Start //

@@ -1,13 +1,13 @@
 package com.cmput301f21t34.habittrak.social;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.user.Habit;
@@ -18,6 +18,7 @@ import java.util.Locale;
 
 public class SocialViewHabit extends AppCompatActivity {
 
+    private final int whiteColor = Color.WHITE;
     private Habit habit;
     private MaterialButton mondayButton;
     private MaterialButton tuesdayButton;
@@ -26,7 +27,6 @@ public class SocialViewHabit extends AppCompatActivity {
     private MaterialButton fridayButton;
     private MaterialButton saturdayButton;
     private MaterialButton sundayButton;
-    private final int whiteColor = Color.WHITE;
     private int tealColor;
 
 
@@ -75,16 +75,16 @@ public class SocialViewHabit extends AppCompatActivity {
         sundayButton.setOnClickListener(null);
 
 
-
     }
 
 
     /**
      * get the String value from calendar
+     *
      * @param calendar date to convert to string
      * @return string value of type Month, Day
      */
-    public String getDate(Calendar calendar){
+    public String getDate(Calendar calendar) {
         String month = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
         String day = Integer.toString(calendar.get(Calendar.DAY_OF_MONTH));
         return month + ", " + day;
@@ -94,7 +94,7 @@ public class SocialViewHabit extends AppCompatActivity {
      * setDaysSelector.
      *
      * @author Pranav
-     *
+     * <p>
      * sets the state of the days of week buttons.
      */
     public void setDaysSelector() {
@@ -111,17 +111,16 @@ public class SocialViewHabit extends AppCompatActivity {
     /**
      * setButtonState.
      *
-     * @author Pranav
-     *
-     * set the button on/off state
      * @param button MaterialButton for setting state
-     * @param state bool value for on/off state
+     * @param state  bool value for on/off state
+     * @author Pranav
+     * <p>
+     * set the button on/off state
      */
     public void setButtonState(MaterialButton button, Boolean state) {
-        if(state){
+        if (state) {
             button.setBackgroundColor(tealColor);
-        }
-        else{
+        } else {
             button.setBackgroundColor(whiteColor);
         }
     }

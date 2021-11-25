@@ -26,7 +26,11 @@ public class Habit implements Comparable<Habit>, Parcelable {
     // Any changes need to be implement in writeToParcel and Parcel constructor - Dakota
 
 
+
+    // To Be Added To DB
     private int index = 0;
+    private Calendar bestStreakDate;
+    private Calendar currentStreakDate; // We could also just figure this out without db.
 
     private String title;
     private String reason;

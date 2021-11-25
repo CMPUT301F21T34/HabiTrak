@@ -15,7 +15,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_height="wrap_content"
-            android:text="Useremail"
+            android:text="@string/email_hint"
             android:fontFamily="@font/roboto_black"
             android:layout_alignParentStart="true" />
 
@@ -40,7 +40,7 @@
             android:id="@+id/social_user_bio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="User Bio goes here"
+            android:text="@string/biography_default"
             android:layout_marginStart="16dp"
             android:layout_marginTop="48dp"/>
     </RelativeLayout>

@@ -29,14 +29,14 @@
         android:fontFamily="@font/roboto"
         android:layout_marginTop="16dp"
         android:textColor="?android:textColorPrimary"
-        android:text="Habit Name" />
+        android:text="@string/habit_title_name" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/habit_name_text_layout"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:hint="set habit name"
+        android:hint="@string/habit_name_hint"
         app:counterMaxLength="20"
         app:counterEnabled="true"
         android:layout_marginTop="10dp">
@@ -59,14 +59,14 @@
         android:layout_marginTop="16dp"
         android:fontFamily="@font/roboto"
         android:textColor="?android:textColorPrimary"
-        android:text="Habit Reason" />
+        android:text="@string/habit_title_reason" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/habit_reason_text_layout"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:hint="set reason"
+        android:hint="@string/habit_reason_hint"
         app:counterMaxLength="30"
         app:counterEnabled="true"
         android:layout_marginStart="16dp">
@@ -89,7 +89,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Start Date"
+            android:text="@string/habit_title_start_date"
             android:layout_marginTop="16dp"
             android:fontFamily="@font/roboto"
             android:textColor="?android:textColorPrimary"
@@ -98,7 +98,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Public Visibility"
+            android:text="@string/habit_title_visability"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="45dp"
             android:fontFamily="@font/roboto"
@@ -116,7 +116,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="10dp"
-        android:text="PICK DATE"
+        android:text="@string/pick_date_button"
         app:icon="@drawable/ic_baseline_add_24"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -151,7 +151,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginLeft="16dp"
             android:textColor="?android:textColorPrimary"
-            android:text="Selected Date is :"/>
+            android:text="@string/habit_title_selected_date"/>
 
         <TextView
             android:id="@+id/add_habit_visibility_text"
@@ -159,7 +159,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:gravity="end"
-            android:text="Public"
+            android:text="@string/habit_title_public"
             android:fontFamily="@font/roboto_black"
             android:textColor="?android:textColorPrimary"
             android:layout_marginEnd="100dp" />
@@ -172,7 +172,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginLeft="16dp"
         android:textColor="?android:textColorPrimary"
-        android:text="Frequency"/>
+        android:text="@string/habit_title_frequency"/>
 
 
     <include layout="@layout/weekdays_buttons"></include>
@@ -182,7 +182,7 @@
         android:id="@+id/save_habit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save Habit"
+        android:text="@string/save_habit_button"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"/>
 

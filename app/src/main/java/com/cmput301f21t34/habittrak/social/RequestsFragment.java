@@ -21,37 +21,35 @@ import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 
-
 /**
- * RequestsFragment
+ * Fragment for displaying users that request to follow main user
  *
+ * @see SocialAdapter
  * @author Pranav
  * @author Kaaden
- * @version 1.0
- * @see SocialAdapter
- * @since 2021-11-01
  */
 public class RequestsFragment extends Fragment {
+    public static String TAG = "REQUESTS_FRAGMENT";
     DatabaseManager dm = new DatabaseManager();
-    // views
+    // Views
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private SocialAdapter socialAdapter;
     private ShimmerFrameLayout loading;
-    // data
-    private ArrayList<String> displayList = new ArrayList<>();
-    private ArrayList<String> bioList = new ArrayList<>();
+    // Data
     private User mainUser;
+    private ArrayList<String> UUIDs;
+    private ArrayList<String> usernames = new ArrayList<>();
+    private ArrayList<String> bios = new ArrayList<>();
 
-    public RequestsFragment(User mainUser) {
+    public RequestsFragment(User mainUser, ArrayList<String> UUIDs) {
         this.mainUser = mainUser;
+        this.UUIDs = UUIDs;
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -59,15 +57,16 @@ public class RequestsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.habi_requests_fragment, container, false);
+        loading = view.findViewById(R.id.requests_shimmer_container);
+        loading.setVisibility(View.GONE); // Invisible by default
 
-        // setting up recycler view
+        populateList(); // Begin fetching data for display
+
+        // Set up recycler view
         recyclerView = view.findViewById(R.id.requests_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        loading = view.findViewById(R.id.requests_shimmer_container);
-
-        // setting social adapter
-        socialAdapter = new SocialAdapter(displayList, new SocialAdapter.ClickListener() {
+        socialAdapter = new SocialAdapter(mainUser, UUIDs, usernames, new SocialAdapter.ClickListener() {
             @Override
             public void menuButtonOnClick(View view, int position) {
                 Log.d("Menu", "Clicked " + position);
@@ -76,34 +75,11 @@ public class RequestsFragment extends Fragment {
 
             @Override
             public void mainButtonOnClick(View view, int position) {
-                ButtonClicked(view, position);
             }
-        }, true, bioList,"Accept");
+        }, bios, SocialAdapter.ACCEPT);
         recyclerView.setAdapter(socialAdapter);
 
-        if (displayList.isEmpty()){
-            new RequestAsyncTask().execute();
-            loading.startShimmer();
-        } else {
-            loading.setVisibility(View.GONE);
-        }
-
         return view;
-    }
-
-    /**
-     * getUserList
-     *
-     * @author Pranav
-     *
-     * get the followers username and bio
-     */
-    public void getUserList(){
-        ArrayList<String> userEmail = mainUser.getFollowingReqList();
-        for(String user: userEmail){
-            displayList.add(dm.getUserName(user));
-            bioList.add(dm.getUserBio(user));
-        }
     }
 
     /**
@@ -120,9 +96,7 @@ public class RequestsFragment extends Fragment {
         menu.getMenuInflater().inflate(R.menu.social_popup_menu, menu.getMenu());
         menu.getMenu().add("Remove");
         menu.getMenu().add("Block");
-        Log.d("image Button", "menu button clicked");
         menu.show();
-
 
         menu.setOnMenuItemClickListener(menuItem -> {
             if (menuItem.getTitle().equals("Remove")) {
@@ -135,32 +109,48 @@ public class RequestsFragment extends Fragment {
     }
 
     /**
-     * ButtonClicked
-     * <p>
-     * listener for the button in Recycler View
+     * Populates usernames and bios to display, except those that are from users that block or are
+     * blocked by mainUser
      *
-     * @param view
-     * @param userPosition
-     * @see SocialAdapter
+     * @author Kaaden
      */
-    public void ButtonClicked(View view, int userPosition) {
-        MaterialButton button = view.findViewById(R.id.social_main_button);
-        Log.d("ListButton", "Clicked");
+    public void populateList() {
+        // Only populate if empty
+        if (usernames.isEmpty()) {
+            new RequestAsyncTask().execute();
+        }
     }
 
+    /**
+     * Gets the data in background
+     */
     public class RequestAsyncTask extends AsyncTask<Void, Void, Void> {
         @Override
+        protected void onPreExecute() {
+            loading.setVisibility(View.VISIBLE);   // Appear visuals
+            loading.startShimmer();             // Visual effect
+        }
+
+        @Override
         protected Void doInBackground(Void... voids) {
-            getUserList();
+            // Remove unwanted users that might be present
+            UUIDs.removeAll(mainUser.getBlockList());
+            UUIDs.removeAll(mainUser.getBlockedByList());
+            UUIDs.remove(mainUser.getEmail());
+            // Save info
+            UUIDs.forEach(UUID -> {
+                usernames.add(dm.getUserName(UUID));
+                bios.add(dm.getUserBio(UUID));
+            });
             return null;
         }
 
         @Override
         protected void onPostExecute(Void unused) {
             super.onPostExecute(unused);
-            socialAdapter.notifyDataSetChanged();
-            loading.stopShimmer();
-            loading.setVisibility(View.GONE);
+            socialAdapter.notifyDataSetChanged();   // Tell display
+            loading.stopShimmer();                  // Stop visuals
+            loading.setVisibility(View.GONE);       // Disappear visuals
         }
     }
 

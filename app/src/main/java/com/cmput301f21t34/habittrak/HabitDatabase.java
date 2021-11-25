@@ -52,7 +52,7 @@ public class HabitDatabase {
     public void setIndex(int index){ this.index = index; }
 
     public ArrayList<HabitEvent> getHabitEvents(){ return this.habitEvents; }
-    public void setHabitEvents(ArrayList<HabitEvent> habitEvents) { this.habitEvents = habitEvents; }
+    public void setHabitEvents(ArrayList<HabitEvent> habitEvents){ this.habitEvents = habitEvents; }
 
     public ArrayList<Boolean> getOnDaysObj(){ return this.onDaysObj; }
     public void setOnDaysObj(OnDays onDays) {

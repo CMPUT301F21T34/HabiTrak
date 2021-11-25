@@ -1,12 +1,7 @@
 package com.cmput301f21t34.habittrak.social;
 
-import android.annotation.SuppressLint;
-import android.app.SearchManager;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,20 +20,15 @@ import com.cmput301f21t34.habittrak.user.User;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.button.MaterialButton;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
 
 /**
- * SearchFragment
+ * Fragment for displaying and searching all users
  *
+ * @see SearchView
+ * @see SocialAdapter
  * @author Pranav
  * @author Kaaden
- * @version 1.0
- * @see SocialAdapter
- * @see SearchView
- * @since 2021-11-01
  */
 public class SearchFragment extends Fragment {
     public static String TAG = "SEARCH_FRAGMENT";
@@ -48,21 +38,21 @@ public class SearchFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private SocialAdapter socialAdapter;
     private ShimmerFrameLayout loading;
+    private SearchView searchBox;
     // Data
-    private ArrayList<String> displayList = new ArrayList<>();
-    private ArrayList<String> bioList = new ArrayList<>();
     private User mainUser;
+    private ArrayList<String> UUIDs;
+    private ArrayList<String> usernames = new ArrayList<>();
+    private ArrayList<String> bios = new ArrayList<>();
 
-
-
-    public SearchFragment(User mainUser) {
+    public SearchFragment(User mainUser, ArrayList<String> UUIDs) {
         this.mainUser = mainUser;
+        this.UUIDs = UUIDs;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -70,15 +60,18 @@ public class SearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.habi_search_fragment, container, false);
-        SearchView searchBox = view.findViewById(R.id.social_search_box);
         loading = view.findViewById(R.id.shimmer_container);
+        loading.setVisibility(View.GONE); // Invisible by default
+        searchBox = view.findViewById(R.id.social_search_box);
+        searchBox.setVisibility(View.GONE); // Off to start because crash if not done getting users
 
+        populateList(); // Begin fetching data for display
 
-        // setting up recycler view
+        // Set up recycler view
         recyclerView = view.findViewById(R.id.search_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        socialAdapter = new SocialAdapter(displayList, new SocialAdapter.ClickListener() {
+        socialAdapter = new SocialAdapter(mainUser, UUIDs, usernames, new SocialAdapter.ClickListener() {
             @Override
             public void menuButtonOnClick(View view, int position) {
                 Log.d("Menu", "Clicked " + position);
@@ -87,9 +80,8 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void mainButtonOnClick(View view, int position) {
-                ButtonClicked(view, position);
             }
-        }, true, bioList, "Follow");
+        }, bios, "none");
         recyclerView.setAdapter(socialAdapter);
 
 
@@ -108,13 +100,6 @@ public class SearchFragment extends Fragment {
             }
         });
 
-        if (displayList.isEmpty()) {
-            new SearchAsyncTask().execute();
-            loading.startShimmer();
-        } else {
-            loading.setVisibility(View.GONE);
-        }
-
         return view;
     }
 
@@ -131,7 +116,6 @@ public class SearchFragment extends Fragment {
         PopupMenu menu = new PopupMenu(getContext(), view);
         menu.getMenuInflater().inflate(R.menu.social_popup_menu, menu.getMenu());
         menu.getMenu().add("Block");
-        Log.d("image Button", "menu button clicked");
         menu.show();
 
         menu.setOnMenuItemClickListener(menuItem -> {
@@ -143,62 +127,50 @@ public class SearchFragment extends Fragment {
     }
 
     /**
-     * ButtonClicked
-     * <p>
-     * listener for the button in Recycler View
+     * Populates usernames and bios to display, except those that are from users that block or are
+     * blocked by mainUser
      *
-     * @param view
-     * @param userPosition
-     * @see SocialAdapter
+     * @author Kaaden
      */
-    public void ButtonClicked(View view, int userPosition) {
-        MaterialButton button = view.findViewById(R.id.social_main_button);
-        Log.d("ListButton", "Clicked");
-    }
-
-    /**
-     * getAllUsers.
-     *
-     * @author Pranav
-     *
-     * gets all users and removes the blocked and blocked by from the display list.
-     */
-    public void getAllUsers(){
-        ArrayList<String> users = dm.getAllUsers();
-        ArrayList<String> blockedUsers = mainUser.getBlockList();
-        ArrayList<String> blockedBy = mainUser.getBlockedByList();
-
-        for (String user: users){
-            if(!blockedBy.contains(user) && !blockedUsers.contains(user)){
-                displayList.add(dm.getUserName(user));
-                bioList.add(dm.getUserBio(user));
-                Log.d(TAG, user);
-            }
+    public void populateList() {
+        // Only populate if empty
+        if (usernames.isEmpty()) {
+            new SearchAsyncTask().execute();
         }
-
     }
 
     /**
-     * SearchAsyncTask
-     *
-     * @author Pranav
-     *
-     * gets the data in background on another thread.
+     * Gets the data in background
      */
-    @SuppressLint("StaticFieldLeak")
     public class SearchAsyncTask extends AsyncTask<Void, Void, Void> {
         @Override
+        protected void onPreExecute() {
+            loading.setVisibility(View.VISIBLE);   // Appear visuals
+            loading.startShimmer();             // Visual effect
+        }
+
+        @Override
         protected Void doInBackground(Void... voids) {
-            getAllUsers();
+            // Remove unwanted users that might be present
+            UUIDs.removeAll(mainUser.getBlockList());
+            UUIDs.removeAll(mainUser.getBlockedByList());
+            UUIDs.remove(mainUser.getEmail());
+            // Save info
+            UUIDs.forEach(UUID -> {
+                usernames.add(dm.getUserName(UUID));
+                bios.add(dm.getUserBio(UUID));
+            });
             return null;
         }
 
         @Override
         protected void onPostExecute(Void unused) {
             super.onPostExecute(unused);
-            socialAdapter.notifyDataSetChanged();
-            loading.stopShimmer();
-            loading.setVisibility(View.GONE);
+            socialAdapter.notifyDataSetChanged();   // Tell display
+            searchBox.setVisibility(View.VISIBLE);  // Allow searches now
+            loading.stopShimmer();                  // Stop visuals
+            loading.setVisibility(View.GONE);       // Disappear visuals
         }
     }
+
 }

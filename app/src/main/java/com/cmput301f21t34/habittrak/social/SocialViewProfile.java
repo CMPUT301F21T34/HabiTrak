@@ -1,22 +1,21 @@
 package com.cmput301f21t34.habittrak.social;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.recycler.HabitRecycler;
 import com.cmput301f21t34.habittrak.recycler.SocialAdapter;
 import com.cmput301f21t34.habittrak.recycler.TodayHabitRecyclerAdapter;
-import com.cmput301f21t34.habittrak.user.User;
 import com.cmput301f21t34.habittrak.user.Habit;
+import com.cmput301f21t34.habittrak.user.User;
 
 import java.util.ArrayList;
 
@@ -24,7 +23,7 @@ import java.util.ArrayList;
  * SocialViewProfile.
  *
  * @author Pranav
- *
+ * <p>
  * View the user's profile with the public habits.
  */
 public class SocialViewProfile extends AppCompatActivity {
@@ -94,20 +93,20 @@ public class SocialViewProfile extends AppCompatActivity {
 
     /**
      * getPublicHabits
-     *
+     * <p>
      * sets the displayList to the public habits of the User.
      */
-    public void getPublicHabits(){
+    public void getPublicHabits() {
         habitList = user.getHabitList();
         displayList = new ArrayList<Habit>();
-        for (int i = 0; i < habitList.size(); i++){
-            if (habitList.get(i).isPublic()){
+        for (int i = 0; i < habitList.size(); i++) {
+            if (habitList.get(i).isPublic()) {
                 displayList.add(habitList.get(i));
             }
         }
     }
 
-    public void onHabitClick(View view, int position){
+    public void onHabitClick(View view, int position) {
         // start View Habit Activity
     }
 }

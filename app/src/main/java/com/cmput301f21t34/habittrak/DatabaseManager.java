@@ -1,16 +1,16 @@
 package com.cmput301f21t34.habittrak;
 
+import android.location.Location;
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.cmput301f21t34.habittrak.user.DatabasePointer;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitEvent;
 import com.cmput301f21t34.habittrak.user.HabitList;
 import com.cmput301f21t34.habittrak.user.OnDays;
 import com.cmput301f21t34.habittrak.user.User;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -22,23 +22,24 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.TimeZone;
 
 /**
  * @author Tauseef Nafee Fattah
  * @author Henry
- * @see User
  * @version 1.0
- *
+ * @see User
  */
-
 public class DatabaseManager {
-    private FirebaseFirestore database;
+    private final FirebaseFirestore database;
 
     public DatabaseManager() {
         database = FirebaseFirestore.getInstance();
@@ -50,13 +51,13 @@ public class DatabaseManager {
 
     /**
      * validCredentials
-     *
+     * <p>
      * checks if given password matches the actual password of an email
      *
-     * @author Henry
-     * @param email - Type String; the email of the user who's validity is being checked
+     * @param email    - Type String; the email of the user who's validity is being checked
      * @param password - Type password; The password of the user who's validity is being checked
      * @return Boolean; returns true if credentials match, false otherwise
+     * @author Henry
      */
     public boolean validCredentials(String email, String password) {
 
@@ -74,122 +75,84 @@ public class DatabaseManager {
                     validCredentials = true;
                 }
             }
+        } catch (Exception ignored) {
         }
-        catch (Exception ignored) {}
 
         return validCredentials;
     }
 
     /**
      * getAllUsers()
+     * Gets a list of the UUIDs of all users in the database
      *
-     * Fetches all users (identified by email) from the database
-     *
+     * @return ArrayList<String>, if successful, a list of UUIDs of all users, otherwise an empty list
      * @author Henry
-     * @return ArrayList<Database_Pointer>
+     * @author Kaaden
      */
-    public ArrayList<DatabasePointer> getAllUsers() {
-
-        ArrayList<DatabasePointer> users = new ArrayList<>();
-
+    public ArrayList<String> getAllUsers() {
+        ArrayList<String> users = new ArrayList<>();
         try {
             Task<QuerySnapshot> task = database.collection("users").get();
-
-            while (!task.isComplete()) ;
-
-            for (QueryDocumentSnapshot document : task.getResult()) {
-                users.add(new DatabasePointer(document.getId().toString()));
-            }
-        }
-        catch (Exception ignored) {}
-
+            while (!task.isComplete()) ; // wait
+            // Add each the id of each document (UUID of the user) to users
+            Objects.requireNonNull(task.getResult()).forEach(document -> users.add(document.getId()));
+        } catch (Exception ignored) {}
         return users;
     }
 
     /**
      * isUniqueEmail
-     *
+     * <p>
      * Checks to see if the user with the provided email already exists
      *
-     * @author Henry
      * @param email - Type String; the email that is to be checked id its unique or not
      * @return boolean; returns true if unique otherwise will return false
+     * @author Henry
      */
     public boolean isUniqueEmail(String email) {
-
-        boolean isUnique = false;
-
         final CollectionReference collectionReference = database.collection("users");
-
         try {
             DocumentReference docref = collectionReference.document(email);
             Task<DocumentSnapshot> task = docref.get();
-            while (!task.isComplete());
+            while (!task.isComplete()) ;
             DocumentSnapshot document = task.getResult();
-            if (!document.exists()) {
-                isUnique = true;
-                return isUnique;
-            }
+            return !document.exists(); // document for email doesn't exist means email unique
+        } catch (Exception ignored) {
+            return false;
         }
-
-        catch (Exception ignored) {}
-
-        return isUnique;
     }
 
     /**
      * isUniqueUsername
+     * Checks to see if the provided username already exists
      *
-     * Checks to see if the user with the provided email already exists
-     *
+     * @param username String, the username to check
+     * @return boolean, true if the username is unique, otherwise false
      * @author Henry
-     * @param username -Type String, the username to check
-     * @param email - Type String, the email associated with the email
-     * @return boolean
+     * @author Kaaden
      */
-    public boolean isUniqueUsername(String username, String email) {
-
-        boolean isUnique = false;
-
-        final CollectionReference collectionReference = database.collection("users");
-
-        try {
-            // Get all usernames
-            ArrayList<String> allUserNames = new ArrayList<>();
-            Task<QuerySnapshot> task1 = database.collection("users").get();
-            while (!task1.isComplete()) ;
-            for (QueryDocumentSnapshot document : task1.getResult()) {
-                allUserNames.add(document.get("username").toString());
+    public boolean isUniqueUsername(String username) {
+        // Go through all users
+        for (String UUID : getAllUsers()) {
+            // Check if any of their emails match the given
+            if (username.equals(getUserName(UUID))) {
+                return false;
             }
-
-            // Get username for given email, then compare
-            DocumentReference docref = collectionReference.document(email);
-            Task<DocumentSnapshot> task2 = docref.get();
-            while (!task2.isComplete());
-            DocumentSnapshot document = task2.getResult();
-            String name = document.get("username").toString();
-            if (!allUserNames.contains(name)) {
-                isUnique = true;
-            }
-            return isUnique;
-
         }
-
-        catch (Exception ignored) {}
-
-        return isUnique;
+        // If not then its unique
+        return true;
     }
 
     /**
      * createNewUser
-     *
+     * <p>
      * Creates a new user from the data passed into it, and puts it into the database
      *
-     * @author Henry
-     * @param email -Type String the email of the user to be created
+     * @param email    -Type String the email of the user to be created
      * @param password -Type String the password of the user to be created
      * @param username -Type String the username of the user to be created
      * @return true if it is successful or false if it is not
+     * @author Henry
      */
     public boolean createNewUser(String email, String username, String password) {
 
@@ -204,12 +167,12 @@ public class DatabaseManager {
             data.put("Username", username);
             data.put("Biography", "");
             data.put("habitList", new ArrayList<HabitDatabase>());
-            data.put("followerList", new ArrayList<DatabasePointer>());
-            data.put("followingList", new ArrayList<DatabasePointer>());
-            data.put("followReqList", new ArrayList<DatabasePointer>());
-            data.put("followRequestedList", new ArrayList<DatabasePointer>());
-            data.put("blockList", new ArrayList<DatabasePointer>());
-            data.put("blockedByList", new ArrayList<DatabasePointer>());
+            data.put("followerList", new ArrayList<String>());
+            data.put("followingList", new ArrayList<String>());
+            data.put("followReqList", new ArrayList<String>());
+            data.put("followRequestedList", new ArrayList<String>());
+            data.put("blockList", new ArrayList<String>());
+            data.put("blockedByList", new ArrayList<String>());
 
             collectionReference
                     .document(email)
@@ -223,12 +186,12 @@ public class DatabaseManager {
 
     /**
      * deleteUser
-     *
+     * <p>
      * Attempts to delete a user from the database
      *
-     * @author Henry
      * @param email -Type String; the email of the user to be deleted
      * @return true if it is successful or false if it is not
+     * @author Henry
      */
     public boolean deleteUser(String email) {
 
@@ -255,13 +218,13 @@ public class DatabaseManager {
 
     /**
      * getUser
-     *
+     * <p>
      * returns the user with the provided email
      *
-     * @author Tauseef
-     * @author Henry
      * @param email- Type String; the email of the user to get
      * @return User
+     * @author Tauseef
+     * @author Henry
      */
     public User getUser(String email) {
         User user;
@@ -271,17 +234,17 @@ public class DatabaseManager {
         String bio = "";
 
         HabitList habitList = new HabitList();
-        ArrayList<DatabasePointer>followerList = new ArrayList<DatabasePointer>();
-        ArrayList<DatabasePointer>followingList = new ArrayList<DatabasePointer>();
-        ArrayList<DatabasePointer>followReqList = new ArrayList<DatabasePointer>();
-        ArrayList<DatabasePointer>followRequestedList = new ArrayList<DatabasePointer>();
-        ArrayList<DatabasePointer>blockList = new ArrayList<DatabasePointer>();
-        ArrayList<DatabasePointer>blockedByList = new ArrayList<DatabasePointer>();
+        ArrayList<String> followerList = new ArrayList<>();
+        ArrayList<String> followingList = new ArrayList<>();
+        ArrayList<String> followReqList = new ArrayList<>();
+        ArrayList<String> followRequestedList = new ArrayList<>();
+        ArrayList<String> blockList = new ArrayList<>();
+        ArrayList<String> blockedByList = new ArrayList<>();
 
         try {
             DocumentReference docref = database.collection("users").document(email);
             Task<DocumentSnapshot> task = docref.get();
-            while (!task.isComplete());
+            while (!task.isComplete()) ;
             DocumentSnapshot document = task.getResult();
 
             if (document.getData() != null) {
@@ -290,55 +253,45 @@ public class DatabaseManager {
                 ArrayList<HashMap<String, Object>> requestedHabitList = (ArrayList<HashMap<String, Object>>) document.get("habitList");
                 ArrayList<HabitDatabase> requestedHabitDatabases = toHabitDatabaseList(requestedHabitList);
                 habitList = databaseToHabit(requestedHabitDatabases);
-                ArrayList<HashMap<String, String>> followerListMap = (ArrayList<HashMap<String, String>>) document.get("followerList");
-                followerList = toPointerList(followerListMap);
-
-                ArrayList<HashMap<String, String>> followingListMap = (ArrayList<HashMap<String, String>>) document.get("followingList");
-                followingList = toPointerList(followingListMap);
-
-                ArrayList<HashMap<String, String>> followReqListMap = (ArrayList<HashMap<String, String>>) document.get("followReqList");
-                followReqList = toPointerList((followReqListMap));
-
-                ArrayList<HashMap<String, String>> followRequestedListMap = (ArrayList<HashMap<String, String>>) document.get("followRequestedList");
-                followRequestedList = toPointerList((followRequestedListMap));
-
-                ArrayList<HashMap<String, String>> blockListMap = (ArrayList<HashMap<String, String>>) document.get("blockList");
-                blockList = toPointerList((blockListMap));
-
-                ArrayList<HashMap<String, String>> blockedByListMap = (ArrayList<HashMap<String, String>>) document.get("blockedByList");
-                blockedByList = toPointerList((blockedByListMap));
-
+                followerList = (ArrayList<String>) document.get("followerList");
+                followingList = (ArrayList<String>) document.get("followingList");
+                followReqList = (ArrayList<String>) document.get("followReqList");
+                followRequestedList = (ArrayList<String>) document.get("followRequestedList");
+                blockList = (ArrayList<String>) document.get("blockList");
+                blockedByList = (ArrayList<String>) document.get("blockedByList");
                 name = (String) document.get("Username");
                 password = (String) document.get("Password");
                 bio = (String) document.get("Biography");
             }
 
-            user = new User(email);
-
-            user.setPassword(password);
-            user.setUsername(name);
-            user.setHabitList(habitList);
-            user.setFollowerList(followerList);
-            user.setFollowingList(followingList);
-            user.setBlockList(blockList);
-            user.setBlockedByList(blockedByList);
-            user.setFollowerReqList(followReqList);
-            user.setFollowerRequestedList(followRequestedList);
+            user = new User(
+                    name,
+                    password,
+                    email,
+                    bio,
+                    habitList,
+                    followerList,
+                    followingList,
+                    followReqList,
+                    followRequestedList,
+                    blockList,
+                    blockedByList
+            );
             return user;
+        } catch (Exception ignored) {
         }
-        catch (Exception ignored) {}
-        user = new User();
-        return user;
+
+        return new User(email);
     }
 
     /**
      * getUserName
-     *
+     * <p>
      * gets the user name of the provided email
      *
-     * @author Tauseef
      * @param email -Type String; The email email of the user who's username is to be retrieved
      * @return username (string)
+     * @author Tauseef
      */
     public String getUserName(String email) {
 
@@ -353,19 +306,19 @@ public class DatabaseManager {
             if (document.getData() != null) {
                 name = (String) document.get("Username");
             }
+        } catch (Exception ignored) {
         }
-        catch (Exception ignored){}
         return name;
     }
 
     /**
      * getUserBio
-     *
+     * <p>
      * gets the user bio of the provided email
      *
-     * @author Tauseef
      * @param email -Type String; The email email of the user who's bio is to be retrieved
      * @return String containing the bio
+     * @author Tauseef
      */
     public String getUserBio(String email) {
 
@@ -380,8 +333,8 @@ public class DatabaseManager {
             if (document.getData() != null) {
                 bio = (String) document.get("Biography");
             }
+        } catch (Exception ignored) {
         }
-        catch (Exception ignored){}
         return bio;
     }
 
@@ -389,9 +342,9 @@ public class DatabaseManager {
      * getHabitList
      * gets the habit list of the provided user email
      *
-     * @author Tauseef
      * @param email -Type String; The email email of the user who's habit list is to be retrieved
-     * @return habitList
+     * @return HabitList
+     * @author Tauseef
      */
     public HabitList getHabitList(String email) {
 
@@ -399,28 +352,29 @@ public class DatabaseManager {
         try {
             DocumentReference docref = database.collection("users").document(email);
             Task<DocumentSnapshot> task = docref.get();
-            while (!task.isComplete());
+            while (!task.isComplete()) ;
             DocumentSnapshot document = task.getResult();
-            if(document.getData() != null){
+            if (document.getData() != null) {
                 ArrayList<HashMap<String, Object>> requestedHabitList = (ArrayList<HashMap<String, Object>>) document.get("habitList");
                 ArrayList<HabitDatabase> requestedHabitDatabases = toHabitDatabaseList(requestedHabitList);
                 returnHabitList = databaseToHabit(requestedHabitDatabases);
             }
+        } catch (Exception ignored) {
+            Log.d("XYZGETTING", "habitlist", ignored);
         }
-        catch (Exception ignored){Log.d("XYZGETTING", "habitlist", ignored);}
         return returnHabitList;
     }
 
     /**
      * toHabitDatabaseList
-     *
+     * <p>
      * Converts an array of HashMap (data from the database) to an array of HabitDatabase objects
      *
-     * @author Tauseef
-     * @param hashMapList -Type ArrayList<HashMap<String,Object>> the array of HashMap to be converted
+     * @param hashMapList -Type ArrayList<HashMap<String, Object>> the array of HashMap to be converted
      * @return ArrayList <HabitDatabase>
+     * @author Tauseef
      */
-    public ArrayList<HabitDatabase> toHabitDatabaseList(ArrayList<HashMap<String,Object>>hashMapList){
+    public ArrayList<HabitDatabase> toHabitDatabaseList(ArrayList<HashMap<String, Object>> hashMapList) {
         ArrayList<HabitDatabase> habitDatabaseList = new ArrayList<>();
         for (int i = 0; i < hashMapList.size(); i++) {
             HabitDatabase habitDatabase = toHabitDatabase(hashMapList.get(i));
@@ -433,34 +387,36 @@ public class DatabaseManager {
      * toHabitDatabase
      * Converts HashMap from database to HabitDatabase object
      *
-     * @author Tauseef
-     * @param hashmap -Type HashMap<String,Object> the HashMap to be converted
+     * @param hashmap -Type HashMap<String, Object> the HashMap to be converted
      * @return HabitDatabase
+     * @author Tauseef
      */
-    public HabitDatabase toHabitDatabase(HashMap<String ,Object> hashmap){
+    public HabitDatabase toHabitDatabase(HashMap<String, Object> hashmap) {
         HabitDatabase habitDatabase = new HabitDatabase();
-        habitDatabase.setIndex((int)(long) hashmap.get("index"));
+        habitDatabase.setIndex((int) (long) hashmap.get("index"));
         habitDatabase.setReason((String) hashmap.get("reason"));
         habitDatabase.setTitle((String) hashmap.get("title"));
         habitDatabase.setisPublic((boolean) hashmap.get("isPublic"));
         habitDatabase.setHabitEvents(toHabitEventList((ArrayList<HashMap<String, Object>>) hashmap.get("habitEvents")));
-        habitDatabase.setOnDaysObj((ArrayList<Boolean>) hashmap.get("onDaysObj"));
+        habitDatabase.setOnDaysObjFromDB((ArrayList<Boolean>) hashmap.get("onDaysObj"));
         habitDatabase.setStartDate(toCalendar((HashMap<String, Object>) hashmap.get("startDate")));
-        return  habitDatabase;
+        habitDatabase.setCurrentStreakDate(toCalendar((HashMap<String, Object>) hashmap.get("currentStreakDate")));
+        habitDatabase.setBestStreakDate(toCalendar((HashMap<String, Object>) hashmap.get("bestStreakDate")));
+        return habitDatabase;
     }
 
     /**
      * toHabitEventList
      * Converts an array of HashMap (data from the database) to an array of HabitEvent objects
      *
+     * @param hashMapList -Type ArrayList<HashMap<String, Object>> the array of HashMap to be converted
+     * @return ArrayList<HabitEvent>
      * @author Tauseef
-     * @param hashMapList -Type ArrayList<HashMap<String,Object>> the array of HashMap to be converted
-     * @return ArrayList<Habit_Event>
      */
-    public ArrayList<HabitEvent> toHabitEventList(ArrayList<HashMap<String,Object>>hashMapList){
+    public ArrayList<HabitEvent> toHabitEventList(ArrayList<HashMap<String, Object>> hashMapList) {
         ArrayList<HabitEvent> habitEventList = new ArrayList<>();
         for (int i = 0; i < hashMapList.size(); i++) {
-            HabitEvent habitEvent = toHabitEvent( hashMapList.get(i));
+            HabitEvent habitEvent = toHabitEvent(hashMapList.get(i));
             habitEventList.add(habitEvent);
         }
         return habitEventList;
@@ -470,32 +426,59 @@ public class DatabaseManager {
      * toHabitEvent
      * Converts HashMap from database to HabitEvent object
      *
+     * @param hashmap -Type HashMap<String, Object> the HashMap to be converted
+     * @return HabitEvent
      * @author Tauseef
-     * @param hashmap -Type HashMap<String,Object> the HashMap to be converted
-     * @return Habit_Event
      */
-    public HabitEvent toHabitEvent(HashMap<String,Object> hashmap){
+    public HabitEvent toHabitEvent(HashMap<String, Object> hashmap) {
         HabitEvent event = new HabitEvent();
-        event.setComment((String) hashmap.get("comment"));
+        if(hashmap.get("comment") != null) {
+            event.setComment((String) hashmap.get("comment"));
+        }
+        else{
+            event.setComment(null);
+        }
 
-        //TODO: Figure out away to store a Location and Photograph
-        /*
-        event.setLocation((String) hashmap.get("location"));
-        event.setPhotograph((String) hashmap.get("photograph"));
-         */
+        if(hashmap.get("location") != null){
+            event.setLocation(toLocation((HashMap<String,Object>) hashmap.get("location")));
+        }
+        else{
+            event.setLocation(null);
+        }
+        if (hashmap.get("photograph") != null){
+            event.setPhotograph(Uri.parse((String) hashmap.get("photograph")));
+        }
+        else{
+            event.setPhotograph(null);
+        }
+
         event.setCompletedDate(toCalendar((HashMap<String, Object>) hashmap.get("completedDate")));
         return event;
+    }
+
+    /**
+     * toLocation
+     * Converts HashMap from database to Location object
+     * @param hashMap HashMap<String, Object> the HashMap to be converted
+     * @return Location, the location from the HashMap
+     */
+    private Location toLocation(HashMap<String,Object> hashMap){
+
+        Location loc = new Location((String) hashMap.get("provider"));
+        loc.setLatitude((double) (long) hashMap.get("latitude"));
+        loc.setLongitude((double) (long) hashMap.get("longitude"));
+        return loc;
     }
 
     /**
      * toCalendar
      * Converts HashMap from database to Calendar object
      *
-     * @author Tauseef
-     * @param hashmap -Type HashMap<String,Object> the HashMap to be converted
+     * @param hashmap -Type HashMap<String, Object> the HashMap to be converted
      * @return GregorianCalendar
+     * @author Tauseef
      */
-    public GregorianCalendar toCalendar(HashMap<String,Object> hashmap){
+    public GregorianCalendar toCalendar(HashMap<String, Object> hashmap) {
         GregorianCalendar returnCalendar = new GregorianCalendar();
         returnCalendar.setLenient((boolean) hashmap.get("lenient"));
         returnCalendar.setFirstDayOfWeek((int) (long) hashmap.get("firstDayOfWeek"));
@@ -509,197 +492,142 @@ public class DatabaseManager {
 
     /**
      * getTimezone
-     *
+     * <p>
      * Converts HashMap from database to TimeZone object
      *
-     * @author Tauseef
-     * @param hashMap -Type HashMap<String,Object> the HashMap to be converted
+     * @param hashMap -Type HashMap<String, Object> the HashMap to be converted
      * @return TimeZone
+     * @author Tauseef
      */
-    public TimeZone getTimezone(HashMap<String,Object> hashMap){
+    public TimeZone getTimezone(HashMap<String, Object> hashMap) {
         String timezoneId = (String) hashMap.get("id");
         TimeZone zone = TimeZone.getTimeZone(timezoneId);
         return zone;
     }
 
     /**
-     * getFollowerList
-     * gets the follower list of the provided email
+     * getUUIDList
+     * Gets the specified list owned by the specified user from the database
      *
-     * @author Tauseef
-     * @param email -Type String; The email of the user who's followerList is to be retrieved
-     * @return Follower list
+     * @param listName String, name of the list to retrieve
+     * @param UUID     String, UUID of the user who owns said list
+     * @return ArrayList<String>, the list if successful, otherwise an empty list
+     * @author Kaaden, Henry, Tauseef
      */
-    public ArrayList<DatabasePointer> getFollowerList(String email) {
-
-        ArrayList<DatabasePointer> returnFollowerList = new ArrayList<DatabasePointer>();
-
+    private ArrayList<String> getUUIDList(String listName, String UUID) {
         try {
-            DocumentReference docref = database.collection("users").document(email);
-            Task<DocumentSnapshot> task = docref.get();
-            while (!task.isComplete()) ;
-            DocumentSnapshot document = task.getResult();
+            DocumentReference documentReference = database.collection("users").document(UUID);
+            Task<DocumentSnapshot> task = documentReference.get();
 
+            while (!task.isComplete()) ; // wait
+
+            DocumentSnapshot document = task.getResult();
             if (document.getData() != null) {
-                ArrayList<HashMap<String, String>> followerListMap = (ArrayList<HashMap<String, String>>) document.get("followerList");
-                returnFollowerList = toPointerList(followerListMap);
+                return (ArrayList<String>) document.get(listName);
             }
+        } catch (Exception ignored) {
         }
-        catch (Exception ignored){}
-        return returnFollowerList;
+
+        return new ArrayList<>();
+    }
+
+    /**
+     * getFollowerList
+     * Gets the followerList of the user with the provided UUID,
+     * a list of UUIDs of users who follow this user
+     *
+     * @param UUID String, UUID of the user whose followerList is to be retrieved
+     * @return ArrayList<String>, the followerList if successful, otherwise an empty list
+     * @author Tauseef
+     * @author Kaaden
+     */
+    public ArrayList<String> getFollowerList(String UUID) {
+        return getUUIDList("followerList", UUID);
     }
 
     /**
      * getFollowingList
+     * Gets the followingList of the user with the provided UUID,
+     * a list of UUIDs of users who follow this user
      *
-     * gets the following list of the provided email
-     *
+     * @param UUID String, UUID of the user whose followingList is to be retrieved
+     * @return ArrayList<String>, the followingList if successful, otherwise an empty list
      * @author Tauseef
-     * @param email -Type String; The email of the user who's followingList is to be retrieved
-     * @return Following list
+     * @author Kaaden
      */
-    public ArrayList<DatabasePointer> getFollowingList(String email ){
-
-        ArrayList<DatabasePointer> returnFollowingList = new ArrayList<DatabasePointer>();
-
-        try {
-            DocumentReference docref = database.collection("users").document(email);
-            Task<DocumentSnapshot> task = docref.get();
-            while (!task.isComplete()) ;
-            DocumentSnapshot document = task.getResult();
-
-            if (document.getData() != null) {
-                ArrayList<HashMap<String, String>> followingListMap = (ArrayList<HashMap<String, String>>) document.get("followingList");
-                returnFollowingList = toPointerList(followingListMap);
-            }
-        }
-        catch (Exception ignored){}
-        return returnFollowingList;
+    public ArrayList<String> getFollowingList(String UUID) {
+        return getUUIDList("followingList", UUID);
     }
 
     /**
      * getFollowReqList
-     * returns followReq list of the provided email (The followReq list contains all the users email
-     * the main user(the one with the id) has requested to follow)
+     * Gets the followReqList of the user with the provided UUID,
+     * a list of UUIDs of users that this user has requested to follow
      *
+     * @param UUID String, UUID of the user whose followReqList is to be retrieved
+     * @return ArrayList<String>, the followReqList if successful, otherwise an empty list
      * @author Tauseef
-     * @param email -Type String; The email email of the user who's follow req list is to be retrieved
-     * @return ArrayList<Database_Pointer> Follow req list
+     * @author Kaaden
      */
-    public ArrayList<DatabasePointer> getFollowReqList(String email) {
-
-        ArrayList<DatabasePointer> returnFollowReqList = new ArrayList<DatabasePointer>();
-
-        try {
-            DocumentReference docref = database.collection("users").document(email);
-            Task<DocumentSnapshot> task = docref.get();
-            while (!task.isComplete()) ;
-            DocumentSnapshot document = task.getResult();
-
-            if (document.getData() != null) {
-                ArrayList<HashMap<String, String>> followReqListMap = (ArrayList<HashMap<String, String>>) document.get("followReqList");
-                returnFollowReqList = toPointerList((followReqListMap));
-            }
-        }
-        catch (Exception ignored){}
-        return returnFollowReqList;
+    public ArrayList<String> getFollowReqList(String UUID) {
+        return getUUIDList("followReqList", UUID);
     }
 
 
     /**
      * getFollowRequestedList
-     * returns followRequested list of the provided email (The followReq list contains all the users email
-     * that have requested to follow the main user(the one with the id)
+     * Gets the followRequestedList of the user with the provided UUID,
+     * a list of UUIDs of users that have requested to follow this user
      *
+     * @param UUID String, UUID of the user whose followRequestedList is to be retrieved
+     * @return ArrayList<String>, the followRequestedList if successful, otherwise an empty list
      * @author Tauseef
-     * @param email -Type String; The email email of the user who's follow requested list is to be retrieved
-     * @return ArrayList<Database_Pointer>
+     * @author Kaaden
      */
-    public ArrayList<DatabasePointer> getFollowRequestedList(String email) {
-
-        ArrayList<DatabasePointer> returnFollowRequestedList = new ArrayList<DatabasePointer>();
-
-        try {
-            DocumentReference docref = database.collection("users").document(email);
-            Task<DocumentSnapshot> task = docref.get();
-            while (!task.isComplete()) ;
-            DocumentSnapshot document = task.getResult();
-
-            if (document.getData() != null) {
-                ArrayList<HashMap<String, String>> followRequestedListMap = (ArrayList<HashMap<String, String>>) document.get("followRequestedList");
-                returnFollowRequestedList = toPointerList((followRequestedListMap));
-            }
-        }
-        catch (Exception ignored){}
-        return returnFollowRequestedList;
+    public ArrayList<String> getFollowRequestedList(String UUID) {
+        return getUUIDList("followRequestedList", UUID);
     }
 
 
     /**
      * getBlockList
-     * returns the block list of the provided email (The block list contains all the users email
-     * that the user have blocked
+     * Gets the blockList of the user with the provided UUID,
+     * a list of UUIDs of users that this user has blocked
      *
+     * @param UUID String, UUID of the user whose blockList is to be retrieved
+     * @return ArrayList<String>, the blockList if successful, otherwise an empty list
      * @author Tauseef
-     * @param email -Type String; The email email of the user who's block list is to be retrieved
-     * @return ArrayList<Database_Pointer> Block List
+     * @author Kaaden
      */
-    public ArrayList<DatabasePointer> getBlockList(String email) {
-
-        ArrayList<DatabasePointer> returnBlockList = new ArrayList<DatabasePointer>();
-
-        try {
-            DocumentReference docref = database.collection("users").document(email);
-            Task<DocumentSnapshot> task = docref.get();
-            while (!task.isComplete()) ;
-            DocumentSnapshot document = task.getResult();
-
-            if (document.getData() != null) {
-                ArrayList<HashMap<String, String>> blockListMap = (ArrayList<HashMap<String, String>>) document.get("blockList");
-                returnBlockList = toPointerList((blockListMap));
-            }
-        }
-        catch (Exception ignored){}
-        return returnBlockList;
+    public ArrayList<String> getBlockList(String UUID) {
+        return getUUIDList("blockList", UUID);
     }
 
     /**
      * getBlockedByList
-     * returns blockedBylist of the provided email (The BlockedBy list contains all the users email
-     * that have blocked the user)
+     * Gets the blockList of the user with the provided UUID,
+     * a list of UUIDs of users that have blocked this user
      *
+     * @param UUID String, UUID of the user whose blockedByList is to be retrieved
+     * @return ArrayList<String>, the blockedByList if successful, otherwise an empty list
      * @author Tauseef
-     * @param email -Type String; The email email of the user who's blockedBy list is to be retrieved
-     * @return ArrayList<Database_Pointer> BlockedByList
+     * @author Kaaden
      */
-    public ArrayList<DatabasePointer> getBlockedByList(String email) {
-
-        ArrayList<DatabasePointer> returnBlockedByList = new ArrayList<DatabasePointer>();
-
-        try {
-            DocumentReference docref = database.collection("users").document(email);
-            Task<DocumentSnapshot> task = docref.get();
-            while (!task.isComplete()) ;
-            DocumentSnapshot document = task.getResult();
-
-            if (document.getData() != null) {
-                ArrayList<HashMap<String, String>> blockedByListMap = (ArrayList<HashMap<String, String>>) document.get("blockedByList");
-                returnBlockedByList = toPointerList((blockedByListMap));
-            }
-        }
-        catch (Exception ignored){}
-        return returnBlockedByList;
+    public ArrayList<String> getBlockedByList(String UUID) {
+        return getUUIDList("blockedByList", UUID);
     }
+
+    // TODO no one should be updating everything at once, its just inefficient, we should break this down into more precise functions
 
     /**
      * updateHabitNamePassword
-     *
+     * <p>
      * updates the habit, name and password of the user
      *
-     * @author Tauseef
      * @param user Type- User, the user who's habit/password/name is to be updated
+     * @author Tauseef
      */
-    public void updateHabitNamePassword(User user){
+    public void updateHabitNamePassword(User user) {
         final CollectionReference collectionReference = database.collection("users");
 
         HashMap<String, Object> data = new HashMap<>();
@@ -709,8 +637,8 @@ public class DatabaseManager {
         data.put("habitList", habitToDatabase(user.getHabitList()));
         data.put("followerList", user.getFollowerList());
         data.put("followingList", user.getFollowingList());
-        data.put("followReqList", user.getFollowerReqList());
-        data.put("followRequestedList", user.getFollowerRequestedList());
+        data.put("followReqList", user.getFollowingReqList());
+        data.put("followRequestedList", user.getFollowerReqList());
         data.put("blockList", user.getBlockList());
         data.put("blockedByList", user.getBlockedByList());
 
@@ -719,415 +647,166 @@ public class DatabaseManager {
                 .set(data);
     }
 
+
     /**
-     * updateFollower
+     * Updates the username of the user with the given UUID
      *
-     * Updates the follower list of the usr by adding or removing the database_pointer toBeAdded
-     * @author Henry
-     * @param user Type- User, the user who's follower list is to be updated
-     * @param toBeAdded Type- Database_Pointer, the database_pointer to be added or removed
-     * @param remove -Type Boolean, Indicates whether its add or remove operation
+     * @param UUID String, the UUID of the user to update
+     * @param newUserName String, the name to update to
+     * @author Kaaden
      */
-    public void updateFollower(User user, DatabasePointer toBeAdded, boolean remove) {
-        // Update user's followerList
-        DocumentReference userRef = database.collection("users").document(user.getEmail());
-        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        String TAG = "contain checker";
-                        int index = -1;
-                        boolean contains = false;
-                        ArrayList<DatabasePointer> followerList = new ArrayList<>();
-                        ArrayList<HashMap<String, String>> followerListMap = (ArrayList<HashMap<String, String>>) document.get("followerList");
-                        Log.d(TAG,Integer.toString(followerListMap.size()));
-                        followerList = toPointerList((followerListMap));
-                        for(int i = 0; i <followerList.size(); i++){
-                            if (followerList.get(i).equals(toBeAdded)){
-                                index = i;
-                                contains = true;
-                                Log.d(TAG,"from equals");
-                            }
-                            else if (followerList.get(i).Equals(toBeAdded)){
-                                index = i;
-                                contains = true;
-                                Log.d(TAG,"not from equals");
-                            }
-                            Log.d(TAG,"inside for loop");
+    public void updateUsername(String UUID, String newUserName) {
+        //if (!isUniqueUsername(newUserName)) return; // Don't update if would cause duplicates
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("Username", newUserName);
+        List<String> fieldsToUpdate = new ArrayList<>();
+        fieldsToUpdate.add("Username");
+        database.collection("users").document(UUID).set(data, SetOptions.mergeFields(fieldsToUpdate));
+    }
+
+    /**
+     * Updates the biography of the user with the given UUID
+     *
+     * @param UUID String, the UUID of the user to update
+     * @param newBio String, the biography to update to
+     * @author Kaaden
+     */
+    public void updateBio(String UUID, String newBio) {
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("Biography", newBio);
+        List<String> fieldsToUpdate = new ArrayList<>();
+        fieldsToUpdate.add("Biography");
+        database.collection("users").document(UUID).set(data, SetOptions.mergeFields(fieldsToUpdate));
+
+    }
+
+    /**
+     * Update the habit list of the given user
+     * We can add/remove/edit attributes of habitToUpdate
+     * @param UUID String, the uuid of the user who's habit list is to be updated
+     * @param habitList HabitList, the habit list that is to be updated
+     */
+
+    public void updateHabitList(String UUID, HabitList habitList) {
+
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("habitList", habitToDatabase(habitList));
+            List<String> fieldsToUpdate = new ArrayList<>();
+            fieldsToUpdate.add("habitList");
+            database.collection("users").document(UUID).set(data, SetOptions.mergeFields(fieldsToUpdate));
+    }
+
+    /**
+     * updateUUIDList
+     * <p>
+     * Add or remove member from a user's list.
+     *
+     * @param listName   String, name of the user's list in the database
+     * @param listHaver  String, UUID of the user whose list to update
+     * @param listMember String, UUID to add or remove from the list
+     * @param remove     boolean, false for add, true for remove
+     * @author Kaaden
+     * @author Henry
+     * @author Tauseef
+     */
+    private void updateUUIDList(String listName, String listHaver, String listMember, boolean remove) {
+        // Get the user, owner of the list to update, from the database
+        DocumentReference userRef = database.collection("users").document(listHaver);
+        userRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    // Get the list to update from the user
+                    ArrayList<String> list = (ArrayList<String>) document.get(listName);
+                    if (list != null) {
+
+                        // Check if the relevant member is already stored
+                        boolean contains = list.contains(listMember);
+
+                        if (remove) {
+                            list.remove(listMember);
+                        } else if (!contains) {  // Only add if not already a member
+                            list.add(listMember);
                         }
-                        // Updates only if follower (toBeAdded) is not already in the list
-                        if (!contains && !remove) {
-                            Log.d("Contains", "does not");
+
+                        // Only send to database if changes made
+                        if (remove && contains || !remove && !contains) {
                             List<String> fieldsToUpdate = new ArrayList<>();
-                            fieldsToUpdate.add("followerList");
-
-                            followerList.add(toBeAdded);
-
+                            fieldsToUpdate.add(listName);
                             HashMap<String, Object> data = new HashMap<>();
-                            data.put("followerList", followerList);
+                            data.put(listName, list);
                             userRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
                         }
-                        else if (contains && remove){
-                            Log.d("Contains", "does not");
-                            List<String> fieldsToUpdate = new ArrayList<>();
-                            fieldsToUpdate.add("followerList");
 
-                            followerList.remove(index);
-
-                            HashMap<String, Object> data = new HashMap<>();
-                            data.put("followerList", followerList);
-                            userRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
-
-                        }
                     }
-                } else {
-                    Log.d("Task", "get failed with ", task.getException());
                 }
-            }
-        });
-
-        // Update toBeAdded's followingList
-        DocumentReference addedRef = database.collection("users").document(toBeAdded.getEmail());
-        addedRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        String TAG = "contain checker";
-                        int index = -1;
-                        boolean contains = false;
-                        ArrayList<DatabasePointer> followingList = new ArrayList<>();
-                        ArrayList<HashMap<String, String>> followingListMap = (ArrayList<HashMap<String, String>>) document.get("followingList");
-                        followingList = toPointerList((followingListMap));
-                        DatabasePointer following = new DatabasePointer(user.getEmail());
-                        // Updates only if following (user) is not already in the list
-                        for(int i = 0; i < followingList.size(); i++){
-                            if (followingList.get(i).equals(following)){
-                                index = i;
-                                contains = true;
-                                Log.d(TAG,"from equals");
-                            }
-                            else if (followingList.get(i).Equals(following)){
-                                index = i;
-                                contains = true;
-                                Log.d(TAG,"not from equals");
-                            }
-                        }
-                        if (!contains && !remove){
-                            Log.d("Contains", "does not");
-                            List<String> fieldsToUpdate = new ArrayList<>();
-                            fieldsToUpdate.add("followingList");
-
-                            followingList.add(following);
-
-                            HashMap<String, Object> data = new HashMap<>();
-                            data.put("followingList", followingList);
-                            addedRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
-                        }
-                        else if (contains && remove){
-                            Log.d("Contains", "does not");
-                            List<String> fieldsToUpdate = new ArrayList<>();
-                            fieldsToUpdate.add("followingList");
-
-                            followingList.remove(index);
-
-
-                            HashMap<String, Object> data = new HashMap<>();
-                            data.put("followingList", followingList);
-                            addedRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
-                        }
-                    }
-                } else {
-                    Log.d("Task", "get failed with ", task.getException());
-                }
+            } else {
+                Log.d("Task: " + task, " failed with: ", task.getException());
             }
         });
     }
 
     /**
-     * updateFollowerReq
+     * updateFollow
+     * <p>
+     * Add or remove a following relationship in the database
      *
-     * Updates the follower requested list of the user by adding or removing the database_pointer toBeAdded
-     *
-     * @author Tauseef
-     * @param user- Type User; the user who's follower requested list is to be updated
-     * @param toBeAdded - Type Database_pointer; the database_pointer to be added or removed
-     * @param remove - Type Boolean; Indicates whether the operation is adding or removing
+     * @param followee String, UUID of user to be followed/unfollowed
+     * @param follower String, UUID of the user that is following/unfollowing
+     * @param remove   boolean, false for add, true for remove
+     * @author Henry
+     * @author Kaaden
      */
-    public void updateFollowerReq(User user, DatabasePointer toBeAdded, boolean remove) {
-        // Update user
+    public void updateFollow(String followee, String follower, boolean remove) {
+        // Update folllowee's followerList
+        updateUUIDList("followerList", followee, follower, remove);
+        // Update follower's followingList
+        updateUUIDList("followingList", follower, followee, remove);
+    }
 
-        DocumentReference userRef = database.collection("users").document(user.getEmail());
-        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        String TAG = "contain checker";
-                        int index = -1;
-                        boolean contains = false;
-                        ArrayList<DatabasePointer> followerReqList = new ArrayList<>();
-                        ArrayList<HashMap<String, String>> followerReqListMap = (ArrayList<HashMap<String, String>>) document.get("followReqList");
-                        followerReqList = toPointerList((followerReqListMap));
-                        for(int i = 0; i < followerReqList.size(); i++){
-                            if (followerReqList.get(i).equals(toBeAdded)){
-                                index = i;
-                                contains = true;
-                                Log.d(TAG,"from equals");
-                            }
-                            else if (followerReqList.get(i).Equals(toBeAdded)){
-                                index = i;
-                                contains = true;
-                                Log.d(TAG,"not from equals");
-                            }
-                        }
-                        // Updates only if followerReq (toBeAdded) is not already in the list
-                        if (!contains && !remove) {
-                            Log.d("Contains", "does not");
-                            List<String> fieldsToUpdate = new ArrayList<>();
-                            fieldsToUpdate.add("followReqList");
-
-                            followerReqList.add(toBeAdded);
-
-                            HashMap<String, Object> data = new HashMap<>();
-                            data.put("followReqList", followerReqList);
-                            userRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
-                        }
-                        else if (contains && remove){
-                            Log.d("Contains", "does not");
-                            List<String> fieldsToUpdate = new ArrayList<>();
-                            fieldsToUpdate.add("followReqList");
-
-                            followerReqList.remove(index);
-
-                            HashMap<String, Object> data = new HashMap<>();
-                            data.put("followReqList", followerReqList);
-                            userRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
-                        }
-                    }
-                } else {
-                    Log.d("Task", "get failed with ", task.getException());
-                }
-            }
-        });
-
-        // Update toBeAdded's followerRequestedList
-        DocumentReference addedRef = database.collection("users").document(toBeAdded.getEmail());
-        addedRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        int index = -1;
-                        String TAG = "contain checker";
-                        boolean contains = false;
-                        ArrayList<DatabasePointer> followerRequestedList = new ArrayList<>();
-                        ArrayList<HashMap<String, String>> followerRequestedListMap = (ArrayList<HashMap<String, String>>) document.get("followRequestedList");
-                        followerRequestedList = toPointerList((followerRequestedListMap));
-                        DatabasePointer followerRequested = new DatabasePointer(user.getEmail());
-                        // Updates only if followerRequested (user) is not already in the list
-                        for(int i = 0; i < followerRequestedList.size(); i++){
-                            if (followerRequestedList.get(i).equals(followerRequested)){
-                                index = i;
-                                contains = true;
-                                Log.d(TAG,"from equals");
-                            }
-                            else if (followerRequestedList.get(i).Equals(followerRequested)){
-                                index = i;
-                                contains = true;
-                                Log.d(TAG,"not from equals");
-                            }
-                        }
-                        if (!contains && !remove){
-                            Log.d("Contains", "does not");
-                            List<String> fieldsToUpdate = new ArrayList<>();
-                            fieldsToUpdate.add("followRequestedList");
-
-                            followerRequestedList.add(followerRequested);
-
-                            HashMap<String, Object> data = new HashMap<>();
-                            data.put("followRequestedList", followerRequestedList);
-                            addedRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
-                        }
-                        else if (contains && remove){
-                            Log.d("Contains", "does not");
-                            List<String> fieldsToUpdate = new ArrayList<>();
-                            fieldsToUpdate.add("followRequestedList");
-
-                            followerRequestedList.remove(index);
-
-                            HashMap<String, Object> data = new HashMap<>();
-                            data.put("followRequestedList", followerRequestedList);
-                            addedRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
-                        }
-                    }
-                } else {
-                    Log.d("Task", "get failed with ", task.getException());
-                }
-            }
-        });
+    /**
+     * updateFollowRequest
+     * <p>
+     * Add or remove a follow-request relationship in the database
+     *
+     * @param followRequestee String, UUID of the user to be follow-requested/unfollow-requested
+     * @param followRequester String, UUID of the user that is follow-requesting/unfollow-requesting
+     * @param remove          boolean, false for add, true for remove
+     * @author Tauseef
+     */
+    public void updateFollowRequest(String followRequestee, String followRequester, boolean remove) {
+        // Update followRequestee's followReqList
+        updateUUIDList("followReqList", followRequestee, followRequester, remove);
+        // Update followRequester's followerRequestedList
+        updateUUIDList("followRequestedList", followRequester, followRequestee, remove);
     }
 
     /**
      * updateBlock
+     * <p>
+     * Add or remove a block relationship in the database
      *
-     * Updates the blocklist of the user by adding or removing the database_pointer toBeAdded
-     *
+     * @param blockee String, UUID of the user to be blocked/unblocked
+     * @param blocker String, UUID of the user that is blocking/unblocking
+     * @param remove  boolean, false for add, true for remove
      * @author Tauseef
-     * @param user- Type User; the user who's block list is to be updated
-     * @param toBeAdded - Type Database_pointer; the database_pointer to be added or removed
-     * @param remove - Type Boolean; Indicates whether the operation is adding or removing
-     *
      */
-    public void updateBlock(User user, DatabasePointer toBeAdded, boolean remove) {
-        // Update user's blockList
-        DocumentReference userRef = database.collection("users").document(user.getEmail());
-        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        int index = -1;
-                        String TAG = "contain checker";
-                        boolean contains = false;
-                        ArrayList<DatabasePointer> blockList = new ArrayList<>();
-                        ArrayList<HashMap<String, String>> blockListMap = (ArrayList<HashMap<String, String>>) document.get("blockList");
-                        blockList = toPointerList(blockListMap);
-                        for(int i = 0; i < blockList.size(); i++){
-                            if (blockList.get(i).equals(toBeAdded)){
-                                contains = true;
-                                index = i;
-                                Log.d(TAG,"from equals");
-                            }
-                            else if (blockList.get(i).Equals(toBeAdded)){
-                                contains = true;
-                                index = i;
-                                Log.d(TAG,"not from equals");
-                            }
-                        }
-                        // Updates only if block (toBeAdded) is not already in the list
-                        if (!contains && !remove) {
-                            Log.d("Contains", "does not");
-                            List<String> fieldsToUpdate = new ArrayList<>();
-                            fieldsToUpdate.add("blockList");
-
-                            blockList.add(toBeAdded);
-
-                            HashMap<String, Object> data = new HashMap<>();
-                            data.put("blockList", blockList);
-                            userRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
-                        }
-                        else if (contains && remove){
-                            Log.d("Contains", "does not");
-                            List<String> fieldsToUpdate = new ArrayList<>();
-                            fieldsToUpdate.add("blockList");
-
-                            blockList.remove(index);
-
-                            HashMap<String, Object> data = new HashMap<>();
-                            data.put("blockList", blockList);
-                            userRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
-                        }
-                    }
-                } else {
-                    Log.d("Task", "get failed with ", task.getException());
-                }
-            }
-        });
-
-        // Update toBeAdded's blockedByList
-        DocumentReference addedRef = database.collection("users").document(toBeAdded.getEmail());
-        addedRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        String TAG = "contain checker";
-                        int index = -1;
-                        boolean contains = false;
-                        ArrayList<DatabasePointer> blockedByList = new ArrayList<>();
-                        ArrayList<HashMap<String, String>> blockedByListMap = (ArrayList<HashMap<String, String>>) document.get("blockedByList");
-                        blockedByList = toPointerList(blockedByListMap);
-                        DatabasePointer blockedBy = new DatabasePointer(user.getEmail());
-                        // Updates only if blockedBy (user) is not already in the list
-                        for(int i = 0; i < blockedByList.size();i++){
-                            if (blockedByList.get(i).equals(blockedBy)){
-                                contains = true;
-                                index = i;
-                                Log.d(TAG,"from equals");
-                            }
-                            else if (blockedByList.get(i).Equals(blockedBy)){
-                                contains = true;
-                                index = i;
-                                Log.d(TAG,"not from equals");
-                            }
-                        }
-                        if (!contains && !remove){
-                            Log.d("Contains", "does not");
-                            List<String> fieldsToUpdate = new ArrayList<>();
-                            fieldsToUpdate.add("blockedByList");
-
-                            blockedByList.add(blockedBy);
-
-                            HashMap<String, Object> data = new HashMap<>();
-                            data.put("blockedByList", blockedByList);
-                            addedRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
-                        }
-                        else if (contains && remove){
-                            Log.d("Contains", "does not");
-                            List<String> fieldsToUpdate = new ArrayList<>();
-                            fieldsToUpdate.add("blockedByList");
-
-                            blockedByList.remove(index);
-
-                            HashMap<String, Object> data = new HashMap<>();
-                            data.put("blockedByList", blockedByList);
-                            addedRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
-                        }
-                    }
-                } else {
-                    Log.d("Task", "get failed with ", task.getException());
-                }
-            }
-        });
-    }
-
-    /**
-     * toPointerList
-     *
-     * Converts an ArrayList<HashMap<String, String>> listOfMap to an ArrayList<Database_Pointer>
-     *
-     * @author Henry
-     * @param listOfMap - Type; The hashmap from the database that has to be converted to an arraylist of Database_pointer
-     *
-     * @return ArrayList<Database_Pointer>
-     */
-    public ArrayList<DatabasePointer> toPointerList(ArrayList<HashMap<String, String>> listOfMap) {
-        ArrayList<DatabasePointer> pointerList = new ArrayList<>();
-        for (int i = 0; i < listOfMap.size(); i++) {
-            String email = listOfMap.get(i).get("email");
-            DatabasePointer dp = new DatabasePointer(email);
-            pointerList.add(dp);
-        }
-        return pointerList;
+    public void updateBlock(String blockee, String blocker, boolean remove) {
+        // Update blockee's blockList
+        updateUUIDList("blockList", blockee, blocker, remove);
+        // Update blocker's blockedByList
+        updateUUIDList("blockedByList", blocker, blockee, remove);
     }
 
     /**
      * habitToDatabase
+     * <p>
+     * Convert HabitList<Habit> to an ArrayList<HabitDatabase> that is more compatitble with the database
      *
-     * Convert Habit in Habit_List<Habit> to a new object that is compatitble with the database
-     *
-     * @author Henry
-     * @param habits- Type Habit_List; the Habit_list that has to be converted to HabitDatabase
-     *              so that its compatible with the database
+     * @param habits- Type HabitList; the Habitlist that has to be converted to HabitDatabase
+     *                so that its compatible with the database
      * @return ArrayList<HabitDatabase>; a habit list compatible with the database
+     * @author Henry
      */
     public ArrayList<HabitDatabase> habitToDatabase(HabitList habits) {
         ArrayList<HabitDatabase> habitListToDatabase = new ArrayList<>();
@@ -1140,7 +819,8 @@ public class DatabaseManager {
             habitToDatabase.setStartDate(primitiveHabit.getStartDate());
             habitToDatabase.setHabitEvents(primitiveHabit.getHabitEvents());
             habitToDatabase.setOnDaysObj(primitiveHabit.getOnDaysObj());
-
+            habitToDatabase.setCurrentStreakDate(primitiveHabit.getCurrentStreakDate());
+            habitToDatabase.setBestStreakDate(primitiveHabit.getBestStreakDate());
             habitListToDatabase.add(habitToDatabase);
         }
         return habitListToDatabase;
@@ -1148,13 +828,12 @@ public class DatabaseManager {
 
     /**
      * databaseToHabit
-     * @author Henry
+     *
      * @param habitsFromDatabase - Type Arraylist<HabitDatabase>; the arraylist of HabitDatabase
-     *                           that is to be converted to Habit_List
-     *
-     * @return Habit_List;
-     * Returns a Habit_List given the habitList from Database.
-     *
+     *                           that is to be converted to HabitList
+     * @return HabitList;
+     * Returns a HabitList given the habit list (ArrayList<HabitDatabase>) from the database.
+     * @author Henry
      */
     public HabitList databaseToHabit(ArrayList<HabitDatabase> habitsFromDatabase) {
         HabitList habitList = new HabitList();
@@ -1166,12 +845,34 @@ public class DatabaseManager {
             habit.setReason(habitFromDatabase.getReason());
             habit.setStartDate(habitFromDatabase.getStartDate());
             habit.setHabitEvents(habitFromDatabase.getHabitEvents());
-
+            habit.setCurrentStreakDate(habitFromDatabase.getCurrentStreakDate());
+            habit.setBestStreakDate(habitFromDatabase.getBestStreakDate());
             ArrayList<Boolean> dbOnDays = habitFromDatabase.getOnDaysObj();
 
             habit.setOnDaysObj(new OnDays(dbOnDays));
             habitList.add(habit);
         }
         return habitList;
+    }
+
+    public Uri uploadImageToFirebase(String name, Uri contentUri, StorageReference mStorageRef) {
+        Uri returnedUri = null;
+        StorageReference picImage = mStorageRef.child("images/" + name);
+        UploadTask task = picImage.putFile(contentUri);
+        while (!task.isComplete()) ;
+        if (task.isSuccessful()) {
+            Task<Uri> uriTask = picImage.getDownloadUrl();
+            while (!uriTask.isComplete()) ;
+            if (uriTask.isSuccessful()) {
+                Uri uriTaskResult = uriTask.getResult();
+                returnedUri =  uriTaskResult;
+            } else {
+                Log.d("Uploading image to firebase", "couldn't get download url");
+
+            }
+        } else {
+            Log.d("Uploading image to firebase", "couldn't upload url");
+        }
+        return returnedUri;
     }
 }

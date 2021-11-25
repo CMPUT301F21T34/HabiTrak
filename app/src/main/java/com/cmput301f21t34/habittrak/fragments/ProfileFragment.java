@@ -1,5 +1,7 @@
 package com.cmput301f21t34.habittrak.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -15,11 +17,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.MainActivity;
 import com.cmput301f21t34.habittrak.R;
+import com.cmput301f21t34.habittrak.auth.Auth;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * ProfileFragment
@@ -37,6 +43,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     TextInputEditText nameEdit;
     TextInputEditText bioEdit;
     TextView emailView;
+
+    Auth mAuth;
+    DatabaseManager db = new DatabaseManager();
 
     public ProfileFragment(User mainUser) {
         this.mainUser = mainUser;
@@ -67,6 +76,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         emailView.setText(mainUser.getEmail());
         bioEdit.setText(mainUser.getBiography());
 
+        mAuth = new Auth(getActivity(), db);
+
         return view;
     }
 
@@ -83,6 +94,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
      */
     @Override
     public void onClick(View view) {
+
+        FirebaseAuth fAuth = mAuth.getAuth();
+        FirebaseUser fUser = fAuth.getCurrentUser();
+
         switch (view.getId()){
             //For confirm changes button press
             case R.id.confirmer:
@@ -91,18 +106,26 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                 String newUsername = nameEdit.getText().toString();
                 String newBio = bioEdit.getText().toString();
 
-                // If stored and written variables differ, update variables
-                if (!oldUsername.equals(newUsername)){
-                    mainUser.setUsername(newUsername);
-                }
-                if (!oldBio.equals(newBio)){
-                    mainUser.setBiography(newBio);
+                if (fUser != null) { // Only update if we have a user
+
+                    // If stored and written variables differ, update variables
+                    if (!oldUsername.equals(newUsername)) {
+
+                        db.updateUsername(fUser.getEmail(), newUsername);
+                        mainUser.setUsername(newUsername);
+                    }
+                    if (!oldBio.equals(newBio)) {
+
+                        db.updateBio(fUser.getEmail(), newBio);
+                        mainUser.setBiography(newBio);
+                    }
                 }
                 break;
+
             case R.id.logout:
-                // Logout button pressed //
-                // TODO: make sure database it updated
-                // TODO: make sure to remove any offline stored credientals
+
+                // sign out
+                mAuth.signOut();
 
                 // Send user back to main activity
                 startMainActivity();
@@ -115,12 +138,17 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                 break;
             case R.id.deleter:
 
-                // TODO: require reauth
-                // TODO: remove from database
-                // TODO: remove from account manager if needed
 
-                // Send user back to main activity
-                startMainActivity();
+
+                // run alert to delete
+                if (fUser != null){
+
+                    delete(fUser);
+
+
+
+                }
+
 
                 break;
         }
@@ -139,5 +167,59 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         startActivity(intent);
         mainUser = null; // Possibly redundant
         getActivity().finish();
+    }
+
+    private void delete(FirebaseUser authUser){
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+
+        alert
+                .setMessage("This Cannot be undone!")
+                .setTitle("Delete Account?");
+
+        alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int id) {
+
+                AlertDialog.Builder confirmation = new AlertDialog.Builder(getActivity());
+
+                confirmation
+                        .setMessage("Are you sure?")
+                        .setTitle("Confirm");
+
+                confirmation.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // Delete
+
+                        String email = authUser.getEmail();
+                        authUser.delete();
+                        db.deleteUser(email);
+                        startMainActivity();
+
+                    }
+                });
+
+                confirmation.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // Cancel
+                        dialogInterface.cancel();
+                    }
+                });
+
+                confirmation.show();
+
+            }
+        });
+
+        alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int id) {
+                // Cancel
+                dialogInterface.cancel();
+
+            }
+        });
+        alert.show();
     }
 }

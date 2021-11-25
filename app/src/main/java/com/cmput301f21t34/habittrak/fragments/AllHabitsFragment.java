@@ -1,7 +1,11 @@
 package com.cmput301f21t34.habittrak.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,9 +14,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 
 import com.cmput301f21t34.habittrak.R;
+import com.cmput301f21t34.habittrak.ViewEditHabit;
 import com.cmput301f21t34.habittrak.recycler.HabitRecycler;
+import com.cmput301f21t34.habittrak.recycler.TodayHabitRecyclerAdapter;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitList;
 import com.cmput301f21t34.habittrak.user.User;
@@ -20,12 +28,12 @@ import com.cmput301f21t34.habittrak.user.User;
 import java.util.ArrayList;
 
 /**
- * AllHabitsFragment
+ * AllHabitsFragment.
  *
  * @author Pranav
  * @author Dakota
  *
- * Fragment for displaying all the user's habits
+ * Fragment for displaying all the user's habits, viewing and editing them when clicked
  *
  * @version 1.0
  */
@@ -33,19 +41,21 @@ public class AllHabitsFragment extends Fragment {
 
 
     // Attributes //
-
+    public static String TAG = "All_Habits";
     // These are for the Recycler view
     private RecyclerView habitRecyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private HabitRecycler habitRecycler;
     private ArrayList<Habit> habitsDisplayList;
-
+    private TodayHabitRecyclerAdapter adapter;
+    private LinearLayout noDataLayout;
     private User mainUser;
 
     public AllHabitsFragment(User mainUser) {
 
         habitsDisplayList = new ArrayList<>();
         this.mainUser = mainUser;
+        this.adapter = new TodayHabitRecyclerAdapter(habitsDisplayList, false);
 
 
     }
@@ -59,25 +69,56 @@ public class AllHabitsFragment extends Fragment {
 
         // Sets up views and manager for recycler view
         habitRecyclerView = view.findViewById(R.id.all_recycler_view);
-        layoutManager = new LinearLayoutManager(getActivity());
+        noDataLayout = view.findViewById(R.id.all_habit_no_data_view);
+        layoutManager = new LinearLayoutManager(getContext());
 
 
-        // Sets up the recycler view with a list of all habits, and
-        // an array list for the recycler to use for display - Dakota
-        this.habitRecycler = new HabitRecycler(habitRecyclerView, layoutManager, habitsDisplayList, mainUser.getHabitList());
+        // set the click listener interface for the adapter
+        adapter.setHabitClickListener(new TodayHabitRecyclerAdapter.HabitClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Habit habit = habitsDisplayList.get(position);
+                Intent intent = new Intent(getContext(), ViewEditHabit.class);
+                intent.putExtra("HABIT", habit);
+                intent.putExtra("position", habit.getIndex());
+                viewHabitResultLauncher.launch(intent);
+            }
 
+            @Override
+            public void menuButtonOnClick(View view, int position) {
+                showMenu(view, position);
+            }
 
+            @Override
+            public void checkBoxOnClick(View view, int position) {
+                // empty function as no checkbox in this fragment
+            }
+        });
+        // creates a new habitRecycler class with the view and data
+        habitRecycler = new HabitRecycler(habitRecyclerView, layoutManager, habitsDisplayList, mainUser.getHabitList());
+        habitRecycler.setAdapter(adapter);
+        setLayoutVisibility();
         return view;
     }
 
 
     @Override
     public void onResume() {
-
         super.onResume();
-
         // Refreshes Frag
         refreshAllFragment();
+    }
+
+    public void setLayoutVisibility(){
+        if (!(noDataLayout == null)){
+            if (habitsDisplayList.isEmpty()){
+                noDataLayout.setVisibility(View.VISIBLE);
+                habitRecycler.setRecyclerVisibility(false);
+            } else {
+                noDataLayout.setVisibility(View.GONE);
+                habitRecycler.setRecyclerVisibility(true);
+            }
+        }
 
     }
 
@@ -91,17 +132,41 @@ public class AllHabitsFragment extends Fragment {
      */
     public void refreshAllFragment() {
 
-        Log.d("TodayListFragment", "refreshing habit list");
+        Log.d(TAG, "refreshing habit list");
         // Populate today view with Today's habits.
-
         habitsDisplayList.clear(); // Make sure is clear
-
         HabitList mainUserHabits = mainUser.getHabitList(); // get HabitsList
-
         habitsDisplayList.addAll(mainUserHabits);
-
         // tells the adapter in recycler that the dataset has changed
-        habitRecycler.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
+        setLayoutVisibility();
+    }
 
+    // activity result launcher for view/edit activity
+    ActivityResultLauncher<Intent> viewHabitResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {}
+    );
+
+    /**
+     * showMenu
+     *
+     * create a menu when Image Button is clicked
+     * @param view view from the adapter to create the menu
+     * @param position position of habit from adapter
+     */
+    public void showMenu(View view, int position) {
+        PopupMenu menu = new PopupMenu(getContext(), view);
+        menu.getMenuInflater().inflate(R.menu.social_popup_menu, menu.getMenu());
+        menu.getMenu().add("Remove");
+        menu.show();
+
+        menu.setOnMenuItemClickListener(menuItem -> {
+            Habit habit = habitsDisplayList.get(position);
+            mainUser.removeHabit(habit);
+            refreshAllFragment();
+            Log.d(TAG,"Habit Removed");
+            return true;
+        });
     }
 }

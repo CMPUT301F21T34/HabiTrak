@@ -1,5 +1,6 @@
 package com.cmput301f21t34.habittrak;
 
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -16,7 +17,7 @@ import android.widget.TextView;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Calendar;
@@ -32,31 +33,39 @@ import java.util.TimeZone;
  */
 public class AddHabitActivity extends AppCompatActivity {
 
-    //TODO: make attribute explicitly private
-    TextInputEditText habitName;
-    TextInputEditText habitReason;
-    MaterialButton datePickerButton;
-    TextView startDate;
-    Calendar calendar;
-    MaterialButton saveButton;
-    MaterialButton mondayButton;
-    MaterialButton tuesdayButton;
-    MaterialButton wednesdayButton;
-    MaterialButton thursdayButton;
-    MaterialButton fridayButton;
-    MaterialButton saturdayButton;
-    MaterialButton sundayButton;
-    boolean[] daysOfWeek = new boolean[]{true, true, true, true, true, true, true};;
-    int whiteColor = Color.WHITE;
-    int tealColor;
+    public static final String TAG = "Add_Habit";
+    private TextInputEditText habitName;
+    private TextInputEditText habitReason;
+    private MaterialButton datePickerButton;
+    private TextView startDate;
+    private TextView visibilityText;
+    private Calendar calendar;
+    private MaterialButton saveButton;
+    private MaterialButton mondayButton;
+    private MaterialButton tuesdayButton;
+    private MaterialButton wednesdayButton;
+    private MaterialButton thursdayButton;
+    private MaterialButton fridayButton;
+    private MaterialButton saturdayButton;
+    private MaterialButton sundayButton;
+    private SwitchMaterial publicSwitch;
+    private boolean[] daysOfWeek = new boolean[]{true, true, true, true, true, true, true};;
+    private boolean isPublic = true;
+    private final int whiteColor = Color.WHITE;
+    private int tealColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Toolbar toolbar = findViewById(R.id.add_habit_toolbar);
-        setSupportActionBar(toolbar);
         setContentView(R.layout.activity_add_habit);
+
+        // add back button to toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.add_habit_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
 
         // Getting Views //
         startDate = findViewById(R.id.add_habit_selected_date);
@@ -71,6 +80,8 @@ public class AddHabitActivity extends AppCompatActivity {
         fridayButton = findViewById(R.id.friday_button);
         saturdayButton = findViewById(R.id.saturday_button);
         sundayButton = findViewById(R.id.sunday_button);
+        publicSwitch = findViewById(R.id.add_public_switch);
+        visibilityText = findViewById(R.id.add_habit_visibility_text);
 
         // getting color
         // TODO: change the setting for dark mode as well
@@ -80,7 +91,7 @@ public class AddHabitActivity extends AppCompatActivity {
         // setting date
         calendar = Calendar.getInstance();
         String setDateText = "Selected Date is : " + getDate(calendar);
-        Log.d("date", setDateText);
+        Log.d(TAG, setDateText);
         startDate.setText(setDateText);
 
 
@@ -97,13 +108,21 @@ public class AddHabitActivity extends AppCompatActivity {
             }
         });
 
-        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
-            @Override
-            public void onPositiveButtonClick(Object selection) {
-                calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-                calendar.setTimeInMillis((long) selection);
-                String date = "Selected Date is : " + getDate(calendar);
-                startDate.setText(date);
+        materialDatePicker.addOnPositiveButtonClickListener(selection -> {
+            calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            calendar.setTimeInMillis((long) selection);
+            String date = "Selected Date is : " + getDate(calendar);
+            startDate.setText(date);
+        });
+
+        // switcher listener
+        publicSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (b) {
+                isPublic = true;
+                visibilityText.setText("Public");
+            } else {
+                isPublic = false;
+                visibilityText.setText("Private");
             }
         });
 
@@ -115,17 +134,13 @@ public class AddHabitActivity extends AppCompatActivity {
                 String name = habitName.getText().toString();
                 if(!checkField(habitName.getText())){
                     habitName.setError("Input Required");
-                }
-
-                //TODO: make reason field optional
-                else if (!checkField(habitReason.getText())){
+                } else if (!checkField(habitReason.getText())){
                     habitReason.setError("Input Required");
-                }
-                else{
+                } else{
                     finishActivityWithResult();
                 }
 
-
+                //TODO: make reason field optional
             }
         });
 
@@ -190,11 +205,10 @@ public class AddHabitActivity extends AppCompatActivity {
      */
 
     public void changeButtonState(View view, MaterialButton button, int position){
-        if(daysOfWeek[position]){
+        if(daysOfWeek[position]) {
             button.setBackgroundColor(whiteColor);
             daysOfWeek[position] = false;
-        }
-        else{
+        } else {
             button.setBackgroundColor(tealColor);
             daysOfWeek[position] = true;
         }
@@ -203,10 +217,9 @@ public class AddHabitActivity extends AppCompatActivity {
 
     /**
      * get the String value from calendar
-     * @param calendar
+     * @param calendar date to convert to string
      * @return string value of type Month, Day
      */
-
     public String getDate(Calendar calendar){
         String month = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
         String day = Integer.toString(calendar.get(Calendar.DAY_OF_MONTH));
@@ -215,38 +228,42 @@ public class AddHabitActivity extends AppCompatActivity {
 
     /**
      * Check if the fields are  filled or not
-     * @param name
+     * @param name Editable name to check if empty
      * @return boolean whether filled or not
      */
-
     public boolean checkField(Editable name){
-        Boolean fieldCheck = false;
-        String field = name.toString();
 
-        if (field.trim().length() > 0 ){
-            fieldCheck = true;
-        }
-
-        return fieldCheck;
+        return name.toString().trim().length() > 0;
     }
 
     /**
      * finish activity if all fields are filled
+     *
+     * @author Pranav
+     * @author Dakota
      */
     public void finishActivityWithResult(){
         String name = habitName.getText().toString();
         String reason = habitReason.getText().toString();
 
         Habit newHabit = new Habit(name, reason, calendar);
-
         newHabit.getOnDaysObj().setAll(daysOfWeek);
+        // set isPublic of habit
+        if (isPublic) {
+            newHabit.makePublic();
+        } else {
+            newHabit.makePrivate();
+        }
 
-        //Bundle newHabitBundle = new Bundle();
-        //newHabitBundle.putParcelable("newHabit", newHabit);
         Intent result = new Intent();
         result.putExtra("newHabit", newHabit);
         setResult(BaseActivity.RESULT_NEW_HABIT, result);
         this.finish();
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 }

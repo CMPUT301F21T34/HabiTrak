@@ -55,7 +55,6 @@ import java.util.Locale;
  * @author Henry
  * Version: 1.0
  * Takes a habit and returns the new habit event
- * TODO: Fix the camera bug
  */
 public class AddHabitEventActivity extends AppCompatActivity implements View.OnClickListener {
 

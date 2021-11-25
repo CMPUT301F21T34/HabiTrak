@@ -32,7 +32,7 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
 
     private Calendar completedDate;
     private Location location;
-    private Uri photograph;
+    private String photograph;
 
     // redundant constructor
 
@@ -46,7 +46,7 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
 
     public HabitEvent(String comment, Calendar date, Location loc, Uri photo){
 
-        this.photograph = photo;
+        this.photograph = photo.toString();
         this.location = loc;
         this.comment = comment;
         this.completedDate = date;
@@ -93,13 +93,7 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
         }
 
         // Sets path
-        String photographPath = habitEventBundle.getString("photograph");
-        if(photographPath != null){
-            this.photograph = Uri.parse(photographPath);
-        }
-        else{
-            this.photograph = null;
-        }
+        this.photograph = habitEventBundle.getString("photograph");
 
     }
 
@@ -130,8 +124,8 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
         return completedDate;
     }
 
-    public Uri getPhotograph() {
-        return photograph;
+    public String getPhotograph() {
+        return this.photograph;
     }
 
     public Location getLocation() {
@@ -165,7 +159,7 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
     }
 
     public void setPhotograph(Uri photograph) {
-        this.photograph = photograph;
+        this.photograph = photograph.toString();
     }
 
     /**
@@ -225,7 +219,7 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
             habitEventBundle.putParcelable("location", null);
         }
         if (photograph != null) {
-            String photographPath = photograph.toString();
+            String photographPath = photograph;
             Log.d("EDIT_HAb","the path is "+photographPath);
 
             // Handles photograph

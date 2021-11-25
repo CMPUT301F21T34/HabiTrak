@@ -204,8 +204,8 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
         }
 
         // set progress bar
-        viewHolder.setProgress(habit.getStreak());
-        Log.d("Progess Bar", " " + habit.getStreak());
+//        viewHolder.setProgress(habit.getStreak());
+ //       Log.d("Progess Bar", " " + habit.getStreak());
     }
 
     /**

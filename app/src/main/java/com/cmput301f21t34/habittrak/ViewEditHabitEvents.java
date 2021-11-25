@@ -269,12 +269,8 @@ Log.d(TAG,"Set the dateeeee");
     @Override
     public void onBackPressed(){
         // handle the on back button press
-        Log.d(TAG,"Back button pressed");
-        returnedHabitEvent.setComment(comment.getText().toString());
-        // create the intent to return the habit event
-        Log.d(TAG,"creating intent");
         Log.d(TAG,"The size of the habit event list is " + habit.getHabitEvents().size());
-        habit.addHabitEvent(returnedHabitEvent);
+        habit.addHabitEvent(habitEvent);
         Log.d(TAG,"The size of the habit event list is " + habit.getHabitEvents().size());
         Intent result = new Intent();
         result.putExtra("HABIT", habit);

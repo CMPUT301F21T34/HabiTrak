@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -127,6 +128,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View view) {
                 Log.d("MAP","The confirm button has been pressed");
                 Intent result = new Intent();
+                result.putExtra("permission",true);
                 result.putExtra("latitude", lastKnownLocation.getLatitude());
                 result.putExtra("longitude", lastKnownLocation.getLongitude());
                 setResult(RESULT_OK, result);
@@ -288,7 +290,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
                 else {
                     Log.d("MAPppp","location not granted");
-                    getLocationPermission();
+                    Toast.makeText(this, "The app needs the location permission to choose location", Toast.LENGTH_LONG).show();
+                    Intent result = new Intent();
+                    result.putExtra("permission",false);
+                    result.putExtra("latitude", 0.0000);
+                    result.putExtra("longitude", 0.0000);
+                    setResult(RESULT_OK, result);
+                    MapsActivity.this.finish();
+
                 }
             }
         }

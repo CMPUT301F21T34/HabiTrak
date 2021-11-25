@@ -180,14 +180,18 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
             @Override
             public void onActivityResult(ActivityResult result) {
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                    double latitude = result.getData().getDoubleExtra("latitude", 0.000000);
-                    double longitude = result.getData().getDoubleExtra("longitude", 0.000000);
-                    Location eventLocation = new Location("gps");
-                    eventLocation.setLatitude(latitude);
-                    eventLocation.setLongitude(longitude);
-                    habitEvent.setLocation(eventLocation);
-                    addressLine.setText("");
-                    addressLine.setText(getAddress(eventLocation.getLatitude(),eventLocation.getLongitude()));
+
+                    if(result.getData().getBooleanExtra("permission",false)) {
+                        double latitude = result.getData().getDoubleExtra("latitude", 0.000000);
+                        double longitude = result.getData().getDoubleExtra("longitude", 0.000000);
+
+                        Location eventLocation = new Location("gps");
+                        eventLocation.setLatitude(latitude);
+                        eventLocation.setLongitude(longitude);
+                        habitEvent.setLocation(eventLocation);
+                        addressLine.setText("");
+                        addressLine.setText(getAddress(eventLocation.getLatitude(), eventLocation.getLongitude()));
+                    }
                 }
                 else {
                     Log.d("MAP", "Failed onActivityResult if condition");

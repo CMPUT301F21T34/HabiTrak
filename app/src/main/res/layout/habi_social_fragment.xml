@@ -7,19 +7,6 @@
     android:orientation="vertical"
     tools:context=".fragments.SocialFragment">
 
-<!--    <com.google.android.material.appbar.AppBarLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content">-->
-
-<!--        <androidx.appcompat.widget.Toolbar-->
-<!--            android:id="@+id/social_toolbar"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:minHeight="?attr/actionBarSize"-->
-<!--            app:titleTextColor="@android:color/white"-->
-<!--            app:title="Social"-->
-<!--            android:background="?attr/colorPrimary"/>-->
-
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/social_tab_layout"
             android:layout_width="match_parent"
@@ -31,7 +18,6 @@
             app:tabMode="fixed">
         </com.google.android.material.tabs.TabLayout>
 
-<!--    </com.google.android.material.appbar.AppBarLayout>-->
 
     <androidx.viewpager2.widget.ViewPager2
         xmlns:android="http://schemas.android.com/apk/res/android"

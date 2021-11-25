@@ -82,7 +82,7 @@ public class SearchFragment extends Fragment {
             public void mainButtonOnClick(View view, int position) {
                 ButtonClicked(view, position);
             }
-        }, true, bios, "none");
+        }, bios, "none");
         recyclerView.setAdapter(socialAdapter);
 
 

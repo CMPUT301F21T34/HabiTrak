@@ -77,7 +77,7 @@ public class RequestsFragment extends Fragment {
             public void mainButtonOnClick(View view, int position) {
                 ButtonClicked(view, position);
             }
-        }, true, bios, SocialAdapter.ACCEPT);
+        }, bios, SocialAdapter.ACCEPT);
         recyclerView.setAdapter(socialAdapter);
 
         return view;

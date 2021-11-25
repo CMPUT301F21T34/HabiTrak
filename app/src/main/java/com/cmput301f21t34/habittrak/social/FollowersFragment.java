@@ -77,7 +77,7 @@ public class FollowersFragment extends Fragment {
             public void mainButtonOnClick(View view, int position) {
                 // empty button not used.
             }
-        }, false, bios, "none");
+        }, bios, "none");
         recyclerView.setAdapter(socialAdapter);
 
         return view;

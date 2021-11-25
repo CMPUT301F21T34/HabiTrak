@@ -33,7 +33,6 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
     private final ArrayList<String> usernamesCopy;
     private final ArrayList<String> bioCopy;
     private final ClickListener listener;
-    private final boolean buttonVisibility;
     private final String defaultButtonText;
     private ArrayList<String> UUIDsCopy;
     private ArrayList<String> usernames;   // UUIDS (emails as of 10/11)
@@ -45,15 +44,14 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
     public static  final String REQUESTED = "Requested";
     public static  final String UNFOLLOW = "Unfollow";
 
-    public SocialAdapter(User mainUser, ArrayList<String> UUIDs, ArrayList<String> usernames, ClickListener listener, boolean visible,
-                         ArrayList<String> bio, String defaultButtonText) {
+    public SocialAdapter(User mainUser, ArrayList<String> UUIDs, ArrayList<String> usernames,
+                         ClickListener listener, ArrayList<String> bio, String defaultButtonText) {
         this.mainUser = mainUser;
         this.UUIDs = UUIDs;
         this.UUIDsCopy = UUIDs;
         this.usernames = usernames;
         this.usernamesCopy = usernames;
         this.listener = listener;
-        this.buttonVisibility = visible;
         this.bio = bio;
         this.bioCopy = bio;
         this.defaultButtonText = defaultButtonText;
@@ -144,12 +142,6 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
                     }
                 }
             }
-        }
-
-        if (buttonVisibility) {
-            holder.makeButtonVisible();
-        } else {
-            holder.makeButtonInvisible();
         }
     }
 

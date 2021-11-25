@@ -77,7 +77,7 @@ public class FollowingFragment extends Fragment {
             public void mainButtonOnClick(View view, int position) {
                 ButtonClicked(view, position);
             }
-        }, true, bios, SocialAdapter.UNFOLLOW);
+        }, bios, SocialAdapter.UNFOLLOW);
         recyclerView.setAdapter(socialAdapter);
 
         return view;

@@ -132,4 +132,11 @@ public class SocialFragment extends Fragment {
             return socialTab.getTabCount();
         }
     }
+    /*
+    @Override
+    public boolean onSupportNavigateUp() {
+        // Adding the back button
+        onBackPressed();
+        return true;
+    }*/
 }

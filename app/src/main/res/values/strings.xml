@@ -18,4 +18,5 @@
     <string name="need_help">Need Help?</string>
     <string name="no_habits_set_for_today">No Habits Active Today</string>
     <string name="no_active_habits">You have no active habits</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>

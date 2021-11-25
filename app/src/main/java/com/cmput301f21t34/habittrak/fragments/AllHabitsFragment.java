@@ -33,7 +33,7 @@ import java.util.ArrayList;
  * @author Pranav
  * @author Dakota
  *
- * Fragment for displaying all the user's habits
+ * Fragment for displaying all the user's habits, viewing and editing them when clicked
  *
  * @version 1.0
  */
@@ -110,13 +110,16 @@ public class AllHabitsFragment extends Fragment {
     }
 
     public void setLayoutVisibility(){
-        if (habitsDisplayList.isEmpty()){
-            noDataLayout.setVisibility(View.VISIBLE);
-            habitRecycler.setRecyclerVisibility(false);
-        } else {
-            noDataLayout.setVisibility(View.GONE);
-            habitRecycler.setRecyclerVisibility(true);
+        if (!(noDataLayout == null)){
+            if (habitsDisplayList.isEmpty()){
+                noDataLayout.setVisibility(View.VISIBLE);
+                habitRecycler.setRecyclerVisibility(false);
+            } else {
+                noDataLayout.setVisibility(View.GONE);
+                habitRecycler.setRecyclerVisibility(true);
+            }
         }
+
     }
 
 

@@ -28,21 +28,21 @@ import java.util.ArrayList;
  * @see RecyclerView
  */
 public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder> implements Filterable {
+    // Button values
+    public static final String ACCEPT = "Accept";
+    public static final String FOLLOW = "Follow";
+    public static final String FOLLOW_BACK = "Follow Back";
+    public static final String REQUESTED = "Requested";
+    public static final String UNFOLLOW = "Unfollow";
     private final User mainUser;
-    private final ArrayList<String> UUIDs;
     private final ArrayList<String> usernamesCopy;
     private final ArrayList<String> bioCopy;
     private final ClickListener listener;
     private final String defaultButtonText;
+    private ArrayList<String> UUIDs;
     private ArrayList<String> UUIDsCopy;
     private ArrayList<String> usernames;   // UUIDS (emails as of 10/11)
     private ArrayList<String> bio;
-    // Button values
-    public static  final String ACCEPT = "Accept";
-    public static  final String FOLLOW = "Follow";
-    public static  final String FOLLOW_BACK = "Follow Back";
-    public static  final String REQUESTED = "Requested";
-    public static  final String UNFOLLOW = "Unfollow";
 
     public SocialAdapter(User mainUser, ArrayList<String> UUIDs, ArrayList<String> usernames,
                          ClickListener listener, ArrayList<String> bio, String defaultButtonText) {
@@ -69,20 +69,24 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
                 String charString = charSequence.toString();
                 // is no input in searchView put the original list back
                 if (charString.isEmpty()) {
+                    UUIDs = UUIDsCopy;
                     usernames = usernamesCopy;
                     bio = bioCopy;
                 } else {
                     // filter username and bio bases if username contains the characters
-                    ArrayList<String> filteredProfileList = new ArrayList<>();
-                    ArrayList<String> filteredBioList = new ArrayList<>();
+                    ArrayList<String> filteredUUIDs = new ArrayList<>();
+                    ArrayList<String> filteredProfiles = new ArrayList<>();
+                    ArrayList<String> filteredBios = new ArrayList<>();
                     for (int i = 0; i < usernamesCopy.size(); i++) {
                         if (usernamesCopy.get(i).toLowerCase().contains(charString)) {
-                            filteredProfileList.add(usernamesCopy.get(i));
-                            filteredBioList.add(bioCopy.get(i));
+                            filteredUUIDs.add(UUIDsCopy.get(i));
+                            filteredProfiles.add(usernamesCopy.get(i));
+                            filteredBios.add(bioCopy.get(i));
                         }
                     }
-                    usernames = filteredProfileList;
-                    bio = filteredBioList;
+                    UUIDs = filteredUUIDs;
+                    usernames = filteredProfiles;
+                    bio = filteredBios;
                 }
 
                 FilterResults filterResults = new FilterResults();

@@ -92,7 +92,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
         this.reason = habitBundle.getString("reason");
         this.habitEvents = habitBundle.getParcelableArrayList("habitEvents");
 
-        // Handles Calendar //
+        // Handles Start Day Calendar //
         String completedDateTimeZone = habitBundle.getString("startDateTimeZone");
         if (completedDateTimeZone != null) {
 
@@ -103,6 +103,32 @@ public class Habit implements Comparable<Habit>, Parcelable {
             this.startDate = constructionCalendar;
         } else {
             this.startDate = null;
+        }
+
+        // Handles Best Streak Calendar //
+        String bestStreakDateTimeZone = habitBundle.getString("bestStreakDateTimeZone");
+        if (bestStreakDateTimeZone != null) {
+
+            Calendar constructionCalendar = Calendar.getInstance();
+            constructionCalendar.setTimeZone(TimeZone.getTimeZone(bestStreakDateTimeZone));
+            constructionCalendar.setTimeInMillis(habitBundle.getLong("bestStreakDateTime"));
+
+            this.bestStreakDate = constructionCalendar;
+        } else {
+            this.bestStreakDate = null;
+        }
+
+        // Handles Current Streak Calendar //
+        String currentStreakDateTimeZone = habitBundle.getString("currentStreakDateTimeZone");
+        if (bestStreakDateTimeZone != null) {
+
+            Calendar constructionCalendar = Calendar.getInstance();
+            constructionCalendar.setTimeZone(TimeZone.getTimeZone(currentStreakDateTimeZone));
+            constructionCalendar.setTimeInMillis(habitBundle.getLong("currentStreakDateTime"));
+
+            this.currentStreakDate = constructionCalendar;
+        } else {
+            this.currentStreakDate = null;
         }
 
         this.isPublic = habitBundle.getBoolean("isPublic");
@@ -463,6 +489,21 @@ public class Habit implements Comparable<Habit>, Parcelable {
             habitBundle.putLong("startDateTime", startDate.getTimeInMillis());
         } else {
             habitBundle.putString("startDateTimeZone", null);
+        }
+
+        // Handles Best Streak Calendar
+        if (bestStreakDate != null) {
+            habitBundle.putString("bestStreakDateTimeZone", bestStreakDate.getTimeZone().getID());
+            habitBundle.putLong("bestStreakDateTime", bestStreakDate.getTimeInMillis());
+        } else {
+            habitBundle.putString("bestStreakDateTimeZone", null);
+        }
+        // Handles Current Streak Calendar
+        if (bestStreakDate != null) {
+            habitBundle.putString("currentStreakDateTimeZone", currentStreakDate.getTimeZone().getID());
+            habitBundle.putLong("currentStreakDateTime", currentStreakDate.getTimeInMillis());
+        } else {
+            habitBundle.putString("currentStreakDateTimeZone", null);
         }
 
         habitBundle.putParcelable("onDaysObj", onDaysObj);

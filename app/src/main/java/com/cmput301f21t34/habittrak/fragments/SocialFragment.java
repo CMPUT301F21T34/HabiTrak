@@ -20,6 +20,7 @@ import com.cmput301f21t34.habittrak.social.FollowersFragment;
 import com.cmput301f21t34.habittrak.social.FollowingFragment;
 import com.cmput301f21t34.habittrak.social.RequestsFragment;
 import com.cmput301f21t34.habittrak.social.SearchFragment;
+import com.cmput301f21t34.habittrak.social.SocialTabFragment;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.tabs.TabLayout;
 
@@ -69,11 +70,7 @@ public class SocialFragment extends Fragment {
         socialTab.addTab(socialTab.newTab().setText("Requests"));
         socialTab.addTab(socialTab.newTab().setText("Search"));
 
-        // Initialise Fragments
-        // TODO maybe move these into base onCreate if doesn't cause issues with things not updating because this is called repeatedly possibly leading to reduced performance
-
-
-        // tab listener
+        // For tapping between tabs
         socialTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -126,8 +123,10 @@ public class SocialFragment extends Fragment {
                     return followingFragment;
                 case 2:
                     return requestsFragment;
-                default:
+                case 3:
                     return searchFragment;
+                default:
+                    throw new RuntimeException("Tab not found");
             }
         }
 

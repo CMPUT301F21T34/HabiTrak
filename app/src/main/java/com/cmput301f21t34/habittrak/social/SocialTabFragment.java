@@ -2,20 +2,29 @@ package com.cmput301f21t34.habittrak.social;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
+import com.cmput301f21t34.habittrak.recycler.SocialAdapter;
 import com.cmput301f21t34.habittrak.user.User;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
 
 public class SocialTabFragment extends Fragment {
     private DatabaseManager dm = new DatabaseManager();
+    // Views
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private SocialAdapter socialAdapter;
+    private ShimmerFrameLayout loading;
     // Data
     private User mainUser;
     private ArrayList<String> UUIDs;
@@ -36,7 +45,28 @@ public class SocialTabFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.habi_followers_fragment, container, false);
+
+        socialAdapter = new SocialAdapter(mainUser, UUIDs, usernames, new SocialAdapter.ClickListener() {
+            @Override
+            public void menuButtonOnClick(View view, int position) {
+
+            }
+            @Override
+            public void mainButtonOnClick(View view, int position) {
+
+            }
+        }, bios, "none");
+
         return view;
+    }
+
+    /**
+     * Get the tab's social adapter to update to include any changes
+     */
+    public void updateList() {
+        if (socialAdapter != null) {
+            socialAdapter.notifyDataSetChanged();
+        }
     }
 
     /**

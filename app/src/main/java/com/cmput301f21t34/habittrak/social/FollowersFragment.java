@@ -75,7 +75,6 @@ public class FollowersFragment extends Fragment {
 
             @Override
             public void mainButtonOnClick(View view, int position) {
-                MaterialButton button = view.findViewById(R.id.social_main_button);
             }
         }, bios, "none");
         recyclerView.setAdapter(socialAdapter);

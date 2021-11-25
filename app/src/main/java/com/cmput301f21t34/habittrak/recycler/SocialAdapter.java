@@ -1,24 +1,25 @@
 package com.cmput301f21t34.habittrak.recycler;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
+import com.cmput301f21t34.habittrak.social.FollowersFragment;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
-
-//TODO: Send menu options in the adapter itself
-//TODO: change username to email
 
 /**
  * Custom Recycler View Adapter for users on the social page
@@ -36,29 +37,25 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
     public static final String UNFOLLOW = "Unfollow";
     private final User mainUser;
     private final ArrayList<String> usernamesCopy;
-    private final ArrayList<String> bioCopy;
+    private final ArrayList<String> biosCopy;
     private final ClickListener listener;
     private final String defaultButtonText;
+    private final ArrayList<String> UUIDsCopy;
     private ArrayList<String> UUIDs;
-    private ArrayList<String> UUIDsCopy;
     private ArrayList<String> usernames;   // UUIDS (emails as of 10/11)
-    private ArrayList<String> bio;
+    private ArrayList<String> bios;
 
     public SocialAdapter(User mainUser, ArrayList<String> UUIDs, ArrayList<String> usernames,
-                         ClickListener listener, ArrayList<String> bio, String defaultButtonText) {
+                         ClickListener listener, ArrayList<String> bios, String defaultButtonText) {
         this.mainUser = mainUser;
         this.UUIDs = UUIDs;
         this.UUIDsCopy = UUIDs;
         this.usernames = usernames;
         this.usernamesCopy = usernames;
         this.listener = listener;
-        this.bio = bio;
-        this.bioCopy = bio;
+        this.bios = bios;
+        this.biosCopy = bios;
         this.defaultButtonText = defaultButtonText;
-    }
-
-    public ArrayList<String> getUUIDs() {
-        return UUIDs;
     }
 
     @Override
@@ -71,9 +68,9 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
                 if (charString.isEmpty()) {
                     UUIDs = UUIDsCopy;
                     usernames = usernamesCopy;
-                    bio = bioCopy;
+                    bios = biosCopy;
                 } else {
-                    // filter username and bio bases if username contains the characters
+                    // filter username and bios bases if username contains the characters
                     ArrayList<String> filteredUUIDs = new ArrayList<>();
                     ArrayList<String> filteredProfiles = new ArrayList<>();
                     ArrayList<String> filteredBios = new ArrayList<>();
@@ -81,12 +78,12 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
                         if (usernamesCopy.get(i).toLowerCase().contains(charString)) {
                             filteredUUIDs.add(UUIDsCopy.get(i));
                             filteredProfiles.add(usernamesCopy.get(i));
-                            filteredBios.add(bioCopy.get(i));
+                            filteredBios.add(biosCopy.get(i));
                         }
                     }
                     UUIDs = filteredUUIDs;
                     usernames = filteredProfiles;
-                    bio = filteredBios;
+                    bios = filteredBios;
                 }
 
                 FilterResults filterResults = new FilterResults();
@@ -95,7 +92,6 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
             }
 
             @Override
-            @SuppressWarnings("unchecked")
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                 usernames = (ArrayList<String>) filterResults.values;
                 notifyDataSetChanged();
@@ -108,15 +104,15 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
     public SocialAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.social_page_listview_content, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(mainUser, view);
     }
 
     // Used to set up each item in the adapter
     @Override
     public void onBindViewHolder(@NonNull SocialAdapter.ViewHolder holder, int position) {
-        // Get user info from database
+        holder.setUUID(UUIDs.get(position));
         holder.getUsername().setText(usernames.get(position));
-        holder.getUserBio().setText(bio.get(position));
+        holder.getUserBio().setText(bios.get(position));
 
         // Button setup
         holder.listenerRef = this.listener;
@@ -169,21 +165,29 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
      * @version 1.0
      * @see RecyclerView.ViewHolder
      */
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private final User mainUser;
+        private final DatabaseManager dm = new DatabaseManager();
         private final TextView username;
         private final MaterialButton mainButton;
         private final ImageButton menuButton;
         private final TextView userBio;
+        private String UUID;
         private ClickListener listenerRef;
 
-        public ViewHolder(View view) {
+        public ViewHolder(User mainUser, View view) {
             super(view);
+            this.mainUser = mainUser;
             username = view.findViewById(R.id.username_social_page);
             mainButton = view.findViewById(R.id.social_main_button);
             menuButton = view.findViewById(R.id.social_menu);
             userBio = view.findViewById(R.id.social_user_bio);
             menuButton.setOnClickListener(this);
             mainButton.setOnClickListener(this);
+        }
+
+        public void setUUID(String UUID) {
+            this.UUID = UUID;
         }
 
         public TextView getUsername() {
@@ -204,13 +208,84 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
 
         @Override
         public void onClick(View view) {
-            if (listenerRef != null) {
-                if (view.getId() == R.id.social_main_button) {
-                    listenerRef.mainButtonOnClick(view, getAdapterPosition());
-                } else if (view.getId() == R.id.social_menu) {
-                    listenerRef.menuButtonOnClick(view, getAdapterPosition());
+            int position = getAdapterPosition();
+            //if (listenerRef != null) {
+            //listenerRef.mainButtonOnClick(view, getAdapterPosition());
+
+            if (view.getId() == R.id.social_main_button) { // The big button
+                MaterialButton button = view.findViewById(R.id.social_main_button);
+                String buttonType = button.getText().toString();
+                String mainUUID = mainUser.getEmail();
+
+                if (buttonType.equals(ACCEPT)) {
+                    // Update locally
+                    mainUser.addFollower(UUID);
+                    mainUser.removeFollowerReq(UUID); // Removes from UUIDs too because references
+                    usernames.remove(position);
+                    bios.remove(position);
+
+                    // Update in database
+//                    dm.updateFollow(mainUUID, UUID, false);
+//                    dm.updateFollowRequest(mainUUID, UUID, true);
+
+                    // Update display(s)
+                    notifyItemRemoved(position);
+
+                } else if (buttonType.equals(FOLLOW) || buttonType.equals(FOLLOW_BACK)) {
+                    // Update locally
+                    mainUser.addFollowingReq(UUID);
+
+                    // Update in database
+                    //     dm.updateFollowRequest(UUID, mainUser.getEmail(), false);
+
+                    // Update display(s)
+                    button.setText(REQUESTED);
+
+                } else if (buttonType.equals(REQUESTED)) {
+                    // Update locally
+                    mainUser.removeFollowingReq(UUID);
+
+                    // Update in database
+//                    dm.updateFollowRequest(UUID, mainUUID, true);
+
+                    // Update display(s)
+                    button.setText(mainUser.getFollowerList().contains(UUID) ? FOLLOW_BACK : FOLLOW);
+
+                } else if (buttonType.equals(UNFOLLOW)) {
+                    // Update locally
+                    mainUser.removeFollowing(UUID); // Removes from UUIDs too because references
+                    usernames.remove(position);
+                    bios.remove(position);
+
+                    // Update in database
+//                    dm.updateFollow(UUID, mainUUID, true);
+
+                    // Update display(s)
+                    notifyItemRemoved(position);
                 }
+
+
+            } else if (view.getId() == R.id.social_menu) { // The three dots
+                //listenerRef.menuButtonOnClick(view, getAdapterPosition());
+                PopupMenu menu = new PopupMenu(view.getContext(), view);
+                menu.getMenuInflater().inflate(R.menu.social_popup_menu, menu.getMenu());
+                menu.getMenu().add("Block");
+                menu.getMenu().add("Remove");
+                menu.show();
+
+                menu.setOnMenuItemClickListener(menuItem -> {
+                    if (menuItem.getTitle().equals("Block")) {
+                        Log.d("MenuItem", "Block Clicked");
+
+
+                    } else if (menuItem.getTitle().equals("Remove")) {
+                        Log.d("MenuItem", "Remove Clicked");
+
+                    }
+                    return true;
+                });
             }
+            //}
         }
 
         /**

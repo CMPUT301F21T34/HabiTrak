@@ -34,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
-            android:hint="@string/habi_hint_username">
+            android:hint="@string/prompt_email">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id='@+id/username_edit_text'

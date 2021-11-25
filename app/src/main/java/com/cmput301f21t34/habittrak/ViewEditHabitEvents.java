@@ -104,7 +104,13 @@ Log.d(TAG,"Got the views");
         //get data from habit event
         String commentHabitEvent = habitEvent.getComment();
         Calendar completedDate = habitEvent.getCompletedDate();
-        Uri photoUri = Uri.parse( habitEvent.getPhotograph());
+        Uri photoUri;
+        if(habitEvent.getPhotograph() != null) {
+            photoUri = Uri.parse(habitEvent.getPhotograph());
+        }
+        else{
+            photoUri = null;
+        }
         Location locationHabitEvent = habitEvent.getLocation();
 Log.d(TAG,"got the data");
 // setting the data to the new habit event

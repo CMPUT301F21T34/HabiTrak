@@ -136,7 +136,7 @@ public class SocialFragment extends Fragment {
             return socialTab.getTabCount();
         }
     }
-<<<<<<< .merge_file_Q9Qtt5
+
     /*
     @Override
     public boolean onSupportNavigateUp() {
@@ -144,7 +144,6 @@ public class SocialFragment extends Fragment {
         onBackPressed();
         return true;
     }*/
-=======
 
     /**
      * Gets the data in background
@@ -157,5 +156,5 @@ public class SocialFragment extends Fragment {
             return null;
         }
     }
->>>>>>> .merge_file_aca078
+
 }

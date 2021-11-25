@@ -16,4 +16,8 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="best_streak">Best Streak: </string>
+    <string name="_30_day_streak">30-Day Streak</string>
+    <string name="total_events_completed">Total Events Completed: </string>
+    <string name="habit_overview">Habit Overview</string>
 </resources>

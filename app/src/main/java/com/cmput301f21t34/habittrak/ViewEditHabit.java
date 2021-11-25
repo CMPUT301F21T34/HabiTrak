@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -23,7 +24,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
-
+// TODO: calculate best streak and set the text
 /**
  * ViewEditHabit.
  *
@@ -56,6 +57,12 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
     private MaterialButton sundayButton;
     private MaterialDatePicker materialDatePicker;
     private SwitchMaterial publicSwitch;
+    private TextView bestStreakStart;
+    private TextView bestStreakEnd;
+    private TextView totalEventCompleted;
+    private TextView bestStreakTotal;
+    private TextView progressBarText;
+    private LinearProgressIndicator progressBar;
     private boolean[] daysOfWeek;
     private final int whiteColor = Color.WHITE;
     private int tealColor;
@@ -96,7 +103,12 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
         saveButton = findViewById(R.id.view_save_habit);
         publicSwitch = findViewById(R.id.view_public_switch);
         visibilityText = findViewById(R.id.view_habit_visibility_text);
-
+        bestStreakStart = findViewById(R.id.best_streak_start);
+        bestStreakEnd = findViewById(R.id.best_streak_end);
+        progressBar = findViewById(R.id.view_habit_progress);
+        totalEventCompleted = findViewById(R.id.view_total_events);
+        bestStreakTotal = findViewById(R.id.best_streak_count);
+        progressBarText = findViewById(R.id.view_habit_streak);
         tealColor = ContextCompat.getColor(getBaseContext(), R.color.teal_200); // color for buttons
 
         // get data from habit
@@ -114,10 +126,14 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
             publicSwitch.setChecked(false);
             visibilityText.setText("Private");
         }
-
+        // set progress bar
+        progressBar.setProgress((habit.getStreak()*100)/30);
+        String txt = habit.getStreak() + "/30";
+        progressBarText.setText(txt);
         // setting date
         String setDateText = "Selected Date: " + getDate(calendar);
         startDate.setText(setDateText);
+
 
         // setting up date picker
         MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();

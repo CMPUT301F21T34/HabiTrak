@@ -87,7 +87,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
         Bundle habitBundle;
         habitBundle = parcel.readBundle(Habit.class.getClassLoader());
 
-
+        this.index = habitBundle.getInt("index");
         this.title = habitBundle.getString("title");
         this.reason = habitBundle.getString("reason");
         this.habitEvents = habitBundle.getParcelableArrayList("habitEvents");
@@ -479,7 +479,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
 
         habitBundle.putString("title", title);
         habitBundle.putString("reason", reason);
-
+        habitBundle.putInt("index", index);
         // Requires Habit_Events to implement parcelable
         habitBundle.putParcelableArrayList("habitEvents", habitEvents);
 

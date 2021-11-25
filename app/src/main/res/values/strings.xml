@@ -59,4 +59,6 @@
     <string name="habit_row_default_name">Habit Name</string>
     <string name="habit_row_default_reason">Reason goes here</string>
     <string name="habit_add_button">Add Habit</string>
+    <string name="title_activity_maps">MapsActivity</string>
+
 </resources>

@@ -1,6 +1,7 @@
 package com.cmput301f21t34.habittrak;
 
 import android.location.Location;
+import android.net.Uri;
 
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitEvent;
@@ -38,7 +39,7 @@ public class HabitEventTest {
         String comment = "I read book 1";
         Habit habit = new Habit("Read Book");
         Location loc = new Location("");
-        File photo = new File("");
+        Uri photo = null;
         Calendar completeDate = new GregorianCalendar(2021, 6, 1);
         HabitEvent mockHabitEvent = new HabitEvent(comment, completeDate, loc, photo);
         return mockHabitEvent;

@@ -1,6 +1,8 @@
 package com.cmput301f21t34.habittrak.auth;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
@@ -165,9 +167,10 @@ public class LoginFragment extends Fragment {
 
 
                                 mainUser = db.getUser(authUser.getEmail());
-                                startHomePage(null, mainUser);
+                                startHomePage(mainUser);
 
                             } else {
+                                // Email not Verified //
 
                                 usernameLayout.setError("Email not Verified");
                                 passwordLayout.setError(null);
@@ -178,6 +181,7 @@ public class LoginFragment extends Fragment {
 
 
                         } else {
+                            // Login Failed
 
                             usernameLayout.setError(null);
                             passwordLayout.setError("Incorrect Password");
@@ -195,9 +199,9 @@ public class LoginFragment extends Fragment {
     /**
      * startHomePage
      * Start the base activity after logging in
-     * @param view
+     * @param
      */
-    public void startHomePage(View view, User currentUser){
+    public void startHomePage(User currentUser){
 
         Log.d("MERGE", "startHomePage");
 

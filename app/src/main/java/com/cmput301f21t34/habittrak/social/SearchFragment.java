@@ -38,6 +38,7 @@ public class SearchFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private SocialAdapter socialAdapter;
     private ShimmerFrameLayout loading;
+    private SearchView searchBox;
     // Data
     private User mainUser;
     private ArrayList<String> UUIDs;
@@ -61,7 +62,8 @@ public class SearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.habi_search_fragment, container, false);
         loading = view.findViewById(R.id.shimmer_container);
         loading.setVisibility(View.GONE); // Invisible by default
-        SearchView searchBox = view.findViewById(R.id.social_search_box);
+        searchBox = view.findViewById(R.id.social_search_box);
+        searchBox.setVisibility(View.GONE); // Off to start because crash if not done getting users
 
         populateList(); // Begin fetching data for display
 
@@ -164,7 +166,6 @@ public class SearchFragment extends Fragment {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            UUIDs = dm.getAllUsers();
             // Remove unwanted users that might be present
             UUIDs.removeAll(mainUser.getBlockList());
             UUIDs.removeAll(mainUser.getBlockedByList());
@@ -181,6 +182,7 @@ public class SearchFragment extends Fragment {
         protected void onPostExecute(Void unused) {
             super.onPostExecute(unused);
             socialAdapter.notifyDataSetChanged();   // Tell display
+            searchBox.setVisibility(View.VISIBLE);  // Allow searches now
             loading.stopShimmer();                  // Stop visuals
             loading.setVisibility(View.GONE);       // Disappear visuals
         }

@@ -1,5 +1,4 @@
 <resources>
-
     <!-- Base -->
     <string name="app_name">HabitTrak</string>
     <string name="habi_app_name">habiTrak</string>
@@ -23,12 +22,11 @@
     <string name="no_habits_set_for_today">No Habits Active Today</string>
     <string name="no_active_habits">You have no active habits</string>
     <string name="title_activity_maps">MapsActivity</string>
-<<<<<<< HEAD
+
     <string name="best_streak">Best Streak: </string>
     <string name="_30_day_streak">30-Day Streak</string>
     <string name="total_events_completed">Total Events Completed: </string>
     <string name="habit_overview">Habit Overview</string>
-=======
     <string name="today">Today</string>
     <string name="habits">Habits</string>
     <string name="events">Events</string>
@@ -73,5 +71,4 @@
     <string name="follow">Follow</string>
     <string name="add_location">Add Location</string>
 
->>>>>>> origin/dev
 </resources>

@@ -126,10 +126,11 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
             publicSwitch.setChecked(false);
             visibilityText.setText("Private");
         }
+        //TODO: set these values
         // set progress bar
-        progressBar.setProgress((habit.getStreak()*100)/30);
-        String txt = habit.getStreak() + "/30";
-        progressBarText.setText(txt);
+        //progressBar.setProgress((habit.getStreak()*100)/30);
+        //String txt = habit.getStreak() + "/30";
+        //progressBarText.setText(txt);
         // setting date
         String setDateText = "Selected Date: " + getDate(calendar);
         startDate.setText(setDateText);

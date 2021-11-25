@@ -651,10 +651,17 @@ public class DatabaseManager {
     /**
      * Update the habit list of the given user
      * We can add/remove/edit attributes of habitToUpdate
-     * @param userToUpdate
-     * @param habitToUpdate
+     * @param UUID String, the uuid of the user who's habit list is to be updated
+     * @param habitList HabitList, the habit list that is to be updated
      */
-    public void updateHabitList(String userToUpdate, Habit habitToUpdate) {
+
+    public void updateHabitList(String UUID, HabitList habitList) {
+
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("habitList", habitToDatabase(habitList));
+            List<String> fieldsToUpdate = new ArrayList<>();
+            fieldsToUpdate.add("habitList");
+            database.collection("users").document(UUID).set(data, SetOptions.mergeFields(fieldsToUpdate));
 
     }
 

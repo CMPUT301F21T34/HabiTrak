@@ -1,5 +1,6 @@
 package com.cmput301f21t34.habittrak.recycler;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,25 +36,27 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
     public static final String FOLLOW_BACK = "Follow Back";
     public static final String REQUESTED = "Requested";
     public static final String UNFOLLOW = "Unfollow";
+
     private final SocialFragment socialRef;
     private final User mainUser;
+    private final ArrayList<String> UUIDsCopy;
     private final ArrayList<String> usernamesCopy;
     private final ArrayList<String> biosCopy;
     private final String defaultButtonText;
-    private final ArrayList<String> UUIDsCopy;
     private ArrayList<String> UUIDs;
-    private ArrayList<String> usernames;   // UUIDS (emails as of 10/11)
+    private ArrayList<String> usernames;
     private ArrayList<String> bios;
 
-    public SocialAdapter(SocialFragment socialRef, User mainUser, ArrayList<String> UUIDs, ArrayList<String> usernames,
-                         ArrayList<String> bios, String defaultButtonText) {
+    public SocialAdapter(
+            SocialFragment socialRef, User mainUser, ArrayList<String> UUIDs,
+            ArrayList<String> usernames, ArrayList<String> bios, String defaultButtonText) {
         this.socialRef = socialRef;
         this.mainUser = mainUser;
         this.UUIDs = UUIDs;
-        this.usernames = usernames;
-        this.bios = bios;
         this.UUIDsCopy = UUIDs;
+        this.usernames = usernames;
         this.usernamesCopy = usernames;
+        this.bios = bios;
         this.biosCopy = bios;
         this.defaultButtonText = defaultButtonText;
     }
@@ -81,49 +84,50 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
      */
     public void removeUserEntry(String UUID) {
         int position = UUIDs.indexOf(UUID);
-        UUIDs.remove(position);
-        usernames.remove(position);
-        bios.remove(position);
-        notifyItemRemoved(position);
+        if (position != -1) {
+            UUIDs.remove(position);
+            usernames.remove(position);
+            bios.remove(position);
+            notifyItemRemoved(position);
+        }
     }
 
     @NonNull
     @Override
     public SocialAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.social_page_listview_content, parent, false);
-        return new ViewHolder(mainUser, view);
+        // Just makes a ViewHolder from the inflated view
+        return new ViewHolder(LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.social_page_listview_content, parent, false));
     }
 
     // Used to set up each item in the adapter
     @Override
     public void onBindViewHolder(@NonNull SocialAdapter.ViewHolder holder, int position) {
-        holder.setUUID(UUIDs.get(position));
-        holder.getUsername().setText(usernames.get(position));
-        holder.getUserBio().setText(bios.get(position));
+        // Set up the data for the given entry
+        holder.UUID = UUIDs.get(position);
+        holder.username = usernames.get(position);
+        holder.bio = bios.get(position);
+        holder.usernameTextView.setText(holder.username);
+        holder.bioTextView.setText(holder.bio);
 
         // Set appropriate button text based on tab and relationships of main user with each user
         if (defaultButtonText.equals(ACCEPT) || defaultButtonText.equals(UNFOLLOW)) {
             // Requests and Following tabs
-            holder.setButtonText(defaultButtonText);
-        } else {
-            // Followers and Search tabs
+            holder.mainButton.setText(defaultButtonText);
+        } else { // Followers and Search tabs
             if (mainUser.getFollowingList().contains(UUIDs.get(position))) {
                 // If main user follows a given user
-                holder.setButtonText(UNFOLLOW);
-            } else {
-                // Main user does not follow a given user
+                holder.mainButton.setText(UNFOLLOW);
+            } else { // Main user does not follow a given user
                 if (mainUser.getFollowingReqList().contains(UUIDs.get(position))) {
                     // If main user has requested to follow a given user
-                    holder.setButtonText(REQUESTED);
-                } else {
-                    // Main user has not requested to follow a given user
+                    holder.mainButton.setText(REQUESTED);
+                } else { // Main user has not requested to follow a given user
                     if (mainUser.getFollowerList().contains(UUIDs.get(position))) {
                         // A given user follows main user
-                        holder.setButtonText(FOLLOW_BACK);
-                    } else {
-                        // A given user does not follow main user
-                        holder.setButtonText(FOLLOW);
+                        holder.mainButton.setText(FOLLOW_BACK);
+                    } else { // A given user does not follow main user
+                        holder.mainButton.setText(FOLLOW);
                     }
                 }
             }
@@ -141,17 +145,13 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
                 String charString = charSequence.toString();
-                // is no input in searchView put the original list back
-                if (charString.isEmpty()) {
-                    UUIDs = UUIDsCopy;
-                    usernames = usernamesCopy;
-                    bios = biosCopy;
-                } else {
-                    // filter username and bios bases if username contains the characters
+                // If no input in searchView put the original list back
+                if (!charString.isEmpty()) {
+                    // Filter based if username contains the inputted characters
                     ArrayList<String> filteredUUIDs = new ArrayList<>();
                     ArrayList<String> filteredProfiles = new ArrayList<>();
                     ArrayList<String> filteredBios = new ArrayList<>();
-                    for (int i = 0; i < usernamesCopy.size(); i++) {
+                    for (int i = 0; i < usernamesCopy.size(); ++i) {
                         if (usernamesCopy.get(i).toLowerCase().contains(charString)) {
                             filteredUUIDs.add(UUIDsCopy.get(i));
                             filteredProfiles.add(usernamesCopy.get(i));
@@ -162,12 +162,12 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
                     usernames = filteredProfiles;
                     bios = filteredBios;
                 }
-
                 FilterResults filterResults = new FilterResults();
                 filterResults.values = usernames;
                 return filterResults;
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                 usernames = (ArrayList<String>) filterResults.values;
@@ -177,201 +177,138 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
     }
 
     /**
-     * ViewHolder
-     * <p>
      * View Holder of the SocialAdapter
      *
      * @author Pranav
-     * @version 1.0
+     * @author Kaaden
      * @see RecyclerView.ViewHolder
      */
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    protected class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private final DatabaseManager dm = new DatabaseManager(); // For updating the database
+        private final TextView usernameTextView; // Displays this entry's username
+        private final TextView bioTextView; // Displays this entry's bio
+        private final MaterialButton mainButton; // This big button
+        private String UUID; // This entry's user's UUID
+        private String username; // This entry's user's username
+        private String bio; // This entry's user's biography
 
-        private final User mainUser;
-        private final DatabaseManager dm = new DatabaseManager();
-        private final TextView username;
-        private final MaterialButton mainButton;
-        private final ImageButton menuButton;
-        private final TextView userBio;
-        private String UUID;
-
-        public ViewHolder(User mainUser, View view) {
+        private ViewHolder(View view) {
             super(view);
-            this.mainUser = mainUser;
-            username = view.findViewById(R.id.username_social_page);
+            usernameTextView = view.findViewById(R.id.username_social_page);
+            bioTextView = view.findViewById(R.id.social_user_bio);
             mainButton = view.findViewById(R.id.social_main_button);
-            menuButton = view.findViewById(R.id.social_menu);
-            userBio = view.findViewById(R.id.social_user_bio);
-            menuButton.setOnClickListener(this);
+            ImageButton menuButton = view.findViewById(R.id.social_menu); // The 3 dots
             mainButton.setOnClickListener(this);
-        }
-
-        public void setUUID(String UUID) {
-            this.UUID = UUID;
-        }
-
-        public TextView getUsername() {
-            return username;
-        }
-
-        public TextView getUserBio() {
-            return userBio;
-        }
-
-        public MaterialButton getMainButton() {
-            return mainButton;
-        }
-
-        public ImageButton getMenuButton() {
-            return menuButton;
+            menuButton.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            int position = getAdapterPosition();
-            //if (listenerRef != null) {
-            //listenerRef.mainButtonOnClick(view, getAdapterPosition());
-
             if (view.getId() == R.id.social_main_button) { // The big button
-                MaterialButton button = view.findViewById(R.id.social_main_button);
-                String buttonType = button.getText().toString();
-                String mainUUID = mainUser.getEmail();
+                mainButtonOnClick();
+            } else if (view.getId() == R.id.social_menu) { // The three dots
+                menuButtonOnClick(view);
+            }
+        } // onClick
 
-                switch (buttonType) {
-                    case ACCEPT:
-                        // Update locally
-                        mainUser.addFollower(UUID);
-                        mainUser.removeFollowerReq(UUID);
-//                      UUIDs.remove(UUID);
-//                      usernames.remove(position);
-//                      bios.remove(position);
+        /**
+         * Executes the functionality of the main button on an entry
+         */
+        private void mainButtonOnClick() {
+            switch (mainButton.getText().toString()) {
+                case ACCEPT:
+                    // Update locally
+                    mainUser.addFollower(UUID);
+                    mainUser.removeFollowerReq(UUID);
+                    removeUserEntry(UUID); // Remove this entry from Requests (this) tab
+                    // Update in database
+                    dm.updateFollow(mainUser.getEmail(), UUID, DatabaseManager.ADD);
+                    dm.updateFollowRequest(mainUser.getEmail(), UUID, DatabaseManager.REMOVE);
+                    // Add accepted user to Followers tab
+                    socialRef.addUserEntry(SocialFragment.FOLLOWERS, UUID, username, bio);
+                    break;
+                case FOLLOW:
+                case FOLLOW_BACK:
+                    // Update locally
+                    mainUser.addFollowingReq(UUID);
+                    // Update in database
+                    dm.updateFollowRequest(UUID, mainUser.getEmail(), DatabaseManager.ADD);
+                    // Update display
+                    mainButton.setText(REQUESTED);
+                    break;
+                case REQUESTED:
+                    // Update locally
+                    mainUser.removeFollowingReq(UUID);
+                    // Update in database
+                    dm.updateFollowRequest(UUID, mainUser.getEmail(), DatabaseManager.REMOVE);
+                    // Update display
+                    mainButton.setText(
+                            mainUser.getFollowerList().contains(UUID) ? FOLLOW_BACK : FOLLOW);
+                    break;
+                case UNFOLLOW:
+                    // Update locally
+                    mainUser.removeFollowing(UUID);
+                    removeUserEntry(UUID); // Remove entry from Following (this) tab
+                    // Update in database
+                    dm.updateFollow(UUID, mainUser.getEmail(), DatabaseManager.REMOVE);
+                    break;
+            }
+        }
+
+        /**
+         * Executes the functionality of the menu button (3 dots) of an entry
+         */
+        private void menuButtonOnClick(View view) {
+            PopupMenu menu = new PopupMenu(view.getContext(), view);
+            menu.getMenuInflater().inflate(R.menu.social_popup_menu, menu.getMenu());
+            menu.getMenu().add("Block");
+            menu.getMenu().add("Remove");
+            menu.show();
+
+            menu.setOnMenuItemClickListener(menuItem -> {
+                switch (menuItem.getTitle().toString()) {
+                    case "Block":
+                        Log.d("MenuItem", "Block Clicked");
+                        /* Remove all relationships, remove from this list now, store block
+                           relationship
+                        */
+
+                        // Remove follower or follower request (they are mutually exclusive)
+                        // Only bother database if relationship exists
+                        // Also update relevant possible other tabs
+                        if (mainUser.removeFollowing(UUID)) {
+                            dm.updateFollow(UUID, mainUser.getEmail(), DatabaseManager.REMOVE);
+                            socialRef.removeUserEntry(SocialFragment.FOLLOWING, UUID);
+                        } else if (mainUser.removeFollowingReq(UUID)) {
+                            dm.updateFollowRequest(UUID, mainUser.getEmail(), DatabaseManager.REMOVE);
+                        }
+
+                            /* Just continue into remove section to so for follower/follower
+                            request/this list now */
+                    case "Remove":
+                        Log.d("MenuItem", "Remove Clicked");
+                        // Remove follower or follower request, remove from this list now
+
+                        // Remove follower or follower request (they are mutually exclusive)
+                        // Only bother database if relationship exists
+                        // Also update relevant possible other tabs
+                        if (mainUser.removeFollower(UUID)) {
+                            socialRef.removeUserEntry(SocialFragment.FOLLOWERS, UUID);
+                            dm.updateFollow(mainUser.getEmail(), UUID, DatabaseManager.REMOVE);
+                        } else if (mainUser.removeFollowerReq(UUID)) {
+                            socialRef.removeUserEntry(SocialFragment.REQUESTS, UUID);
+                            dm.updateFollowRequest(
+                                    mainUser.getEmail(), UUID, DatabaseManager.REMOVE);
+                        }
+
+                        // Remove from this list now
                         removeUserEntry(UUID);
-                        // Update in database
-//                      dm.updateFollow(mainUUID, UUID, false);
-//                      dm.updateFollowRequest(mainUUID, UUID, true);
 
-                        // Update display(s)
-                        notifyItemRemoved(position);
-                        break;
-                    case FOLLOW:
-                    case FOLLOW_BACK:
-                        // Update locally
-                        mainUser.addFollowingReq(UUID);
-
-                        // Update in database
-                        //     dm.updateFollowRequest(UUID, mainUser.getEmail(), false);
-
-                        // Update display(s)
-                        button.setText(REQUESTED);
-
-                        break;
-                    case REQUESTED:
-                        // Update locally
-                        mainUser.removeFollowingReq(UUID);
-
-                        // Update in database
-//                      dm.updateFollowRequest(UUID, mainUUID, true);
-
-                        // Update display(s)
-                        button.setText(mainUser.getFollowerList().contains(UUID) ? FOLLOW_BACK : FOLLOW);
-                        break;
-                    case UNFOLLOW:
-                        // Update locally
-                        mainUser.removeFollowing(UUID);
-                        usernames.remove(position);
-                        bios.remove(position);
-
-                        // Update in database
-//                    dm.updateFollow(UUID, mainUUID, true);
-
-                        // Update display(s)
-                        notifyItemRemoved(position);
                         break;
                 }
-
-
-            } else if (view.getId() == R.id.social_menu) { // The three dots
-                //listenerRef.menuButtonOnClick(view, getAdapterPosition());
-                PopupMenu menu = new PopupMenu(view.getContext(), view);
-                menu.getMenuInflater().inflate(R.menu.social_popup_menu, menu.getMenu());
-                menu.getMenu().add("Block");
-                menu.getMenu().add("Remove");
-                menu.show();
-
-                menu.setOnMenuItemClickListener(menuItem -> {
-                    if (menuItem.getTitle().equals("Block")) {
-                        Log.d("MenuItem", "Block Clicked");
-
-
-                    } else if (menuItem.getTitle().equals("Remove")) {
-                        Log.d("MenuItem", "Remove Clicked");
-
-                    }
-                    return true;
-                });
-            }
-            //}
+                return true;
+            });
         }
 
-        /**
-         * makeButtonVisible
-         * <p>
-         * set the visibility of the button depending on the usage of the adapter
-         *
-         * @author Pranav
-         */
-        public void makeButtonVisible() {
-            mainButton.setVisibility(View.VISIBLE);
-        }
-
-        /**
-         * makeButtonInvisible
-         * <p>
-         * set the visibility of the button depending on the usage of the adapter
-         *
-         * @author Pranav
-         */
-        public void makeButtonInvisible() {
-            mainButton.setVisibility(View.INVISIBLE);
-        }
-
-        /**
-         * setButtonText
-         * <p>
-         * sets the test of the main button in the recycler view
-         *
-         * @param text -Type String; The new button text
-         */
-        public void setButtonText(String text) {
-            mainButton.setText(text);
-        }
-
-
-    }
-}
-// to reference when coding the equivalent here
-//    /**
-//     * showMenu
-//     * <p>
-//     * listener function for ImageButton in Recycler View
-//     *
-//     * @param view
-//     * @param userPosition position of the clicked menu in the adapter
-//     * @see SocialAdapter
-//     */
-//    public void showMenu(View view, int userPosition) {
-//        PopupMenu menu = new PopupMenu(getContext(), view);
-//        menu.getMenuInflater().inflate(R.menu.social_popup_menu, menu.getMenu());
-//        menu.getMenu().add("Remove");
-//        menu.getMenu().add("Block");
-//        menu.show();
-//
-//        menu.setOnMenuItemClickListener(menuItem -> {
-//            if (menuItem.getTitle().equals("Remove")) {
-//                Log.d("MenuItem", "Remove Clicked");
-//            } else {
-//                Log.d("MenuItem", "Block Clicked");
-//            }
-//            return true;
-//        });
-//    }
+    } // ViewHolder
+} // SocialAdapter

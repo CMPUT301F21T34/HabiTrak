@@ -41,8 +41,10 @@ public class SocialTabFragment extends Fragment {
     // Views
     private ShimmerFrameLayout loading;
     private SearchView searchBox;
-    private final boolean searchable;
+    // Other
     private final SocialAdapter socialAdapter;
+    private final boolean searchable;
+    private final SocialTabAsyncTask fetchData = new SocialTabAsyncTask();
 
     public SocialTabFragment(SocialFragment socialRef, User mainUser, ArrayList<String> UUIDs,
                              String defaultButtonText, boolean searchable) {
@@ -74,7 +76,11 @@ public class SocialTabFragment extends Fragment {
         loading = view.findViewById(R.id.social_tab_shimmer_container);
         loading.setVisibility(View.GONE); // Invisible by default
 
-        populateList(); // Begin fetching data for display
+        // If fetching data isn't done yet
+        if (fetchData.getStatus() != AsyncTask.Status.FINISHED) {
+            loading.setVisibility(View.VISIBLE); // Appear visuals
+            loading.startShimmer(); // Visual effect
+        }
 
         // List display
         RecyclerView recyclerView = view.findViewById(R.id.social_tab_recycler_view);
@@ -130,7 +136,7 @@ public class SocialTabFragment extends Fragment {
     public void populateList() {
         // Only populate if empty
         if (usernames.isEmpty()) {
-            new SocialTabAsyncTask().execute();
+            fetchData.execute();
         }
     }
 
@@ -159,11 +165,6 @@ public class SocialTabFragment extends Fragment {
      */
     public class SocialTabAsyncTask extends AsyncTask<Void, Void, Void> {
         @Override
-        protected void onPreExecute() {
-            loading.setVisibility(View.VISIBLE);   // Appear visuals
-            loading.startShimmer();             // Visual effect
-        }
-        @Override
         protected Void doInBackground(Void... voids) {
             final DatabaseManager dm = new DatabaseManager();
             // Remove unwanted users that might be present
@@ -183,9 +184,12 @@ public class SocialTabFragment extends Fragment {
         protected void onPostExecute(Void unused) {
             super.onPostExecute(unused);
             socialAdapter.notifyDataSetChanged();   // Tell display
-            loading.stopShimmer();                  // Stop visuals
-            loading.setVisibility(View.GONE);       // Disappear visuals
-            if (searchable) {
+            // Don't cause null references if fragment view isn't created yet
+            if (loading != null) {
+                loading.stopShimmer();                  // Stop visuals
+                loading.setVisibility(View.GONE);       // Disappear visuals
+            }
+            if (searchBox != null && searchable) {
                 searchBox.setVisibility(View.VISIBLE);  // Allow searches now
             }
         }

@@ -1,5 +1,6 @@
 package com.cmput301f21t34.habittrak.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -52,6 +53,10 @@ public class SocialFragment extends Fragment {
                 mainUser.getFollowerReqList(), SocialAdapter.ACCEPT, NOT_SEARCHABLE);
         // Initialise searchFragment on separate thread because need to call slow database method
         new SocialAsyncTask().execute();
+        // Start fetching data for the lists
+        followersFragment.populateList();
+        followingFragment.populateList();
+        requestsFragment.populateList();
     }
 
     @Override
@@ -203,6 +208,12 @@ public class SocialFragment extends Fragment {
             searchFragment = new SocialTabFragment(SocialFragment.this, mainUser,
                     new DatabaseManager().getAllUsers(), "nodefault", SEARCHABLE);
             return null;
+        }
+        @Override
+        protected void onPostExecute(Void unused) {
+            super.onPostExecute(unused);
+            // Start fetching data for the list
+            searchFragment.populateList();
         }
     }
 }

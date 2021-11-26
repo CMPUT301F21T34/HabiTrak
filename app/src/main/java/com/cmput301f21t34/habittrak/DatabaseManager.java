@@ -249,11 +249,12 @@ public class DatabaseManager {
 
             if (document.getData() != null) {
                 Log.d("getData", "not null");
-
                 ArrayList<HashMap<String, Object>> requestedHabitList = (ArrayList<HashMap<String, Object>>) document.get("habitList");
+
                 ArrayList<HabitDatabase> requestedHabitDatabases = toHabitDatabaseList(requestedHabitList);
                 habitList = databaseToHabit(requestedHabitDatabases);
                 followerList = (ArrayList<String>) document.get("followerList");
+
                 followingList = (ArrayList<String>) document.get("followingList");
                 followReqList = (ArrayList<String>) document.get("followReqList");
                 followRequestedList = (ArrayList<String>) document.get("followRequestedList");
@@ -279,6 +280,7 @@ public class DatabaseManager {
             );
             return user;
         } catch (Exception ignored) {
+            Log.d("GETMAINUSER","the exceptions is "+ ignored.getLocalizedMessage());
         }
 
         return new User(email);
@@ -394,14 +396,25 @@ public class DatabaseManager {
     public HabitDatabase toHabitDatabase(HashMap<String, Object> hashmap) {
         HabitDatabase habitDatabase = new HabitDatabase();
         habitDatabase.setIndex((int) (long) hashmap.get("index"));
+
         habitDatabase.setReason((String) hashmap.get("reason"));
         habitDatabase.setTitle((String) hashmap.get("title"));
         habitDatabase.setisPublic((boolean) hashmap.get("isPublic"));
         habitDatabase.setHabitEvents(toHabitEventList((ArrayList<HashMap<String, Object>>) hashmap.get("habitEvents")));
         habitDatabase.setOnDaysObjFromDB((ArrayList<Boolean>) hashmap.get("onDaysObj"));
         habitDatabase.setStartDate(toCalendar((HashMap<String, Object>) hashmap.get("startDate")));
-        habitDatabase.setCurrentStreakDate(toCalendar((HashMap<String, Object>) hashmap.get("currentStreakDate")));
-        habitDatabase.setBestStreakDate(toCalendar((HashMap<String, Object>) hashmap.get("bestStreakDate")));
+        if(hashmap.get("currentStreakDate") != null){
+            habitDatabase.setCurrentStreakDate(toCalendar((HashMap<String, Object>) hashmap.get("currentStreakDate")));
+        }
+        else{
+            habitDatabase.setCurrentStreakDate(null);
+        }
+        if(hashmap.get("bestStreakDate") != null){
+            habitDatabase.setBestStreakDate(toCalendar((HashMap<String, Object>) hashmap.get("bestStreakDate")));
+        }
+        else{
+            habitDatabase.setBestStreakDate(null);
+        }
         return habitDatabase;
     }
 
@@ -415,6 +428,7 @@ public class DatabaseManager {
      */
     public ArrayList<HabitEvent> toHabitEventList(ArrayList<HashMap<String, Object>> hashMapList) {
         ArrayList<HabitEvent> habitEventList = new ArrayList<>();
+
         for (int i = 0; i < hashMapList.size(); i++) {
             HabitEvent habitEvent = toHabitEvent(hashMapList.get(i));
             habitEventList.add(habitEvent);
@@ -463,11 +477,16 @@ public class DatabaseManager {
      * @return Location, the location from the HashMap
      */
     private Location toLocation(HashMap<String,Object> hashMap){
+        if(hashMap != null) {
+            Location loc = new Location((String) hashMap.get("provider"));
+            loc.setLatitude((double) (long) hashMap.get("latitude"));
+            loc.setLongitude((double) (long) hashMap.get("longitude"));
 
-        Location loc = new Location((String) hashMap.get("provider"));
-        loc.setLatitude((double) (long) hashMap.get("latitude"));
-        loc.setLongitude((double) (long) hashMap.get("longitude"));
-        return loc;
+            return loc;
+        }
+        else{
+            return null;
+        }
     }
 
     /**

@@ -137,7 +137,9 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
             //TODO: Send to main
 
         }
+
         mainUser = db.getUser(fUser.getEmail());
+
     }
 
     /**

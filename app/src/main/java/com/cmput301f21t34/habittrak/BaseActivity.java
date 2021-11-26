@@ -103,24 +103,11 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
     }
 
-    /**
-     * gets the main user from database
-     * @author Dakota
-     */
-    private void getMainUser() {
-        // Updates the mainUser, even if they are already logged in
-        FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (fUser == null){
-            //TODO: Send to main
 
-        }
-        mainUser = db.getUser(fUser.getEmail());
-    }
 
     @Override
     public void onResume() {
         super.onResume();
-
 
 
         refreshHabitStreak();
@@ -137,6 +124,20 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
             }
         });
 
+    }
+
+    /**
+     * gets the main user from database
+     * @author Dakota
+     */
+    private void getMainUser() {
+        // Updates the mainUser, even if they are already logged in
+        FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (fUser == null){
+            //TODO: Send to main
+
+        }
+        mainUser = db.getUser(fUser.getEmail());
     }
 
     /**

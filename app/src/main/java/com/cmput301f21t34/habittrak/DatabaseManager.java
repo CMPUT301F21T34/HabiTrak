@@ -840,6 +840,7 @@ public class DatabaseManager {
             habitToDatabase.setOnDaysObj(primitiveHabit.getOnDaysObj());
             habitToDatabase.setCurrentStreakDate(primitiveHabit.getCurrentStreakDate());
             habitToDatabase.setBestStreakDate(primitiveHabit.getBestStreakDate());
+            habitToDatabase.setisPublic(primitiveHabit.isPublic());
             habitListToDatabase.add(habitToDatabase);
         }
         return habitListToDatabase;

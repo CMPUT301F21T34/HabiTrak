@@ -130,7 +130,7 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
 
         //TODO: set these values
         // set progress bar
-        progressBar.setProgress( habit.getCurrentStreak()/30 );
+        progressBar.setProgress( (habit.getCurrentStreak()*100)/30 );
         String currentStreakText = habit.getCurrentStreak() + "/30";
         progressBarText.setText(currentStreakText);
 
@@ -138,7 +138,7 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
 
 
 
-        if (habit.getBestStreakDate() == null){
+        if (habit.getBestStreakDate() == null || habit.getBestStreakDateEnd() == null){
             bestStreakStart.setText("N/A");
             bestStreakEnd.setText("N/A");
         } else {

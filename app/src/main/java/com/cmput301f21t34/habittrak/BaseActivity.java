@@ -16,11 +16,14 @@ import com.cmput301f21t34.habittrak.fragments.EventsFragment;
 import com.cmput301f21t34.habittrak.fragments.ProfileFragment;
 import com.cmput301f21t34.habittrak.fragments.SocialFragment;
 import com.cmput301f21t34.habittrak.fragments.TodayListFragment;
+import com.cmput301f21t34.habittrak.streak.Streak;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitEvent;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationBarView;
+
+import java.util.ArrayList;
 
 //TODO: Rename BaseActivity to a more suitable name
 
@@ -85,6 +88,10 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         bottomNav.setOnItemSelectedListener(this);              // Sets listener to this class
         bottomNav.setSelectedItemId(R.id.navbar_menu_today);    // Sets initial selected item
 
+
+        refreshHabitStreak();
+
+
         // add habit listener
         addHabitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +102,22 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
                 addHabitActivityLauncher.launch(intent);
             }
         });
+    }
+
+    /**
+     * refreshes all habit streaks
+     *
+     * @author Dakota
+     */
+    private void refreshHabitStreak() {
+        // Refreshes all habit streaks //
+
+        ArrayList<Habit> habits = (ArrayList<Habit>) mainUser.getHabitList(); // cast for simple iteration
+
+        for (int index = 0; index < habits.size(); index++){
+            Streak streak = new Streak(habits.get(index)); // set a Streak class to modify each habit
+            streak.refreshStreak(); // refreshes each streak
+        }
     }
 
     /**

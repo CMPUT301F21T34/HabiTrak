@@ -46,7 +46,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
     private ArrayList<String> UUIDs;
     private ArrayList<String> usernames;
     private ArrayList<String> bios;
-    private static SocialListener socialListener;
+    private SocialListener socialListener;
 
     public interface SocialListener {
         void onItemClick(View view, int position);
@@ -67,7 +67,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
     }
 
     public void setSocialListener(final SocialListener socialListener){
-        SocialAdapter.socialListener = socialListener;
+        this.socialListener = socialListener;
     }
     /**
      * Adds the specified user entry to the list if its UUID is not already present

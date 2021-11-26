@@ -15,6 +15,7 @@ import com.cmput301f21t34.habittrak.recycler.HabitRecycler;
 import com.cmput301f21t34.habittrak.recycler.SocialAdapter;
 import com.cmput301f21t34.habittrak.recycler.TodayHabitRecyclerAdapter;
 import com.cmput301f21t34.habittrak.user.Habit;
+import com.cmput301f21t34.habittrak.user.HabitList;
 import com.cmput301f21t34.habittrak.user.User;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class SocialViewProfile extends AppCompatActivity {
     private TextView bio;
     private HabitRecycler habitRecycler;
     private TodayHabitRecyclerAdapter adapter;
-    private ArrayList<Habit> habitList;
+    private HabitList habitList = new HabitList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +64,7 @@ public class SocialViewProfile extends AppCompatActivity {
         bio.setText(user.getBiography());
 
         // get public habits
-        habitList.removeIf(habit -> !habit.isPublic());
+        getPublicHabits();
 
         // set recycler view
         layoutManager = new LinearLayoutManager(this);
@@ -93,4 +94,16 @@ public class SocialViewProfile extends AppCompatActivity {
     public void onHabitClick(View view, int position) {
         // start View Habit Activity
     }
+
+    /**
+     * gets the public habits of the user
+     */
+    public void getPublicHabits(){
+        HabitList allHabits = user.getHabitList();
+        for(Habit h: allHabits){
+            if (h.isPublic())
+                habitList.add(h);
+        }
+    }
+
 }

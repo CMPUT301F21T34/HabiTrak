@@ -1,5 +1,6 @@
 package com.cmput301f21t34.habittrak.fragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.social.FollowersFragment;
 import com.cmput301f21t34.habittrak.social.FollowingFragment;
@@ -20,6 +22,8 @@ import com.cmput301f21t34.habittrak.social.RequestsFragment;
 import com.cmput301f21t34.habittrak.social.SearchFragment;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.tabs.TabLayout;
+
+import java.util.ArrayList;
 
 public class SocialFragment extends Fragment {
     FollowersFragment followersFragment;
@@ -32,16 +36,16 @@ public class SocialFragment extends Fragment {
 
     public SocialFragment(User mainUser) {
         this.mainUser = mainUser;
-        this.followersFragment = new FollowersFragment(mainUser);
-        this.followingFragment = new FollowingFragment(mainUser);
-        this.requestsFragment = new RequestsFragment(mainUser);
-        this.searchFragment = new SearchFragment(mainUser);
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        this.followersFragment = new FollowersFragment(mainUser, mainUser.getFollowerList());
+        this.followingFragment = new FollowingFragment(mainUser, mainUser.getFollowingList());
+        this.requestsFragment = new RequestsFragment(mainUser, mainUser.getFollowerReqList());
+        // Initialise searchFragment on separate thread because need to call slow database method
+        new SocialAsyncTask().execute();
     }
 
     @Nullable
@@ -132,6 +136,7 @@ public class SocialFragment extends Fragment {
             return socialTab.getTabCount();
         }
     }
+
     /*
     @Override
     public boolean onSupportNavigateUp() {
@@ -139,4 +144,17 @@ public class SocialFragment extends Fragment {
         onBackPressed();
         return true;
     }*/
+
+    /**
+     * Gets the data in background
+     */
+    public class SocialAsyncTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            // Initialise searchFragment here because need to call a database method
+            searchFragment = new SearchFragment(mainUser, new DatabaseManager().getAllUsers());
+            return null;
+        }
+    }
+
 }

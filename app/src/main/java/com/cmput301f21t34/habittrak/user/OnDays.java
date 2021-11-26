@@ -242,7 +242,7 @@ public class OnDays implements Parcelable {
 
         System.out.println(String.valueOf(currentDayOfWeek) + " mon: " + String.valueOf(MON - 1));
 
-       /* switch (currentDayOfWeek){
+        switch (currentDayOfWeek){
             case MON + 3: return get(MON);
             case TUE + 3: return get(TUE);
             case WED + 3: return get(WED);
@@ -252,12 +252,7 @@ public class OnDays implements Parcelable {
             case SUN + 3: return get(SUN);
             default: throw new IllegalStateException("Current day does not exist!?!");
 
-        }*/
-        if (currentDayOfWeek < 1 || currentDayOfWeek > 7) {
-            throw new IllegalStateException("Current day does not exist!?!");
         }
-
-        return get((date.get(Calendar.DAY_OF_WEEK) + 3) % 7 + 1);
     }
 
     /**
@@ -270,7 +265,7 @@ public class OnDays implements Parcelable {
      */
     private int getShift(int startOfWeek) {
 
-        /*int shift = 0;
+        int shift = 0;
 
         switch (startOfWeek) {
             case MON:
@@ -295,14 +290,8 @@ public class OnDays implements Parcelable {
 
         }
 
-        return shift;*/
-        if (1 <= startOfWeek && startOfWeek <= 8) {
-            throw new IllegalArgumentException("must use Calendar day constant " +
-                    "with On_Days.getAll()" +
-                    "\nEx. Calendar.MONDAY.");
-        }
+        return shift;
 
-        return startOfWeek - 2;
     }
 
     /**
@@ -376,3 +365,4 @@ public class OnDays implements Parcelable {
         }
     };
 }
+

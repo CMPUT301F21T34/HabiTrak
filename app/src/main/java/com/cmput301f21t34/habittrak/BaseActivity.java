@@ -17,6 +17,7 @@ import com.cmput301f21t34.habittrak.fragments.EventsFragment;
 import com.cmput301f21t34.habittrak.fragments.ProfileFragment;
 import com.cmput301f21t34.habittrak.fragments.SocialFragment;
 import com.cmput301f21t34.habittrak.fragments.TodayListFragment;
+import com.cmput301f21t34.habittrak.streak.Streak;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitEvent;
 import com.cmput301f21t34.habittrak.user.User;
@@ -24,6 +25,8 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.ArrayList;
 
 //TODO: Rename BaseActivity to a more suitable name
 
@@ -74,7 +77,10 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
         // Gets Intents
         Intent intent = getIntent();
-        mainUser = intent.getParcelableExtra("mainUser");      // Gets mainUser from intent
+        mainUser = intent.getParcelableExtra("mainUser"); // Gets mainUser from intent // Dont think this is being used anymore - Dakota
+
+        getMainUser();
+        refreshHabitStreak();
 
 
 
@@ -93,19 +99,19 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         bottomNav.setSelectedItemId(R.id.navbar_menu_today);    // Sets initial selected item
 
 
+
+
     }
+
+
 
     @Override
     public void onResume() {
         super.onResume();
 
-        // Updates the mainUser, even if they are already logged in
-        FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (fUser == null){
-            //TODO: Send to main
 
-        }
-        mainUser = db.getUser(fUser.getEmail());
+        refreshHabitStreak();
+
 
         // add habit listener
         addHabitButton.setOnClickListener(new View.OnClickListener() {
@@ -118,6 +124,38 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
             }
         });
 
+    }
+
+    /**
+     * gets the main user from database
+     * @author Dakota
+     */
+    private void getMainUser() {
+        // Updates the mainUser, even if they are already logged in
+        FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (fUser == null){
+            //TODO: Send to main
+
+        }
+
+        mainUser = db.getUser(fUser.getEmail());
+
+    }
+
+    /**
+     * refreshes all habit streaks
+     *
+     * @author Dakota
+     */
+    private void refreshHabitStreak() {
+        // Refreshes all habit streaks //
+
+        ArrayList<Habit> habits = (ArrayList<Habit>) mainUser.getHabitList(); // cast for simple iteration
+
+        for (int index = 0; index < habits.size(); index++){
+            Streak streak = new Streak(habits.get(index)); // set a Streak class to modify each habit
+            streak.refreshStreak(); // refreshes each streak
+        }
     }
 
     /**

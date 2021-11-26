@@ -77,7 +77,10 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
         // Gets Intents
         Intent intent = getIntent();
-        mainUser = intent.getParcelableExtra("mainUser");      // Gets mainUser from intent
+        mainUser = intent.getParcelableExtra("mainUser"); // Gets mainUser from intent // Dont think this is being used anymore - Dakota
+
+        getMainUser();
+        refreshHabitStreak();
 
 
 
@@ -96,14 +99,15 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         bottomNav.setSelectedItemId(R.id.navbar_menu_today);    // Sets initial selected item
 
 
-        refreshHabitStreak();
+
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
+    /**
+     * gets the main user from database
+     * @author Dakota
+     */
+    private void getMainUser() {
         // Updates the mainUser, even if they are already logged in
         FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
         if (fUser == null){
@@ -111,6 +115,15 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
         }
         mainUser = db.getUser(fUser.getEmail());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+
+
+        refreshHabitStreak();
 
 
         // add habit listener

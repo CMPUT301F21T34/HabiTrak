@@ -95,7 +95,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         bottomNav.setOnItemSelectedListener(this);              // Sets listener to this class
         bottomNav.setSelectedItemId(R.id.navbar_menu_today);    // Sets initial selected item
 
-
+        
         refreshHabitStreak();
 
     }

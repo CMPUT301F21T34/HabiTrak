@@ -34,8 +34,8 @@ public class HabitDatabase {
         this.onDaysObj = new ArrayList<Boolean>();
     }
 
-    public void setIsPublic(boolean aPublic) {
-        isPublic = aPublic;
+    public void setIsPublic(boolean isPublic) {
+        this.isPublic = isPublic;
     }
 
     public boolean getIsPublic() {

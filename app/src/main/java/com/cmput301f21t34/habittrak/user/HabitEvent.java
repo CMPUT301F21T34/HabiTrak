@@ -40,7 +40,7 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
         this.photograph = null;
     }
 
-    public HabitEvent(String comment, Calendar date, Location loc, Uri photo){
+    public HabitEvent(String comment, Calendar date, Location loc, Uri photo) {
         this.photograph = photo.toString();
         this.location = loc;
         this.comment = comment;
@@ -64,7 +64,7 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
         this.comment = habitEventBundle.getString("comment");
 
         String completedDateTimeZone = habitEventBundle.getString("completedDateTimeZone");
-        if ( completedDateTimeZone != null) {
+        if (completedDateTimeZone != null) {
 
             Calendar constructionCalendar = Calendar.getInstance();
             constructionCalendar.setTimeZone(TimeZone.getTimeZone(completedDateTimeZone));

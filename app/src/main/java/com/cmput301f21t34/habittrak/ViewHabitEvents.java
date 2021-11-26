@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
@@ -44,6 +45,7 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
     private ArrayList<HabitEvent> eventDataList;
     private Toolbar toolbar;
     private Button confirmBtn;
+    private LinearLayout noDataLayout;
     // recycler view
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
@@ -63,7 +65,7 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
 
         // get views
         confirmBtn = findViewById(R.id.events_confirm_changes);
-
+        noDataLayout = findViewById(R.id.events_no_data_view);
 
         // get habit data from the intent
         Intent intent = getIntent();
@@ -95,7 +97,21 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
 
         // setting up the buttons listener
         confirmBtn.setOnClickListener(this);
+        setNoDataLayout();
 
+    }
+
+    /**
+     * setNoDataLayout
+     *
+     * sets the visibility to gone of the noDataLayout if habits events list is empty
+     */
+    public void setNoDataLayout(){
+        if (noDataLayout != null) {
+            if (eventDataList.isEmpty())
+                noDataLayout.setVisibility(View.VISIBLE);
+            else noDataLayout.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -130,6 +146,7 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
     public void updateList(HabitEvent event, int position){
         eventDataList.set(position, event);
         eventAdapter.notifyDataSetChanged();
+        setNoDataLayout();
     }
 
     // Set up activity launcher

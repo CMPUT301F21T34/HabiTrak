@@ -20,6 +20,7 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -126,11 +127,18 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
             publicSwitch.setChecked(false);
             visibilityText.setText("Private");
         }
+
         //TODO: set these values
         // set progress bar
-        //progressBar.setProgress((habit.getStreak()*100)/30);
-        //String txt = habit.getStreak() + "/30";
-        //progressBarText.setText(txt);
+        progressBar.setProgress( habit.getCurrentStreak()/30 );
+        String currentStreakText = habit.getCurrentStreak() + "/30";
+        progressBarText.setText(currentStreakText);
+
+        SimpleDateFormat streakDateFormat = new SimpleDateFormat("MMM dd, yyyy");
+
+        bestStreakStart.setText(streakDateFormat.format(habit.getBestStreakDate().getTime()));
+        bestStreakEnd.setText(streakDateFormat.format(habit.getBestStreakDateEnd().getTime()));
+
         // setting date
         String setDateText = "Selected Date: " + getDate(calendar);
         startDate.setText(setDateText);

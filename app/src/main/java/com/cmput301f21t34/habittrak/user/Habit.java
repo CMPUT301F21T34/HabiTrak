@@ -25,6 +25,11 @@ public class Habit implements Comparable<Habit>, Parcelable {
 
     // Any changes need to be implement in writeToParcel and Parcel constructor - Dakota
 
+    // Not to be added to DB
+    private int currentStreak = 0; // For display
+    private int bestStreak = 0; // For display
+    private Calendar bestStreakDateEnd;
+    private Calendar currentStreakDateEnd;
 
 
     // To Be Added To DB
@@ -146,6 +151,38 @@ public class Habit implements Comparable<Habit>, Parcelable {
 
     // Methods //
 
+
+    public void setCurrentStreak(int currentStreak) {
+        this.currentStreak = currentStreak;
+    }
+
+    public void setBestStreak(int bestStreak) {
+        this.bestStreak = bestStreak;
+    }
+
+    public int getCurrentStreak(){
+        return this.currentStreak;
+    }
+
+    public int getBestStreak(){
+        return this.bestStreak;
+    }
+
+    public Calendar getBestStreakDateEnd(){
+        return this.bestStreakDateEnd;
+    }
+
+    public void setBestStreakDateEnd(Calendar calendar){
+        this.bestStreakDateEnd = calendar;
+    }
+
+    public Calendar getCurrentStreakDateEnd(){
+        return this.currentStreakDateEnd;
+    }
+
+    public void setCurrentStreakDateEnd(Calendar calendar){
+        this.currentStreakDateEnd = calendar;
+    }
 
     public static final Parcelable.Creator<Habit> CREATOR = new Parcelable.Creator<Habit>() {
         @Override

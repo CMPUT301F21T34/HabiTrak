@@ -166,8 +166,7 @@ public class LoginFragment extends Fragment {
                             if (authUser.isEmailVerified()){
 
 
-                                mainUser = db.getUser(authUser.getEmail());
-                                startHomePage(mainUser);
+                                startHomePage(null);
 
                             } else {
                                 // Email not Verified //

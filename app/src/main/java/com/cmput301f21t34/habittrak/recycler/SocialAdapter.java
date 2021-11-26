@@ -193,52 +193,56 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
                 String buttonType = button.getText().toString();
                 String mainUUID = mainUser.getEmail();
 
-                if (buttonType.equals(ACCEPT)) {
-                    // Update locally
-                    mainUser.addFollower(UUID);
-                    mainUser.removeFollowerReq(UUID);
-//                    UUIDs.remove(UUID);
-//                    usernames.remove(position);
-//                    bios.remove(position);
-                    removeUser(UUID);
-                    // Update in database
-//                    dm.updateFollow(mainUUID, UUID, false);
-//                    dm.updateFollowRequest(mainUUID, UUID, true);
+                switch (buttonType) {
+                    case ACCEPT:
+                        // Update locally
+                        mainUser.addFollower(UUID);
+                        mainUser.removeFollowerReq(UUID);
+//                      UUIDs.remove(UUID);
+//                      usernames.remove(position);
+//                      bios.remove(position);
+                        removeUser(UUID);
+                        // Update in database
+//                      dm.updateFollow(mainUUID, UUID, false);
+//                      dm.updateFollowRequest(mainUUID, UUID, true);
 
-                    // Update display(s)
-                    notifyItemRemoved(position);
+                        // Update display(s)
+                        notifyItemRemoved(position);
+                        break;
+                    case FOLLOW:
+                    case FOLLOW_BACK:
+                        // Update locally
+                        mainUser.addFollowingReq(UUID);
 
-                } else if (buttonType.equals(FOLLOW) || buttonType.equals(FOLLOW_BACK)) {
-                    // Update locally
-                    mainUser.addFollowingReq(UUID);
+                        // Update in database
+                        //     dm.updateFollowRequest(UUID, mainUser.getEmail(), false);
 
-                    // Update in database
-                    //     dm.updateFollowRequest(UUID, mainUser.getEmail(), false);
+                        // Update display(s)
+                        button.setText(REQUESTED);
 
-                    // Update display(s)
-                    button.setText(REQUESTED);
+                        break;
+                    case REQUESTED:
+                        // Update locally
+                        mainUser.removeFollowingReq(UUID);
 
-                } else if (buttonType.equals(REQUESTED)) {
-                    // Update locally
-                    mainUser.removeFollowingReq(UUID);
+                        // Update in database
+//                      dm.updateFollowRequest(UUID, mainUUID, true);
 
-                    // Update in database
-//                    dm.updateFollowRequest(UUID, mainUUID, true);
+                        // Update display(s)
+                        button.setText(mainUser.getFollowerList().contains(UUID) ? FOLLOW_BACK : FOLLOW);
+                        break;
+                    case UNFOLLOW:
+                        // Update locally
+                        mainUser.removeFollowing(UUID);
+                        usernames.remove(position);
+                        bios.remove(position);
 
-                    // Update display(s)
-                    button.setText(mainUser.getFollowerList().contains(UUID) ? FOLLOW_BACK : FOLLOW);
-
-                } else if (buttonType.equals(UNFOLLOW)) {
-                    // Update locally
-                    mainUser.removeFollowing(UUID);
-                    usernames.remove(position);
-                    bios.remove(position);
-
-                    // Update in database
+                        // Update in database
 //                    dm.updateFollow(UUID, mainUUID, true);
 
-                    // Update display(s)
-                    notifyItemRemoved(position);
+                        // Update display(s)
+                        notifyItemRemoved(position);
+                        break;
                 }
 
 

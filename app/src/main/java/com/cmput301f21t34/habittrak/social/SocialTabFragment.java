@@ -45,17 +45,7 @@ public class SocialTabFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.habi_followers_fragment, container, false);
 
-        socialAdapter = new SocialAdapter(mainUser, UUIDs, usernames, new SocialAdapter.ClickListener() {
-            @Override
-            public void menuButtonOnClick(View view, int position) {
-
-            }
-
-            @Override
-            public void mainButtonOnClick(View view, int position) {
-
-            }
-        }, bios, "none");
+        socialAdapter = new SocialAdapter(mainUser, UUIDs, usernames, bios, "none");
 
         return view;
     }

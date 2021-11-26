@@ -2,11 +2,9 @@ package com.cmput301f21t34.habittrak.social;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.PopupMenu;
 import android.widget.SearchView;
 
 import androidx.fragment.app.Fragment;
@@ -70,17 +68,7 @@ public class SearchFragment extends Fragment {
         recyclerView = view.findViewById(R.id.search_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        socialAdapter = new SocialAdapter(mainUser, UUIDs, usernames, new SocialAdapter.ClickListener() {
-            @Override
-            public void menuButtonOnClick(View view, int position) {
-                Log.d("Menu", "Clicked " + position);
-                showMenu(view, position);
-            }
-
-            @Override
-            public void mainButtonOnClick(View view, int position) {
-            }
-        }, bios, "none");
+        socialAdapter = new SocialAdapter(mainUser, UUIDs, usernames, bios, "none");
         recyclerView.setAdapter(socialAdapter);
 
 
@@ -120,29 +108,6 @@ public class SearchFragment extends Fragment {
      */
     public void removeUserEntry(String UUID) {
         socialAdapter.removeUserEntry(UUID);
-    }
-
-    /**
-     * showMenu
-     * <p>
-     * listener function for ImageButton in Recycler View
-     *
-     * @param view
-     * @param userPosition position of the clicked menu in the adapter
-     * @see SocialAdapter
-     */
-    public void showMenu(View view, int userPosition) {
-        PopupMenu menu = new PopupMenu(getContext(), view);
-        menu.getMenuInflater().inflate(R.menu.social_popup_menu, menu.getMenu());
-        menu.getMenu().add("Block");
-        menu.show();
-
-        menu.setOnMenuItemClickListener(menuItem -> {
-            if (menuItem.getTitle().equals("Block")) {
-                Log.d("MenuItem", "Block Clicked");
-            }
-            return true;
-        });
     }
 
     /**

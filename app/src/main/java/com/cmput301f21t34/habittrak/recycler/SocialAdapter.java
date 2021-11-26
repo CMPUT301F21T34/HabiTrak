@@ -37,7 +37,6 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
     private final User mainUser;
     private final ArrayList<String> usernamesCopy;
     private final ArrayList<String> biosCopy;
-    private final ClickListener listener;
     private final String defaultButtonText;
     private final ArrayList<String> UUIDsCopy;
     private ArrayList<String> UUIDs;
@@ -45,7 +44,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
     private ArrayList<String> bios;
 
     public SocialAdapter(User mainUser, ArrayList<String> UUIDs, ArrayList<String> usernames,
-                         ClickListener listener, ArrayList<String> bios, String defaultButtonText) {
+                         ArrayList<String> bios, String defaultButtonText) {
         this.mainUser = mainUser;
         this.UUIDs = UUIDs;
         this.usernames = usernames;
@@ -53,7 +52,6 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         this.UUIDsCopy = UUIDs;
         this.usernamesCopy = usernames;
         this.biosCopy = bios;
-        this.listener = listener;
         this.defaultButtonText = defaultButtonText;
     }
 
@@ -100,9 +98,6 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         holder.setUUID(UUIDs.get(position));
         holder.getUsername().setText(usernames.get(position));
         holder.getUserBio().setText(bios.get(position));
-
-        // Button setup
-        holder.listenerRef = this.listener;
 
         // Set appropriate button text based on tab and relationships of main user with each user
         if (defaultButtonText.equals(ACCEPT) || defaultButtonText.equals(UNFOLLOW)) {
@@ -178,12 +173,6 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         };
     }
 
-    public interface ClickListener {
-        void menuButtonOnClick(View view, int position);
-
-        void mainButtonOnClick(View view, int position);
-    }
-
     /**
      * ViewHolder
      * <p>
@@ -202,7 +191,6 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         private final ImageButton menuButton;
         private final TextView userBio;
         private String UUID;
-        private ClickListener listenerRef;
 
         public ViewHolder(User mainUser, View view) {
             super(view);
@@ -358,3 +346,29 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
 
     }
 }
+// to reference when coding the equivalent here
+//    /**
+//     * showMenu
+//     * <p>
+//     * listener function for ImageButton in Recycler View
+//     *
+//     * @param view
+//     * @param userPosition position of the clicked menu in the adapter
+//     * @see SocialAdapter
+//     */
+//    public void showMenu(View view, int userPosition) {
+//        PopupMenu menu = new PopupMenu(getContext(), view);
+//        menu.getMenuInflater().inflate(R.menu.social_popup_menu, menu.getMenu());
+//        menu.getMenu().add("Remove");
+//        menu.getMenu().add("Block");
+//        menu.show();
+//
+//        menu.setOnMenuItemClickListener(menuItem -> {
+//            if (menuItem.getTitle().equals("Remove")) {
+//                Log.d("MenuItem", "Remove Clicked");
+//            } else {
+//                Log.d("MenuItem", "Block Clicked");
+//            }
+//            return true;
+//        });
+//    }

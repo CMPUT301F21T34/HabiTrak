@@ -91,6 +91,8 @@ public class ViewEditHabitEvents extends AppCompatActivity {
         this.habitEvent = intent.getParcelableExtra("HABIT_EVENT_VIEW");
         this.habitPosition = intent.getIntExtra("position", 0);
         this.eventPosition = intent.getIntExtra("event_position", 0);
+        String title = intent.getStringExtra("HABIT_TITLE");
+        toolbar.setTitle(title + "'s event");
 
         // get views
         comment = findViewById(R.id.comment_edit_text);

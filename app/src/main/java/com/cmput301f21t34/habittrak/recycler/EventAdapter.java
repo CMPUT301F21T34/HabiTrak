@@ -16,6 +16,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+
+/**
+ * EventAdapter
+ *
+ * recycler view adapter for viewing events
+ * @author Pranav
+ * @version 1.0
+ * @since Nov 26, 2021
+ */
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
     private ArrayList<HabitEvent> events;
     private final EventClickListener listener;
@@ -40,9 +49,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
         public ViewHolder(View view){
             super(view);
+            // set views
             comment = view.findViewById(R.id.event_list_comment);
             date = view.findViewById(R.id.event_list_date);
             menuButton = view.findViewById(R.id.events_menu);
+            // set listeners
             view.setOnClickListener(this);
             menuButton.setOnClickListener(this);
         }
@@ -79,6 +90,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull EventAdapter.ViewHolder holder, int position) {
+        // set data from event
         holder.listenerRef = this.listener;
         HabitEvent event = events.get(position);
         Calendar eventDate = event.getCompletedDate();

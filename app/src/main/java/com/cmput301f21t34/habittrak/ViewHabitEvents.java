@@ -5,10 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
@@ -20,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f21t34.habittrak.recycler.EventAdapter;
-import com.cmput301f21t34.habittrak.recycler.EventList;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitEvent;
 
@@ -30,10 +26,11 @@ import java.util.ArrayList;
  * ViewHabitEvents.
  *
  * @author Aron Rajabi
+ * @author Pranav
  *
  * View and delete habit events tied to a habit.
  *
- * @version 1.0
+ * @version 2.0
  * @since 2021-11-10
  */
 public class ViewHabitEvents extends AppCompatActivity implements View.OnClickListener {
@@ -73,11 +70,9 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
         habit = intent.getParcelableExtra("HABIT");
         habitPosition = intent.getIntExtra("position", 0);
         eventDataList =  habit.getHabitEvents();
-        String name = habit.getTitle();
-        String nameFinisher = " Events";
 
         //Set up our list of events for display
-        toolbar.setTitle(name + nameFinisher);
+        toolbar.setTitle(habit.getTitle() + "'s events");
 
 
         // set recycler view
@@ -118,7 +113,7 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
         menu.setOnMenuItemClickListener(menuItem -> {
             HabitEvent event = habit.getHabitEvents().get(position);
             habit.removeHabitEvent(event);
-            Toast.makeText(this, "Removed Event", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Event Removed", Toast.LENGTH_SHORT).show();
             eventAdapter.notifyDataSetChanged();
             return true;
         });
@@ -161,7 +156,7 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
         HabitEvent event = habit.getHabitEvents().get(position);
         Intent intent = new Intent(this,ViewEditHabitEvents.class);
         intent.putExtra("HABIT_EVENT_VIEW", event);
-        intent.putExtra("HABIT_VIEW",habit);
+        intent.putExtra("HABIT_TITLE",habit.getTitle());
         intent.putExtra("position", habitPosition);
         intent.putExtra("event_position", position);
         editEventsResultLauncher.launch(intent);
@@ -185,4 +180,5 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
         onBackPressed();
         return true;
     }
+
 }

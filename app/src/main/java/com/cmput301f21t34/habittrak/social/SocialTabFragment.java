@@ -126,14 +126,14 @@ public class SocialTabFragment extends Fragment {
     public void populateList() {
         // Only populate if empty
         if (usernames.isEmpty()) {
-            new SocialAsyncTask().execute();
+            new SocialTabAsyncTask().execute();
         }
     }
 
     /**
      * Gets the data in background
      */
-    public class SocialAsyncTask extends AsyncTask<Void, Void, Void> {
+    public class SocialTabAsyncTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
             loading.setVisibility(View.VISIBLE);   // Appear visuals

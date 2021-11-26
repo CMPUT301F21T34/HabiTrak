@@ -76,7 +76,7 @@ public class SearchFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         socialAdapter = new SocialAdapter(
-                socialRef, mainUser, UUIDs, usernames, bios,defaultButtonText);
+                socialRef, mainUser, UUIDs, usernames, bios, defaultButtonText);
         recyclerView.setAdapter(socialAdapter);
 
         // search box listener

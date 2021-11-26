@@ -61,8 +61,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
     ImageView image;
     TextView addressLine;
     public static int RESULT_CODE = 3000;
-    public static final int Camera_Permission_CODE = 100;
-    public static final int Camera_REQUEST_CODE = 101;
+    public static final int CAMERA_PERMISSION_CODE = 100;
     private StorageReference mStorageRef;
     String currentPhotoPath;
     HabitEvent habitEvent;
@@ -103,7 +102,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
         // set the completed date of the habit event
         habitEvent.setCompletedDate(Calendar.getInstance());
 
-        // get data from clicked item
+        // get habit data from intent
         Intent intent = getIntent();
         this.habit = intent.getParcelableExtra("HABIT");
         this.email = intent.getStringExtra("USER");
@@ -221,7 +220,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
     private void askCameraPermission() {
         if (ContextCompat.checkSelfPermission(AddHabitEventActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(AddHabitEventActivity.this, new String[] {
-                    Manifest.permission.CAMERA}, Camera_Permission_CODE);
+                    Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
         } else {
             dispatchTakePictureIntent();
         }
@@ -293,7 +292,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == Camera_Permission_CODE) {
+        if (requestCode == CAMERA_PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // granted camera permission
                 dispatchTakePictureIntent();

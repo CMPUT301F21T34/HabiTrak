@@ -38,8 +38,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 
@@ -119,17 +117,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         // Return the chosen location after confirm button has been pressed
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("MAP","The confirm button has been pressed");
-                Intent result = new Intent();
-                result.putExtra("permission",true);
-                result.putExtra("latitude", lastKnownLocation.getLatitude());
-                result.putExtra("longitude", lastKnownLocation.getLongitude());
-                setResult(RESULT_OK, result);
-                finish();
-            }
+        confirmButton.setOnClickListener(view -> {
+            Log.d("MAP","The confirm button has been pressed");
+            Intent result = new Intent();
+            result.putExtra("permission",true);
+            result.putExtra("latitude", lastKnownLocation.getLatitude());
+            result.putExtra("longitude", lastKnownLocation.getLongitude());
+            setResult(RESULT_OK, result);
+            finish();
         });
     }
 
@@ -162,29 +157,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
 
-        task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
-            @Override
-            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
-                // settings are satisfied the client can initialize location requests here
-                startLocationUpdates();
-                Log.d("MAP","it was already turned on");
+        task.addOnSuccessListener(this, locationSettingsResponse -> {
+            // settings are satisfied the client can initialize location requests here
+            startLocationUpdates();
+            Log.d("MAP","it was already turned on");
 
-            }
         });
-        task.addOnFailureListener(this, new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                if (e instanceof ResolvableApiException) {
-                    // location settings are not satisfied.
-                    try {
-                        Log.d("MAP","Need to turn it on");
-                        ResolvableApiException resolvable = (ResolvableApiException) e;
-                        resolvable.startResolutionForResult(MapsActivity.this,
-                                REQUEST_CHECK_SETTINGS);
-                    } catch (IntentSender.SendIntentException sendEx) {
-                        // ignore it
-                        Log.d("MAP","Error on task on failure");
-                    }
+        task.addOnFailureListener(this, e -> {
+            if (e instanceof ResolvableApiException) {
+                // location settings are not satisfied.
+                try {
+                    Log.d("MAP","Need to turn it on");
+                    ResolvableApiException resolvable = (ResolvableApiException) e;
+                    resolvable.startResolutionForResult(MapsActivity.this,
+                            REQUEST_CHECK_SETTINGS);
+                } catch (IntentSender.SendIntentException sendEx) {
+                    // ignore it
+                    Log.d("MAP","Error on task on failure");
                 }
             }
         });
@@ -228,18 +217,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         Log.d("MAP","outside device location");
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(@NonNull LatLng latLng) {
-                Log.d("MAP","inside the onclick function");
-
-                lastKnownLocation.setLatitude(latLng.latitude);
-                lastKnownLocation.setLongitude(latLng.longitude);
-                updateLocationUI(lastKnownLocation);
-                String address = getAddress(latLng.latitude, latLng.longitude);
-                Log.d("MAP","Got the location " + lastKnownLocation.getLongitude() + lastKnownLocation.getLatitude());
-                Log.d("Address", address);
-            }
+        mMap.setOnMapClickListener(latLng -> {
+            Log.d("MAP","inside the onclick function");
+            lastKnownLocation.setLatitude(latLng.latitude);
+            lastKnownLocation.setLongitude(latLng.longitude);
+            updateLocationUI(lastKnownLocation);
+            String address = getAddress(latLng.latitude, latLng.longitude);
+            Log.d("MAP","Got the location " + lastKnownLocation.getLongitude() + lastKnownLocation.getLatitude());
+            Log.d("Address", address);
         });
     }
 
@@ -356,7 +341,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         List<Address> addressList;
         geocoder = new Geocoder(this, Locale.getDefault());
         String address = "";
-
+        // Get address using geocoder
         try {
             addressList = geocoder.getFromLocation(latitude, longitude, 1);
             address = addressList.get(0).getAddressLine(0);

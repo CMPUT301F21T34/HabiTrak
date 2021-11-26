@@ -37,7 +37,6 @@ public class SocialViewProfile extends AppCompatActivity {
     private HabitRecycler habitRecycler;
     private TodayHabitRecyclerAdapter adapter;
     private ArrayList<Habit> habitList;
-    private ArrayList<Habit> displayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,12 +63,12 @@ public class SocialViewProfile extends AppCompatActivity {
         bio.setText(user.getBiography());
 
         // get public habits
-        getPublicHabits();
+        habitList.removeIf(habit -> !habit.isPublic());
 
         // set recycler view
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new TodayHabitRecyclerAdapter(displayList, false);
+        adapter = new TodayHabitRecyclerAdapter(habitList, false);
         adapter.setHabitClickListener(new TodayHabitRecyclerAdapter.HabitClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -86,24 +85,9 @@ public class SocialViewProfile extends AppCompatActivity {
                 // no action here
             }
         });
-        habitRecycler = new HabitRecycler(recyclerView, layoutManager, displayList, user.getHabitList(), true);
+        habitRecycler = new HabitRecycler(recyclerView, layoutManager, habitList, user.getHabitList(), true);
         habitRecycler.setAdapter(adapter);
 
-    }
-
-    /**
-     * getPublicHabits
-     * <p>
-     * sets the displayList to the public habits of the User.
-     */
-    public void getPublicHabits() {
-        habitList = user.getHabitList();
-        displayList = new ArrayList<Habit>();
-        for (int i = 0; i < habitList.size(); i++) {
-            if (habitList.get(i).isPublic()) {
-                displayList.add(habitList.get(i));
-            }
-        }
     }
 
     public void onHabitClick(View view, int position) {

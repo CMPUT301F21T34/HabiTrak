@@ -35,8 +35,8 @@ import java.util.TimeZone;
  * @see User
  */
 public class DatabaseManager {
-    public static final boolean ADD = true;
-    public static final boolean REMOVE = false;
+    public static final boolean ADD = false;
+    public static final boolean REMOVE = true;
     private final FirebaseFirestore database;
 
     public DatabaseManager() {

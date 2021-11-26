@@ -22,6 +22,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -64,8 +65,8 @@ public class ViewEditHabitEvents extends AppCompatActivity {
 
     // intent data variables
     private HabitEvent habitEvent;
-    private Habit habit;
     private int habitPosition;
+    private int eventPosition;
 
     private final String TAG = "EDIT_HABIT_EVENT";
 
@@ -73,6 +74,12 @@ public class ViewEditHabitEvents extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_edit_habit_events);
+
+        // toolbar
+        Toolbar toolbar = findViewById(R.id.view_edit_habit_event_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // initializing variable
         mStorageRef = FirebaseStorage.getInstance().getReference();
@@ -82,10 +89,8 @@ public class ViewEditHabitEvents extends AppCompatActivity {
         // get habit event data from intent
         Intent intent = getIntent();
         this.habitEvent = intent.getParcelableExtra("HABIT_EVENT_VIEW");
-        this.habit = intent.getParcelableExtra("HABIT_VIEW");
         this.habitPosition = intent.getIntExtra("position", 0);
-        Log.d(TAG,"The completed date of the habit event is "+ habitEvent.getComment());
-        Log.d(TAG,"The habit is "+habit.getTitle());
+        this.eventPosition = intent.getIntExtra("event_position", 0);
 
         // get views
         comment = findViewById(R.id.comment_edit_text);
@@ -95,7 +100,6 @@ public class ViewEditHabitEvents extends AppCompatActivity {
         cameraBtn = findViewById(R.id.camera_button_edit);
         saveHabitEventBtn = findViewById(R.id.save_habit_event_edit);
         completionDateCalendar = findViewById(R.id.completion_date_calendar);
-        Log.d(TAG,"Got the views");
 
         //get data from habit event
         String commentHabitEvent = habitEvent.getComment();
@@ -109,14 +113,11 @@ public class ViewEditHabitEvents extends AppCompatActivity {
         }
 
         Location locationHabitEvent = habitEvent.getLocation();
-        Log.d(TAG,"got the data");
         // setting the data to the new habit event
         returnedHabitEvent.setCompletedDate(completedDate);
         returnedHabitEvent.setPhotograph(photoUri);
         returnedHabitEvent.setComment(commentHabitEvent);
         returnedHabitEvent.setLocation(locationHabitEvent);
-        Log.d(TAG,"The uri is " + returnedHabitEvent.getPhotograph());
-        Log.d(TAG,"The comment is " + returnedHabitEvent.getComment());
 
         // set comment
         if (commentHabitEvent != null) {
@@ -215,37 +216,18 @@ public class ViewEditHabitEvents extends AppCompatActivity {
         */
         saveHabitEventBtn.setOnClickListener(view -> {
             Log.d(TAG,"Save button pressed");
-            returnedHabitEvent.setComment(comment.getText().toString());
+            if (!comment.getText().toString().equals(""))
+                returnedHabitEvent.setComment(comment.getText().toString());
             // create the intent to return the habit event
             Log.d(TAG,"creating intent");
-            Log.d(TAG,"The size of the habit event list is " + habit.getHabitEvents().size());
-            habit.addHabitEvent(returnedHabitEvent);
-            Log.d(TAG,"The size of the habit event list is " + habit.getHabitEvents().size());
             Intent result = new Intent();
-            result.putExtra("HABIT", habit);
-            result.putExtra("position", habitPosition);
+            result.putExtra("HABIT_EVENT", returnedHabitEvent);
+            result.putExtra("event_position", eventPosition);
             setResult(RESULT_CODE, result);
-            ViewEditHabitEvents.this.finish();
+            this.finish();
         });
     }
 
-    /**
-     * onBackPressed
-     *
-     * Handles the on back button press to return the correct habit and its position
-     */
-    @Override
-    public void onBackPressed() {
-        Log.d(TAG,"The size of the habit event list is " + habit.getHabitEvents().size());
-        habit.addHabitEvent(habitEvent);
-        Log.d(TAG,"The size of the habit event list is " + habit.getHabitEvents().size());
-        Intent result = new Intent();
-        result.putExtra("HABIT", habit);
-        result.putExtra("position", habitPosition);
-        setResult(RESULT_CODE, result);
-        super.onBackPressed();
-        ViewEditHabitEvents.this.finish();
-    }
 
     /**
      * askCameraPermission
@@ -372,5 +354,11 @@ public class ViewEditHabitEvents extends AppCompatActivity {
             e.printStackTrace();
         }
         return address;
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

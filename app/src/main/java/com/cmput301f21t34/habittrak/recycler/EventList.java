@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,11 @@ import java.util.Locale;
 public class EventList extends ArrayAdapter<HabitEvent> {
     private ArrayList<HabitEvent> events;
     private Context context;
+    private EventListListener eventListener;
+
+    public interface EventListListener {
+        void menuButtonClick(View view, int position);
+    }
 
     public EventList(Context context, ArrayList<HabitEvent> events){
         super(context,0, events);
@@ -42,14 +48,24 @@ public class EventList extends ArrayAdapter<HabitEvent> {
 
         TextView comment = view.findViewById(R.id.event_list_comment);
         TextView date = view.findViewById(R.id.event_list_date);
+        ImageButton menuButton = view.findViewById(R.id.events_menu);
 
         Calendar eventDate = event.getCompletedDate();
 
         comment.setText(event.getComment());
         date.setText(getDate(eventDate));
 
+        menuButton.setOnClickListener(view1 -> {
+            eventListener.menuButtonClick(view1, position);
+        });
+
         return view;
     }
+
+    public void setEventListener(EventListListener listener){
+        this.eventListener = listener;
+    }
+
 
     /**
      * get the String value from calendar

@@ -46,6 +46,11 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
     private ArrayList<String> UUIDs;
     private ArrayList<String> usernames;
     private ArrayList<String> bios;
+    private static SocialListener socialListener;
+
+    public interface SocialListener {
+        void onItemClick(View view, int position);
+    }
 
     public SocialAdapter(
             SocialFragment socialRef, User mainUser, ArrayList<String> UUIDs,
@@ -61,6 +66,9 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         this.defaultButtonText = defaultButtonText;
     }
 
+    public void setSocialListener(final SocialListener socialListener){
+        SocialAdapter.socialListener = socialListener;
+    }
     /**
      * Adds the specified user entry to the list if its UUID is not already present
      *
@@ -194,6 +202,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
 
         private ViewHolder(View view) {
             super(view);
+            view.setOnClickListener(this);
             usernameTextView = view.findViewById(R.id.username_social_page);
             bioTextView = view.findViewById(R.id.social_user_bio);
             mainButton = view.findViewById(R.id.social_main_button);
@@ -208,6 +217,8 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
                 mainButtonOnClick();
             } else if (view.getId() == R.id.social_menu) { // The three dots
                 menuButtonOnClick(view);
+            } else {
+                socialListener.onItemClick(view, getAdapterPosition());
             }
         } // onClick
 

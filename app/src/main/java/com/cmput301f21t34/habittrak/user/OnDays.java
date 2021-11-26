@@ -21,8 +21,6 @@ import java.util.Calendar;
 
 public class OnDays implements Parcelable {
 
-
-
     private boolean mon, tue, wed, thu, fri, sat, sun; // booleans for each day of the week
 
     // gets constants from Calendar class
@@ -34,9 +32,8 @@ public class OnDays implements Parcelable {
             SAT = Calendar.SATURDAY,
             SUN = Calendar.SUNDAY;
 
-
     // initializes On_Days by default to all true
-    public OnDays(){
+    public OnDays() {
         this.mon = true;
         this.tue = true;
         this.wed = true;
@@ -52,8 +49,7 @@ public class OnDays implements Parcelable {
      * @author Henry
      */
     public OnDays(ArrayList<Boolean> onDaysArray) {
-
-        setAll(new boolean[]{
+        setAll(new boolean[] {
                 onDaysArray.get(0),
                 onDaysArray.get(1),
                 onDaysArray.get(2),
@@ -62,18 +58,14 @@ public class OnDays implements Parcelable {
                 onDaysArray.get(5),
                 onDaysArray.get(6),
         });
-
     }
 
     // Constructing from a parcel
     public OnDays(Parcel parcel){
-
         Bundle onDaysBundle = parcel.readBundle(this.getClass().getClassLoader()); // get bundle
         boolean[] onDays = onDaysBundle.getBooleanArray("onDays");
 
         setAll(onDays);
-
-
     }
 
     /** get
@@ -86,8 +78,7 @@ public class OnDays implements Parcelable {
      * @param day int day constant that you want to get (Ex. MON))
      * @return boolean val of particular day;
      */
-    public boolean get(int day){
-
+    public boolean get(int day) {
         switch (day){
             case MON: return mon;
             case TUE: return tue;
@@ -99,8 +90,6 @@ public class OnDays implements Parcelable {
             default: throw new IllegalArgumentException("must use Calendar int constant object " +
                     "with On_Days.get(). \nEx. Calendar.MONDAY");
         }
-
-
     }
 
     /** setTrue
@@ -112,12 +101,8 @@ public class OnDays implements Parcelable {
      * @throws IllegalArgumentException must use int constants (EX. MON)
      * @param day int day constant that you want to set true (Ex. MON))
      */
-    public void setTrue(int day){
-
-
+    public void setTrue(int day) {
         set(day, true);
-
-
     }
 
     /** setFalse
@@ -129,11 +114,8 @@ public class OnDays implements Parcelable {
      * @throws IllegalArgumentException must use int constants (EX. MON)
      * @param day int day constant that you want to set false (Ex. MON))
      */
-    public void setFalse(int day){
-
+    public void setFalse(int day) {
         set(day, false);
-
-
     }
 
     /**
@@ -143,8 +125,7 @@ public class OnDays implements Parcelable {
      * @param day int day to be changed
      * @param bool boolean to change it to
      */
-    public void set(int day, boolean bool){
-
+    public void set(int day, boolean bool) {
         switch (day){
             case MON: mon = bool; break;
             case TUE: tue = bool; break;
@@ -156,9 +137,7 @@ public class OnDays implements Parcelable {
             default: throw new IllegalArgumentException("must use Calendar int constant object " +
                     "with On_Days.setTrue(). \nEx. Calendar.MONDAY");
         }
-
     }
-
 
     /** getAll
      *
@@ -169,13 +148,11 @@ public class OnDays implements Parcelable {
      * @param startOfWeek int constant day you want for the start of the week
      * @return boolean[7] of the days
      */
-    public boolean[] getAll(int startOfWeek){
-
+    public boolean[] getAll(int startOfWeek) {
         boolean[] allDays = getAll();
 
         // + 1 shifts the array to the left
         allDays = shift(allDays, getShift(startOfWeek), + 1);
-
         return allDays;
 
     }
@@ -188,8 +165,7 @@ public class OnDays implements Parcelable {
      *
      * @return boolean[7] of the days starting on Monday
      */
-    public boolean[] getAll(){
-
+    public boolean[] getAll() {
         return new boolean[] {
                 get(MON),
                 get(TUE),
@@ -199,9 +175,7 @@ public class OnDays implements Parcelable {
                 get(SAT),
                 get(SUN),
         };
-
     }
-
 
     /** setAll
      *
@@ -213,9 +187,8 @@ public class OnDays implements Parcelable {
      * @param startOfWeek int constant day that array starts on Ex. MONDAY
      * @throws IllegalArgumentException array boolean[] must be of boolean[7]
      */
-    public void setAll(boolean[] array, int startOfWeek ){
-
-        if (array.length != 7){
+    public void setAll(boolean[] array, int startOfWeek ) {
+        if (array.length != 7) {
             throw new IllegalArgumentException("boolean[] argument of setAll must be of length 7");
         }
 
@@ -225,8 +198,6 @@ public class OnDays implements Parcelable {
         allDays = shift(array, getShift(startOfWeek), - 1);
 
         setAll(allDays);
-
-
     }
 
     /** setAll
@@ -236,7 +207,7 @@ public class OnDays implements Parcelable {
      * @author Dakota
      * @param onDays boolean[7] array of values to set
      */
-    public void setAll(boolean[] onDays){
+    public void setAll(boolean[] onDays) {
         set(MON, onDays[0]);
         set(TUE, onDays[1]);
         set(WED, onDays[2]);
@@ -254,11 +225,9 @@ public class OnDays implements Parcelable {
      * @return boolean true if On_Day is on today
      * @throws IllegalStateException impossible state to reach, default switch case.
      */
-    public boolean isOnDay(){
-
+    public boolean isOnDay() {
         // Calls isOnDay with today's date
         return isOnDay(Calendar.getInstance());
-
     }
 
     /**
@@ -267,8 +236,7 @@ public class OnDays implements Parcelable {
      * @return boolean true if it is an On Day, false elsewise
      * @throws IllegalStateException impossible state to reach, default switch case.
      */
-    public boolean isOnDay(Calendar date){
-
+    public boolean isOnDay(Calendar date) {
         date.setFirstDayOfWeek(Calendar.SUNDAY);
         int currentDayOfWeek = date.get(Calendar.DAY_OF_WEEK);
 
@@ -291,7 +259,6 @@ public class OnDays implements Parcelable {
 
         return get((date.get(Calendar.DAY_OF_WEEK) + 3) % 7 + 1);
     }
-
 
     /**
      * gets the amount a boolean array needs to be shifted to change its start
@@ -347,7 +314,7 @@ public class OnDays implements Parcelable {
      * @param direction +1 to shift left, -1 to shift right
      * @return boolean[] that has been shifted
      */
-    private boolean[] shift(boolean[] array, int shift, int direction){
+    private boolean[] shift(boolean[] array, int shift, int direction) {
 
         if ( direction != -1 && direction != 1) {
             throw new IllegalArgumentException(
@@ -355,7 +322,7 @@ public class OnDays implements Parcelable {
             );
         }
 
-        if (array == null){
+        if (array == null) {
             throw new NullPointerException("array passed to shiftLeft is null");
         } else if (shift >= array.length) {
             throw new IllegalArgumentException("shift passed to shiftLeft is greater then array length");
@@ -364,13 +331,10 @@ public class OnDays implements Parcelable {
         int maxIndex = array.length - 1;
 
         // for each time we want to shift it
-        for (;shift > 0; shift--){
-
+        for (;shift > 0; shift--) {
             // for each pair of [index] [index - 1] swap
-            for (int index = 0; index <= maxIndex; index++){
-
+            for (int index = 0; index <= maxIndex; index++) {
                 boolean swap = array[index];
-
                 if (index == 0){ // if we are at index 0, loop back to max index
                     array[index] = array[maxIndex];
                     array[maxIndex] = swap;
@@ -378,12 +342,9 @@ public class OnDays implements Parcelable {
                     array[index] = array[index + direction];
                     array[index + direction] = swap;
                 }
-
             }
         }
-
         return array;
-
     }
 
 
@@ -395,23 +356,19 @@ public class OnDays implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
-
         Bundle onDaysBundle = new Bundle(this.getClass().getClassLoader()); // Create a new bundle
-        onDaysBundle.putBooleanArray // Writes the vals as a bool array
+        onDaysBundle.putBooleanArray // Writes the values as a bool array
                 ("onDays",new boolean[]{mon, tue, wed, thu, fri, sat, sun});
         parcel.writeBundle(onDaysBundle); // Writes to parcel
-
     }
 
     // Creates User from parcel
     public static final Parcelable.Creator<OnDays> CREATOR = new Parcelable.Creator<OnDays>() {
-
         @Override
         public OnDays createFromParcel(Parcel in) {
 
             return new OnDays(in);
         }
-
         @Override
         public OnDays[] newArray(int size) {
 

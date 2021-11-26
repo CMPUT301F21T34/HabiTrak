@@ -29,7 +29,6 @@ public class HabitList extends ArrayList<Habit> {
     }
 
     public HabitList(Parcel parcel) {
-
         // Gets the bundle
         Bundle habitListBundle = parcel.readBundle(HabitList.class.getClassLoader());
 
@@ -41,16 +40,15 @@ public class HabitList extends ArrayList<Habit> {
 
     }
 
-    public void saveOrder(){
+    public void saveOrder() {
         int size = this.size();
 
-        for (int index = 0; index < size; index++){
+        for (int index = 0; index < size; index++) {
             this.get(index).setIndex(index);
         }
-
     }
 
-    public void saveOrder(int start){
+    public void saveOrder(int start) {
         int size = this.size();
 
         // Makes sure list isn't empty
@@ -59,7 +57,6 @@ public class HabitList extends ArrayList<Habit> {
             if (start < 0) {
                 start = 0;
             }
-
             for (int index = start; index < size; index++) {
                 this.get(index).setIndex(index);
             }
@@ -71,7 +68,7 @@ public class HabitList extends ArrayList<Habit> {
     }
 
 
-    public void swap(int index1, int index2){
+    public void swap(int index1, int index2) {
 
         // Swaps //
         Habit swap = this.get(index1);
@@ -84,7 +81,7 @@ public class HabitList extends ArrayList<Habit> {
     }
 
     @Override
-    public void add(int index, Habit habit){
+    public void add(int index, Habit habit) {
 
         habit.setIndex(index); // Sets habit index
 
@@ -95,7 +92,7 @@ public class HabitList extends ArrayList<Habit> {
 
 
     @Override
-    public boolean add(Habit habit){
+    public boolean add(Habit habit) {
 
         boolean success;
         success = super.add(habit); // Calls super add
@@ -105,26 +102,25 @@ public class HabitList extends ArrayList<Habit> {
     }
 
     @Override
-    public Habit remove(int index){
+    public Habit remove(int index) {
         Habit removed = super.remove(index);
         this.saveOrder(index - 1); // Updates all indices affected
 
         return removed;
     }
 
-    public void replace(Habit habit){
+    public void replace(Habit habit) {
         int index = habit.getIndex();
         this.remove(index);
         this.add(index, habit);
     }
 
-    public boolean remove( Habit toRemove ){
+    public boolean remove(Habit toRemove) {
         boolean success;
         int index = toRemove.getIndex();
-        if (this.get(index) == toRemove){
+        if (this.get(index) == toRemove) {
             this.remove(index);
             return true;
-
         } else {
             // index mismatch //
             Log.e("Habit_List", "Index Mismatch:" + "\n\t index expected: "
@@ -137,7 +133,6 @@ public class HabitList extends ArrayList<Habit> {
             this.saveOrder();
 
             return success;
-
         }
     }
 }

@@ -24,9 +24,6 @@ public class Habit implements Comparable<Habit>, Parcelable {
     // Attributes //
 
     // Any changes need to be implement in writeToParcel and Parcel constructor - Dakota
-
-
-
     // To Be Added To DB
     private int index = 0;
     private Calendar bestStreakDate;
@@ -70,7 +67,6 @@ public class Habit implements Comparable<Habit>, Parcelable {
         this.getOnDaysObj().setAll(
                 new boolean[]{false, false, false, false, false, false, false}
         );
-
     }
 
     /**
@@ -95,7 +91,6 @@ public class Habit implements Comparable<Habit>, Parcelable {
         // Handles Start Day Calendar //
         String completedDateTimeZone = habitBundle.getString("startDateTimeZone");
         if (completedDateTimeZone != null) {
-
             Calendar constructionCalendar = Calendar.getInstance();
             constructionCalendar.setTimeZone(TimeZone.getTimeZone(completedDateTimeZone));
             constructionCalendar.setTimeInMillis(habitBundle.getLong("startDateTime"));
@@ -108,7 +103,6 @@ public class Habit implements Comparable<Habit>, Parcelable {
         // Handles Best Streak Calendar //
         String bestStreakDateTimeZone = habitBundle.getString("bestStreakDateTimeZone");
         if (bestStreakDateTimeZone != null) {
-
             Calendar constructionCalendar = Calendar.getInstance();
             constructionCalendar.setTimeZone(TimeZone.getTimeZone(bestStreakDateTimeZone));
             constructionCalendar.setTimeInMillis(habitBundle.getLong("bestStreakDateTime"));
@@ -121,7 +115,6 @@ public class Habit implements Comparable<Habit>, Parcelable {
         // Handles Current Streak Calendar //
         String currentStreakDateTimeZone = habitBundle.getString("currentStreakDateTimeZone");
         if (bestStreakDateTimeZone != null) {
-
             Calendar constructionCalendar = Calendar.getInstance();
             constructionCalendar.setTimeZone(TimeZone.getTimeZone(currentStreakDateTimeZone));
             constructionCalendar.setTimeInMillis(habitBundle.getLong("currentStreakDateTime"));
@@ -130,24 +123,16 @@ public class Habit implements Comparable<Habit>, Parcelable {
         } else {
             this.currentStreakDate = null;
         }
-
         this.isPublic = habitBundle.getBoolean("isPublic");
-
         this.onDaysObj = habitBundle.getParcelable("onDaysObj");
-
-
     }
 
-
     // Methods //
-
-
     public static final Parcelable.Creator<Habit> CREATOR = new Parcelable.Creator<Habit>() {
         @Override
         public Habit createFromParcel(Parcel in) {
             return new Habit(in);
         }
-
         @Override
         public Habit[] newArray(int size) {
             return new Habit[size];
@@ -226,16 +211,27 @@ public class Habit implements Comparable<Habit>, Parcelable {
         this.startDate = startDate;
     }
 
-    public int getIndex(){
-        return this.index;
+    /**
+     * getIndex
+     *
+     * getter function for Habit index
+     *
+     * @author Dakota
+     * @return int
+     */
+    public int getIndex(){ return this.index; }
 
-    }
-
+    /**
+     * setIndex
+     *
+     * setter function for Habit index
+     *
+     * @author Dakota
+     * @param index int to change Habits index to
+     */
     public void setIndex(int index){
         this.index = index;
     }
-
-
 
     /**
      * getOnDaysOnj
@@ -250,10 +246,8 @@ public class Habit implements Comparable<Habit>, Parcelable {
         return this.onDaysObj;
     }
 
-
     @Deprecated
     public void setOnDaysObj(OnDays onDaysObj) { this.onDaysObj = onDaysObj; }
-
 
     /**
      * isHabitStart
@@ -263,7 +257,6 @@ public class Habit implements Comparable<Habit>, Parcelable {
      * @author Pranav
      * @return boolean is habit starts today
      */
-
     public boolean isHabitStart(){
         Calendar today = Calendar.getInstance();
         today.setFirstDayOfWeek(Calendar.MONDAY);
@@ -285,11 +278,9 @@ public class Habit implements Comparable<Habit>, Parcelable {
      * @param habitEvent HabitEvent to be added
      * @return boolean true if added
      */
-
     public boolean addHabitEvent(HabitEvent habitEvent){
         return habitEvents.add(habitEvent);
     }
-
 
     /**
      * removeHabitEvent
@@ -303,8 +294,6 @@ public class Habit implements Comparable<Habit>, Parcelable {
     public boolean removeHabitEvent(HabitEvent habit){
         return habitEvents.remove(habit);
     }
-
-
 
     /**
      * getHabitEvents
@@ -336,12 +325,10 @@ public class Habit implements Comparable<Habit>, Parcelable {
      * @author Dakota
      */
     public void sortHabitEvents(){
-
         // Sorts with HabitEvent's compareTo method
         // Sorts by date
         habitEvents.sort(HabitEvent::compareTo);
         // min API 24 needed, need to program own sorting else wise
-
     }
 
     /** makePublic
@@ -354,6 +341,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
     public void makePublic(){
         this.isPublic = true;
     }
+
     /** makePrivate
      *
      * makes the habit not publicly visible
@@ -389,7 +377,6 @@ public class Habit implements Comparable<Habit>, Parcelable {
         return !this.isPublic;
     }
 
-
     /**
      * compareTo
      *
@@ -402,15 +389,13 @@ public class Habit implements Comparable<Habit>, Parcelable {
     @Override
     public int compareTo(Habit habit) {
 
-        if (this.getIndex() > habit.getIndex()){
+        if (this.getIndex() > habit.getIndex()) {
             return 1;
-        } else if (this.getIndex() < habit.getIndex()){
+        } else if (this.getIndex() < habit.getIndex()) {
             return -1;
         }
         return 0;
-
     }
-
 
     /**
      * hashCode
@@ -426,7 +411,6 @@ public class Habit implements Comparable<Habit>, Parcelable {
         return this.title.hashCode() * this.reason.hashCode();
     }
 
-
     /**
      * equals
      *
@@ -438,23 +422,16 @@ public class Habit implements Comparable<Habit>, Parcelable {
      * @return boolean true if they are equal, false elsewise
      */
     @Override
-    public boolean equals(Object object){
-
-
+    public boolean equals(Object object) {
         if (object.getClass() == Habit.class){
 
-            if( ( ((Habit) object).getTitle() == this.getTitle() )
-                    && ( ((Habit) object).getReason() == this.getReason() ) ){
+            if((((Habit) object).getTitle() == this.getTitle())
+                    && (((Habit) object).getReason() == this.getReason())){
                 return true;
             }
         }
-
-
         return false;
-
     }
-
-
 
     /**
      * Code that parses Habit parameters into a Parcel

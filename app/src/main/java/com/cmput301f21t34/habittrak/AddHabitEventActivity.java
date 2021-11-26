@@ -131,17 +131,10 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
                 result -> {
                     Log.d("CAMERA", "Entered camera on activity result");
                     if (result.getResultCode() == Activity.RESULT_OK ) {
-                        Log.d("CAMERA", "Entered camera on activity result if condition");
                         File f = new File(currentPhotoPath);
-                        Log.d("CAMERA","Setting the image");
                         image.setImageURI(Uri.fromFile(f));
-                        Log.d("CAMERA", "Absolute url is " + Uri.fromFile(f));
                         Uri contentUri = Uri.fromFile(f);
-                        Log.d("CAMERA", "Entering FIREBASE");
                         habitEvent.setPhotograph(db.uploadImageToFirebase(f.getName(), contentUri, mStorageRef));
-                        Log.d("CAMERA", "Exited the FIREBASE");
-                        Log.d("EDIT HABIT", "The uri is " + habitEvent.getPhotograph());
-                        Log.d("CAMERA","Entering gallery stage");
                         // save the image to the gallery
                         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                         mediaScanIntent.setData(contentUri);

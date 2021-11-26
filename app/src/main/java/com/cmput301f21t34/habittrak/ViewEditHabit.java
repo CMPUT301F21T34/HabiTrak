@@ -144,7 +144,10 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
         } else {
             bestStreakStart.setText(streakDateFormat.format(habit.getBestStreakDate().getTime()));
             bestStreakEnd.setText(streakDateFormat.format(habit.getBestStreakDateEnd().getTime()));
+            bestStreakTotal.setText(String.valueOf(habit.getBestStreak()));
         }
+
+        totalEventCompleted.setText(String.valueOf(habit.getHabitEvents().size()));
 
         // setting date
         String setDateText = "Selected Date: " + getDate(calendar);

@@ -46,7 +46,12 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
 
     public HabitEvent(String comment, Calendar date, Location loc, Uri photo){
 
-        this.photograph = photo.toString();
+        // Null check on photo (allows it to be null for testing purposes)
+        if (photo == null){
+            this.photograph = null;
+        } else {
+            this.photograph = photo.toString();
+        }
         this.location = loc;
         this.comment = comment;
         this.completedDate = date;

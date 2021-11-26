@@ -1,4 +1,4 @@
-package com.cmput301f21t34.habittrak;
+package com.cmput301f21t34.habittrak.streak;
 
 import com.cmput301f21t34.habittrak.user.Habit;
 

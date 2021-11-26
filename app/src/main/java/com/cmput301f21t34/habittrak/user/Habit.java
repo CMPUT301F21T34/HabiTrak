@@ -161,9 +161,9 @@ public class Habit implements Comparable<Habit>, Parcelable {
             constructionCalendar.setTimeZone(TimeZone.getTimeZone(bestStreakDateEndTimeZone));
             constructionCalendar.setTimeInMillis(habitBundle.getLong("bestStreakDateEndTime"));
 
-            this.currentStreakDateEnd = constructionCalendar;
+            this.bestStreakDateEnd = constructionCalendar;
         } else {
-            this.currentStreakDateEnd = null;
+            this.bestStreakDateEnd = null;
         }
 
         // streak ints

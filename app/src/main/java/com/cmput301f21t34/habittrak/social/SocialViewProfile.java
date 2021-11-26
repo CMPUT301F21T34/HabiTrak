@@ -102,6 +102,7 @@ public class SocialViewProfile extends AppCompatActivity {
         // start View Habit Activity
         Intent intent = new Intent(this, SocialViewHabit.class);
         intent.putExtra("HABIT", habitList.get(position));
+        intent.putExtra("USERNAME", user.getUsername());
         startActivity(intent);
     }
 

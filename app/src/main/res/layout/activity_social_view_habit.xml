@@ -30,7 +30,7 @@
         android:layout_marginStart="16dp"
         android:fontFamily="@font/roboto"
         android:textColor="?android:textColorPrimary"
-        android:text="Habit Name"/>
+        android:text="Name"/>
 
     <TextView
         android:id="@+id/social_habit_name"
@@ -39,6 +39,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:fontFamily="@font/roboto_black"
+        android:textSize="16sp"
         android:textColor="?android:textColorPrimary"
         android:text="Sameple Habit Name"/>
 
@@ -49,7 +50,7 @@
         android:layout_marginStart="16dp"
         android:fontFamily="@font/roboto"
         android:textColor="?android:textColorPrimary"
-        android:text="Habit Reason"/>
+        android:text="Reason"/>
 
     <TextView
         android:id="@+id/social_habit_reason"
@@ -58,6 +59,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:fontFamily="@font/roboto_black"
+        android:textSize="16sp"
         android:textColor="?android:textColorPrimary"
         android:text="Sample Habit Reason"/>
 
@@ -77,6 +79,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:fontFamily="@font/roboto_black"
+        android:textSize="16sp"
         android:textColor="?android:textColorPrimary"
         android:text="Sample Start Date"/>
 

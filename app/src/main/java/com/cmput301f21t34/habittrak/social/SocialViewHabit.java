@@ -37,15 +37,17 @@ public class SocialViewHabit extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_social_view_habit);
 
-        // set up toolbar
-        Toolbar toolbar = findViewById(R.id.social_view_habit_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
         // get data
         Intent intent = getIntent();
         habit = intent.getParcelableExtra("HABIT");
+        String username = intent.getStringExtra("USERNAME");
+
+        // set up toolbar
+        Toolbar toolbar = findViewById(R.id.social_view_habit_toolbar);
+        toolbar.setTitle(username + "'s Habit");
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         // set views
         TextView name = findViewById(R.id.social_habit_name);
@@ -144,5 +146,11 @@ public class SocialViewHabit extends AppCompatActivity {
         } else {
             button.setBackgroundColor(whiteColor);
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

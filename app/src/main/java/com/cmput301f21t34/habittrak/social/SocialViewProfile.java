@@ -45,14 +45,16 @@ public class SocialViewProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_social_view_profile);
 
+        // get data
+        Intent intent = getIntent();
+        user = intent.getParcelableExtra("USER");
+
         // add back button to toolbar
         Toolbar toolbar = findViewById(R.id.social_view_profile_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        // get data
-        Intent intent = getIntent();
-        user = intent.getParcelableExtra("USER");
+        toolbar.setTitle(user.getUsername() + "'s public habits");
 
         // set view
         recyclerView = findViewById(R.id.social_profile_recycler);
@@ -62,7 +64,10 @@ public class SocialViewProfile extends AppCompatActivity {
 
         // set TextView
         username.setText(user.getUsername());
-        bio.setText(user.getBiography());
+        if (!user.getBiography().equals("")){
+            bio.setText(user.getBiography());
+        }
+
 
         // get public habits
         getPublicHabits();
@@ -111,8 +116,14 @@ public class SocialViewProfile extends AppCompatActivity {
      */
     public void getPublicHabits(){
         for (int i = 0; i < user.getHabitList().size(); i++){
-            habitList.add(user.getHabitList().get(i));
+            if (user.getHabitList().get(i).isPublic())
+                habitList.add(user.getHabitList().get(i));
         }
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 }

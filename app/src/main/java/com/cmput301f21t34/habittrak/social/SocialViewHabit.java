@@ -44,7 +44,7 @@ public class SocialViewHabit extends AppCompatActivity {
 
         // set up toolbar
         Toolbar toolbar = findViewById(R.id.social_view_habit_toolbar);
-        toolbar.setTitle(username + "'s Habit");
+        toolbar.setTitle(username + "'s habit");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);

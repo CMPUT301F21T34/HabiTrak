@@ -17,10 +17,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.recycler.SocialAdapter;
-import com.cmput301f21t34.habittrak.social.FollowersFragment;
-import com.cmput301f21t34.habittrak.social.FollowingFragment;
-import com.cmput301f21t34.habittrak.social.RequestsFragment;
-import com.cmput301f21t34.habittrak.social.SearchFragment;
+import com.cmput301f21t34.habittrak.social.SocialTabFragment;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.tabs.TabLayout;
 
@@ -32,10 +29,10 @@ public class SocialFragment extends Fragment {
     private static final boolean SEARCHABLE = true;
     private static final boolean NOT_SEARCHABLE = false;
     private final User mainUser;
-    private FollowersFragment followersFragment;
-    private FollowingFragment followingFragment;
-    private RequestsFragment requestsFragment;
-    private SearchFragment searchFragment;
+    private SocialTabFragment followersFragment;
+    private SocialTabFragment followingFragment;
+    private SocialTabFragment requestsFragment;
+    private SocialTabFragment searchFragment;
     private TabLayout socialTab;
     private ViewPager2 viewPager;
 
@@ -47,11 +44,11 @@ public class SocialFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // TODO make nodefault an attribute in socialadapter
-        this.followersFragment = new FollowersFragment(this, mainUser,
+        this.followersFragment = new SocialTabFragment(this, mainUser,
                 mainUser.getFollowerList(), "nodefault", NOT_SEARCHABLE);
-        this.followingFragment = new FollowingFragment(this, mainUser,
+        this.followingFragment = new SocialTabFragment(this, mainUser,
                 mainUser.getFollowingList(), SocialAdapter.UNFOLLOW, NOT_SEARCHABLE);
-        this.requestsFragment = new RequestsFragment(this, mainUser,
+        this.requestsFragment = new SocialTabFragment(this, mainUser,
                 mainUser.getFollowerReqList(), SocialAdapter.ACCEPT, NOT_SEARCHABLE);
         // Initialise searchFragment on separate thread because need to call slow database method
         new SocialAsyncTask().execute();
@@ -203,7 +200,7 @@ public class SocialFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             // Initialise searchFragment here because need to call a database method
-            searchFragment = new SearchFragment(SocialFragment.this, mainUser ,
+            searchFragment = new SocialTabFragment(SocialFragment.this, mainUser,
                     new DatabaseManager().getAllUsers(), "nodefault", SEARCHABLE);
             return null;
         }

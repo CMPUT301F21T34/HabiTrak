@@ -48,9 +48,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-// Map libraries
-
-
 /**
  * @author Tauseef Nafee Fattah
  * @author Henry

@@ -62,10 +62,9 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
      *
      * @param UUID String, the UUID of the user
      * @param username String, the user's username
-     * @param bio String the user's bio
+     * @param bio String, the user's bio
      */
-    public void addUser(String UUID, String username, String bio) {
-        // (Use copy because don't wanna add to main if filtered by search)
+    public void addUserEntry(String UUID, String username, String bio) {
         if (!UUIDs.contains(UUID)) {
             UUIDs.add(UUID);
             usernames.add(username);
@@ -78,7 +77,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
      * Removes the entry specified by UUID
      * @param UUID String, the UUID of the user whose entry to remove
      */
-    public void removeUser(String UUID) {
+    public void removeUserEntry(String UUID) {
         int position = UUIDs.indexOf(UUID);
         UUIDs.remove(position);
         usernames.remove(position);
@@ -201,7 +200,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
 //                      UUIDs.remove(UUID);
 //                      usernames.remove(position);
 //                      bios.remove(position);
-                        removeUser(UUID);
+                        removeUserEntry(UUID);
                         // Update in database
 //                      dm.updateFollow(mainUUID, UUID, false);
 //                      dm.updateFollowRequest(mainUUID, UUID, true);

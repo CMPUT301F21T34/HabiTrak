@@ -83,6 +83,25 @@ public class RequestsFragment extends Fragment {
     }
 
     /**
+     * Adds the specified user entry to this tab's list if its UUID is not already present
+     *
+     * @param UUID String, the UUID of the user
+     * @param username String, the user's username
+     * @param bio String, the user's bio
+     */
+    public void addUserEntry(String UUID, String username, String bio) {
+        socialAdapter.addUserEntry(UUID, username, bio);
+    }
+
+    /**
+     * Removes the entry specified by UUID from this tab's list
+     * @param UUID String, the UUID of the user whose entry to remove
+     */
+    public void removeUserEntry(String UUID) {
+        socialAdapter.removeUserEntry(UUID);
+    }
+
+    /**
      * showMenu
      * <p>
      * listener function for ImageButton in Recycler View

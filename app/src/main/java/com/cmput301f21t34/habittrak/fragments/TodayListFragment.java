@@ -204,11 +204,7 @@ public class TodayListFragment extends Fragment {
      */
     public void onCheckBoxClick(View view, int position) {
         MaterialCheckBox checkBox = (MaterialCheckBox) view;
-        if (checkBox.isChecked()) {
-            //TODO: add logic if habit event is already completed
-            Log.d(TAG, "checkbox checked");
-            checkBox.setEnabled(false);
-        }
+        checkBox.setChecked(false);
         Habit habit = habitsDisplayList.get(position);
         Intent intent = new Intent(getContext(), AddHabitEventActivity.class);
         intent.putExtra("HABIT", habit);

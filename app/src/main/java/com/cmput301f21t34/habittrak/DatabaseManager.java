@@ -867,6 +867,11 @@ public class DatabaseManager {
             habit.setHabitEvents(habitFromDatabase.getHabitEvents());
             habit.setCurrentStreakDate(habitFromDatabase.getCurrentStreakDate());
             habit.setBestStreakDate(habitFromDatabase.getBestStreakDate());
+            if(habitFromDatabase.getisPublic()){
+                habit.makePublic();
+            } else {
+                habit.makePrivate();
+            }
             ArrayList<Boolean> dbOnDays = habitFromDatabase.getOnDaysObj();
 
             habit.setOnDaysObj(new OnDays(dbOnDays));

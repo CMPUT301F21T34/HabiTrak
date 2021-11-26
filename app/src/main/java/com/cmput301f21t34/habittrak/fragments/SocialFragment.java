@@ -39,24 +39,24 @@ public class SocialFragment extends Fragment {
 
     public SocialFragment(User mainUser) {
         this.mainUser = mainUser;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO make nodefault an attribute in socialadapter
         this.followersFragment = new SocialTabFragment(this, mainUser,
                 mainUser.getFollowerList(), "nodefault", NOT_SEARCHABLE);
         this.followingFragment = new SocialTabFragment(this, mainUser,
                 mainUser.getFollowingList(), SocialAdapter.UNFOLLOW, NOT_SEARCHABLE);
         this.requestsFragment = new SocialTabFragment(this, mainUser,
                 mainUser.getFollowerReqList(), SocialAdapter.ACCEPT, NOT_SEARCHABLE);
-        // Initialise searchFragment on separate thread because need to call slow database method
         new SocialAsyncTask().execute();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO make nodefault an attribute in socialadapter
+
+        // Initialise searchFragment on separate thread because need to call slow database method
+
         // Start fetching data for the lists
-        followersFragment.populateList();
-        followingFragment.populateList();
-        requestsFragment.populateList();
+
     }
 
     @Override
@@ -198,13 +198,6 @@ public class SocialFragment extends Fragment {
         }
     }
 
-    /*
-    @Override
-    public boolean onSupportNavigateUp() {
-        // Adding the back button
-        onBackPressed();
-        return true;
-    }*/
 
     /**
      * Gets the data in background
@@ -221,6 +214,9 @@ public class SocialFragment extends Fragment {
         protected void onPostExecute(Void unused) {
             super.onPostExecute(unused);
             // Start fetching data for the list
+            followersFragment.populateList();
+            followingFragment.populateList();
+            requestsFragment.populateList();
             searchFragment.populateList();
         }
     }

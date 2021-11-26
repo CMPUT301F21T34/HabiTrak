@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 
 import androidx.fragment.app.Fragment;
@@ -41,6 +42,8 @@ public class SocialTabFragment extends Fragment {
     // Views
     private ShimmerFrameLayout loading;
     private SearchView searchBox;
+    private LinearLayout noDataView;
+    private RecyclerView recyclerView;
     // Other
     private final SocialAdapter socialAdapter;
     private final boolean searchable;
@@ -53,12 +56,7 @@ public class SocialTabFragment extends Fragment {
         this.searchable = searchable;
         socialAdapter = new SocialAdapter(
                 socialRef, mainUser, UUIDs, usernames, bios, defaultButtonText);
-        socialAdapter.setSocialListener(new SocialAdapter.SocialListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                onRowClick(view, position);
-            }
-        });
+        socialAdapter.setSocialListener(this::onRowClick);
     }
 
     @Override
@@ -72,6 +70,8 @@ public class SocialTabFragment extends Fragment {
         View view = inflater.inflate(
                 R.layout.habi_social_tab_fragment, container, false);
 
+        // no data display
+        noDataView = view.findViewById(R.id.social_no_data_view);
         // Shimmer effect
         loading = view.findViewById(R.id.social_tab_shimmer_container);
         loading.setVisibility(View.GONE); // Invisible by default
@@ -82,8 +82,12 @@ public class SocialTabFragment extends Fragment {
             loading.startShimmer(); // Visual effect
         }
 
+        if (fetchData.getStatus() == AsyncTask.Status.FINISHED){
+            setViewIfEmpty();
+        }
+
         // List display
-        RecyclerView recyclerView = view.findViewById(R.id.social_tab_recycler_view);
+        recyclerView = view.findViewById(R.id.social_tab_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(socialAdapter);
 
@@ -103,6 +107,8 @@ public class SocialTabFragment extends Fragment {
                 return true;
             }
         });
+
+
 
         return view;
     }
@@ -160,6 +166,23 @@ public class SocialTabFragment extends Fragment {
         }
     }
 
+
+    /**
+     * sets the view depending on the value of the data set
+     */
+    public void setViewIfEmpty(){
+
+        if(noDataView != null) {
+            if (UUIDs.isEmpty()) {
+                noDataView.setVisibility(View.VISIBLE);
+            } else {
+                noDataView.setVisibility(View.GONE);
+            }
+        }
+
+    }
+
+
     /**
      * Gets the user data for the list entry in the background
      */
@@ -192,6 +215,7 @@ public class SocialTabFragment extends Fragment {
             if (searchBox != null && searchable) {
                 searchBox.setVisibility(View.VISIBLE);  // Allow searches now
             }
+            setViewIfEmpty();
         }
     }
 

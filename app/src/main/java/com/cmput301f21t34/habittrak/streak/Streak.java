@@ -111,6 +111,26 @@ public class Streak {
 
     }
 
+    private boolean currentDayCheck(){
+        Calendar today = Calendar.getInstance();
+
+        if (habit.getOnDaysObj().isOnDay(today)){
+            ArrayList<HabitEvent> events = habit.getHabitEvents();
+            events.sort(HabitEvent::compareTo);
+
+            for (int index = 0; index < events.size(); index ++) {
+                int comparison = new TimeIgnoringComparator().compare(today, events.get(index).getCompletedDate());
+                if (comparison == 0) {
+                    // Then an event was completed today
+                    return true;
+                }
+            }
+
+        }
+
+        return false;
+    }
+
 
     /**
      * refreshes the Habits streak
@@ -142,6 +162,11 @@ public class Streak {
             currentStreakDateEnd.add(Calendar.DAY_OF_YEAR, -1); // increments the day down by 1
         } // Until it is an onDay
 
+        boolean completedToday = currentDayCheck();
+
+        if (completedToday){
+            currentStreak += 1;
+        }
 
         // Only update best streak if needed
         if (habit.getBestStreak() <= currentStreak){

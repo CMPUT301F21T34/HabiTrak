@@ -20,23 +20,20 @@ import com.cmput301f21t34.habittrak.social.FollowersFragment;
 import com.cmput301f21t34.habittrak.social.FollowingFragment;
 import com.cmput301f21t34.habittrak.social.RequestsFragment;
 import com.cmput301f21t34.habittrak.social.SearchFragment;
-import com.cmput301f21t34.habittrak.social.SocialTabFragment;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.tabs.TabLayout;
-
-import java.util.ArrayList;
 
 public class SocialFragment extends Fragment {
     public static final int FOLLOWERS = 0;
     public static final int FOLLOWING = 1;
     public static final int REQUESTS = 2;
     public static final int SEARCH = 3;
+    private final User mainUser;
     private FollowersFragment followersFragment;
     private FollowingFragment followingFragment;
     private RequestsFragment requestsFragment;
     private SearchFragment searchFragment;
     private TabLayout socialTab;
-    private final User mainUser;
     private ViewPager2 viewPager;
 
     public SocialFragment(User mainUser) {
@@ -101,6 +98,58 @@ public class SocialFragment extends Fragment {
         });
 
         return view;
+    }
+
+    /**
+     * Adds the specified user entry to the specified tab's list if its UUID is not already present
+     *
+     * @param tab      int, the tab number, a public attribute of this class
+     * @param UUID     String, the UUID of the user
+     * @param username String, the user's username
+     * @param bio      String, the user's bio
+     */
+    public void addUserEntry(int tab, String UUID, String username, String bio) {
+        switch (tab) {
+            case FOLLOWERS:
+                followersFragment.addUserEntry(UUID, username, bio);
+                break;
+            case FOLLOWING:
+                followingFragment.addUserEntry(UUID, username, bio);
+                break;
+            case REQUESTS:
+                requestsFragment.addUserEntry(UUID, username, bio);
+                break;
+            case SEARCH:
+                searchFragment.addUserEntry(UUID, username, bio);
+                break;
+            default:
+                throw new RuntimeException("Tab not found");
+        }
+    }
+
+    /**
+     * Removes the entry specified by UUID from the specified tab's list
+     *
+     * @param tab  int, the tab number, a public attribute of this class
+     * @param UUID String, the UUID of the user whose entry to remove
+     */
+    public void removeUserEntry(int tab, String UUID) {
+        switch (tab) {
+            case FOLLOWERS:
+                followersFragment.removeUserEntry(UUID);
+                break;
+            case FOLLOWING:
+                followingFragment.removeUserEntry(UUID);
+                break;
+            case REQUESTS:
+                requestsFragment.removeUserEntry(UUID);
+                break;
+            case SEARCH:
+                searchFragment.removeUserEntry(UUID);
+                break;
+            default:
+                throw new RuntimeException("Tab not found");
+        }
     }
 
     /**

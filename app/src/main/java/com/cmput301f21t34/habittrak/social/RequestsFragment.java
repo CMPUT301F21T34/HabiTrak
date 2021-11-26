@@ -17,16 +17,15 @@ import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.recycler.SocialAdapter;
 import com.cmput301f21t34.habittrak.user.User;
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 
 /**
  * Fragment for displaying users that request to follow main user
  *
- * @see SocialAdapter
  * @author Pranav
  * @author Kaaden
+ * @see SocialAdapter
  */
 public class RequestsFragment extends Fragment {
     public static String TAG = "REQUESTS_FRAGMENT";
@@ -85,9 +84,9 @@ public class RequestsFragment extends Fragment {
     /**
      * Adds the specified user entry to this tab's list if its UUID is not already present
      *
-     * @param UUID String, the UUID of the user
+     * @param UUID     String, the UUID of the user
      * @param username String, the user's username
-     * @param bio String, the user's bio
+     * @param bio      String, the user's bio
      */
     public void addUserEntry(String UUID, String username, String bio) {
         socialAdapter.addUserEntry(UUID, username, bio);
@@ -95,6 +94,7 @@ public class RequestsFragment extends Fragment {
 
     /**
      * Removes the entry specified by UUID from this tab's list
+     *
      * @param UUID String, the UUID of the user whose entry to remove
      */
     public void removeUserEntry(String UUID) {

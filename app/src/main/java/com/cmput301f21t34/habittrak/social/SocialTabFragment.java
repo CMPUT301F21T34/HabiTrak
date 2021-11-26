@@ -2,7 +2,6 @@ package com.cmput301f21t34.habittrak.social;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +50,7 @@ public class SocialTabFragment extends Fragment {
             public void menuButtonOnClick(View view, int position) {
 
             }
+
             @Override
             public void mainButtonOnClick(View view, int position) {
 
@@ -63,9 +63,9 @@ public class SocialTabFragment extends Fragment {
     /**
      * Adds the specified user entry to this tab's list if its UUID is not already present
      *
-     * @param UUID String, the UUID of the user
+     * @param UUID     String, the UUID of the user
      * @param username String, the user's username
-     * @param bio String, the user's bio
+     * @param bio      String, the user's bio
      */
     public void addUserEntry(String UUID, String username, String bio) {
         socialAdapter.addUserEntry(UUID, username, bio);
@@ -73,6 +73,7 @@ public class SocialTabFragment extends Fragment {
 
     /**
      * Removes the entry specified by UUID from this tab's list
+     *
      * @param UUID String, the UUID of the user whose entry to remove
      */
     public void removeUserEntry(String UUID) {

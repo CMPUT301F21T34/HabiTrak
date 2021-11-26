@@ -60,9 +60,9 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
     /**
      * Adds the specified user entry to the list if its UUID is not already present
      *
-     * @param UUID String, the UUID of the user
+     * @param UUID     String, the UUID of the user
      * @param username String, the user's username
-     * @param bio String, the user's bio
+     * @param bio      String, the user's bio
      */
     public void addUserEntry(String UUID, String username, String bio) {
         if (!UUIDs.contains(UUID)) {
@@ -75,6 +75,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
 
     /**
      * Removes the entry specified by UUID
+     *
      * @param UUID String, the UUID of the user whose entry to remove
      */
     public void removeUserEntry(String UUID) {
@@ -131,6 +132,58 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         }
     }
 
+    @Override
+    public int getItemCount() {
+        return usernames.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charString = charSequence.toString();
+                // is no input in searchView put the original list back
+                if (charString.isEmpty()) {
+                    UUIDs = UUIDsCopy;
+                    usernames = usernamesCopy;
+                    bios = biosCopy;
+                } else {
+                    // filter username and bios bases if username contains the characters
+                    ArrayList<String> filteredUUIDs = new ArrayList<>();
+                    ArrayList<String> filteredProfiles = new ArrayList<>();
+                    ArrayList<String> filteredBios = new ArrayList<>();
+                    for (int i = 0; i < usernamesCopy.size(); i++) {
+                        if (usernamesCopy.get(i).toLowerCase().contains(charString)) {
+                            filteredUUIDs.add(UUIDsCopy.get(i));
+                            filteredProfiles.add(usernamesCopy.get(i));
+                            filteredBios.add(biosCopy.get(i));
+                        }
+                    }
+                    UUIDs = filteredUUIDs;
+                    usernames = filteredProfiles;
+                    bios = filteredBios;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = usernames;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                usernames = (ArrayList<String>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
+
+    public interface ClickListener {
+        void menuButtonOnClick(View view, int position);
+
+        void mainButtonOnClick(View view, int position);
+    }
+
     /**
      * ViewHolder
      * <p>
@@ -150,6 +203,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         private final TextView userBio;
         private String UUID;
         private ClickListener listenerRef;
+
         public ViewHolder(User mainUser, View view) {
             super(view);
             this.mainUser = mainUser;
@@ -302,57 +356,5 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         }
 
 
-    }
-
-    @Override
-    public int getItemCount() {
-        return usernames.size();
-    }
-
-    @Override
-    public Filter getFilter() {
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence charSequence) {
-                String charString = charSequence.toString();
-                // is no input in searchView put the original list back
-                if (charString.isEmpty()) {
-                    UUIDs = UUIDsCopy;
-                    usernames = usernamesCopy;
-                    bios = biosCopy;
-                } else {
-                    // filter username and bios bases if username contains the characters
-                    ArrayList<String> filteredUUIDs = new ArrayList<>();
-                    ArrayList<String> filteredProfiles = new ArrayList<>();
-                    ArrayList<String> filteredBios = new ArrayList<>();
-                    for (int i = 0; i < usernamesCopy.size(); i++) {
-                        if (usernamesCopy.get(i).toLowerCase().contains(charString)) {
-                            filteredUUIDs.add(UUIDsCopy.get(i));
-                            filteredProfiles.add(usernamesCopy.get(i));
-                            filteredBios.add(biosCopy.get(i));
-                        }
-                    }
-                    UUIDs = filteredUUIDs;
-                    usernames = filteredProfiles;
-                    bios = filteredBios;
-                }
-
-                FilterResults filterResults = new FilterResults();
-                filterResults.values = usernames;
-                return filterResults;
-            }
-
-            @Override
-            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                usernames = (ArrayList<String>) filterResults.values;
-                notifyDataSetChanged();
-            }
-        };
-    }
-
-    public interface ClickListener {
-        void menuButtonOnClick(View view, int position);
-
-        void mainButtonOnClick(View view, int position);
     }
 }

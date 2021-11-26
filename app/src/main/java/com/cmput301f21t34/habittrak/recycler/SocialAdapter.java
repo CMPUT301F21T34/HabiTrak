@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
-import com.cmput301f21t34.habittrak.social.FollowersFragment;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 
@@ -49,54 +48,42 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
                          ClickListener listener, ArrayList<String> bios, String defaultButtonText) {
         this.mainUser = mainUser;
         this.UUIDs = UUIDs;
-        this.UUIDsCopy = UUIDs;
         this.usernames = usernames;
-        this.usernamesCopy = usernames;
-        this.listener = listener;
         this.bios = bios;
+        this.UUIDsCopy = UUIDs;
+        this.usernamesCopy = usernames;
         this.biosCopy = bios;
+        this.listener = listener;
         this.defaultButtonText = defaultButtonText;
     }
 
-    @Override
-    public Filter getFilter() {
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence charSequence) {
-                String charString = charSequence.toString();
-                // is no input in searchView put the original list back
-                if (charString.isEmpty()) {
-                    UUIDs = UUIDsCopy;
-                    usernames = usernamesCopy;
-                    bios = biosCopy;
-                } else {
-                    // filter username and bios bases if username contains the characters
-                    ArrayList<String> filteredUUIDs = new ArrayList<>();
-                    ArrayList<String> filteredProfiles = new ArrayList<>();
-                    ArrayList<String> filteredBios = new ArrayList<>();
-                    for (int i = 0; i < usernamesCopy.size(); i++) {
-                        if (usernamesCopy.get(i).toLowerCase().contains(charString)) {
-                            filteredUUIDs.add(UUIDsCopy.get(i));
-                            filteredProfiles.add(usernamesCopy.get(i));
-                            filteredBios.add(biosCopy.get(i));
-                        }
-                    }
-                    UUIDs = filteredUUIDs;
-                    usernames = filteredProfiles;
-                    bios = filteredBios;
-                }
+    /**
+     * Adds the specified user entry to the list if its UUID is not already present
+     *
+     * @param UUID String, the UUID of the user
+     * @param username String, the user's username
+     * @param bio String the user's bio
+     */
+    public void addUser(String UUID, String username, String bio) {
+        // (Use copy because don't wanna add to main if filtered by search)
+        if (!UUIDs.contains(UUID)) {
+            UUIDs.add(UUID);
+            usernames.add(username);
+            bios.add(bio);
+            notifyItemInserted(UUIDs.size() - 1);
+        }
+    }
 
-                FilterResults filterResults = new FilterResults();
-                filterResults.values = usernames;
-                return filterResults;
-            }
-
-            @Override
-            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                usernames = (ArrayList<String>) filterResults.values;
-                notifyDataSetChanged();
-            }
-        };
+    /**
+     * Removes the entry specified by UUID
+     * @param UUID String, the UUID of the user whose entry to remove
+     */
+    public void removeUser(String UUID) {
+        int position = UUIDs.indexOf(UUID);
+        UUIDs.remove(position);
+        usernames.remove(position);
+        bios.remove(position);
+        notifyItemRemoved(position);
     }
 
     @NonNull
@@ -145,17 +132,6 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return usernames.size();
-    }
-
-    public interface ClickListener {
-        void menuButtonOnClick(View view, int position);
-
-        void mainButtonOnClick(View view, int position);
-    }
-
     /**
      * ViewHolder
      * <p>
@@ -166,6 +142,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
      * @see RecyclerView.ViewHolder
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
         private final User mainUser;
         private final DatabaseManager dm = new DatabaseManager();
         private final TextView username;
@@ -174,7 +151,6 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         private final TextView userBio;
         private String UUID;
         private ClickListener listenerRef;
-
         public ViewHolder(User mainUser, View view) {
             super(view);
             this.mainUser = mainUser;
@@ -220,10 +196,11 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
                 if (buttonType.equals(ACCEPT)) {
                     // Update locally
                     mainUser.addFollower(UUID);
-                    mainUser.removeFollowerReq(UUID); // Removes from UUIDs too because references
-                    usernames.remove(position);
-                    bios.remove(position);
-
+                    mainUser.removeFollowerReq(UUID);
+//                    UUIDs.remove(UUID);
+//                    usernames.remove(position);
+//                    bios.remove(position);
+                    removeUser(UUID);
                     // Update in database
 //                    dm.updateFollow(mainUUID, UUID, false);
 //                    dm.updateFollowRequest(mainUUID, UUID, true);
@@ -253,7 +230,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
 
                 } else if (buttonType.equals(UNFOLLOW)) {
                     // Update locally
-                    mainUser.removeFollowing(UUID); // Removes from UUIDs too because references
+                    mainUser.removeFollowing(UUID);
                     usernames.remove(position);
                     bios.remove(position);
 
@@ -320,6 +297,59 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         public void setButtonText(String text) {
             mainButton.setText(text);
         }
+
+
     }
 
+    @Override
+    public int getItemCount() {
+        return usernames.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charString = charSequence.toString();
+                // is no input in searchView put the original list back
+                if (charString.isEmpty()) {
+                    UUIDs = UUIDsCopy;
+                    usernames = usernamesCopy;
+                    bios = biosCopy;
+                } else {
+                    // filter username and bios bases if username contains the characters
+                    ArrayList<String> filteredUUIDs = new ArrayList<>();
+                    ArrayList<String> filteredProfiles = new ArrayList<>();
+                    ArrayList<String> filteredBios = new ArrayList<>();
+                    for (int i = 0; i < usernamesCopy.size(); i++) {
+                        if (usernamesCopy.get(i).toLowerCase().contains(charString)) {
+                            filteredUUIDs.add(UUIDsCopy.get(i));
+                            filteredProfiles.add(usernamesCopy.get(i));
+                            filteredBios.add(biosCopy.get(i));
+                        }
+                    }
+                    UUIDs = filteredUUIDs;
+                    usernames = filteredProfiles;
+                    bios = filteredBios;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = usernames;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                usernames = (ArrayList<String>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
+
+    public interface ClickListener {
+        void menuButtonOnClick(View view, int position);
+
+        void mainButtonOnClick(View view, int position);
+    }
 }

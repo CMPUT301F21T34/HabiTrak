@@ -126,6 +126,17 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
     }
 
+    @Override
+    public void onPause(){
+        super.onPause();
+
+        // Update before we are ever terminated (or unfocused)
+        // TODO: Change the email to uuid in the next line
+        db.updateHabitList(mainUser.getEmail(),mainUser.getHabitList());
+        // TODO: Update all events list
+
+    }
+
     /**
      * gets the main user from database
      * @author Dakota

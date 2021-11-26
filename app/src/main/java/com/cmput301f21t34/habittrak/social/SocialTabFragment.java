@@ -1,5 +1,6 @@
 package com.cmput301f21t34.habittrak.social;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -29,29 +30,24 @@ import java.util.ArrayList;
  * @author Pranav
  */
 public class SocialTabFragment extends Fragment {
-    private final DatabaseManager dm = new DatabaseManager();
-    private final SocialFragment socialRef;
+    // Data
+    private final User mainUser;
+    private final ArrayList<String> UUIDs;
+    private final ArrayList<String> usernames = new ArrayList<>();
+    private final ArrayList<String> bios = new ArrayList<>();
     // Views
-    private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager layoutManager;
-    private SocialAdapter socialAdapter;
     private ShimmerFrameLayout loading;
     private SearchView searchBox;
     private final boolean searchable;
-    // Data
-    private final User mainUser;
-    private ArrayList<String> UUIDs;
-    private ArrayList<String> usernames = new ArrayList<>();
-    private ArrayList<String> bios = new ArrayList<>();
-    private final String defaultButtonText;
+    private final SocialAdapter socialAdapter;
 
-    public SocialTabFragment(
-            SocialFragment socialRef, User mainUser, ArrayList<String> UUIDs, String defaultButtonText, boolean searchable) {
-        this.socialRef = socialRef;
+    public SocialTabFragment(SocialFragment socialRef, User mainUser, ArrayList<String> UUIDs,
+                             String defaultButtonText, boolean searchable) {
         this.mainUser = mainUser;
         this.UUIDs = UUIDs;
         this.searchable = searchable;
-        this.defaultButtonText = defaultButtonText;
+        socialAdapter = new SocialAdapter(
+                socialRef, mainUser, UUIDs, usernames, bios, defaultButtonText);
     }
 
     @Override
@@ -62,33 +58,32 @@ public class SocialTabFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.habi_social_tab_fragment, container, false);
+        View view = inflater.inflate(
+                R.layout.habi_social_tab_fragment, container, false);
+
+        // Shimmer effect
         loading = view.findViewById(R.id.social_tab_shimmer_container);
         loading.setVisibility(View.GONE); // Invisible by default
-        searchBox = view.findViewById(R.id.social_tab_search_box);
-        searchBox.setVisibility(View.GONE); // Off to start because crash if not done getting users
 
         populateList(); // Begin fetching data for display
 
-        // Set up recycler view
-        recyclerView = view.findViewById(R.id.social_tab_recycler_view);
-        layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
-        socialAdapter = new SocialAdapter(
-                socialRef, mainUser, UUIDs, usernames, bios, defaultButtonText);
+        // List display
+        RecyclerView recyclerView = view.findViewById(R.id.social_tab_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(socialAdapter);
 
-        // search box listener
+        // Search bar
+        searchBox = view.findViewById(R.id.social_tab_search_box);
+        searchBox.setVisibility(View.GONE); // Off until done getting users
         searchBox.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String s) {
+            public boolean onQueryTextChange(String s) {
                 socialAdapter.getFilter().filter(s);
                 return true;
             }
 
             @Override
-            public boolean onQueryTextChange(String s) {
+            public boolean onQueryTextSubmit(String s) {
                 socialAdapter.getFilter().filter(s);
                 return true;
             }
@@ -131,7 +126,7 @@ public class SocialTabFragment extends Fragment {
     }
 
     /**
-     * Gets the data in background
+     * Gets the user data for the list entry in the background
      */
     public class SocialTabAsyncTask extends AsyncTask<Void, Void, Void> {
         @Override
@@ -139,9 +134,9 @@ public class SocialTabFragment extends Fragment {
             loading.setVisibility(View.VISIBLE);   // Appear visuals
             loading.startShimmer();             // Visual effect
         }
-
         @Override
         protected Void doInBackground(Void... voids) {
+            final DatabaseManager dm = new DatabaseManager();
             // Remove unwanted users that might be present
             UUIDs.removeAll(mainUser.getBlockList());
             UUIDs.removeAll(mainUser.getBlockedByList());
@@ -154,15 +149,16 @@ public class SocialTabFragment extends Fragment {
             return null;
         }
 
+        @SuppressLint("NotifyDataSetChanged")
         @Override
         protected void onPostExecute(Void unused) {
             super.onPostExecute(unused);
             socialAdapter.notifyDataSetChanged();   // Tell display
+            loading.stopShimmer();                  // Stop visuals
+            loading.setVisibility(View.GONE);       // Disappear visuals
             if (searchable) {
                 searchBox.setVisibility(View.VISIBLE);  // Allow searches now
             }
-            loading.stopShimmer();                  // Stop visuals
-            loading.setVisibility(View.GONE);       // Disappear visuals
         }
     }
 

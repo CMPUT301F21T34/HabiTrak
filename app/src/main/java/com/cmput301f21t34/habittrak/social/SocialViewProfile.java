@@ -2,6 +2,7 @@ package com.cmput301f21t34.habittrak.social;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -86,23 +87,30 @@ public class SocialViewProfile extends AppCompatActivity {
                 // no action here
             }
         });
-        habitRecycler = new HabitRecycler(recyclerView, layoutManager, habitList, user.getHabitList(), true);
+        habitRecycler = new HabitRecycler(recyclerView, layoutManager, user.getHabitList(), user.getHabitList(), true);
         habitRecycler.setAdapter(adapter);
+        Log.d("Social", user.getHabitList().get(0).getTitle() + "");
 
     }
 
+    /**
+     * start view social habit activity
+     * @param view
+     * @param position
+     */
     public void onHabitClick(View view, int position) {
         // start View Habit Activity
+        Intent intent = new Intent(this, SocialViewHabit.class);
+        intent.putExtra("HABIT", habitList.get(position));
+        startActivity(intent);
     }
 
     /**
      * gets the public habits of the user
      */
     public void getPublicHabits(){
-        HabitList allHabits = user.getHabitList();
-        for(Habit h: allHabits){
-            if (h.isPublic())
-                habitList.add(h);
+        for (int i = 0; i < user.getHabitList().size(); i++){
+            habitList.add(user.getHabitList().get(i));
         }
     }
 

@@ -136,8 +136,15 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
 
         SimpleDateFormat streakDateFormat = new SimpleDateFormat("MMM dd, yyyy");
 
-        bestStreakStart.setText(streakDateFormat.format(habit.getBestStreakDate().getTime()));
-        bestStreakEnd.setText(streakDateFormat.format(habit.getBestStreakDateEnd().getTime()));
+
+
+        if (habit.getBestStreakDate() == null){
+            bestStreakStart.setText("N/A");
+            bestStreakEnd.setText("N/A");
+        } else {
+            bestStreakStart.setText(streakDateFormat.format(habit.getBestStreakDate().getTime()));
+            bestStreakEnd.setText(streakDateFormat.format(habit.getBestStreakDateEnd().getTime()));
+        }
 
         // setting date
         String setDateText = "Selected Date: " + getDate(calendar);

@@ -19,6 +19,7 @@ import android.widget.PopupMenu;
 
 import com.cmput301f21t34.habittrak.AddHabitActivity;
 import com.cmput301f21t34.habittrak.AddHabitEventActivity;
+import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.ViewEditHabit;
 import com.cmput301f21t34.habittrak.recycler.HabitRecycler;
 import com.cmput301f21t34.habittrak.recycler.TodayHabitRecyclerAdapter;
@@ -56,6 +57,8 @@ public class TodayListFragment extends Fragment {
     private TodayHabitRecyclerAdapter adapter;
     private LinearLayout noDataLayout;
     private User mainUser;
+    // Database Manager
+    private final DatabaseManager dm = new DatabaseManager();
 
 
 
@@ -183,6 +186,7 @@ public class TodayListFragment extends Fragment {
             mainUser.removeHabit(habit);
             refreshTodayFragment();
             Log.d(TAG,"Habit Removed");
+            dm.updateHabitList(mainUser.getEmail(), mainUser.getHabitList());
             return true;
         });
     }

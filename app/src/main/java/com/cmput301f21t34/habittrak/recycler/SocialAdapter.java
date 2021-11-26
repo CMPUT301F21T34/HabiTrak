@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
+import com.cmput301f21t34.habittrak.fragments.SocialFragment;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 
@@ -34,6 +35,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
     public static final String FOLLOW_BACK = "Follow Back";
     public static final String REQUESTED = "Requested";
     public static final String UNFOLLOW = "Unfollow";
+    private final SocialFragment socialRef;
     private final User mainUser;
     private final ArrayList<String> usernamesCopy;
     private final ArrayList<String> biosCopy;
@@ -43,8 +45,9 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
     private ArrayList<String> usernames;   // UUIDS (emails as of 10/11)
     private ArrayList<String> bios;
 
-    public SocialAdapter(User mainUser, ArrayList<String> UUIDs, ArrayList<String> usernames,
+    public SocialAdapter(SocialFragment socialRef, User mainUser, ArrayList<String> UUIDs, ArrayList<String> usernames,
                          ArrayList<String> bios, String defaultButtonText) {
+        this.socialRef = socialRef;
         this.mainUser = mainUser;
         this.UUIDs = UUIDs;
         this.usernames = usernames;

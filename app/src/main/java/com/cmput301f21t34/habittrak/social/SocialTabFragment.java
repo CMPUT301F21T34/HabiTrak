@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
+import com.cmput301f21t34.habittrak.fragments.SocialFragment;
 import com.cmput301f21t34.habittrak.recycler.SocialAdapter;
 import com.cmput301f21t34.habittrak.user.User;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -18,19 +19,21 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import java.util.ArrayList;
 
 public class SocialTabFragment extends Fragment {
-    private DatabaseManager dm = new DatabaseManager();
+    private final DatabaseManager dm = new DatabaseManager();
+    private final SocialFragment socialRef;
     // Views
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private SocialAdapter socialAdapter;
     private ShimmerFrameLayout loading;
     // Data
-    private User mainUser;
+    private final User mainUser;
     private ArrayList<String> UUIDs;
     private ArrayList<String> usernames = new ArrayList<>();
     private ArrayList<String> bios = new ArrayList<>();
 
-    public SocialTabFragment(User mainUser, ArrayList<String> UUIDs) {
+    public SocialTabFragment(SocialFragment socialRef, User mainUser, ArrayList<String> UUIDs) {
+        this.socialRef = socialRef;
         this.mainUser = mainUser;
         this.UUIDs = UUIDs;
     }
@@ -45,7 +48,8 @@ public class SocialTabFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.habi_followers_fragment, container, false);
 
-        socialAdapter = new SocialAdapter(mainUser, UUIDs, usernames, bios, "none");
+        socialAdapter = new SocialAdapter(
+                socialRef, mainUser, UUIDs, usernames, bios, "none");
 
         return view;
     }

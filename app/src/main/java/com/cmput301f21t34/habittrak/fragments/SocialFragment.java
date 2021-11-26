@@ -43,9 +43,9 @@ public class SocialFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.followersFragment = new FollowersFragment(mainUser, mainUser.getFollowerList());
-        this.followingFragment = new FollowingFragment(mainUser, mainUser.getFollowingList());
-        this.requestsFragment = new RequestsFragment(mainUser, mainUser.getFollowerReqList());
+        this.followersFragment = new FollowersFragment(this, mainUser, mainUser.getFollowerList());
+        this.followingFragment = new FollowingFragment(this, mainUser, mainUser.getFollowingList());
+        this.requestsFragment = new RequestsFragment(this, mainUser, mainUser.getFollowerReqList());
         // Initialise searchFragment on separate thread because need to call slow database method
         new SocialAsyncTask().execute();
     }
@@ -196,7 +196,7 @@ public class SocialFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             // Initialise searchFragment here because need to call a database method
-            searchFragment = new SearchFragment(mainUser, new DatabaseManager().getAllUsers());
+            searchFragment = new SearchFragment(SocialFragment.this, mainUser, new DatabaseManager().getAllUsers());
             return null;
         }
     }

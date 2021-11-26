@@ -12,7 +12,9 @@ import androidx.core.content.ContextCompat;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -57,13 +59,32 @@ public class SocialViewHabit extends AppCompatActivity {
         saturdayButton = findViewById(R.id.saturday_button);
         sundayButton = findViewById(R.id.sunday_button);
         tealColor = ContextCompat.getColor(getBaseContext(), R.color.teal_200);
-
+        TextView totalEventsCompleted = findViewById(R.id.social_view_total_events);
+        LinearProgressIndicator progressBar = findViewById(R.id.social_view_habit_progress);
+        TextView progressBarText = findViewById(R.id.social_view_habit_streak);
+        TextView bestStreakStart = findViewById(R.id.social_streak_start);
+        TextView bestStreakEnd = findViewById(R.id.social_best_streak_end);
+        TextView bestStreakTotal = findViewById(R.id.social_best_streak_count);
         // set data for views
         name.setText(habit.getTitle());
         reason.setText(habit.getReason());
         date.setText(getDate(habit.getStartDate()));
         setDaysSelector();
+        totalEventsCompleted.setText(String.valueOf(habit.getHabitEvents().size()));
+        progressBar.setProgress( (habit.getCurrentStreak()*100)/30 );
+        String currentStreakText = habit.getCurrentStreak() + "/30";
+        progressBarText.setText(currentStreakText);
 
+        SimpleDateFormat streakDateFormat = new SimpleDateFormat("MMM dd, yyyy");
+
+        if (habit.getBestStreakDate() == null || habit.getBestStreakDateEnd() == null){
+            bestStreakStart.setText("N/A");
+            bestStreakEnd.setText("N/A");
+        } else {
+            bestStreakStart.setText(streakDateFormat.format(habit.getBestStreakDate().getTime()));
+            bestStreakEnd.setText(streakDateFormat.format(habit.getBestStreakDateEnd().getTime()));
+            bestStreakTotal.setText(String.valueOf(habit.getBestStreak()));
+        }
 
         // setting listeners to null
         mondayButton.setOnClickListener(null);

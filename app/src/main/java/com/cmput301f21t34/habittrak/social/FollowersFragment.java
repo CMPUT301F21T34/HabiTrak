@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,12 +23,12 @@ import java.util.ArrayList;
 /**
  * Fragment for displaying users that follow the main user
  *
+ * @see SocialAdapter
+ * @see SearchView
  * @author Pranav
  * @author Kaaden
- * @see SocialAdapter
  */
 public class FollowersFragment extends Fragment {
-    public static String TAG = "FOLLOWERS_FRAGMENT";
     private final DatabaseManager dm = new DatabaseManager();
     private final SocialFragment socialRef;
     // Views
@@ -35,16 +36,22 @@ public class FollowersFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private SocialAdapter socialAdapter;
     private ShimmerFrameLayout loading;
+    private SearchView searchBox;
+    private final boolean searchable;
     // Data
     private final User mainUser;
     private ArrayList<String> UUIDs;
     private ArrayList<String> usernames = new ArrayList<>();
     private ArrayList<String> bios = new ArrayList<>();
+    private final String defaultButtonText;
 
-    public FollowersFragment(SocialFragment socialRef, User mainUser, ArrayList<String> UUIDs) {
+    public FollowersFragment(
+            SocialFragment socialRef, User mainUser, ArrayList<String> UUIDs, String defaultButtonText, boolean searchable) {
         this.socialRef = socialRef;
         this.mainUser = mainUser;
         this.UUIDs = UUIDs;
+        this.searchable = searchable;
+        this.defaultButtonText = defaultButtonText;
     }
 
     @Override
@@ -56,19 +63,36 @@ public class FollowersFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.habi_followers_fragment, container, false);
-        loading = view.findViewById(R.id.followers_shimmer_container);
+        View view = inflater.inflate(R.layout.habi_social_tab_fragment, container, false);
+        loading = view.findViewById(R.id.social_tab_shimmer_container);
         loading.setVisibility(View.GONE); // Invisible by default
+        searchBox = view.findViewById(R.id.social_tab_search_box);
+        searchBox.setVisibility(View.GONE); // Off to start because crash if not done getting users
 
         populateList(); // Begin fetching data for display
 
         // Set up recycler view
-        recyclerView = view.findViewById(R.id.followers_recycler_view);
+        recyclerView = view.findViewById(R.id.social_tab_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         socialAdapter = new SocialAdapter(
-                socialRef, mainUser, UUIDs, usernames, bios, "none");
+                socialRef, mainUser, UUIDs, usernames, bios, defaultButtonText);
         recyclerView.setAdapter(socialAdapter);
+
+        // search box listener
+        searchBox.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                socialAdapter.getFilter().filter(s);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                socialAdapter.getFilter().filter(s);
+                return true;
+            }
+        });
 
         return view;
     }
@@ -134,6 +158,9 @@ public class FollowersFragment extends Fragment {
         protected void onPostExecute(Void unused) {
             super.onPostExecute(unused);
             socialAdapter.notifyDataSetChanged();   // Tell display
+            if (searchable) {
+                searchBox.setVisibility(View.VISIBLE);  // Allow searches now
+            }
             loading.stopShimmer();                  // Stop visuals
             loading.setVisibility(View.GONE);       // Disappear visuals
         }

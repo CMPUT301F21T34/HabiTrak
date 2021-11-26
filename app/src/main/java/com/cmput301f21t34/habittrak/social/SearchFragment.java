@@ -23,13 +23,12 @@ import java.util.ArrayList;
 /**
  * Fragment for displaying and searching all users
  *
+ * @see SocialAdapter
+ * @see SearchView
  * @author Pranav
  * @author Kaaden
- * @see SearchView
- * @see SocialAdapter
  */
 public class SearchFragment extends Fragment {
-    public static String TAG = "SEARCH_FRAGMENT";
     private final DatabaseManager dm = new DatabaseManager();
     private final SocialFragment socialRef;
     // Views
@@ -38,16 +37,21 @@ public class SearchFragment extends Fragment {
     private SocialAdapter socialAdapter;
     private ShimmerFrameLayout loading;
     private SearchView searchBox;
+    private final boolean searchable;
     // Data
     private final User mainUser;
     private ArrayList<String> UUIDs;
     private ArrayList<String> usernames = new ArrayList<>();
     private ArrayList<String> bios = new ArrayList<>();
+    private final String defaultButtonText;
 
-    public SearchFragment(SocialFragment socialRef, User mainUser, ArrayList<String> UUIDs) {
+    public SearchFragment(
+            SocialFragment socialRef, User mainUser, ArrayList<String> UUIDs, String defaultButtonText, boolean searchable) {
         this.socialRef = socialRef;
         this.mainUser = mainUser;
         this.UUIDs = UUIDs;
+        this.searchable = searchable;
+        this.defaultButtonText = defaultButtonText;
     }
 
     @Override
@@ -59,22 +63,21 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.habi_search_fragment, container, false);
-        loading = view.findViewById(R.id.shimmer_container);
+        View view = inflater.inflate(R.layout.habi_social_tab_fragment, container, false);
+        loading = view.findViewById(R.id.social_tab_shimmer_container);
         loading.setVisibility(View.GONE); // Invisible by default
-        searchBox = view.findViewById(R.id.social_search_box);
+        searchBox = view.findViewById(R.id.social_tab_search_box);
         searchBox.setVisibility(View.GONE); // Off to start because crash if not done getting users
 
         populateList(); // Begin fetching data for display
 
         // Set up recycler view
-        recyclerView = view.findViewById(R.id.search_recycler_view);
+        recyclerView = view.findViewById(R.id.social_tab_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         socialAdapter = new SocialAdapter(
-                socialRef, mainUser, UUIDs, usernames, bios,"none");
+                socialRef, mainUser, UUIDs, usernames, bios,defaultButtonText);
         recyclerView.setAdapter(socialAdapter);
-
 
         // search box listener
         searchBox.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -155,7 +158,9 @@ public class SearchFragment extends Fragment {
         protected void onPostExecute(Void unused) {
             super.onPostExecute(unused);
             socialAdapter.notifyDataSetChanged();   // Tell display
-            searchBox.setVisibility(View.VISIBLE);  // Allow searches now
+            if (searchable) {
+                searchBox.setVisibility(View.VISIBLE);  // Allow searches now
+            }
             loading.stopShimmer();                  // Stop visuals
             loading.setVisibility(View.GONE);       // Disappear visuals
         }

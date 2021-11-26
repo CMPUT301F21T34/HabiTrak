@@ -16,6 +16,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
+import com.cmput301f21t34.habittrak.recycler.SocialAdapter;
 import com.cmput301f21t34.habittrak.social.FollowersFragment;
 import com.cmput301f21t34.habittrak.social.FollowingFragment;
 import com.cmput301f21t34.habittrak.social.RequestsFragment;
@@ -28,6 +29,8 @@ public class SocialFragment extends Fragment {
     public static final int FOLLOWING = 1;
     public static final int REQUESTS = 2;
     public static final int SEARCH = 3;
+    private static final boolean SEARCHABLE = true;
+    private static final boolean NOT_SEARCHABLE = false;
     private final User mainUser;
     private FollowersFragment followersFragment;
     private FollowingFragment followingFragment;
@@ -43,16 +46,20 @@ public class SocialFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.followersFragment = new FollowersFragment(this, mainUser, mainUser.getFollowerList());
-        this.followingFragment = new FollowingFragment(this, mainUser, mainUser.getFollowingList());
-        this.requestsFragment = new RequestsFragment(this, mainUser, mainUser.getFollowerReqList());
+        // TODO make nodefault an attribute in socialadapter
+        this.followersFragment = new FollowersFragment(this, mainUser,
+                mainUser.getFollowerList(), "nodefault", NOT_SEARCHABLE);
+        this.followingFragment = new FollowingFragment(this, mainUser,
+                mainUser.getFollowingList(), SocialAdapter.UNFOLLOW, NOT_SEARCHABLE);
+        this.requestsFragment = new RequestsFragment(this, mainUser,
+                mainUser.getFollowerReqList(), SocialAdapter.ACCEPT, NOT_SEARCHABLE);
         // Initialise searchFragment on separate thread because need to call slow database method
         new SocialAsyncTask().execute();
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.habi_social_fragment, container, false);
 
@@ -196,7 +203,8 @@ public class SocialFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             // Initialise searchFragment here because need to call a database method
-            searchFragment = new SearchFragment(SocialFragment.this, mainUser, new DatabaseManager().getAllUsers());
+            searchFragment = new SearchFragment(SocialFragment.this, mainUser ,
+                    new DatabaseManager().getAllUsers(), "nodefault", SEARCHABLE);
             return null;
         }
     }

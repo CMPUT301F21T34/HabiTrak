@@ -1,8 +1,10 @@
 package com.cmput301f21t34.habittrak.social;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,7 @@ import com.cmput301f21t34.habittrak.user.User;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Fragment for displaying a list of users and their info in a tab
@@ -48,6 +51,12 @@ public class SocialTabFragment extends Fragment {
         this.searchable = searchable;
         socialAdapter = new SocialAdapter(
                 socialRef, mainUser, UUIDs, usernames, bios, defaultButtonText);
+        socialAdapter.setSocialListener(new SocialAdapter.SocialListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                onRowClick(view, position);
+            }
+        });
     }
 
     @Override
@@ -122,6 +131,26 @@ public class SocialTabFragment extends Fragment {
         // Only populate if empty
         if (usernames.isEmpty()) {
             new SocialTabAsyncTask().execute();
+        }
+    }
+
+    /**
+     * Start view profile activity when a row is clicked in the recycler view
+     * @param view viewHolder of the recycler
+     * @param position position in the List
+     */
+    public void onRowClick(View view, int position){
+        Log.d("Social", "Row Clicked " + position);
+        DatabaseManager dm = new DatabaseManager();
+        String uuid = UUIDs.get(position);
+        Log.d("Social", uuid);
+        socialAdapter.getItemId(position);
+        ArrayList<String> following = mainUser.getFollowingList();
+        if (following.contains(uuid)){
+            User user = dm.getUser(uuid);
+            Intent intent = new Intent(getContext(), SocialViewProfile.class);
+            intent.putExtra("USER", user);
+            startActivity(intent);
         }
     }
 

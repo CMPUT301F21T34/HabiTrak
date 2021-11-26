@@ -27,13 +27,17 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 
 public class SocialFragment extends Fragment {
-    FollowersFragment followersFragment;
-    FollowingFragment followingFragment;
-    RequestsFragment requestsFragment;
-    SearchFragment searchFragment;
-    TabLayout socialTab;
-    User mainUser;
-    ViewPager2 viewPager;
+    public static final int FOLLOWERS = 0;
+    public static final int FOLLOWING = 1;
+    public static final int REQUESTS = 2;
+    public static final int SEARCH = 3;
+    private FollowersFragment followersFragment;
+    private FollowingFragment followingFragment;
+    private RequestsFragment requestsFragment;
+    private SearchFragment searchFragment;
+    private TabLayout socialTab;
+    private final User mainUser;
+    private ViewPager2 viewPager;
 
     public SocialFragment(User mainUser) {
         this.mainUser = mainUser;
@@ -117,13 +121,13 @@ public class SocialFragment extends Fragment {
         @Override
         public Fragment createFragment(int position) {
             switch (position) {
-                case 0:
+                case FOLLOWERS:
                     return followersFragment;
-                case 1:
+                case FOLLOWING:
                     return followingFragment;
-                case 2:
+                case REQUESTS:
                     return requestsFragment;
-                case 3:
+                case SEARCH:
                     return searchFragment;
                 default:
                     throw new RuntimeException("Tab not found");
@@ -139,7 +143,7 @@ public class SocialFragment extends Fragment {
     /**
      * Gets the data in background
      */
-    public class SocialAsyncTask extends AsyncTask<Void, Void, Void> {
+    private class SocialAsyncTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
             // Initialise searchFragment here because need to call a database method

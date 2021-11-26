@@ -841,7 +841,7 @@ public class DatabaseManager {
             habitToDatabase.setOnDaysObj(primitiveHabit.getOnDaysObj());
             habitToDatabase.setCurrentStreakDate(primitiveHabit.getCurrentStreakDate());
             habitToDatabase.setBestStreakDate(primitiveHabit.getBestStreakDate());
-            habitToDatabase.setisPublic(primitiveHabit.isPublic());
+            habitToDatabase.setIsPublic(primitiveHabit.isPublic());
             habitListToDatabase.add(habitToDatabase);
         }
         return habitListToDatabase;
@@ -873,7 +873,7 @@ public class DatabaseManager {
             habit.setHabitEvents(habitFromDatabase.getHabitEvents());
             habit.setCurrentStreakDate(habitFromDatabase.getCurrentStreakDate());
             habit.setBestStreakDate(habitFromDatabase.getBestStreakDate());
-            if(habitFromDatabase.getisPublic()){
+            if(habitFromDatabase.getIsPublic()){
                 habit.makePublic();
             } else {
                 habit.makePrivate();

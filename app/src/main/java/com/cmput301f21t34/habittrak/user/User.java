@@ -236,18 +236,33 @@ public class User implements Parcelable {
     }
 
     public ArrayList<String> getFollowerList() {
-        return followerList;
+        return (ArrayList<String>) followerList.clone();
     }
 
-    // Might not want to allow these //
-    public void setFollowerList(ArrayList<String> followerList) {
-        this.followerList = followerList;
+    public ArrayList<String> getFollowingList() {
+        return (ArrayList<String>) followingList.clone();
+    }
+    public ArrayList<String> getFollowerReqList() {
+        return (ArrayList<String>) followerReqList.clone();
     }
 
     public ArrayList<String> getFollowingReqList() {
-        return followingReqList;
+        return (ArrayList<String>) followingReqList.clone();
     }
 
+    public ArrayList<String> getBlockList() {
+        return (ArrayList<String>) blockList.clone();
+    }
+
+    public ArrayList<String> getBlockedByList() {
+        return (ArrayList<String>) blockedByList.clone();
+    }
+
+    // Might not want to allow these //
+
+    public void setFollowerList(ArrayList<String> followerList) {
+        this.followerList = followerList;
+    }
 
     // Database can modify these methods below //
 
@@ -255,32 +270,16 @@ public class User implements Parcelable {
         this.followingReqList = followingReqList;
     }
 
-    public ArrayList<String> getFollowingList() {
-        return followingList;
-    }
-
     public void setFollowingList(ArrayList<String> followingList) {
         this.followingList = followingList;
-    }
-
-    public ArrayList<String> getFollowerReqList() {
-        return followerReqList;
     }
 
     public void setFollowerReqList(ArrayList<String> followerReqList) {
         this.followerReqList = followerReqList;
     }
 
-    public ArrayList<String> getBlockList() {
-        return blockList;
-    }
-
     public void setBlockList(ArrayList<String> blockList) {
-        this.blockList = blockList;
-    }
-
-    public ArrayList<String> getBlockedByList() {
-        return blockedByList;
+        this.blockList = (ArrayList<String>) blockList.clone();
     }
 
     public void setBlockedByList(ArrayList<String> blockedByList) {

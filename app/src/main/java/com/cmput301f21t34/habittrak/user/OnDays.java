@@ -52,13 +52,17 @@ public class OnDays implements Parcelable {
      * @author Henry
      */
     public OnDays(ArrayList<Boolean> onDaysArray) {
-        this.mon = onDaysArray.get(0).booleanValue();
-        this.tue = onDaysArray.get(1).booleanValue();
-        this.wed = onDaysArray.get(2).booleanValue();
-        this.thu = onDaysArray.get(3).booleanValue();
-        this.fri = onDaysArray.get(4).booleanValue();
-        this.sat = onDaysArray.get(5).booleanValue();
-        this.sun = onDaysArray.get(6).booleanValue();
+
+        setAll(new boolean[]{
+                onDaysArray.get(0),
+                onDaysArray.get(1),
+                onDaysArray.get(2),
+                onDaysArray.get(3),
+                onDaysArray.get(4),
+                onDaysArray.get(5),
+                onDaysArray.get(6),
+        });
+
     }
 
     // Constructing from a parcel
@@ -67,13 +71,8 @@ public class OnDays implements Parcelable {
         Bundle onDaysBundle = parcel.readBundle(this.getClass().getClassLoader()); // get bundle
         boolean[] onDays = onDaysBundle.getBooleanArray("onDays");
 
-        this.mon = onDays[0];
-        this.tue = onDays[1];
-        this.wed = onDays[2];
-        this.thu = onDays[3];
-        this.fri = onDays[4];
-        this.sat = onDays[5];
-        this.sun = onDays[6];
+        setAll(onDays);
+
 
     }
 
@@ -114,21 +113,9 @@ public class OnDays implements Parcelable {
      * @param day int day constant that you want to set true (Ex. MON))
      */
     public void setTrue(int day){
-        Log.d("On_Days", "int passed: " + String.valueOf(day)
-                + "int expected (for monday): " + String.valueOf(MON));
 
 
-        switch (day){
-            case MON: mon = true; break;
-            case TUE: tue = true; break;
-            case WED: wed = true; break;
-            case THU: thu = true; break;
-            case FRI: fri = true; break;
-            case SAT: sat = true; break;
-            case SUN: sun = true; break;
-            default: throw new IllegalArgumentException("must use Calendar int constant object " +
-                    "with On_Days.setTrue(). \nEx. Calendar.MONDAY");
-        }
+        set(day, true);
 
 
     }
@@ -144,18 +131,31 @@ public class OnDays implements Parcelable {
      */
     public void setFalse(int day){
 
+        set(day, false);
+
+
+    }
+
+    /**
+     * sets a given day to a given boolean
+     *
+     * @author Dakota
+     * @param day int day to be changed
+     * @param bool boolean to change it to
+     */
+    public void set(int day, boolean bool){
+
         switch (day){
-            case MON: mon = false; break;
-            case TUE: tue = false; break;
-            case WED: wed = false; break;
-            case THU: thu = false; break;
-            case FRI: fri = false; break;
-            case SAT: sat = false; break;
-            case SUN: sun = false; break;
+            case MON: mon = bool; break;
+            case TUE: tue = bool; break;
+            case WED: wed = bool; break;
+            case THU: thu = bool; break;
+            case FRI: fri = bool; break;
+            case SAT: sat = bool; break;
+            case SUN: sun = bool; break;
             default: throw new IllegalArgumentException("must use Calendar int constant object " +
                     "with On_Days.setTrue(). \nEx. Calendar.MONDAY");
         }
-
 
     }
 
@@ -171,24 +171,10 @@ public class OnDays implements Parcelable {
      */
     public boolean[] getAll(int startOfWeek){
 
-        boolean[] allDays = new boolean[]{get(MON), get(TUE), get(WED), get(THU), get(FRI), get(SAT), get(SUN)};
-        int shift = 0;
+        boolean[] allDays = getAll();
 
-        switch (startOfWeek){
-            case MON: break; // If monday then no need to shift
-            case SUN: shift++; // shift 6 to the left
-            case SAT: shift++; // shift 5 to the left
-            case FRI: shift++; //   .
-            case THU: shift++; //   .
-            case WED: shift++; //   .
-            case TUE: shift++; // shift 1 to the left
-                shiftLeft(allDays, shift); // execute shift
-                break;
-            default: throw new IllegalArgumentException("must use int day constant " +
-                    "with On_Days.getAll()" +
-                    "\nEx. MONDAY");
-
-        }
+        // + 1 shifts the array to the left
+        allDays = shift(allDays, getShift(startOfWeek), + 1);
 
         return allDays;
 
@@ -204,7 +190,15 @@ public class OnDays implements Parcelable {
      */
     public boolean[] getAll(){
 
-        return getAll(MON);
+        return new boolean[] {
+                get(MON),
+                get(TUE),
+                get(WED),
+                get(THU),
+                get(FRI),
+                get(SAT),
+                get(SUN),
+        };
 
     }
 
@@ -225,34 +219,13 @@ public class OnDays implements Parcelable {
             throw new IllegalArgumentException("boolean[] argument of setAll must be of length 7");
         }
 
-        int shift = 0;
-        boolean[] allDays = array;
+        boolean[] allDays;
 
-        // Makes sure array starts on monday for handling
-        switch (startOfWeek) {
-            case MON:
-                break; // If monday then no need to shift
-            case SUN: shift++; // shift 6 to the left
-            case SAT: shift++; // shift 5 to the left
-            case FRI: shift++; //   .
-            case THU: shift++; //   .
-            case WED: shift++; //   .
-            case TUE: shift++; // shift 1 to the left
-                allDays = shiftRight(array, shift); // execute shift
-                break;
-            default:
-                throw new IllegalArgumentException("must use Calendar day constant " +
-                        "with On_Days.getAll()" +
-                        "\nEx. Calendar.MONDAY.");
-        }
+        // - 1 shifts the array to the right
+        allDays = shift(array, getShift(startOfWeek), - 1);
 
-        this.mon = allDays[0];
-        this.tue = allDays[1];
-        this.wed = allDays[2];
-        this.thu = allDays[3];
-        this.fri = allDays[4];
-        this.sat = allDays[5];
-        this.sun = allDays[6];
+        setAll(allDays);
+
 
     }
 
@@ -261,101 +234,115 @@ public class OnDays implements Parcelable {
      * sets the days On_Day with an array starting on Monday
      *
      * @author Dakota
-     *
-     * @param array boolean[7] array of values to set
+     * @param onDays boolean[7] array of values to set
      */
-    public void setAll(boolean[] array){
-        setAll(array, MON);
+    public void setAll(boolean[] onDays){
+        set(MON, onDays[0]);
+        set(TUE, onDays[1]);
+        set(WED, onDays[2]);
+        set(THU, onDays[3]);
+        set(FRI, onDays[4]);
+        set(SAT, onDays[5]);
+        set(SUN, onDays[6]);
     }
 
     /** isOnDay
      *
      * returns if an On_Day object is on today
      *
+     * @author Dakota
      * @return boolean true if On_Day is on today
      * @throws IllegalStateException impossible state to reach, default switch case.
      */
     public boolean isOnDay(){
 
-        int currentDayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        // Calls isOnDay with today's date
+        return isOnDay(Calendar.getInstance());
+
+    }
+
+    /**
+     * returns if it is an OnDay for a particular date
+     * @param date Calendar that we want to check
+     * @return boolean true if it is an On Day, false elsewise
+     * @throws IllegalStateException impossible state to reach, default switch case.
+     */
+    public boolean isOnDay(Calendar date){
+
+        date.setFirstDayOfWeek(Calendar.SUNDAY);
+        int currentDayOfWeek = date.get(Calendar.DAY_OF_WEEK);
+
+        System.out.println(String.valueOf(currentDayOfWeek) + " mon: " + String.valueOf(MON - 1));
 
         switch (currentDayOfWeek){
-            case MON: return get(MON);
-            case TUE: return get(TUE);
-            case WED: return get(WED);
-            case THU: return get(THU);
-            case FRI: return get(FRI);
-            case SAT: return get(SAT);
-            case SUN: return get(SUN);
+            case MON + 3: return get(MON);
+            case TUE + 3: return get(TUE);
+            case WED + 3: return get(WED);
+            case THU - 4: return get(THU);
+            case FRI - 4: return get(FRI);
+            case SAT - 4: return get(SAT);
+            case SUN + 3: return get(SUN);
             default: throw new IllegalStateException("Current day does not exist!?!");
 
         }
+    }
 
+
+    /**
+     * gets the amount a boolean array needs to be shifted to change its start
+     * day from monday to startOfWeek
+     *
+     * @author Dakota
+     * @param startOfWeek Int Calendar constant of startOfWeek to shift to
+     * @return int amount to shift
+     */
+    private int getShift(int startOfWeek) {
+
+        int shift = 0;
+
+        switch (startOfWeek) {
+            case MON:
+                break; // If monday then no need to shift
+            case SUN:
+                shift++; // shift 6 to the left
+            case SAT:
+                shift++; // shift 5 to the left
+            case FRI:
+                shift++; //   .
+            case THU:
+                shift++; //   .
+            case WED:
+                shift++; //   .
+            case TUE:
+                shift++; // shift 1 to the left
+                break;
+            default:
+                throw new IllegalArgumentException("must use Calendar day constant " +
+                        "with On_Days.getAll()" +
+                        "\nEx. Calendar.MONDAY.");
+
+        }
+
+        return shift;
 
     }
 
     /**
-     * shiftLeft
-     *
-     * shifts a boolean array to the left
+     * shifts a boolean array left or right
      *
      * @author Dakota
-     *
-     * @throws NullPointerException array can't be null
-     * @throws IllegalArgumentException shift can't be greater than array length
-     * @param array the array to be shifted
-     * @param shift the amount of times to shift to the left
-     * @return boolean[] shifted
+     * @param array boolean[] to be shifted
+     * @param shift amount to shift
+     * @param direction +1 to shift left, -1 to shift right
+     * @return boolean[] that has been shifted
      */
-    private boolean[] shiftLeft(boolean[] array, int shift){
-        // Worst case O(n^2) Best case O(n) pretty slow
+    private boolean[] shift(boolean[] array, int shift, int direction){
 
-        if (array == null){
-            throw new NullPointerException("array passed to shiftLeft is null");
-        } else if (shift >= array.length) {
-            throw new IllegalArgumentException("shift passed to shiftLeft is greater then array length");
+        if ( direction != -1 && direction != 1) {
+            throw new IllegalArgumentException(
+                    "direction must be -1 or 1! Given was: " + String.valueOf(direction)
+            );
         }
-
-        int maxIndex = array.length - 1;
-
-        // for each time we want to shift it
-        for (;shift > 0; shift--){
-
-            // for each pair of [index] [index + 1] swap
-            for (int index = 0; index <= maxIndex; index++){
-
-                boolean swap = array[index];
-
-                if (index == maxIndex){ // if we are at max index, loop back to index 0
-                    array[index] = array[0];
-                    array[0] = swap;
-                } else {
-                    array[index] = array[index + 1];
-                    array[index + 1] = swap;
-                }
-
-            }
-        }
-
-        return array;
-
-    }
-
-    /**
-     * shiftRight
-     *
-     * shifts a boolean array to the right
-     *
-     * @author Dakota
-     *
-     * @throws NullPointerException array can't be null
-     * @throws IllegalArgumentException shift can't be greater than array length
-     * @param array the array to be shifted
-     * @param shift the amount of times to shift to the right
-     * @return boolean[] shifted
-     */
-    private boolean[] shiftRight(boolean[] array, int shift){
-        // Worst case O(n^2) Best case O(n) pretty slow
 
         if (array == null){
             throw new NullPointerException("array passed to shiftLeft is null");
@@ -377,8 +364,8 @@ public class OnDays implements Parcelable {
                     array[index] = array[maxIndex];
                     array[maxIndex] = swap;
                 } else {
-                    array[index] = array[index - 1];
-                    array[index - 1] = swap;
+                    array[index] = array[index + direction];
+                    array[index + direction] = swap;
                 }
 
             }

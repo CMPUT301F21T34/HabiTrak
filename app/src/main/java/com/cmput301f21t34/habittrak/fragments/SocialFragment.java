@@ -198,6 +198,14 @@ public class SocialFragment extends Fragment {
         }
     }
 
+    /*
+    @Override
+    public boolean onSupportNavigateUp() {
+        // Adding the back button
+        onBackPressed();
+        return true;
+    }*/
+
     /**
      * Gets the data in background
      */
@@ -216,4 +224,5 @@ public class SocialFragment extends Fragment {
             searchFragment.populateList();
         }
     }
+
 }

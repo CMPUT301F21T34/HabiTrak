@@ -462,8 +462,9 @@ public class User implements Parcelable {
     // These implement Parcelable for being passed through an intent
 
     // replace methods not sure if i need it or not
-    public void replaceHabit(int index, Habit habit) {
-        this.habitList.set(index, habit);
+    public void replaceHabit(Habit habit) {
+
+
     }
 
     /**

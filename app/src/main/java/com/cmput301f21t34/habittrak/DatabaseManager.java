@@ -1,5 +1,7 @@
 package com.cmput301f21t34.habittrak;
 
+import android.location.Location;
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -20,6 +22,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -247,11 +251,12 @@ public class DatabaseManager {
 
             if (document.getData() != null) {
                 Log.d("getData", "not null");
-
                 ArrayList<HashMap<String, Object>> requestedHabitList = (ArrayList<HashMap<String, Object>>) document.get("habitList");
+
                 ArrayList<HabitDatabase> requestedHabitDatabases = toHabitDatabaseList(requestedHabitList);
                 habitList = databaseToHabit(requestedHabitDatabases);
                 followerList = (ArrayList<String>) document.get("followerList");
+
                 followingList = (ArrayList<String>) document.get("followingList");
                 followReqList = (ArrayList<String>) document.get("followReqList");
                 followRequestedList = (ArrayList<String>) document.get("followRequestedList");
@@ -277,6 +282,7 @@ public class DatabaseManager {
             );
             return user;
         } catch (Exception ignored) {
+            Log.d("GETMAINUSER","the exceptions is "+ ignored.getLocalizedMessage());
         }
 
         return new User(email);
@@ -392,12 +398,25 @@ public class DatabaseManager {
     public HabitDatabase toHabitDatabase(HashMap<String, Object> hashmap) {
         HabitDatabase habitDatabase = new HabitDatabase();
         habitDatabase.setIndex((int) (long) hashmap.get("index"));
+
         habitDatabase.setReason((String) hashmap.get("reason"));
         habitDatabase.setTitle((String) hashmap.get("title"));
         habitDatabase.setisPublic((boolean) hashmap.get("isPublic"));
         habitDatabase.setHabitEvents(toHabitEventList((ArrayList<HashMap<String, Object>>) hashmap.get("habitEvents")));
-        habitDatabase.setOnDaysObj((ArrayList<Boolean>) hashmap.get("onDaysObj"));
+        habitDatabase.setOnDaysObjFromDB((ArrayList<Boolean>) hashmap.get("onDaysObj"));
         habitDatabase.setStartDate(toCalendar((HashMap<String, Object>) hashmap.get("startDate")));
+        if(hashmap.get("currentStreakDate") != null){
+            habitDatabase.setCurrentStreakDate(toCalendar((HashMap<String, Object>) hashmap.get("currentStreakDate")));
+        }
+        else{
+            habitDatabase.setCurrentStreakDate(null);
+        }
+        if(hashmap.get("bestStreakDate") != null){
+            habitDatabase.setBestStreakDate(toCalendar((HashMap<String, Object>) hashmap.get("bestStreakDate")));
+        }
+        else{
+            habitDatabase.setBestStreakDate(null);
+        }
         return habitDatabase;
     }
 
@@ -411,6 +430,7 @@ public class DatabaseManager {
      */
     public ArrayList<HabitEvent> toHabitEventList(ArrayList<HashMap<String, Object>> hashMapList) {
         ArrayList<HabitEvent> habitEventList = new ArrayList<>();
+
         for (int i = 0; i < hashMapList.size(); i++) {
             HabitEvent habitEvent = toHabitEvent(hashMapList.get(i));
             habitEventList.add(habitEvent);
@@ -428,15 +448,47 @@ public class DatabaseManager {
      */
     public HabitEvent toHabitEvent(HashMap<String, Object> hashmap) {
         HabitEvent event = new HabitEvent();
-        event.setComment((String) hashmap.get("comment"));
+        if(hashmap.get("comment") != null) {
+            event.setComment((String) hashmap.get("comment"));
+        }
+        else{
+            event.setComment(null);
+        }
 
-        //TODO: Figure out away to store a Location and Photograph
-        /*
-        event.setLocation((String) hashmap.get("location"));
-        event.setPhotograph((String) hashmap.get("photograph"));
-         */
+        if(hashmap.get("location") != null){
+            event.setLocation(toLocation((HashMap<String,Object>) hashmap.get("location")));
+        }
+        else{
+            event.setLocation(null);
+        }
+        if (hashmap.get("photograph") != null){
+            event.setPhotograph(Uri.parse((String) hashmap.get("photograph")));
+        }
+        else{
+            event.setPhotograph(null);
+        }
+
         event.setCompletedDate(toCalendar((HashMap<String, Object>) hashmap.get("completedDate")));
         return event;
+    }
+
+    /**
+     * toLocation
+     * Converts HashMap from database to Location object
+     * @param hashMap HashMap<String, Object> the HashMap to be converted
+     * @return Location, the location from the HashMap
+     */
+    private Location toLocation(HashMap<String,Object> hashMap){
+        if(hashMap != null) {
+            Location loc = new Location((String) hashMap.get("provider"));
+            loc.setLatitude((double) (long) hashMap.get("latitude"));
+            loc.setLongitude((double) (long) hashMap.get("longitude"));
+
+            return loc;
+        }
+        else{
+            return null;
+        }
     }
 
     /**
@@ -616,6 +668,7 @@ public class DatabaseManager {
                 .set(data);
     }
 
+
     /**
      * Updates the username of the user with the given UUID
      *
@@ -645,6 +698,23 @@ public class DatabaseManager {
         List<String> fieldsToUpdate = new ArrayList<>();
         fieldsToUpdate.add("Biography");
         database.collection("users").document(UUID).set(data, SetOptions.mergeFields(fieldsToUpdate));
+
+    }
+
+    /**
+     * Update the habit list of the given user
+     * We can add/remove/edit attributes of habitToUpdate
+     * @param UUID String, the uuid of the user who's habit list is to be updated
+     * @param habitList HabitList, the habit list that is to be updated
+     */
+
+    public void updateHabitList(String UUID, HabitList habitList) {
+
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("habitList", habitToDatabase(habitList));
+            List<String> fieldsToUpdate = new ArrayList<>();
+            fieldsToUpdate.add("habitList");
+            database.collection("users").document(UUID).set(data, SetOptions.mergeFields(fieldsToUpdate));
     }
 
     /**
@@ -770,7 +840,9 @@ public class DatabaseManager {
             habitToDatabase.setStartDate(primitiveHabit.getStartDate());
             habitToDatabase.setHabitEvents(primitiveHabit.getHabitEvents());
             habitToDatabase.setOnDaysObj(primitiveHabit.getOnDaysObj());
-
+            habitToDatabase.setCurrentStreakDate(primitiveHabit.getCurrentStreakDate());
+            habitToDatabase.setBestStreakDate(primitiveHabit.getBestStreakDate());
+            habitToDatabase.setisPublic(primitiveHabit.isPublic());
             habitListToDatabase.add(habitToDatabase);
         }
         return habitListToDatabase;
@@ -795,12 +867,39 @@ public class DatabaseManager {
             habit.setReason(habitFromDatabase.getReason());
             habit.setStartDate(habitFromDatabase.getStartDate());
             habit.setHabitEvents(habitFromDatabase.getHabitEvents());
-
+            habit.setCurrentStreakDate(habitFromDatabase.getCurrentStreakDate());
+            habit.setBestStreakDate(habitFromDatabase.getBestStreakDate());
+            if(habitFromDatabase.getisPublic()){
+                habit.makePublic();
+            } else {
+                habit.makePrivate();
+            }
             ArrayList<Boolean> dbOnDays = habitFromDatabase.getOnDaysObj();
 
             habit.setOnDaysObj(new OnDays(dbOnDays));
             habitList.add(habit);
         }
         return habitList;
+    }
+
+    public Uri uploadImageToFirebase(String name, Uri contentUri, StorageReference mStorageRef) {
+        Uri returnedUri = null;
+        StorageReference picImage = mStorageRef.child("images/" + name);
+        UploadTask task = picImage.putFile(contentUri);
+        while (!task.isComplete()) ;
+        if (task.isSuccessful()) {
+            Task<Uri> uriTask = picImage.getDownloadUrl();
+            while (!uriTask.isComplete()) ;
+            if (uriTask.isSuccessful()) {
+                Uri uriTaskResult = uriTask.getResult();
+                returnedUri =  uriTaskResult;
+            } else {
+                Log.d("Uploading image to firebase", "couldn't get download url");
+
+            }
+        } else {
+            Log.d("Uploading image to firebase", "couldn't upload url");
+        }
+        return returnedUri;
     }
 }

@@ -25,6 +25,11 @@ public class Habit implements Comparable<Habit>, Parcelable {
 
     // Any changes need to be implement in writeToParcel and Parcel constructor - Dakota
 
+    // Not to be added to DB
+    private int currentStreak = 0; // For display
+    private int bestStreak = 0; // For display
+    private Calendar bestStreakDateEnd;
+    private Calendar currentStreakDateEnd;
 
 
     // To Be Added To DB
@@ -87,11 +92,14 @@ public class Habit implements Comparable<Habit>, Parcelable {
         Bundle habitBundle;
         habitBundle = parcel.readBundle(Habit.class.getClassLoader());
 
-
+        this.index = habitBundle.getInt("index");
         this.title = habitBundle.getString("title");
         this.reason = habitBundle.getString("reason");
         this.habitEvents = habitBundle.getParcelableArrayList("habitEvents");
 
+        this.index = habitBundle.getInt("index");
+
+        // Handles Calendar //
         // Handles Start Day Calendar //
         String completedDateTimeZone = habitBundle.getString("startDateTimeZone");
         if (completedDateTimeZone != null) {
@@ -104,6 +112,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
         } else {
             this.startDate = null;
         }
+
 
         // Handles Best Streak Calendar //
         String bestStreakDateTimeZone = habitBundle.getString("bestStreakDateTimeZone");
@@ -120,7 +129,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
 
         // Handles Current Streak Calendar //
         String currentStreakDateTimeZone = habitBundle.getString("currentStreakDateTimeZone");
-        if (bestStreakDateTimeZone != null) {
+        if (currentStreakDateTimeZone != null) {
 
             Calendar constructionCalendar = Calendar.getInstance();
             constructionCalendar.setTimeZone(TimeZone.getTimeZone(currentStreakDateTimeZone));
@@ -130,6 +139,38 @@ public class Habit implements Comparable<Habit>, Parcelable {
         } else {
             this.currentStreakDate = null;
         }
+
+        // Handles Current Streak End Calendar //
+        String currentStreakDateEndTimeZone = habitBundle.getString("currentStreakDateEndTimeZone");
+        if (currentStreakDateEndTimeZone != null) {
+
+            Calendar constructionCalendar = Calendar.getInstance();
+            constructionCalendar.setTimeZone(TimeZone.getTimeZone(currentStreakDateEndTimeZone));
+            constructionCalendar.setTimeInMillis(habitBundle.getLong("currentStreakDateEndTime"));
+
+            this.currentStreakDateEnd = constructionCalendar;
+        } else {
+            this.currentStreakDateEnd = null;
+        }
+
+        // Handles Best Streak End Calendar //
+        String bestStreakDateEndTimeZone = habitBundle.getString("bestStreakDateEndTimeZone");
+        if (bestStreakDateEndTimeZone != null) {
+
+            Calendar constructionCalendar = Calendar.getInstance();
+            constructionCalendar.setTimeZone(TimeZone.getTimeZone(bestStreakDateEndTimeZone));
+            constructionCalendar.setTimeInMillis(habitBundle.getLong("bestStreakDateEndTime"));
+
+            this.currentStreakDateEnd = constructionCalendar;
+        } else {
+            this.currentStreakDateEnd = null;
+        }
+
+        // streak ints
+
+        this.currentStreak = habitBundle.getInt("currentStreak");
+        this.bestStreak = habitBundle.getInt("bestStreak");
+
 
         this.isPublic = habitBundle.getBoolean("isPublic");
 
@@ -141,6 +182,38 @@ public class Habit implements Comparable<Habit>, Parcelable {
 
     // Methods //
 
+
+    public void setCurrentStreak(int currentStreak) {
+        this.currentStreak = currentStreak;
+    }
+
+    public void setBestStreak(int bestStreak) {
+        this.bestStreak = bestStreak;
+    }
+
+    public int getCurrentStreak(){
+        return this.currentStreak;
+    }
+
+    public int getBestStreak(){
+        return this.bestStreak;
+    }
+
+    public Calendar getBestStreakDateEnd(){
+        return this.bestStreakDateEnd;
+    }
+
+    public void setBestStreakDateEnd(Calendar calendar){
+        this.bestStreakDateEnd = calendar;
+    }
+
+    public Calendar getCurrentStreakDateEnd(){
+        return this.currentStreakDateEnd;
+    }
+
+    public void setCurrentStreakDateEnd(Calendar calendar){
+        this.currentStreakDateEnd = calendar;
+    }
 
     public static final Parcelable.Creator<Habit> CREATOR = new Parcelable.Creator<Habit>() {
         @Override
@@ -479,7 +552,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
 
         habitBundle.putString("title", title);
         habitBundle.putString("reason", reason);
-
+        habitBundle.putInt("index", index);
         // Requires Habit_Events to implement parcelable
         habitBundle.putParcelableArrayList("habitEvents", habitEvents);
 
@@ -499,12 +572,32 @@ public class Habit implements Comparable<Habit>, Parcelable {
             habitBundle.putString("bestStreakDateTimeZone", null);
         }
         // Handles Current Streak Calendar
-        if (bestStreakDate != null) {
+        if (currentStreakDate != null) {
             habitBundle.putString("currentStreakDateTimeZone", currentStreakDate.getTimeZone().getID());
             habitBundle.putLong("currentStreakDateTime", currentStreakDate.getTimeInMillis());
         } else {
             habitBundle.putString("currentStreakDateTimeZone", null);
         }
+
+        // Handles Current Streak End Calendar
+        if (currentStreakDateEnd != null) {
+            habitBundle.putString("currentStreakDateEndTimeZone", currentStreakDateEnd.getTimeZone().getID());
+            habitBundle.putLong("currentStreakDateEndTime", currentStreakDateEnd.getTimeInMillis());
+        } else {
+            habitBundle.putString("currentStreakDateEndTimeZone", null);
+        }
+
+        // Handles Best Streak End Calendar
+        if (bestStreakDateEnd != null) {
+            habitBundle.putString("bestStreakDateEndTimeZone", bestStreakDateEnd.getTimeZone().getID());
+            habitBundle.putLong("bestStreakDateEndTime", bestStreakDateEnd.getTimeInMillis());
+        } else {
+            habitBundle.putString("bestStreakDateEndTimeZone", null);
+        }
+
+        // Streak Ints
+        habitBundle.putInt("currentStreak", currentStreak);
+        habitBundle.putInt("bestStreak", bestStreak);
 
         habitBundle.putParcelable("onDaysObj", onDaysObj);
 
@@ -516,6 +609,22 @@ public class Habit implements Comparable<Habit>, Parcelable {
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    public Calendar getBestStreakDate() {
+        return bestStreakDate;
+    }
+
+    public void setBestStreakDate(Calendar bestStreakDate) {
+        this.bestStreakDate = bestStreakDate;
+    }
+
+    public Calendar getCurrentStreakDate() {
+        return currentStreakDate;
+    }
+
+    public void setCurrentStreakDate(Calendar currentStreakDate) {
+        this.currentStreakDate = currentStreakDate;
     }
 
     private static class Creator implements Parcelable.Creator<Habit> {

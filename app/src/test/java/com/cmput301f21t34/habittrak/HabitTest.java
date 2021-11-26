@@ -4,7 +4,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import android.location.Location;
+import android.net.Uri;
 
+import com.cmput301f21t34.habittrak.streak.Streak;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitEvent;
 
@@ -57,7 +59,7 @@ public class HabitTest {
         Habit habit = mockHabit();
         Calendar cal = Calendar.getInstance();
         boolean flag = false;
-        // Change Calendar.MONDAY/WEDNESDAY/FRIDAY if onDays changes
+
         if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY ||
                 cal.get(Calendar.DAY_OF_WEEK) == Calendar.WEDNESDAY ||
                 cal.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY)
@@ -65,9 +67,9 @@ public class HabitTest {
         // flag and isOnDay() should both return true if today is Monday, Wednesday or Friday
         // and both return false otherwise
 
+        // Notes: Change Calendar.MONDAY/WEDNESDAY/FRIDAY to desired week day if onDays changes
         assertEquals(flag,habit.getOnDaysObj().isOnDay());
     }
-
 
     /**
      * addHabitEventTest
@@ -82,7 +84,7 @@ public class HabitTest {
         Habit habit = mockHabit();
         HabitEvent event1 = new HabitEvent();
         Location loc = new Location("");
-        File photo = new File("");
+        Uri photo = null;
         Calendar completeDate = new GregorianCalendar(2021, 6, 1);
 
         HabitEvent event2 = new HabitEvent("event2", completeDate, loc, photo);
@@ -113,7 +115,7 @@ public class HabitTest {
         Habit habit = mockHabit();
         HabitEvent event1 = new HabitEvent();
         Location loc = new Location("");
-        File photo = new File("");
+        Uri photo = null;
         Calendar completeDate = new GregorianCalendar(2021, 6, 1);
         HabitEvent event2 = new HabitEvent("comment",
                 completeDate, loc, photo);
@@ -136,4 +138,100 @@ public class HabitTest {
         assertTrue(habit.removeHabitEvent(event2));
         assertEquals(0, habit.getHabitEvents().size());
     }
+
+    @Test
+    public void habitStreakTest() {
+        System.out.println("habitStreak");
+        // Init habit
+        Habit habit = mockHabit();
+        habit.getOnDaysObj().setAll(new boolean[]{
+                false,
+                true,
+                false,
+                false,
+                true,
+                false,
+                false
+        });
+
+        Calendar startDay  = Calendar.getInstance();
+        startDay.set(2020, 12, 28);
+        habit.setStartDate(startDay);
+
+        // Defaults
+
+        Location loc = new Location("");
+
+
+        System.out.println(":Creating Events");
+        // Create some events
+
+        Calendar event0Day = Calendar.getInstance();
+        event0Day.set(2020, 12, 29);
+
+        HabitEvent event0 = new HabitEvent("event0", event0Day, loc, null); // null photo since URI is not mocked
+
+        Calendar event1Day = Calendar.getInstance();
+        event1Day.set(2021, 1, 1);
+
+        HabitEvent event1 = new HabitEvent("event1", event1Day, loc, null);
+
+        Calendar event2Day = Calendar.getInstance();
+        event2Day.set(2021, 1, 5);
+
+        HabitEvent event2 = new HabitEvent("event2", event2Day, loc, null);
+
+        Calendar event3Day = Calendar.getInstance();
+        event3Day.set(2021, 1, 8);
+
+        HabitEvent event3 = new HabitEvent("event3", event3Day, loc, null);
+
+        // Add Events //
+        System.out.println(":Adding Events");
+
+        habit.addHabitEvent(event0); habit.addHabitEvent(event1); habit.addHabitEvent(event2); habit.addHabitEvent(event3);
+
+        System.out.println(":Testing Events");
+
+        // Asserts //
+        assertEquals(0, habit.getCurrentStreak());
+
+        // Refresh streak //
+        Calendar testDay = Calendar.getInstance();
+        testDay.set(2021, 1, 10);
+        habit.setCurrentStreakDateEnd(testDay);
+
+        Streak streak = new Streak(habit);
+        streak.refreshStreak();
+
+
+        // Asserts //
+        assertEquals(4, habit.getCurrentStreak());
+        assertEquals(4, habit.getBestStreak());
+        assertEquals(29, habit.getCurrentStreakDate().get(Calendar.DATE));
+
+        // Removes middle event //
+        habit.removeHabitEvent(event2);
+
+        // Asserts //
+
+        streak.refreshStreak();
+        assertEquals(1, habit.getCurrentStreak());
+        assertEquals(4, habit.getBestStreak());
+        assertEquals(29, habit.getBestStreakDate().get(Calendar.DATE));
+        assertEquals(8, habit.getBestStreakDateEnd().get(Calendar.DATE));
+
+        // Removes latest event //
+        habit.removeHabitEvent(event3);
+
+        streak.refreshStreak();
+
+        // Asserts //
+        assertEquals(0, habit.getCurrentStreak());
+
+
+
+
+    }
+
 }

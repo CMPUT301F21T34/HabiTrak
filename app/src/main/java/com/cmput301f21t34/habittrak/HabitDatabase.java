@@ -17,6 +17,9 @@ public class HabitDatabase {
     private int index = 0;
     private String title, reason;
     private Calendar startDate;
+    private Calendar bestStreakDate;
+    private Calendar currentStreakDate; // We could also just figure this out without db.
+
     private ArrayList<HabitEvent> habitEvents;
     private boolean isPublic;
     private ArrayList<Boolean> onDaysObj;
@@ -52,7 +55,7 @@ public class HabitDatabase {
     public void setIndex(int index){ this.index = index; }
 
     public ArrayList<HabitEvent> getHabitEvents(){ return this.habitEvents; }
-    public void setHabitEvents(ArrayList<HabitEvent> habitEvents) { this.habitEvents = habitEvents; }
+    public void setHabitEvents(ArrayList<HabitEvent> habitEvents){ this.habitEvents = habitEvents; }
 
     public ArrayList<Boolean> getOnDaysObj(){ return this.onDaysObj; }
     public void setOnDaysObj(OnDays onDays) {
@@ -63,8 +66,23 @@ public class HabitDatabase {
         }
         this.onDaysObj = onDaysToSet;
     }
-    public void setOnDaysObj(ArrayList<Boolean> booleanArrayList){
+    public void setOnDaysObjFromDB(ArrayList<Boolean> booleanArrayList){
         this.onDaysObj = booleanArrayList;
     }
 
+    public Calendar getBestStreakDate() {
+        return bestStreakDate;
+    }
+
+    public void setBestStreakDate(Calendar bestStreakDate) {
+        this.bestStreakDate = bestStreakDate;
+    }
+
+    public Calendar getCurrentStreakDate() {
+        return currentStreakDate;
+    }
+
+    public void setCurrentStreakDate(Calendar currentStreakDate) {
+        this.currentStreakDate = currentStreakDate;
+    }
 }

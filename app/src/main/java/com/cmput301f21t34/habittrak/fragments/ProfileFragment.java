@@ -22,6 +22,7 @@ import com.cmput301f21t34.habittrak.MainActivity;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.auth.Auth;
 import com.cmput301f21t34.habittrak.user.User;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,9 +38,9 @@ import com.google.firebase.auth.FirebaseUser;
 public class ProfileFragment extends Fragment implements View.OnClickListener{
 
     User mainUser;
-    Button confirm;
-    Button logOut;
-    Button delete;
+    MaterialButton confirm;
+    MaterialButton logOut;
+    MaterialButton delete;
     TextInputEditText nameEdit;
     TextInputEditText bioEdit;
     TextView emailView;
@@ -87,7 +88,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
      * Profile Fragment onClickListener
      * Handle the buttons of the profile UI
      * For confirm, change the variables if they have been changed in the edittexts
-     * TODO:delete account and log out functionality
      *
      * @author Aron Rajabi
      * @param view the view we are currently on
@@ -130,26 +130,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                 // Send user back to main activity
                 startMainActivity();
 
-
-
-
-
-
                 break;
             case R.id.deleter:
-
-
-
                 // run alert to delete
                 if (fUser != null){
-
                     delete(fUser);
-
-
-
                 }
-
-
                 break;
         }
     }
@@ -186,25 +172,19 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                         .setMessage("Are you sure?")
                         .setTitle("Confirm");
 
-                confirmation.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        // Delete
+                confirmation.setPositiveButton("Yes", (dialogInterface1, i) -> {
+                    // Delete
 
-                        String email = authUser.getEmail();
-                        authUser.delete();
-                        db.deleteUser(email);
-                        startMainActivity();
+                    String email = authUser.getEmail();
+                    authUser.delete();
+                    db.deleteUser(email);
+                    startMainActivity();
 
-                    }
                 });
 
-                confirmation.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        // Cancel
-                        dialogInterface.cancel();
-                    }
+                confirmation.setNegativeButton("No", (dialogInterface12, i) -> {
+                    // Cancel
+                    dialogInterface12.cancel();
                 });
 
                 confirmation.show();

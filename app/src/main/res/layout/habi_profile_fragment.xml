@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Username:"
+        android:text="@string/username_title"
         android:textColor="?android:textColorPrimary"
         android:textSize="16sp"
         android:textStyle="bold"/>
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginStart="16dp"
-            android:text="Email:"
+            android:text="@string/email_title"
             android:textColor="?android:textColorPrimary"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginStart="16dp"
-            android:text="user_email"
+            android:text="@string/email_hint"
             android:textColor="?android:textColorPrimary"
             android:textSize="16sp" />
 
@@ -108,32 +108,38 @@
         android:layout_marginBottom="16dp"
         android:orientation="horizontal">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/confirmer"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="bottom"
-            android:text="@string/save_button" />
+            android:text="Save   "
+            app:strokeColor="?android:textColorPrimary"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/logout"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="bottom"
-            android:text="@string/log_out_button" />
+            android:text="@string/log_out_button"
+            app:strokeColor="?android:textColorPrimary"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+             />
+
     </LinearLayout>
 
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/deleter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
+        android:textColor="?android:textColorSecondary"
         android:text="@string/delete_account_button"/>
 
 </LinearLayout>

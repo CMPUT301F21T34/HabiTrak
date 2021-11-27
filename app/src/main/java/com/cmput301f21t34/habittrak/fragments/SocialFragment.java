@@ -39,24 +39,25 @@ public class SocialFragment extends Fragment {
 
     public SocialFragment(User mainUser) {
         this.mainUser = mainUser;
+        // We do the below ASAP so that we can start database processes ASAP
+        // TODO make nodefault an attribute in socialadapter
         this.followersFragment = new SocialTabFragment(this, mainUser,
                 mainUser.getFollowerList(), "nodefault", NOT_SEARCHABLE);
         this.followingFragment = new SocialTabFragment(this, mainUser,
                 mainUser.getFollowingList(), SocialAdapter.UNFOLLOW, NOT_SEARCHABLE);
         this.requestsFragment = new SocialTabFragment(this, mainUser,
                 mainUser.getFollowerReqList(), SocialAdapter.ACCEPT, NOT_SEARCHABLE);
+        // Initialise searchFragment on separate thread because need to call slow database method
         new SocialAsyncTask().execute();
+        // Start fetching data for the lists
+        followersFragment.populateList();
+        followingFragment.populateList();
+        requestsFragment.populateList();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // TODO make nodefault an attribute in socialadapter
-
-        // Initialise searchFragment on separate thread because need to call slow database method
-
-        // Start fetching data for the lists
-
     }
 
     @Override
@@ -213,11 +214,7 @@ public class SocialFragment extends Fragment {
         @Override
         protected void onPostExecute(Void unused) {
             super.onPostExecute(unused);
-            // Start fetching data for the list
-            followersFragment.populateList();
-            followingFragment.populateList();
-            requestsFragment.populateList();
-            searchFragment.populateList();
+            searchFragment.populateList(); // Start fetching data for the list
         }
     }
 

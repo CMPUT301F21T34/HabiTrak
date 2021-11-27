@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -51,13 +52,19 @@ public class AddHabitActivity extends AppCompatActivity {
     private SwitchMaterial publicSwitch;
     private boolean[] daysOfWeek = new boolean[]{true, true, true, true, true, true, true};;
     private boolean isPublic = true;
-    private final int whiteColor = Color.WHITE;
+    private int buttonOffColor = Color.WHITE;
     private int tealColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_habit);
+
+        // check if dark mode
+        int nightModeCheck = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        if (nightModeCheck == Configuration.UI_MODE_NIGHT_YES) {
+            buttonOffColor = Color.BLACK;
+        }
 
         // add back button to toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.add_habit_toolbar);
@@ -206,7 +213,7 @@ public class AddHabitActivity extends AppCompatActivity {
 
     public void changeButtonState(View view, MaterialButton button, int position){
         if(daysOfWeek[position]) {
-            button.setBackgroundColor(whiteColor);
+            button.setBackgroundColor(buttonOffColor);
             daysOfWeek[position] = false;
         } else {
             button.setBackgroundColor(tealColor);

@@ -40,9 +40,8 @@ public class SocialFragment extends Fragment {
     public SocialFragment(User mainUser) {
         this.mainUser = mainUser;
         // We do the below ASAP so that we can start database processes ASAP
-        // TODO make nodefault an attribute in socialadapter
         this.followersFragment = new SocialTabFragment(this, mainUser,
-                mainUser.getFollowerList(), "nodefault", NOT_SEARCHABLE);
+                mainUser.getFollowerList(), SocialAdapter.NONE, NOT_SEARCHABLE);
         this.followingFragment = new SocialTabFragment(this, mainUser,
                 mainUser.getFollowingList(), SocialAdapter.UNFOLLOW, NOT_SEARCHABLE);
         this.requestsFragment = new SocialTabFragment(this, mainUser,
@@ -208,7 +207,7 @@ public class SocialFragment extends Fragment {
         protected Void doInBackground(Void... voids) {
             // Initialise searchFragment here because need to call a database method
             searchFragment = new SocialTabFragment(SocialFragment.this, mainUser,
-                    new DatabaseManager().getAllUsers(), "nodefault", SEARCHABLE);
+                    new DatabaseManager().getAllUsers(), SocialAdapter.NONE, SEARCHABLE);
             return null;
         }
         @Override

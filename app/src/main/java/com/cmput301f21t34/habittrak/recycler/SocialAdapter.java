@@ -36,6 +36,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
     public static final String FOLLOW_BACK = "Follow Back";
     public static final String REQUESTED = "Requested";
     public static final String UNFOLLOW = "Unfollow";
+    public static final String NONE = "";
 
     private final SocialFragment socialRef;
     private final User mainUser;

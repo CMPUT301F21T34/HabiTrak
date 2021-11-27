@@ -1,6 +1,5 @@
 package com.cmput301f21t34.habittrak.fragments;
 
-import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -30,9 +29,9 @@ public class SocialFragment extends Fragment {
     private static final boolean SEARCHABLE = true;
     private static final boolean NOT_SEARCHABLE = false;
     private final User mainUser;
-    private SocialTabFragment followersFragment;
-    private SocialTabFragment followingFragment;
-    private SocialTabFragment requestsFragment;
+    private final SocialTabFragment followersFragment;
+    private final SocialTabFragment followingFragment;
+    private final SocialTabFragment requestsFragment;
     private SocialTabFragment searchFragment;
     private TabLayout socialTab;
     private ViewPager2 viewPager;

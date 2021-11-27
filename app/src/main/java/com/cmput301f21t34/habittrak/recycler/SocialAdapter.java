@@ -21,6 +21,7 @@ import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Custom Recycler View Adapter for users on the social page
@@ -34,9 +35,10 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
     public static final String ACCEPT = "Accept";
     public static final String FOLLOW = "Follow";
     public static final String FOLLOW_BACK = "Follow Back";
-    public static final String REQUESTED = "Requested";
-    public static final String UNFOLLOW = "Unfollow";
     public static final String NONE = "";
+    public static final String REQUESTED = "Requested";
+    public static final String UNBLOCK = "Unblock";
+    public static final String UNFOLLOW = "Unfollow";
 
     private final SocialFragment socialRef;
     private final User mainUser;
@@ -132,11 +134,16 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
                     // If main user has requested to follow a given user
                     holder.mainButton.setText(REQUESTED);
                 } else { // Main user has not requested to follow a given user
-                    if (mainUser.getFollowerList().contains(UUIDs.get(position))) {
-                        // A given user follows main user
-                        holder.mainButton.setText(FOLLOW_BACK);
-                    } else { // A given user does not follow main user
-                        holder.mainButton.setText(FOLLOW);
+                    if (mainUser.getBlockList().contains(UUIDs.get(position))) {
+                        // If main user has blocked a given user
+                        holder.mainButton.setText(UNBLOCK);
+                    } else { // Main user does not block a given user
+                        if (mainUser.getFollowerList().contains(UUIDs.get(position))) {
+                            // A given user follows main user
+                            holder.mainButton.setText(FOLLOW_BACK);
+                        } else { // A given user does not follow main user
+                            holder.mainButton.setText(FOLLOW);
+                        }
                     }
                 }
             }
@@ -264,6 +271,14 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
                     // Update in database
                     dm.updateFollow(UUID, mainUser.getEmail(), DatabaseManager.REMOVE);
                     break;
+                case UNBLOCK:
+                    // Update locally
+                    mainUser.removeBlock(UUID);
+                    // Update in database
+                    dm.updateBlock(UUID, mainUser.getEmail(), DatabaseManager.REMOVE);
+                    // Update display
+                    mainButton.setText(FOLLOW);
+                    break;
             }
         }
 
@@ -281,41 +296,65 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
                 switch (menuItem.getTitle().toString()) {
                     case "Block":
                         Log.d("MenuItem", "Block Clicked");
-                        /* Remove all relationships, remove from this list now, store block
-                           relationship
-                        */
 
-                        // Remove follower or follower request (they are mutually exclusive)
-                        // Only bother database if relationship exists
-                        // Also update relevant possible other tabs
+                        // Store block relationship
+                        mainUser.addBlock(UUID);
+                        dm.updateBlock(UUID, mainUser.getEmail(), DatabaseManager.ADD);
+
+                        // Remove following or following request (they are mutually exclusive)
                         if (mainUser.removeFollowing(UUID)) {
+                            // Only bother database if relationship exists
                             dm.updateFollow(UUID, mainUser.getEmail(), DatabaseManager.REMOVE);
+                            // Also update relevant possible other tabs
                             socialRef.removeUserEntry(SocialFragment.FOLLOWING, UUID);
                         } else if (mainUser.removeFollowingReq(UUID)) {
-                            dm.updateFollowRequest(UUID, mainUser.getEmail(), DatabaseManager.REMOVE);
+                            // Only bother database if relationship exists
+                            dm.updateFollowRequest(
+                                    UUID, mainUser.getEmail(), DatabaseManager.REMOVE);
                         }
 
-                            /* Just continue into remove section to so for follower/follower
-                            request/this list now */
+                        // Remove follower or follower request (they are mutually exclusive)
+                        if (mainUser.removeFollower(UUID)) {
+                            // Only bother database if relationship exists
+                            dm.updateFollow(mainUser.getEmail(), UUID, DatabaseManager.REMOVE);
+                            // Also update relevant possible other tabs
+                            socialRef.removeUserEntry(SocialFragment.FOLLOWERS, UUID);
+                        } else if (mainUser.removeFollowerReq(UUID)) {
+                            // Only bother database if relationship exists
+                            dm.updateFollowRequest(
+                                    mainUser.getEmail(), UUID, DatabaseManager.REMOVE);
+                            // Also update relevant possible other tabs
+                            socialRef.removeUserEntry(SocialFragment.REQUESTS, UUID);
+                        }
+
+                        // Remove from relevant tabs
+                        socialRef.removeUserEntry(SocialFragment.FOLLOWERS, UUID);
+                        socialRef.removeUserEntry(SocialFragment.FOLLOWING, UUID);
+                        socialRef.removeUserEntry(SocialFragment.REQUESTS, UUID);
+
+                        // Update display
+                        mainButton.setText(UNBLOCK);
+                        break;
                     case "Remove":
                         Log.d("MenuItem", "Remove Clicked");
                         // Remove follower or follower request, remove from this list now
 
                         // Remove follower or follower request (they are mutually exclusive)
-                        // Only bother database if relationship exists
-                        // Also update relevant possible other tabs
                         if (mainUser.removeFollower(UUID)) {
-                            socialRef.removeUserEntry(SocialFragment.FOLLOWERS, UUID);
+                            // Only bother database if relationship exists
                             dm.updateFollow(mainUser.getEmail(), UUID, DatabaseManager.REMOVE);
+                            // Also update relevant possible other tabs
+                            socialRef.removeUserEntry(SocialFragment.FOLLOWERS, UUID);
                         } else if (mainUser.removeFollowerReq(UUID)) {
-                            socialRef.removeUserEntry(SocialFragment.REQUESTS, UUID);
+                            // Only bother database if relationship exists
                             dm.updateFollowRequest(
                                     mainUser.getEmail(), UUID, DatabaseManager.REMOVE);
+                            // Also update relevant possible other tabs
+                            socialRef.removeUserEntry(SocialFragment.REQUESTS, UUID);
                         }
 
                         // Remove from this list now
                         removeUserEntry(UUID);
-
                         break;
                 }
                 return true;

@@ -813,10 +813,10 @@ public class DatabaseManager {
      * @author Tauseef
      */
     public void updateBlock(String blockee, String blocker, boolean remove) {
-        // Update blockee's blockList
-        updateUUIDList("blockList", blockee, blocker, remove);
-        // Update blocker's blockedByList
-        updateUUIDList("blockedByList", blocker, blockee, remove);
+        // Update blocker's blockList
+        updateUUIDList("blockList", blocker, blockee, remove);
+        // Update blockee's blockedByList
+        updateUUIDList("blockedByList", blockee, blocker, remove);
     }
 
     /**

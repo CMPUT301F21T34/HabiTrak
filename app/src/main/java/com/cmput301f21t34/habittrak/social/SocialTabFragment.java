@@ -198,7 +198,6 @@ public class SocialTabFragment extends Fragment {
         protected Void doInBackground(Void... voids) {
             final DatabaseManager dm = new DatabaseManager();
             // Remove unwanted users that might be present
-            UUIDs.removeAll(mainUser.getBlockList());
             UUIDs.removeAll(mainUser.getBlockedByList());
             UUIDs.remove(mainUser.getEmail());
             // Save info

@@ -77,9 +77,7 @@ public class DatabaseManager {
                     validCredentials = true;
                 }
             }
-        } catch (Exception ignored) {
-        }
-
+        } catch (Exception ignored) { }
         return validCredentials;
     }
 
@@ -98,7 +96,10 @@ public class DatabaseManager {
             while (!task.isComplete()) ; // wait
             // Add each the id of each document (UUID of the user) to users
             Objects.requireNonNull(task.getResult()).forEach(document -> users.add(document.getId()));
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            Log.d("Getting all users error", "all users", ignored);
+        }
+
         return users;
     }
 
@@ -196,7 +197,6 @@ public class DatabaseManager {
      * @author Henry
      */
     public boolean deleteUser(String email) {
-
         String TAG = "Delete";
         if (!isUniqueEmail(email)) {
             database.collection("users").document(email)
@@ -282,7 +282,9 @@ public class DatabaseManager {
             );
             return user;
         } catch (Exception ignored) {
+
             Log.d("GETMAINUSER","the exceptions is "+ ignored.getLocalizedMessage());
+
         }
 
         return new User(email);
@@ -311,7 +313,9 @@ public class DatabaseManager {
                 name = (String) document.get("Username");
             }
         } catch (Exception ignored) {
+            Log.d("Getting name error", "name", ignored);
         }
+
         return name;
     }
 
@@ -338,7 +342,9 @@ public class DatabaseManager {
                 bio = (String) document.get("Biography");
             }
         } catch (Exception ignored) {
+            Log.d("Getting bio error", "bio", ignored);
         }
+
         return bio;
     }
 
@@ -351,7 +357,6 @@ public class DatabaseManager {
      * @author Tauseef
      */
     public HabitList getHabitList(String email) {
-
         HabitList returnHabitList = new HabitList();
         try {
             DocumentReference docref = database.collection("users").document(email);
@@ -364,7 +369,7 @@ public class DatabaseManager {
                 returnHabitList = databaseToHabit(requestedHabitDatabases);
             }
         } catch (Exception ignored) {
-            Log.d("XYZGETTING", "habitlist", ignored);
+            Log.d("Getting list error", "habitlist", ignored);
         }
         return returnHabitList;
     }
@@ -401,7 +406,7 @@ public class DatabaseManager {
 
         habitDatabase.setReason((String) hashmap.get("reason"));
         habitDatabase.setTitle((String) hashmap.get("title"));
-        habitDatabase.setisPublic((boolean) hashmap.get("isPublic"));
+        habitDatabase.setIsPublic((boolean) hashmap.get("isPublic"));
         habitDatabase.setHabitEvents(toHabitEventList((ArrayList<HashMap<String, Object>>) hashmap.get("habitEvents")));
         habitDatabase.setOnDaysObjFromDB((ArrayList<Boolean>) hashmap.get("onDaysObj"));
         habitDatabase.setStartDate(toCalendar((HashMap<String, Object>) hashmap.get("startDate")));
@@ -440,31 +445,29 @@ public class DatabaseManager {
 
     /**
      * toHabitEvent
-     * Converts HashMap from database to HabitEvent object
      *
+     * Converts HashMap from database to HabitEvent object
      * @param hashmap -Type HashMap<String, Object> the HashMap to be converted
      * @return HabitEvent
      * @author Tauseef
      */
     public HabitEvent toHabitEvent(HashMap<String, Object> hashmap) {
         HabitEvent event = new HabitEvent();
-        if(hashmap.get("comment") != null) {
+        if (hashmap.get("comment") != null) {
             event.setComment((String) hashmap.get("comment"));
-        }
-        else{
+        } else {
             event.setComment(null);
         }
 
-        if(hashmap.get("location") != null){
-            event.setLocation(toLocation((HashMap<String,Object>) hashmap.get("location")));
-        }
-        else{
+        if (hashmap.get("location") != null){
+            event.setLocation(toLocation((HashMap<String, Object>) hashmap.get("location")));
+        } else {
             event.setLocation(null);
         }
-        if (hashmap.get("photograph") != null){
+
+        if (hashmap.get("photograph") != null) {
             event.setPhotograph(Uri.parse((String) hashmap.get("photograph")));
-        }
-        else{
+        } else {
             event.setPhotograph(null);
         }
 
@@ -474,11 +477,13 @@ public class DatabaseManager {
 
     /**
      * toLocation
+     *
      * Converts HashMap from database to Location object
      * @param hashMap HashMap<String, Object> the HashMap to be converted
      * @return Location, the location from the HashMap
      */
     private Location toLocation(HashMap<String,Object> hashMap){
+
         if(hashMap != null) {
             Location loc = new Location((String) hashMap.get("provider"));
             loc.setLatitude((double) (long) hashMap.get("latitude"));
@@ -489,12 +494,13 @@ public class DatabaseManager {
         else{
             return null;
         }
+
     }
 
     /**
      * toCalendar
-     * Converts HashMap from database to Calendar object
      *
+     * Converts HashMap from database to Calendar object
      * @param hashmap -Type HashMap<String, Object> the HashMap to be converted
      * @return GregorianCalendar
      * @author Tauseef
@@ -540,7 +546,7 @@ public class DatabaseManager {
             DocumentReference documentReference = database.collection("users").document(UUID);
             Task<DocumentSnapshot> task = documentReference.get();
 
-            while (!task.isComplete()) ; // wait
+            while (!task.isComplete()) ;
 
             DocumentSnapshot document = task.getResult();
             if (document.getData() != null) {
@@ -594,7 +600,6 @@ public class DatabaseManager {
         return getUUIDList("followReqList", UUID);
     }
 
-
     /**
      * getFollowRequestedList
      * Gets the followRequestedList of the user with the provided UUID,
@@ -608,7 +613,6 @@ public class DatabaseManager {
     public ArrayList<String> getFollowRequestedList(String UUID) {
         return getUUIDList("followRequestedList", UUID);
     }
-
 
     /**
      * getBlockList
@@ -707,9 +711,7 @@ public class DatabaseManager {
      * @param UUID String, the uuid of the user who's habit list is to be updated
      * @param habitList HabitList, the habit list that is to be updated
      */
-
     public void updateHabitList(String UUID, HabitList habitList) {
-
             HashMap<String, Object> data = new HashMap<>();
             data.put("habitList", habitToDatabase(habitList));
             List<String> fieldsToUpdate = new ArrayList<>();
@@ -740,7 +742,6 @@ public class DatabaseManager {
                     // Get the list to update from the user
                     ArrayList<String> list = (ArrayList<String>) document.get(listName);
                     if (list != null) {
-
                         // Check if the relevant member is already stored
                         boolean contains = list.contains(listMember);
 
@@ -758,7 +759,6 @@ public class DatabaseManager {
                             data.put(listName, list);
                             userRef.set(data, SetOptions.mergeFields(fieldsToUpdate));
                         }
-
                     }
                 }
             } else {
@@ -779,7 +779,7 @@ public class DatabaseManager {
      * @author Kaaden
      */
     public void updateFollow(String followee, String follower, boolean remove) {
-        // Update folllowee's followerList
+        // Update followee's followerList
         updateUUIDList("followerList", followee, follower, remove);
         // Update follower's followingList
         updateUUIDList("followingList", follower, followee, remove);
@@ -842,7 +842,7 @@ public class DatabaseManager {
             habitToDatabase.setOnDaysObj(primitiveHabit.getOnDaysObj());
             habitToDatabase.setCurrentStreakDate(primitiveHabit.getCurrentStreakDate());
             habitToDatabase.setBestStreakDate(primitiveHabit.getBestStreakDate());
-            habitToDatabase.setisPublic(primitiveHabit.isPublic());
+            habitToDatabase.setIsPublic(primitiveHabit.isPublic());
             habitListToDatabase.add(habitToDatabase);
         }
         return habitListToDatabase;
@@ -869,14 +869,14 @@ public class DatabaseManager {
             habit.setHabitEvents(habitFromDatabase.getHabitEvents());
             habit.setCurrentStreakDate(habitFromDatabase.getCurrentStreakDate());
             habit.setBestStreakDate(habitFromDatabase.getBestStreakDate());
-            if(habitFromDatabase.getisPublic()){
+            if(habitFromDatabase.getIsPublic()){
                 habit.makePublic();
             } else {
                 habit.makePrivate();
             }
             ArrayList<Boolean> dbOnDays = habitFromDatabase.getOnDaysObj();
-
             habit.setOnDaysObj(new OnDays(dbOnDays));
+            // After converting from HabitDatabase to Habit, add to list
             habitList.add(habit);
         }
         return habitList;

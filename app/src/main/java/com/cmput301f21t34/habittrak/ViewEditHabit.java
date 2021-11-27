@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -27,8 +28,7 @@ import java.util.TimeZone;
 
 // TODO: calculate best streak and set the text
 /**
- * ViewEditHabit.
- *
+ * ViewEditHabit
  *
  * @author Pranav
  *
@@ -40,7 +40,6 @@ import java.util.TimeZone;
 public class ViewEditHabit extends AppCompatActivity implements View.OnClickListener {
 
     public static int RESULT_CODE = 2000;
-
 
     private TextInputEditText habitName;
     private TextInputEditText habitReason;
@@ -65,7 +64,7 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
     private TextView progressBarText;
     private LinearProgressIndicator progressBar;
     private boolean[] daysOfWeek;
-    private final int whiteColor = Color.WHITE;
+    private int buttonOffColor = Color.WHITE;
     private int tealColor;
 
     // data variables
@@ -77,17 +76,23 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_edit_habit);
 
+        // check if dark mode
+        int nightModeCheck = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        if (nightModeCheck == Configuration.UI_MODE_NIGHT_YES) {
+            buttonOffColor = Color.BLACK;
+        }
+
         // add back button to toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.view_habit_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        // get data
+        // get habit data from intent
         Intent intent = getIntent();
         this.habit = intent.getParcelableExtra("HABIT");
         this.habitPosition = intent.getIntExtra("position", 0);
-        Log.d("VIEW_HABIT", Integer.toString(habitPosition));
+        Log.d("VIEW HABIT", Integer.toString(habitPosition));
 
         // getting views
         habitName = findViewById(R.id.view_habit_name_edit_text);
@@ -116,14 +121,14 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
         String name = habit.getTitle();
         String reason = habit.getReason();
         calendar = habit.getStartDate();
-        Boolean isPublic = habit.isPublic();
-        Log.d("View_Habit", Boolean.toString(isPublic));
+        boolean isPublic = habit.isPublic();
+        Log.d("VIEW HABIT", Boolean.toString(isPublic));
         setDaysSelector();  // set days selector values
 
-        // set data
+        // set name and reason
         habitName.setText(name);
         habitReason.setText(reason);
-        if (!isPublic){
+        if (!isPublic) {
             publicSwitch.setChecked(false);
             visibilityText.setText("Private");
         }
@@ -181,11 +186,10 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
 
         // switch listener
         publicSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
-            if (b){
+            if (b) {
                 habit.makePublic();
                 visibilityText.setText("Public");
-            }
-            else {
+            } else {
                 habit.makePrivate();
                 visibilityText.setText("Private");
             }
@@ -212,7 +216,6 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
         } else if (view.getId() == R.id.sunday_button) {
             changeButtonState(view, sundayButton, 6);
         } else if (view.getId() == R.id.view_save_habit) {
-
             if (checkField(habitName.getText()) && checkField(habitReason.getText())) {
                 habit.setTitle(habitName.getText().toString());
                 habit.setReason(habitReason.getText().toString());
@@ -228,7 +231,6 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
             } else {
                 Toast.makeText(getBaseContext(), "Empty Text Fields", Toast.LENGTH_SHORT).show();
             }
-
         }
     }
 
@@ -262,13 +264,14 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
     public void setButtonState(MaterialButton button, Boolean state) {
         if(state){
             button.setBackgroundColor(tealColor);
-        }
-        else{
-            button.setBackgroundColor(whiteColor);
+        } else{
+            button.setBackgroundColor(buttonOffColor);
         }
     }
 
     /**
+     * changeButtonState
+     *
      * Change the color of the button and the arraylist for days of week.
      * @param view Button View
      * @param button to change the color
@@ -276,8 +279,8 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
      * @author Pranav
      */
     public void changeButtonState(View view, MaterialButton button, int position) {
-        if(daysOfWeek[position]) {
-            button.setBackgroundColor(whiteColor);
+        if (daysOfWeek[position]) {
+            button.setBackgroundColor(buttonOffColor);
             daysOfWeek[position] = false;
         } else {
             button.setBackgroundColor(tealColor);
@@ -287,6 +290,8 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
     }
 
     /**
+     * getDate
+     *
      * get the String value from calendar
      * @param calendar
      * @return string value of type Month, Day
@@ -298,6 +303,8 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
     }
 
     /**
+     * checkField
+     *
      * Check if the fields are  filled or not.
      * @param name
      * @return boolean whether filled or not
@@ -311,5 +318,4 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
         onBackPressed();
         return true;
     }
-
 }

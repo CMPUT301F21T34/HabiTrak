@@ -1,5 +1,7 @@
 package com.cmput301f21t34.habittrak.streak;
 
+import android.util.Log;
+
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitEvent;
 
@@ -111,24 +113,32 @@ public class Streak {
 
     }
 
-    private boolean currentDayCheck(){
-        Calendar today = Calendar.getInstance();
+    private Calendar findBestStreakEnd(){
 
-        if (habit.getOnDaysObj().isOnDay(today)){
-            ArrayList<HabitEvent> events = habit.getHabitEvents();
-            events.sort(HabitEvent::compareTo);
+        if (habit.getBestStreakDate() == null){
+            return null;
+        }
 
-            for (int index = 0; index < events.size(); index ++) {
-                int comparison = new TimeIgnoringComparator().compare(today, events.get(index).getCompletedDate());
-                if (comparison == 0) {
-                    // Then an event was completed today
-                    return true;
-                }
+        int amountOfDaysToFind = habit.getBestStreak();
+        Calendar bestStreakDateEnd = (Calendar) habit.getBestStreakDate().clone();
+
+        while (amountOfDaysToFind > 0){
+
+            // Only count on days
+            if (habit.getOnDaysObj().isOnDay(bestStreakDateEnd)){
+                amountOfDaysToFind--; // This was a valid day, decrement amount to find by 1
+            }
+
+            // If this is not the last itteration of the loop
+            if (amountOfDaysToFind > 0) {
+                bestStreakDateEnd.add(Calendar.DATE, 1); // Increase day by one
             }
 
         }
 
-        return false;
+        return bestStreakDateEnd;
+
+
     }
 
 
@@ -162,11 +172,6 @@ public class Streak {
             currentStreakDateEnd.add(Calendar.DAY_OF_YEAR, -1); // increments the day down by 1
         } // Until it is an onDay
 
-        boolean completedToday = currentDayCheck();
-
-        if (completedToday){
-            currentStreak += 1;
-        }
 
         // Only update best streak if needed
         if (habit.getBestStreak() <= currentStreak){
@@ -178,7 +183,9 @@ public class Streak {
         }
 
 
+        habit.setBestStreakDateEnd(findBestStreakEnd());
         habit.setCurrentStreakDate(this.currentStreakDate); // Probably not used for anything
+        habit.setCurrentStreakDateEnd(this.currentStreakDateEnd);
         habit.setCurrentStreak(currentStreak % 30); // We only show out of 30 days
 
 

@@ -20,54 +20,51 @@
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
             app:title="@string/habi_app_name"
-            app:titleTextColor="@android:color/white" />
+            app:titleTextColor="@android:color/white" >
+        <Button
+            android:id="@+id/events_confirm_changes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            app:strokeColor="@color/white"
+            android:textColor="@color/white"
+            android:text="@string/save_changes" />
+        </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ListView
-        android:id="@+id/event_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="64dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbarLayout">
-
-    </ListView>
-
     <LinearLayout
-        android:id="@+id/buttonsLayout"
+        android:id="@+id/events_no_data_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/events_confirm_changes"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/event_editor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            style="?android:attr/buttonBarButtonStyle"
-            android:text="View / Edit" />
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_empty_list_vector"
+            app:tint="#808080" />
 
-        <Button
-            android:id="@+id/event_deleter"
-            android:layout_width="wrap_content"
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            style="?android:attr/buttonBarButtonStyle"
-            android:text="Delete" />
+            android:text="no events for this habit"
+            android:fontFamily="@font/roboto_black"
+            android:textColor="#808080"
+            android:gravity="center"/>
+
     </LinearLayout>
 
-    <Button
-        android:id="@+id/events_confirm_changes"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/events_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="?android:attr/buttonBarButtonStyle"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:text="Confirm Changes To Events" />
+        app:layout_constraintTop_toBottomOf="@id/toolbarLayout"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

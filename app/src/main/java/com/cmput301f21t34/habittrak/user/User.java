@@ -62,7 +62,6 @@ public class User implements Parcelable {
     private String biography;
 
     public User(
-
             String username,
             String password,
             String email,
@@ -74,9 +73,7 @@ public class User implements Parcelable {
             ArrayList<String> followingReqList,
             ArrayList<String> followerReqList,
             ArrayList<String> blockList,
-            ArrayList<String> blockedByList
-
-    ) {
+            ArrayList<String> blockedByList) {
 
         this.email = email;
         this.username = username;
@@ -90,8 +87,6 @@ public class User implements Parcelable {
         this.followerReqList = followerReqList;
         this.blockList = blockList;
         this.blockedByList = blockedByList;
-
-
     }
 
     /**
@@ -102,7 +97,6 @@ public class User implements Parcelable {
      * @param email    String the Users email (for identification)
      */
     public User(String username, String password, String email) {
-
         this.username = username;
         this.password = password;
         this.email = email;
@@ -116,8 +110,6 @@ public class User implements Parcelable {
         this.followerReqList = new ArrayList<>();
         this.blockList = new ArrayList<>();
         this.blockedByList = new ArrayList<>();
-
-
     }
 
     /**
@@ -131,7 +123,6 @@ public class User implements Parcelable {
         this.email = "dummyEmail";
         this.username = "dummyUser";
         this.password = "12345";
-
         this.habitList = new HabitList();
         this.followerList = new ArrayList<>();
         this.followingList = new ArrayList<>();
@@ -152,7 +143,6 @@ public class User implements Parcelable {
         this.email = email;
         this.username = "dummyUser";
         this.password = "12345";
-
         this.habitList = new HabitList();
         this.followerList = new ArrayList<>();
         this.followingList = new ArrayList<>();
@@ -162,7 +152,6 @@ public class User implements Parcelable {
         this.blockedByList = new ArrayList<>();
         this.biography = "";
     }
-
 
     /**
      * Parcel Constructor Class
@@ -175,17 +164,14 @@ public class User implements Parcelable {
      * @see Parcelable
      */
     public User(Parcel parcel) {
-
         Bundle userBundle;
         userBundle = parcel.readBundle(User.class.getClassLoader());
-
 
         // Strings //
         this.username = userBundle.getString("username");
         this.password = userBundle.getString("password");
         this.email = userBundle.getString("email");
         this.biography = userBundle.getString("biography");
-
 
         // HabitList from ArrayList<Habit>
 
@@ -200,8 +186,6 @@ public class User implements Parcelable {
         this.followerReqList = userBundle.getStringArrayList("followerReqList");
         this.blockList = userBundle.getStringArrayList("blockList");
         this.blockedByList = userBundle.getStringArrayList("blockedByList");
-
-
     }
 
     // getter methods
@@ -458,13 +442,10 @@ public class User implements Parcelable {
         return this.email;
     }
 
-
     // These implement Parcelable for being passed through an intent
 
     // replace methods not sure if i need it or not
     public void replaceHabit(Habit habit) {
-
-
     }
 
     /**
@@ -493,10 +474,7 @@ public class User implements Parcelable {
      */
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
-
-
         Bundle userBundle = new Bundle(this.getClass().getClassLoader());
-
 
         userBundle.putString("username", username);
 
@@ -517,7 +495,6 @@ public class User implements Parcelable {
         // requires Habit to implement Parcelable
         userBundle.putParcelableArrayList("habitList", habitList);
 
-
         userBundle.putStringArrayList("followerList", followerList);
         userBundle.putStringArrayList("followingList", followingList);
         userBundle.putStringArrayList("followingReqList", followingReqList);
@@ -527,5 +504,4 @@ public class User implements Parcelable {
 
         parcel.writeBundle(userBundle); // writes bundle to parcel
     }
-
 }

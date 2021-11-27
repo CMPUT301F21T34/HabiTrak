@@ -23,7 +23,6 @@ import com.cmput301f21t34.habittrak.user.User;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 /**
  * Fragment for displaying a list of users and their info in a tab
@@ -67,30 +66,17 @@ public class SocialTabFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Views
         View view = inflater.inflate(
                 R.layout.habi_social_tab_fragment, container, false);
-
-        // no data display
+        // No data display
         noDataView = view.findViewById(R.id.social_no_data_view);
-        // Shimmer effect
-        loading = view.findViewById(R.id.social_tab_shimmer_container);
-        loading.setVisibility(View.GONE); // Invisible by default
-
-        // If fetching data isn't done yet
-        if (fetchData.getStatus() != AsyncTask.Status.FINISHED) {
-            loading.setVisibility(View.VISIBLE); // Appear visuals
-            loading.startShimmer(); // Visual effect
-        }
-
-        if (fetchData.getStatus() == AsyncTask.Status.FINISHED){
-            setViewIfEmpty();
-        }
-
         // List display
         recyclerView = view.findViewById(R.id.social_tab_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(socialAdapter);
-
+        // Shimmer effect
+        loading = view.findViewById(R.id.social_tab_shimmer_container);
         // Search bar
         searchBox = view.findViewById(R.id.social_tab_search_box);
         searchBox.setVisibility(View.GONE); // Off until done getting users
@@ -108,7 +94,20 @@ public class SocialTabFragment extends Fragment {
             }
         });
 
+        // Invisible by default
+        noDataView.setVisibility(View.GONE);
+        loading.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.GONE);
+        searchBox.setVisibility(View.GONE);
 
+        // Set display based on if still fetching data or not
+        if (fetchData.getStatus() != AsyncTask.Status.FINISHED) {
+            // Loading Visuals
+            loading.setVisibility(View.VISIBLE);
+            loading.startShimmer();
+        } else {
+            displayViews();
+        }
 
         return view;
     }
@@ -168,18 +167,26 @@ public class SocialTabFragment extends Fragment {
 
 
     /**
-     * sets the view depending on the value of the data set
+     * UI updates for when the data fetching is done
      */
-    public void setViewIfEmpty(){
-
-        if(noDataView != null) {
+    public void displayViews() {
             if (UUIDs.isEmpty()) {
-                noDataView.setVisibility(View.VISIBLE);
+                // Don't cause null references if fragment view isn't created yet
+                if (noDataView != null) {
+                    noDataView.setVisibility(View.VISIBLE);
+                }
             } else {
-                noDataView.setVisibility(View.GONE);
+                if (loading != null) {
+                    loading.stopShimmer();                  // Stop visuals
+                    loading.setVisibility(View.GONE);       // Disappear visuals
+                }
+                if (recyclerView != null) {
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
+                if (searchBox != null && searchable) {
+                    searchBox.setVisibility(View.VISIBLE);  // Allow searches now
+                }
             }
-        }
-
     }
 
 
@@ -206,16 +213,8 @@ public class SocialTabFragment extends Fragment {
         @Override
         protected void onPostExecute(Void unused) {
             super.onPostExecute(unused);
-            socialAdapter.notifyDataSetChanged();   // Tell display
-            // Don't cause null references if fragment view isn't created yet
-            if (loading != null) {
-                loading.stopShimmer();                  // Stop visuals
-                loading.setVisibility(View.GONE);       // Disappear visuals
-            }
-            if (searchBox != null && searchable) {
-                searchBox.setVisibility(View.VISIBLE);  // Allow searches now
-            }
-            setViewIfEmpty();
+            socialAdapter.notifyDataSetChanged();   // Tell list manager
+            displayViews();
         }
     }
 

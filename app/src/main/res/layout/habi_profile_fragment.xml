@@ -139,7 +139,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
-        android:textColor="?android:textColorSecondary"
+        android:textColor="@color/white"
         android:text="@string/delete_account_button"/>
 
 </LinearLayout>

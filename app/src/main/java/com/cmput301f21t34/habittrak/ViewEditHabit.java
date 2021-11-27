@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -63,7 +64,7 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
     private TextView progressBarText;
     private LinearProgressIndicator progressBar;
     private boolean[] daysOfWeek;
-    private final int whiteColor = Color.WHITE;
+    private int buttonOffColor = Color.WHITE;
     private int tealColor;
 
     // data variables
@@ -74,6 +75,12 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_edit_habit);
+
+        // check if dark mode
+        int nightModeCheck = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        if (nightModeCheck == Configuration.UI_MODE_NIGHT_YES) {
+            buttonOffColor = Color.BLACK;
+        }
 
         // add back button to toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.view_habit_toolbar);
@@ -258,7 +265,7 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
         if(state){
             button.setBackgroundColor(tealColor);
         } else{
-            button.setBackgroundColor(whiteColor);
+            button.setBackgroundColor(buttonOffColor);
         }
     }
 
@@ -273,7 +280,7 @@ public class ViewEditHabit extends AppCompatActivity implements View.OnClickList
      */
     public void changeButtonState(View view, MaterialButton button, int position) {
         if (daysOfWeek[position]) {
-            button.setBackgroundColor(whiteColor);
+            button.setBackgroundColor(buttonOffColor);
             daysOfWeek[position] = false;
         } else {
             button.setBackgroundColor(tealColor);

@@ -777,7 +777,7 @@ public class DatabaseManager {
      * @author Kaaden
      */
     public void updateFollow(String followee, String follower, boolean remove) {
-        // Update folllowee's followerList
+        // Update followee's followerList
         updateUUIDList("followerList", followee, follower, remove);
         // Update follower's followingList
         updateUUIDList("followingList", follower, followee, remove);
@@ -833,7 +833,6 @@ public class DatabaseManager {
             Habit primitiveHabit = habits.get(i);
             HabitDatabase habitToDatabase = new HabitDatabase();
             habitToDatabase.setIndex(primitiveHabit.getIndex());
-            habitToDatabase.setIsPublic(primitiveHabit.isPublic());
             habitToDatabase.setTitle(primitiveHabit.getTitle());
             habitToDatabase.setReason(primitiveHabit.getReason());
             habitToDatabase.setStartDate(primitiveHabit.getStartDate());
@@ -861,11 +860,6 @@ public class DatabaseManager {
         for (int i = 0; i < habitsFromDatabase.size(); i++) {
             HabitDatabase habitFromDatabase = habitsFromDatabase.get(i);
             Habit habit = new Habit();
-            if (habitFromDatabase.getIsPublic()) {
-                habit.makePublic();
-            } else {
-                habit.makePrivate();
-            }
             habit.setIndex(habitFromDatabase.getIndex());
             habit.setTitle(habitFromDatabase.getTitle());
             habit.setReason(habitFromDatabase.getReason());

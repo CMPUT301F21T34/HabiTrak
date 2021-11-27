@@ -48,7 +48,7 @@ public class SocialFragment extends Fragment {
         this.requestsFragment = new SocialTabFragment(this, mainUser,
                 mainUser.getFollowerReqList(), SocialAdapter.ACCEPT, NOT_SEARCHABLE);
         // Initialise searchFragment on separate thread because need to call slow database method
-        new SocialAsyncTask().execute();
+        new SocialAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         // Start fetching data for the lists
         followersFragment.populateList();
         followingFragment.populateList();

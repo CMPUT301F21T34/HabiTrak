@@ -111,7 +111,7 @@ public class Habit implements Comparable<Habit>, Parcelable, Utilities {
         this.currentStreakDateEnd = calendarParcelConstructor(habitBundle, "currentStreakDateEnd");
 
     }
-    
+
 
 
 

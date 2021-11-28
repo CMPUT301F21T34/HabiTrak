@@ -7,6 +7,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import com.cmput301f21t34.habittrak.Utilities;
+
 import java.util.Calendar;
 import java.util.TimeZone;
 
@@ -22,7 +24,7 @@ import java.util.TimeZone;
  * @since 2021-10-16
  * @see Habit
  */
-public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
+public class HabitEvent implements Comparable<HabitEvent>, Parcelable, Utilities {
 
     // Attributes //
 
@@ -69,18 +71,9 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
 
         this.comment = habitEventBundle.getString("comment");
 
-        String completedDateTimeZone = habitEventBundle.getString("completedDateTimeZone");
-        if (completedDateTimeZone != null) {
+        this.completedDate = calendarParcelConstructor(habitEventBundle, "completedDate");
 
-            Calendar constructionCalendar = Calendar.getInstance();
-            constructionCalendar.setTimeZone(TimeZone.getTimeZone(completedDateTimeZone));
-            constructionCalendar.setTimeInMillis(habitEventBundle.getLong("completedDateTime"));
 
-            this.completedDate = constructionCalendar;
-        } else {
-
-            this.completedDate = null;
-        }
         Location parcelLocation = habitEventBundle.getParcelable("location");
         if (parcelLocation != null) {
             this.location = habitEventBundle.getParcelable("location");
@@ -182,14 +175,7 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
 
         habitEventBundle.putString("comment", comment);
 
-        // Handles Calendar
-        if (completedDate != null) {
-            habitEventBundle.putString("completedDateTimeZone", completedDate.getTimeZone().getID());
-            habitEventBundle.putLong("completedDateTime", completedDate.getTimeInMillis());
-
-        } else {
-            habitEventBundle.putString("completedDateTimeZone", null);
-        }
+        putCalendarInBundle(habitEventBundle, completedDate, "completedDate");
 
         if (location != null) {
             habitEventBundle.putParcelable("location", location);

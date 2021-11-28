@@ -16,24 +16,24 @@
         android:padding="24dp"
         android:paddingTop="16dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/sign_up_title"
-        android:fontFamily="@font/roboto_black"
-        android:textSize="30sp"
-        android:textColor="?android:textColorPrimary"
-        android:layout_gravity="center_horizontal"
-        android:maxLength="20"
-        android:layout_marginTop="150dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="150dp"
+            android:fontFamily="@font/roboto_black"
+            android:maxLength="20"
+            android:text="@string/sign_up_title"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="30sp" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/signup_email_text_input"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="@string/email_hint"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            android:hint="@string/email_hint">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id='@+id/signup_email_edit_text'
@@ -45,13 +45,13 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/signup_username_text_input"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            app:counterEnabled="true"
-            app:counterMaxLength="20"
             android:hint="@string/habi_hint_username"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            app:counterEnabled="true"
+            app:counterMaxLength="20">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id='@+id/signup_username_edit_text'
@@ -64,11 +64,11 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/signup_password_text_input"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/habi_hint_password"
-            app:passwordToggleEnabled="true"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id='@+id/signup_password_edit_text'
@@ -80,8 +80,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_marginTop="16dp"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/signup_signup_button"

@@ -14,8 +14,12 @@ import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.recycler.HabitRecycler;
 import com.cmput301f21t34.habittrak.recycler.SocialAdapter;
 import com.cmput301f21t34.habittrak.recycler.HabitRecyclerAdapter;
+import com.cmput301f21t34.habittrak.streak.Streak;
+import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitList;
 import com.cmput301f21t34.habittrak.user.User;
+
+import java.util.ArrayList;
 
 /**
  * SocialViewProfile.
@@ -63,6 +67,10 @@ public class SocialViewProfile extends AppCompatActivity {
             bio.setText(user.getBiography());
         }
 
+        // calculate streaks
+        refreshHabitStreak();
+
+        // get public habits
         getPublicHabits();
 
         // set recycler view
@@ -109,6 +117,21 @@ public class SocialViewProfile extends AppCompatActivity {
         for (int i = 0; i < user.getHabitList().size(); i++) {
             if (user.getHabitList().get(i).isPublic())
                 habitList.add(user.getHabitList().get(i));
+        }
+    }
+
+    /**
+     * refreshes all habit streaks
+     *
+     * @author Dakota
+     */
+    private void refreshHabitStreak() {
+        // Refreshes all habit streaks //
+        ArrayList<Habit> habits = (ArrayList<Habit>) user.getHabitList(); // cast for simple iteration
+
+        for (int index = 0; index < habits.size(); index++){
+            Streak streak = new Streak(habits.get(index)); // set a Streak class to modify each habit
+            streak.refreshStreak(); // refreshes each streak
         }
     }
 

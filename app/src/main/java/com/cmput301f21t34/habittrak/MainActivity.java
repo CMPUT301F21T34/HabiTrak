@@ -13,7 +13,6 @@ import com.google.firebase.auth.FirebaseUser;
  * MainActivity
  *
  * Starting point of the app
- * TODO: figure out how to save the login state of the user
  * TODO : Testing that the database returns the correct on days object
  *
  */

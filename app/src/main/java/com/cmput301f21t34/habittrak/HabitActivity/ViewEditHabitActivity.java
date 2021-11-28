@@ -27,7 +27,6 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
-// TODO: calculate best streak and set the text
 /**
  * ViewEditHabit
  *
@@ -132,8 +131,6 @@ public class ViewEditHabitActivity extends AppCompatActivity implements View.OnC
             visibilityText.setText("Private");
         }
 
-        //TODO: set these values
-        // set progress bar
         progressBar.setProgress( (habit.getCurrentStreak()*100)/30 );
         String currentStreakText = habit.getCurrentStreak() + "/30";
         progressBarText.setText(currentStreakText);

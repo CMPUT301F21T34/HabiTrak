@@ -44,12 +44,12 @@ public class User implements Parcelable {
     private String password;
     private HabitList habitList; // Habit_List extends ArrayList<Habit>
     // Lists of users' UUIDS (emails)
-    private ArrayList<String> followerList;     // Users that follow this user
-    private ArrayList<String> followingList;    // Users this user follows
-    private ArrayList<String> followingReqList; // Users that this user requested to follow
-    private ArrayList<String> followerReqList;  // Users that requested to follow this user
-    private ArrayList<String> blockList;        // Users that this user blocked
-    private ArrayList<String> blockedByList;    // Users that blocked this user
+    private final ArrayList<String> followerList;     // Users that follow this user
+    private final ArrayList<String> followingList;    // Users this user follows
+    private final ArrayList<String> followingReqList; // Users that this user requested to follow
+    private final ArrayList<String> followerReqList;  // Users that requested to follow this user
+    private final ArrayList<String> blockList;        // Users that this user blocked
+    private final ArrayList<String> blockedByList;    // Users that blocked this user
     private String biography;
     // Attributes ----------------------------------------------------------------------------------
 

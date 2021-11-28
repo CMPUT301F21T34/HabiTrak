@@ -18,14 +18,14 @@
         android:text="@string/username_title"
         android:textColor="?android:textColorPrimary"
         android:textSize="16sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/editUserBorder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -45,8 +45,8 @@
             android:id="@+id/emailHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             android:text="@string/email_title"
             android:textColor="?android:textColorPrimary"
             android:textSize="16sp"
@@ -56,8 +56,8 @@
             android:id="@+id/userEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             android:text="@string/email_hint"
             android:textColor="?android:textColorPrimary"
             android:textSize="16sp" />
@@ -68,8 +68,8 @@
         android:id="@+id/bioHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="4dp"
         android:text="@string/biography_title"
@@ -82,19 +82,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editBio"
-            android:lines="4"
-            android:gravity="top|start"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="top|start"
             android:inputType="textMultiLine"
-            android:scrollHorizontally="false"
+            android:lines="4"
             android:scrollbars="vertical"
+            android:scrollHorizontally="false"
             android:text="@string/biography_default" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -103,32 +103,30 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="0dip"
+        android:layout_marginBottom="16dp"
         android:layout_weight="1"
         android:gravity="center|bottom"
-        android:layout_marginBottom="16dp"
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/confirmer"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="bottom"
+            android:layout_weight="1"
             android:text="Save   "
-            app:strokeColor="?android:textColorPrimary"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            />
+            app:strokeColor="?android:textColorPrimary" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/logout"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="bottom"
+            android:layout_weight="1"
             android:text="@string/log_out_button"
-            app:strokeColor="?android:textColorPrimary"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-             />
+            app:strokeColor="?android:textColorPrimary" />
 
     </LinearLayout>
 
@@ -139,7 +137,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
-        android:textColor="@color/white"
-        android:text="@string/delete_account_button"/>
+        android:text="@string/delete_account_button"
+        android:textColor="@color/white" />
 
 </LinearLayout>

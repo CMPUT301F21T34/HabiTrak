@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical"
+    android:orientation="vertical"
     tools:context=".fragments.TodayListFragment">
 
     <LinearLayout
@@ -13,8 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:visibility="gone"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="150dp"
@@ -26,10 +26,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/no_habits_set_for_today"
             android:fontFamily="@font/roboto_black"
-            android:textColor="#808080"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:text="@string/no_habits_set_for_today"
+            android:textColor="#808080" />
 
     </LinearLayout>
 
@@ -37,7 +37,6 @@
         android:id="@+id/today_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
 
 
 </LinearLayout>

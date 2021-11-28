@@ -82,8 +82,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         getMainUser();
         refreshHabitStreak();
 
-
-
         addHabitButton = findViewById(R.id.base_add_habit_button);
 
         // Initializes Fragments
@@ -97,10 +95,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         bottomNav = findViewById(R.id.bottom_nav);              // Sets Nav to bottom nav res
         bottomNav.setOnItemSelectedListener(this);              // Sets listener to this class
         bottomNav.setSelectedItemId(R.id.navbar_menu_today);    // Sets initial selected item
-
-
-
-
     }
 
 
@@ -109,21 +103,16 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
     public void onResume() {
         super.onResume();
 
-
         refreshHabitStreak();
-
 
         // add habit listener
         addHabitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 Intent intent = new Intent(view.getContext(), AddHabitActivity.class);
                 addHabitActivityLauncher.launch(intent);
             }
         });
-
     }
 
     @Override
@@ -134,7 +123,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         // TODO: Change the email to uuid in the next line
         db.updateHabitList(mainUser.getEmail(),mainUser.getHabitList());
         // TODO: Update all events list
-
     }
 
     /**
@@ -146,11 +134,8 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
         if (fUser == null){
             //TODO: Send to main
-
         }
-
         mainUser = db.getUser(fUser.getEmail());
-
     }
 
     /**
@@ -232,7 +217,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
             // TODO: Change the email to uuid in the next line
             db.updateHabitList(mainUser.getEmail(),mainUser.getHabitList());
             // TODO: Update all events list
-
         }
         // result from add habit event activity
         else if (resultCode == RESULT_NEW_HABIT_EVENT) {
@@ -258,7 +242,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
             db.updateHabitList(mainUser.getEmail(),mainUser.getHabitList());
             // TODO: Update all events list
         }
-
         super.onActivityResult(requestCode, resultCode, intent);
     }
 }

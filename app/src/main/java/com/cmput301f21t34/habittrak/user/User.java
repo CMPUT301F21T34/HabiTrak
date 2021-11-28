@@ -41,7 +41,6 @@ public class User implements Parcelable {
         }
     };
 
-
     // Password does not need to be parse and may be eventually removed
     // TODO: Make password final in version after merge with Database
     private final String email;

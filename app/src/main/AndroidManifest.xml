@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HabitTrak">
         <activity
-            android:name=".ViewEditHabitEvents"
+            android:name=".event.ViewEditHabitEventActivity"
             android:exported="true"
             android:parentActivityName=".event.ViewHabitEvents">
             <meta-data
@@ -38,13 +38,10 @@
             android:name=".social.SocialViewProfile"
             android:exported="true" />
         <activity
-            android:name=".ViewEditHabit"
+            android:name=".ViewEditHabitActivity"
             android:exported="true" />
         <activity
-            android:name=".AddHabitEventActivity"
-            android:exported="true" />
-        <activity
-            android:name=".SocialActivity"
+            android:name=".event.AddHabitEventActivity"
             android:exported="true" />
         <activity
             android:name=".AddHabitActivity"

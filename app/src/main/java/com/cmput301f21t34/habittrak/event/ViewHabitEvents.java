@@ -172,7 +172,7 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
      */
     public void startViewEventActivity(int position){
         HabitEvent event = habit.getHabitEvents().get(position);
-        Intent intent = new Intent(this,ViewEditHabitEvents.class);
+        Intent intent = new Intent(this,ViewEditHabitEventActivity.class);
         intent.putExtra("HABIT_EVENT_VIEW", event);
         intent.putExtra("HABIT_TITLE",habit.getTitle());
         intent.putExtra("position", habitPosition);

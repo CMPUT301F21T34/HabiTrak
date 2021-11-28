@@ -276,7 +276,8 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
                 case UNFOLLOW:
                     // Update locally
                     mainUser.removeFollowing(UUID);
-                    removeUserEntry(UUID); // Remove entry from Following (this) tab
+                    // Remove entry from Following tab
+                    socialRef.removeUserEntry(SocialFragment.FOLLOWING,  UUID);
                     // Update in database
                     dm.updateFollow(UUID, mainUser.getEmail(), DatabaseManager.REMOVE);
                     break;

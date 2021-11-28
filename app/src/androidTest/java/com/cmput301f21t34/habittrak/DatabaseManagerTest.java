@@ -31,6 +31,7 @@ public class DatabaseManagerTest {
     private static DatabaseManager dm;
     private static FirebaseFirestore db;
 
+    /*
     @BeforeClass
     public static void setUpDatabase() {
         dm = new DatabaseManager();
@@ -47,7 +48,7 @@ public class DatabaseManagerTest {
     @Before
     public void setUp() {
         this.db = dm.getDatabase();
-    }
+    }*/
 
     /**
      * createNewUser
@@ -56,6 +57,8 @@ public class DatabaseManagerTest {
      */
     @Test
     public void createNewUserTest() {
+        dm = new DatabaseManager();
+        db = dm.getDatabase();
         String email = "test@gmail.com";
         String username = "testUser";
         dm.createNewUser(email, username);

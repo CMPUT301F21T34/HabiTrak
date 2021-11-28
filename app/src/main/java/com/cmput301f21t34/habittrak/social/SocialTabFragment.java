@@ -153,14 +153,12 @@ public class SocialTabFragment extends Fragment {
     public void onRowClick(View view, int position){
         Log.d("Social", "Row Clicked " + position);
         DatabaseManager dm = new DatabaseManager();
-        String uuid = UUIDs.get(position);
-        Log.d("Social", uuid);
-        socialAdapter.getItemId(position);
-        ArrayList<String> following = mainUser.getFollowingList();
-        if (following.contains(uuid)){
-            User user = dm.getUser(uuid);
+        String UUID = UUIDs.get(position);
+        Log.d("Social", UUID);
+        // Display user profile if main user is following a given user
+        if (mainUser.getFollowingList().contains(UUID)) {
             Intent intent = new Intent(getContext(), SocialViewProfile.class);
-            intent.putExtra("USER", user);
+            intent.putExtra("USER", dm.getUser(UUID));
             startActivity(intent);
         }
     }

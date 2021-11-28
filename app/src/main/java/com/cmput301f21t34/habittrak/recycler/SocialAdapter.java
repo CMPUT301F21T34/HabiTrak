@@ -21,7 +21,6 @@ import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 /**
  * Custom Recycler View Adapter for users on the social page
@@ -69,9 +68,15 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         this.defaultButtonText = defaultButtonText;
     }
 
+    /**
+     * Sets the listener that sends main user to the public profile of a user it follows
+     *
+     * @param socialListener The described listener
+     */
     public void setSocialListener(final SocialListener socialListener){
         this.socialListener = socialListener;
     }
+
     /**
      * Adds the specified user entry to the list if its UUID is not already present
      *
@@ -228,7 +233,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
             } else {
                 socialListener.onItemClick(view, getAdapterPosition());
             }
-        } // onClick
+        }
 
         /**
          * Executes the functionality of the main button on an entry
@@ -359,7 +364,6 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
                 }
                 return true;
             });
-        }
-
+        } // menuButtonOnClick
     } // ViewHolder
 } // SocialAdapter

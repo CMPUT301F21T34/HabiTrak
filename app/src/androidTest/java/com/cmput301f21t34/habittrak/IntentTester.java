@@ -28,6 +28,7 @@ import static org.junit.Assert.*;
 
 import android.app.Instrumentation.ActivityResult;
 import android.content.Intent;
+import android.os.SystemClock;
 
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.intent.Intents;
@@ -72,6 +73,14 @@ public class IntentTester {
         onView(withId(R.id.signup_signup_button))
                 .perform(click());
 
+        //Logout to standardize the steps for the tests
+        SystemClock.sleep(3000);
+        intended(hasComponent(BaseActivity.class.getName()));
+        onView(withId(R.id.navbar_menu_profile))
+                .perform(click());
+        onView(withId(R.id.logout))
+                .perform(click());
+
         // Delete the test user
         new DatabaseManager().deleteUser("iTestEmail@gmail.com");
     }
@@ -86,6 +95,7 @@ public class IntentTester {
         //Click login to login
         onView(withId(R.id.login_button))
                 .perform(click());
+        SystemClock.sleep(2000);
         //Check to make sure we're on the intended activity, then click the add habit button
         intended(hasComponent(BaseActivity.class.getName()));
         onView(withId(R.id.base_add_habit_button))
@@ -106,6 +116,7 @@ public class IntentTester {
         onView(withId(R.id.save_habit))
                 .perform((click()));
         intended(hasComponent(BaseActivity.class.getName()));
+        //Logout to standardize the steps for the tests
         onView(withId(R.id.navbar_menu_profile))
                 .perform(click());
         onView(withId(R.id.logout))
@@ -114,10 +125,15 @@ public class IntentTester {
 
     @Test
     public void habitAddedTest(){
-        //Click login to login with dummyUser
-        //TODO: On complete implementation, will have to login for real
+        //Enter login information
+        onView(withId(R.id.username_edit_text))
+                .perform(typeText("rajabi@ualberta.ca"), closeSoftKeyboard());
+        onView(withId(R.id.password_edit_text))
+                .perform(typeText("password"), closeSoftKeyboard());
+        //Click login to login
         onView(withId(R.id.login_button))
                 .perform(click());
+        SystemClock.sleep(2000);
         //Check to make sure we're on the intended activity, then click the add habit button
         intended(hasComponent(BaseActivity.class.getName()));
         //Build the stub for AddHabitActivity to return
@@ -134,15 +150,25 @@ public class IntentTester {
         //Check to see if the new habit was added
         onView(withId(R.id.navbar_menu_habits))
                 .perform(click());
+        //Logout to standardize the steps for the tests
+        onView(withId(R.id.navbar_menu_profile))
+                .perform(click());
+        onView(withId(R.id.logout))
+                .perform(click());
         //TODO: for part 4, make sure we look into the actual list to see if the habit was added
     }
 
     @Test
     public void profileFragTest(){
-        //Click login to login with dummyUser
-        //TODO: On complete implementation, will have to login for real
+        //Enter login information
+        onView(withId(R.id.username_edit_text))
+                .perform(typeText("rajabi@ualberta.ca"), closeSoftKeyboard());
+        onView(withId(R.id.password_edit_text))
+                .perform(typeText("password"), closeSoftKeyboard());
+        //Click login to login
         onView(withId(R.id.login_button))
                 .perform(click());
+        SystemClock.sleep(2000);
         //Check to make sure we're on the intended activity, then click to profile fragment
         intended(hasComponent(BaseActivity.class.getName()));
         onView(withId(R.id.navbar_menu_profile))
@@ -160,10 +186,15 @@ public class IntentTester {
 
     @Test
     public void socialFragUITest(){
-        //Click login to login with dummyUser
-        //TODO: On complete implementation, will have to login for real
+        //Enter login information
+        onView(withId(R.id.username_edit_text))
+                .perform(typeText("rajabi@ualberta.ca"), closeSoftKeyboard());
+        onView(withId(R.id.password_edit_text))
+                .perform(typeText("password"), closeSoftKeyboard());
+        //Click login to login
         onView(withId(R.id.login_button))
                 .perform(click());
+        SystemClock.sleep(2000);
         //Check to make sure we're on the intended activity, then click on the social button
         intended(hasComponent(BaseActivity.class.getName()));
         onView(withId(R.id.navbar_menu_social))
@@ -176,6 +207,11 @@ public class IntentTester {
         onView(withContentDescription("Requests"))
                 .perform(click());
         onView(withContentDescription("Search"))
+                .perform(click());
+        //Logout to standardize the steps for the tests
+        onView(withId(R.id.navbar_menu_profile))
+                .perform(click());
+        onView(withId(R.id.logout))
                 .perform(click());
         //TODO: maybe put in searching? Can the emulator connect to the internet to search?
     }

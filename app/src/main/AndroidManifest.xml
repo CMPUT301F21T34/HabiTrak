@@ -18,13 +18,13 @@
         <activity
             android:name=".ViewEditHabitEvents"
             android:exported="true"
-            android:parentActivityName=".ViewHabitEvents">
+            android:parentActivityName=".event.ViewHabitEvents">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.cmput301f21t34.habittrak.BaseActivity" />
         </activity>
         <activity
-            android:name=".ViewHabitEvents"
+            android:name=".event.ViewHabitEvents"
             android:exported="true"
             android:parentActivityName=".BaseActivity">
             <meta-data
@@ -70,7 +70,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".MapsActivity"
+            android:name=".event.MapsActivity"
             android:exported="true"
             android:label="@string/title_activity_maps" />
 

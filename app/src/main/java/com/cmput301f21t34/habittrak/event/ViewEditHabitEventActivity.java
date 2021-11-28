@@ -1,4 +1,4 @@
-package com.cmput301f21t34.habittrak;
+package com.cmput301f21t34.habittrak.event;
 
 import android.Manifest;
 import android.app.Activity;
@@ -27,7 +27,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
-import com.cmput301f21t34.habittrak.user.Habit;
+import com.cmput301f21t34.habittrak.DatabaseManager;
+import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.user.HabitEvent;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -43,7 +44,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class ViewEditHabitEvents extends AppCompatActivity {
+public class ViewEditHabitEventActivity extends AppCompatActivity {
 
     private TextInputEditText comment;
     private TextView addressLine;
@@ -172,7 +173,7 @@ public class ViewEditHabitEvents extends AppCompatActivity {
                         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                         //Uri contentUri = Uri.fromFile(f);
                         mediaScanIntent.setData(contentUri);
-                        ViewEditHabitEvents.this.sendBroadcast(mediaScanIntent);
+                        ViewEditHabitEventActivity.this.sendBroadcast(mediaScanIntent);
                         // to load the image using the uri use Picasso.get().load(he.getUri()).into(image);
                         Log.d("CAMERA","Exiting gallery stage");
                     } else {
@@ -238,8 +239,8 @@ public class ViewEditHabitEvents extends AppCompatActivity {
      * and if the permission has already been granted starts the process of taking picture using the camera
      */
     private void askCameraPermission() {
-        if (ContextCompat.checkSelfPermission(ViewEditHabitEvents.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(ViewEditHabitEvents.this, new String[]{
+        if (ContextCompat.checkSelfPermission(ViewEditHabitEventActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(ViewEditHabitEventActivity.this, new String[]{
                     Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
         } else {
             dispatchTakePictureIntent();

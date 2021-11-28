@@ -37,7 +37,7 @@ import java.util.TimeZone;
  * @version 1.0
  * @since 2021-11-08
  */
-public class ViewEditHabit extends AppCompatActivity implements View.OnClickListener {
+public class ViewEditHabitActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static int RESULT_CODE = 2000;
 

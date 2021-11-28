@@ -20,7 +20,7 @@ import android.widget.PopupMenu;
 import com.cmput301f21t34.habittrak.AddHabitActivity;
 import com.cmput301f21t34.habittrak.AddHabitEventActivity;
 import com.cmput301f21t34.habittrak.DatabaseManager;
-import com.cmput301f21t34.habittrak.ViewEditHabit;
+import com.cmput301f21t34.habittrak.ViewEditHabitActivity;
 import com.cmput301f21t34.habittrak.recycler.HabitRecycler;
 import com.cmput301f21t34.habittrak.recycler.TodayHabitRecyclerAdapter;
 import com.cmput301f21t34.habittrak.user.Habit;

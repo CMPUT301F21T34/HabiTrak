@@ -1,4 +1,4 @@
-package com.cmput301f21t34.habittrak;
+package com.cmput301f21t34.habittrak.event;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -22,6 +22,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.databinding.ActivityMapsBinding;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -56,7 +57,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int REQUEST_CHECK_SETTINGS = 10001;
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
-
     private FusedLocationProviderClient fusedLocationClient;
     boolean locationPermissionGranted = false;
     private Location lastKnownLocation;

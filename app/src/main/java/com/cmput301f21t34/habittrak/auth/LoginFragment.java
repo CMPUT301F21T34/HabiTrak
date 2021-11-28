@@ -79,7 +79,7 @@ public class LoginFragment extends Fragment implements Utilities {
 
         db = new DatabaseManager();
 
-        mAuth = new Auth(getActivity(), db);
+        mAuth = new Auth(getActivity());
 
         return view;
     }

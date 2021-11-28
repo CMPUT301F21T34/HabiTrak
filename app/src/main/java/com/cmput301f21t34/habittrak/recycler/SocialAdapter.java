@@ -131,7 +131,12 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         // Set up the data for the given entry
         holder.UUID = UUIDs.get(position);
         holder.username = usernames.get(position);
-        holder.bio = bios.get(position);
+        String bio = bios.get(position);
+        if (bio.length() > 30){
+            bio = bio.substring(0, 30);
+            bio = bio + "...";
+        }
+        holder.bio = bio;
         holder.usernameTextView.setText(holder.username);
         holder.bioTextView.setText(holder.bio);
 

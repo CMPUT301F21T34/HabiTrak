@@ -102,10 +102,7 @@ public class DatabaseManager {
      */
     public boolean createNewUser(String email, String username) {
 
-        String TAG = "Unique";
-
         if (isUniqueEmail(email)) {
-            Log.d(TAG, "Unique");
             final CollectionReference collectionReference =
                     database.collection("users");
 
@@ -126,7 +123,6 @@ public class DatabaseManager {
 
             return true;
         }
-        Log.d(TAG, "Not unique");
         return false;
     }
 
@@ -183,7 +179,6 @@ public class DatabaseManager {
             DocumentSnapshot document = task.getResult();
 
             if (document.getData() != null) {
-                Log.d("getData", "not null");
                 ArrayList<HashMap<String, Object>> requestedHabitList =
                         (ArrayList<HashMap<String, Object>>) document.get("habitList");
 
@@ -505,7 +500,6 @@ public class DatabaseManager {
                         } else if (!contains) {  // Only add if not already a member
                             list.add(listMember);
                         }
-
                         // Only send to database if changes made
                         if (remove && contains || !remove && !contains) {
                             List<String> fieldsToUpdate = new ArrayList<>();
@@ -626,7 +620,7 @@ public class DatabaseManager {
             habit.setHabitEvents(habitFromDatabase.getHabitEvents());
             habit.setCurrentStreakDate(habitFromDatabase.getCurrentStreakDate());
             habit.setBestStreakDate(habitFromDatabase.getBestStreakDate());
-            if(habitFromDatabase.getIsPublic()){
+            if (habitFromDatabase.getIsPublic()) {
                 habit.makePublic();
             } else {
                 habit.makePrivate();
@@ -651,7 +645,6 @@ public class DatabaseManager {
                 returnedUri = uriTask.getResult();
             } else {
                 Log.d("Uploading image to firebase", "couldn't get download url");
-
             }
         } else {
             Log.d("Uploading image to firebase", "couldn't upload url");

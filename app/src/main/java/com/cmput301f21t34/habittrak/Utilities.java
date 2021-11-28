@@ -130,6 +130,7 @@ public interface Utilities {
         FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
         if (fUser == null){
             goToMainActivity(activity);
+            return null;
         }
         return db.getUser(fUser.getEmail());
     }

@@ -111,7 +111,7 @@ public class SocialTabFragment extends Fragment {
             populateList(); // Get the data for the entries
             socialAdapter.notifyDataSetChanged(); // Tell list manager data updated
             displayViews(); // Redo the displays
-            swipeRefresh.setRefreshing(false);
+            swipeRefresh.setRefreshing(false); // Turn off refershing indicator
         });
 
         // Invisible by default

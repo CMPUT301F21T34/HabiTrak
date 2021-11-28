@@ -63,6 +63,8 @@ public class DatabaseManagerTest {
         } catch (Exception e) {
             throw new RuntimeException(e.getLocalizedMessage());
         }
+
+        // Delete test user after test is done
         dm.deleteUser("test@gmail.com");
     }
 
@@ -72,16 +74,21 @@ public class DatabaseManagerTest {
      * Tests if getAllUsers correctly get all emails from the database
      */
     @Test
-    public void getAllUsersTest(){
-        String email = "test2@gmail.com";
-        String username = "testUser2";
-        dm.createNewUser(email, username);
+    public void getAllUsersTest() {
+        String email1 = "test1@gmail.com";
+        String username1 = "testUser1";
+        dm.createNewUser(email1, username1);
+        String email2 = "test2@gmail.com";
+        String username2 = "testUser2";
+        dm.createNewUser(email2, username2);
+
         ArrayList<String> userNames = dm.getAllUsers();
-        assertEquals(2,userNames.size());
-        assertEquals("testUser",userNames.get(0));
-        assertEquals("testUser2",userNames.get(1));
-        dm.deleteUser("test2@gmail.com");
-        dm.deleteUser("test@gmail.com");
+        assertEquals(email1, userNames.get(userNames.size() - 2));
+        assertEquals(email2, userNames.get(userNames.size() - 1));
+
+        // Delete test user after test is done
+        dm.deleteUser(email1);
+        dm.deleteUser(email2);
     }
 
     /**
@@ -97,8 +104,10 @@ public class DatabaseManagerTest {
         user.setUsername(username);
         dm.createNewUser(email, username);
         String name = dm.getUserName(user.getEmail());
-        assertEquals(user.getUsername(),name);
-        dm.deleteUser("test@gmail.com");
+        assertEquals(user.getUsername(), name);
+
+        // Delete test user after test is done
+        dm.deleteUser(email);
     }
 
     /**
@@ -107,23 +116,26 @@ public class DatabaseManagerTest {
      * Tests if getUser correctly get the user from the database
      */
     @Test
-    public void getUserTest(){
+    public void getUserTest() {
         String email = "test@gmail.com";
         String username = "testUser";
         String bio = "testing";
         dm.createNewUser(email, username);
-        User user = dm.getUser("test@gmail.com");
-        dm.updateBio(email,bio);
-        assertEquals("testUser",user.getUsername());
-        assertEquals(email,user.getEmail());
-        assertEquals(bio,user.getBiography());
-        assertEquals(0,user.getFollowerList().size());
-        assertEquals(0,user.getFollowingList().size());
-        assertEquals(0,user.getFollowerReqList().size());
-        assertEquals(0,user.getFollowingReqList().size());
-        assertEquals(0,user.getBlockedByList().size());
-        assertEquals(0,user.getBlockList().size());
+        dm.updateBio(email, bio);
 
+        // Get user from the db then test
+        User user = dm.getUser(email);
+        assertEquals(username, user.getUsername());
+        assertEquals(email, user.getEmail());
+        assertEquals(bio, user.getBiography());
+        assertEquals(0, user.getFollowerList().size());
+        assertEquals(0, user.getFollowingList().size());
+        assertEquals(0, user.getFollowerReqList().size());
+        assertEquals(0, user.getFollowingReqList().size());
+        assertEquals(0, user.getBlockedByList().size());
+        assertEquals(0, user.getBlockList().size());
+
+        // Delete test user after test is done
         dm.deleteUser("test@gmail.com");
     }
 
@@ -133,7 +145,7 @@ public class DatabaseManagerTest {
      * Tests if getUserBio correctly get the biography of the user from the database
      */
     @Test
-    public void getUserBioTest(){
+    public void getUserBioTest() {
         String email = "test@gmail.com";
         String username = "testUser";
         String biography = "testing";
@@ -141,8 +153,9 @@ public class DatabaseManagerTest {
         user.setUsername(username);
         user.setBiography(biography);
         dm.createNewUser(email, username);  // add user to the db
-        String bio = dm.getUserBio(user.getEmail());  // get bio from the db
         dm.updateBio(user.getEmail(),user.getBiography());
+
+        String bio = dm.getUserBio(user.getEmail());  // get bio from the db
         assertEquals(user.getBiography(),bio);
 
         // Delete test user after test is done
@@ -243,7 +256,7 @@ public class DatabaseManagerTest {
 
         String email2 = "test2@gmail.com";
         String username2 = "testUser2";
-        dm.createNewUser(email1, username2);
+        dm.createNewUser(email2, username2);
 
         // User 1 is blocking user 2
         dm.updateBlock(email2, email1, false);
@@ -259,7 +272,64 @@ public class DatabaseManagerTest {
     }
 
     /**
+     * updateFollowTest
+     *
+     * Tests if updateFollow properly propagates the changes in follow relation to the database
+     */
+    @Test
+    public void updateFollowTest() {
+        String email1 = "test1@gmail.com";
+        String username1 = "testUser1";
+        dm.createNewUser(email1, username1);
+
+        String email2 = "test2@gmail.com";
+        String username2 = "testUser2";
+        dm.createNewUser(email2, username2);
+
+        // User 1 is following user 2
+        dm.updateFollow(email2, email1, false);
+        User user1 = dm.getUser(email1);
+        User user2 = dm.getUser(email2);
+
+        assertEquals(user1.getFollowingList().get(0), user2.getEmail());
+        assertEquals(user2.getFollowerList().get(0), user1.getEmail());
+
+        // Delete test user after test is done
+        dm.deleteUser(email1);
+        dm.deleteUser(email2);
+    }
+
+    /**
+     * updateFollowRequestTest
+     *
+     * Tests if updateFollowTest properly propagates the changes in request relation to the database
+     */
+    @Test
+    public void updateFollowRequestTest() {
+        String email1 = "test1@gmail.com";
+        String username1 = "testUser1";
+        dm.createNewUser(email1, username1);
+
+        String email2 = "test2@gmail.com";
+        String username2 = "testUser2";
+        dm.createNewUser(email2, username2);
+
+        // User 1 is sending follow request to user 2
+        // dm.updateFollowRequest(email2, email1, false);
+        User user1 = dm.getUser(email1);
+        User user2 = dm.getUser(email2);
+
+        assertEquals(user1.getFollowingReqList().get(0), user2.getEmail());
+        assertEquals(user2.getFollowerReqList().get(0), user1.getEmail());
+
+        // Delete test user after test is done
+        dm.deleteUser(email1);
+        dm.deleteUser(email2);
+    }
+
+    /**
      * updateBioTest
+     *
      * Tests if updateBio properly propagates the changes in biography to the database
      */
     @Test
@@ -273,6 +343,29 @@ public class DatabaseManagerTest {
 
         User user = dm.getUser(email);
         assertEquals(bio, user.getBiography());
+
+        // Delete test user after test is done
+        dm.deleteUser(email);
+    }
+
+    /**
+     * updateUsernameTest
+     *
+     * Tests if updateUsername properly propagates the changes in username to the database
+     */
+    @Test
+    public void updateUsernameTest() {
+        String email = "test@gmail.com";
+        String username = "testUser";
+        dm.createNewUser(email, username);
+
+        String name = "bing chilling";
+        dm.updateUsername(email, name);
+
+        User user = dm.getUser(email);
+        assertEquals(name, user.getUsername());
+
+        // Delete test user after test is done
         dm.deleteUser(email);
     }
 }

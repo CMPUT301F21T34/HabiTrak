@@ -64,7 +64,6 @@ public class DatabaseManager {
         } catch (Exception ignored) {
             Log.d("Getting all users error", "all users", ignored);
         }
-
         return users;
     }
 
@@ -186,7 +185,6 @@ public class DatabaseManager {
                         toHabitDatabaseList(requestedHabitList);
                 habitList = databaseToHabit(requestedHabitDatabases);
                 followerList = (ArrayList<String>) document.get("followerList");
-
                 followingList = (ArrayList<String>) document.get("followingList");
                 followReqList = (ArrayList<String>) document.get("followReqList");
                 followRequestedList = (ArrayList<String>) document.get("followRequestedList");

@@ -43,7 +43,7 @@ public class DatabaseManagerTest {
 
     /**
      * createNewUser
-     *
+     * <p>
      * Tests if createNewUser correctly adds a new user with the given attributes to the database
      */
     @Test
@@ -67,8 +67,8 @@ public class DatabaseManagerTest {
 
     /**
      * updateHabitTest
-     *
-     * Tests of updateHabitList properly propagates the changes in habit list to the database
+     * <p>
+     * Tests if updateHabitList properly propagates the changes in habit list to the database
      */
     @Test
     public void updateHabitListTest() {
@@ -123,6 +123,34 @@ public class DatabaseManagerTest {
 
         // Delete test user after test is done
         dm.deleteUser(email);
+    }
+
+    /**
+     * updateBlockTest
+     *
+     * Tests of updateBlock properly propagates the changes in block relation to the database
+     */
+    @Test
+    public void updateBlockTest() {
+        String email1 = "test1@gmail.com";
+        String username1 = "testUser1";
+        dm.createNewUser(email1, username1);
+
+        String email2 = "test2@gmail.com";
+        String username2 = "testUser2";
+        dm.createNewUser(email1, username2);
+
+        // User 1 is blocking user 2
+        dm.updateBlock(email2, email1, false);
+        User user1 = dm.getUser(email1);
+        User user2 = dm.getUser(email2);
+
+        assertEquals(user1.getBlockList().get(0), user2.getEmail());
+        assertEquals(user2.getBlockedByList().get(0), user1.getEmail());
+
+        // Delete test user after test is done
+        dm.deleteUser(email1);
+        dm.deleteUser(email2);
     }
 }
 

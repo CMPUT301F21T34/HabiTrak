@@ -3,6 +3,7 @@ package com.cmput301f21t34.habittrak.social;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,6 +37,7 @@ public class SocialViewProfile extends AppCompatActivity {
     private SocialAdapter socialAdapter;
     private TextView username;
     private TextView bio;
+    private LinearLayout noDataLayout;
     private HabitRecycler habitRecycler;
     private HabitRecyclerAdapter adapter;
     private HabitList habitList = new HabitList();
@@ -60,6 +62,7 @@ public class SocialViewProfile extends AppCompatActivity {
         recyclerView = findViewById(R.id.social_profile_recycler);
         username = findViewById(R.id.social_profile_username);
         bio = findViewById(R.id.social_profile_bio);
+        noDataLayout = findViewById(R.id.social_no_data_view);
 
         // set TextView
         username.setText(user.getUsername());
@@ -95,6 +98,9 @@ public class SocialViewProfile extends AppCompatActivity {
         });
         habitRecycler = new HabitRecycler(recyclerView, layoutManager, user.getHabitList(), user.getHabitList(), true);
         habitRecycler.setAdapter(adapter);
+
+        if (habitList.isEmpty())
+            noDataLayout.setVisibility(View.VISIBLE);
     }
 
     /**

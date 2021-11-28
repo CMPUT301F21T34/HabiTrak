@@ -219,7 +219,8 @@ public class SocialTabFragment extends Fragment {
      * UI updates for when the data fetching is done
      */
     public void displayViews() {
-            if (UUIDs.isEmpty()) {
+        Log.d("Social", String.valueOf(UUIDs.size()) + "size");
+            if (UUIDs.size() == 0) {
                 // Don't cause null references if fragment view isn't created yet
                 if (noDataView != null) {
                     noDataView.setVisibility(View.VISIBLE);
@@ -235,7 +236,18 @@ public class SocialTabFragment extends Fragment {
                 if (searchBox != null && searchable) {
                     searchBox.setVisibility(View.VISIBLE);  // Allow searches now
                 }
+
+                if (noDataView != null) {
+                    noDataView.setVisibility(View.GONE);
+                }
             }
+    }
+
+    /**
+     * call the setList function of SocialAdapter
+     */
+    public void setList() {
+        socialAdapter.setList(UUIDs, usernames, bios);
     }
 
     /**
@@ -267,6 +279,7 @@ public class SocialTabFragment extends Fragment {
             socialAdapter.setMainUser(mainUser); // Update socialAdapter's version of mainUser
             UUIDs = getUUIDs(type); // Get the entries for the list
             populateList(); // Get the data for the entries
+            setList();
             return null;
         }
 
@@ -277,6 +290,7 @@ public class SocialTabFragment extends Fragment {
             socialAdapter.notifyDataSetChanged(); // Tell list manager data updated
             displayViews(); // Redo the displays
             swipeRefresh.setRefreshing(false); // Turn off loading visual
+
         }
     }
 }

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -134,9 +133,7 @@ public class SocialTabFragment extends Fragment {
      * @param position position in the List
      */
     public void onRowClick(View view, int position) {
-        Log.d("Social", "Row Clicked " + position);
         String UUID = UUIDs.get(position);
-        Log.d("Social", UUID);
         // Display user profile if main user is following a given user
         if (mainUser.getFollowingList().contains(UUID)) {
             Intent intent = new Intent(getContext(), SocialViewProfile.class);
@@ -219,24 +216,29 @@ public class SocialTabFragment extends Fragment {
      * UI updates for when the data fetching is done
      */
     public void displayViews() {
-            if (UUIDs.isEmpty()) {
-                // Don't cause null references if fragment view isn't created yet
-                if (noDataView != null) {
-                    noDataView.setVisibility(View.VISIBLE);
-                }
-            } else {
-                if (loading != null) {
-                    loading.stopShimmer();                  // Stop visuals
-                    loading.setVisibility(View.GONE);       // Disappear visuals
-                }
-                if (recyclerView != null) {
-                    recyclerView.setVisibility(View.VISIBLE);
-                }
-                if (searchBox != null && searchable) {
-                    searchBox.setVisibility(View.VISIBLE);  // Allow searches now
-                }
+        if (UUIDs.size() == 0) {
+            // Don't cause null references if fragment view isn't created yet
+            if (noDataView != null) {
+                noDataView.setVisibility(View.VISIBLE);
             }
+        } else {
+            if (loading != null) {
+                loading.stopShimmer();                  // Stop visuals
+                loading.setVisibility(View.GONE);       // Disappear visuals
+            }
+            if (recyclerView != null) {
+                recyclerView.setVisibility(View.VISIBLE);
+            }
+            if (searchBox != null && searchable) {
+                searchBox.setVisibility(View.VISIBLE);  // Allow searches now
+            }
+
+            if (noDataView != null) {
+                noDataView.setVisibility(View.GONE);
+            }
+        }
     }
+
 
     /**
      * Gets the user data for the list entry in the background
@@ -267,6 +269,7 @@ public class SocialTabFragment extends Fragment {
             socialAdapter.setMainUser(mainUser); // Update socialAdapter's version of mainUser
             UUIDs = getUUIDs(type); // Get the entries for the list
             populateList(); // Get the data for the entries
+            socialAdapter.setList(UUIDs, usernames, bios);
             return null;
         }
 
@@ -277,6 +280,7 @@ public class SocialTabFragment extends Fragment {
             socialAdapter.notifyDataSetChanged(); // Tell list manager data updated
             displayViews(); // Redo the displays
             swipeRefresh.setRefreshing(false); // Turn off loading visual
+
         }
     }
 }

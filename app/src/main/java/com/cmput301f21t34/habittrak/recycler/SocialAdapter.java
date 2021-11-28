@@ -1,7 +1,6 @@
 package com.cmput301f21t34.habittrak.recycler;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,10 +40,10 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
 
     private final SocialFragment socialRef;
     private User mainUser;
-    private final ArrayList<String> UUIDsCopy;
-    private final ArrayList<String> usernamesCopy;
-    private final ArrayList<String> biosCopy;
-    private final String defaultButtonText;
+    private ArrayList<String> UUIDsCopy;
+    private ArrayList<String> usernamesCopy;
+    private ArrayList<String> biosCopy;
+    private String defaultButtonText;
     private ArrayList<String> UUIDs;
     private ArrayList<String> usernames;
     private ArrayList<String> bios;
@@ -115,6 +114,15 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
      */
     public void setMainUser(User mainUser) {
         this.mainUser = mainUser;
+    }
+
+    public void setList(ArrayList<String> UUIDs, ArrayList<String> usernames, ArrayList<String> bios) {
+        this.UUIDs = UUIDs;
+        UUIDsCopy = UUIDs;
+        this.usernames = usernames;
+        usernamesCopy = usernames;
+        this.bios = bios;
+        biosCopy = bios;
     }
 
     @NonNull
@@ -322,7 +330,6 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
             menu.setOnMenuItemClickListener(menuItem -> {
                 switch (menuItem.getTitle().toString()) {
                     case "Block":
-                        Log.d("MenuItem", "Block Clicked");
 
                         // Store block relationship
                         mainUser.addBlock(UUID);
@@ -363,7 +370,6 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
                         mainButton.setText(UNBLOCK);
                         break;
                     case "Remove":
-                        Log.d("MenuItem", "Remove Clicked");
                         // Remove follower or follower request, remove from this list now
 
                         // Remove follower or follower request (they are mutually exclusive)

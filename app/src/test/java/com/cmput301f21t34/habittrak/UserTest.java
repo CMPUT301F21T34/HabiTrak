@@ -20,9 +20,6 @@ import org.junit.jupiter.api.Test;
  * @since 2021-10-22
  */
 public class UserTest {
-    // No tests for getters or setters
-    // YET! TODO: tests for getters and setters.
-    // TODO finish javadoc if needed in testing files
 
     /**
      * mockUser

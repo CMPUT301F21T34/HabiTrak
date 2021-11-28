@@ -39,7 +39,6 @@ public class ParcelableUnitTest {
     @Test
     public void testParcelableUser(){
 
-
         User testUser = getTestUser();
 
         Parcel testParcel = Parcel.obtain(); // init a parcel
@@ -67,18 +66,13 @@ public class ParcelableUnitTest {
      * @return User for testing
      */
     private User getTestUser(){
-
-
-        User testUser = new User("DummyUser","Pass","dummy@email.com");
+        User testUser = new User("DummyUser","dummy@email.com");
 
         HabitList testHabits = getTestHabitList();
         for (int index = 0; index < testHabits.size(); index++){
             testUser.getHabitList().add(testHabits.get(index));
         }
-
-
         return testUser;
-
     }
 
     /**
@@ -92,8 +86,7 @@ public class ParcelableUnitTest {
         HabitList habitList = new HabitList();
         habitList.add(new Habit("hab1"));
         habitList.add(new Habit("hab2","res2",Calendar.getInstance()));
-
-        return  habitList;
+        return habitList;
 
     }
 
@@ -137,8 +130,7 @@ public class ParcelableUnitTest {
      * Tests if {@link HabitEvent} is properly parceled and unpacked
      */
     @Test
-    public void testParcelableHabitEvent(){
-
+    public void testParcelableHabitEvent() {
         HabitEvent testHabitEvent = new HabitEvent();
         // Create empty parcels to populate
         Parcel testParcel = Parcel.obtain();
@@ -154,10 +146,8 @@ public class ParcelableUnitTest {
         assertEquals(testHabitEvent.getCompletedDate(), parceledHabitEvent.getCompletedDate());
     }
 
-
     @Test
-    public void testParcelableOnDays(){
-
+    public void testParcelableOnDays() {
         OnDays onDays = new OnDays();
         onDays.setAll(new boolean[]{true, false, true, false, true, true, true});
 
@@ -168,7 +158,5 @@ public class ParcelableUnitTest {
         OnDays parceledOnDays = new OnDays(testParcel);
 
         assertEquals(onDays.getAll()[1], parceledOnDays.getAll()[1]);
-
-
     }
 }

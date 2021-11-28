@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +38,6 @@ import java.util.ArrayList;
 public class EventsFragment extends Fragment {
 
     // Attributes //
-    public static String TAG = "Habit_Events";
     // These are for the Recycler view
     private RecyclerView habitRecyclerView;
     private RecyclerView.LayoutManager layoutManager;
@@ -112,7 +111,6 @@ public class EventsFragment extends Fragment {
      */
     public void refreshEventFragment() {
 
-        Log.d("EventsFragment", "refreshing habit list");
         // Populate today view with Today's habits.
 
         habitsDisplayList.clear(); // Make sure is clear
@@ -149,7 +147,6 @@ public class EventsFragment extends Fragment {
             Habit habit = habitsDisplayList.get(position);
             mainUser.getHabitList().remove(habit);
             refreshEventFragment();
-            Log.d(TAG,"Habit Removed");
             return true;
         });
     }

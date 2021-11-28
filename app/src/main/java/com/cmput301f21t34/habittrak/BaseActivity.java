@@ -2,7 +2,6 @@ package com.cmput301f21t34.habittrak;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -17,16 +16,12 @@ import com.cmput301f21t34.habittrak.fragments.EventsFragment;
 import com.cmput301f21t34.habittrak.fragments.ProfileFragment;
 import com.cmput301f21t34.habittrak.fragments.SocialFragment;
 import com.cmput301f21t34.habittrak.fragments.TodayListFragment;
-import com.cmput301f21t34.habittrak.streak.Streak;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitEvent;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
-import java.util.ArrayList;
 
 //TODO: Rename BaseActivity to a more suitable name
 
@@ -49,17 +44,16 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
     public static final int RESULT_HABIT_EVENTS = 5000;
     DatabaseManager db = new DatabaseManager();
 
-    final String TAG = "BASE ACTIVITY";
-    //TODO: Explicitly make attributes private
-    NavigationBarView bottomNav;
-    User mainUser;      // Creates dummy user for testing purposes
-    TodayListFragment todayFrag;
-    ProfileFragment profileFrag;
-    EventsFragment eventsFrag;
-    AllHabitsFragment allHabitsFrag;
-    SocialFragment socialFrag;
-    MaterialButton addHabitButton;
-    ActivityResultLauncher<Intent> addHabitActivityLauncher = registerForActivityResult(
+
+    private NavigationBarView bottomNav;
+    private User mainUser;      // Creates dummy user for testing purposes
+    private TodayListFragment todayFrag;
+    private ProfileFragment profileFrag;
+    private EventsFragment eventsFrag;
+    private AllHabitsFragment allHabitsFrag;
+    private SocialFragment socialFrag;
+    private MaterialButton addHabitButton;
+    private ActivityResultLauncher<Intent> addHabitActivityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
             }
@@ -170,11 +164,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         // result from add habit activity
         if (resultCode == RESULT_NEW_HABIT) {
             Habit newHabit = intent.getParcelableExtra("newHabit");
-            Log.d(TAG, "adding new habit: " + newHabit.getTitle());
             mainUser.getHabitList().add(newHabit);
-            Log.d(TAG, "!newHabit Absolute Index: " + String.valueOf(newHabit.getIndex()));
-            Log.d(TAG, "new habit: " + mainUser.getHabitList().get(mainUser.getHabitList().size() - 1).getTitle());
-            Log.d(TAG, "size: " + String.valueOf(mainUser.getHabitList().size()));
             todayFrag.refreshTodayFragment(); // refresh view
 
 

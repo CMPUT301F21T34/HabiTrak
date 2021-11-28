@@ -9,11 +9,11 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cmput301f21t34.habittrak.BaseActivity;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.google.android.material.button.MaterialButton;
@@ -40,7 +40,7 @@ import java.util.TimeZone;
  */
 public class ViewEditHabitActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public static int RESULT_CODE = 2000;
+    public static int RESULT_CODE = BaseActivity.RESULT_EDIT_HABIT;
 
     private TextInputEditText habitName;
     private TextInputEditText habitReason;
@@ -93,7 +93,6 @@ public class ViewEditHabitActivity extends AppCompatActivity implements View.OnC
         Intent intent = getIntent();
         this.habit = intent.getParcelableExtra("HABIT");
         this.habitPosition = intent.getIntExtra("position", 0);
-        Log.d("VIEW HABIT", Integer.toString(habitPosition));
 
         // getting views
         habitName = findViewById(R.id.view_habit_name_edit_text);
@@ -123,7 +122,6 @@ public class ViewEditHabitActivity extends AppCompatActivity implements View.OnC
         String reason = habit.getReason();
         calendar = habit.getStartDate();
         boolean isPublic = habit.isPublic();
-        Log.d("VIEW HABIT", Boolean.toString(isPublic));
         setDaysSelector();  // set days selector values
 
         // set name and reason
@@ -218,6 +216,7 @@ public class ViewEditHabitActivity extends AppCompatActivity implements View.OnC
             changeButtonState(view, sundayButton, 6);
         } else if (view.getId() == R.id.view_save_habit) {
             if (checkField(habitName.getText()) && checkField(habitReason.getText())) {
+
                 habit.setTitle(habitName.getText().toString());
                 habit.setReason(habitReason.getText().toString());
                 habit.setStartDate(calendar);
@@ -226,11 +225,13 @@ public class ViewEditHabitActivity extends AppCompatActivity implements View.OnC
                 Intent result = new Intent();
                 result.putExtra("HABIT", habit);
                 result.putExtra("position", habitPosition);
-                Log.d("VIEW_HABIT", "SENDING RESULT");
                 setResult(RESULT_CODE, result);
                 this.finish();
+
             } else {
+
                 Toast.makeText(getBaseContext(), "Empty Text Fields", Toast.LENGTH_SHORT).show();
+
             }
         }
     }

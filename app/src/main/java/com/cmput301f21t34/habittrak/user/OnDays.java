@@ -3,7 +3,6 @@ package com.cmput301f21t34.habittrak.user;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Calendar;

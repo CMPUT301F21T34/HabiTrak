@@ -2,31 +2,24 @@ package com.cmput301f21t34.habittrak.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.OnLifecycleEvent;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cmput301f21t34.habittrak.DatabaseManager;
-import com.cmput301f21t34.habittrak.MainActivity;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.Utilities;
 import com.cmput301f21t34.habittrak.auth.Auth;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
 import com.google.firebase.auth.FirebaseUser;
@@ -60,8 +53,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, U
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.habi_profile_fragment, container, false);
-
-        Log.d("mainUser", "in ProfileFragment mainUser: " + mainUser.getUsername());
 
         //Link views in the UI to the variables
         confirm = view.findViewById(R.id.confirmer);

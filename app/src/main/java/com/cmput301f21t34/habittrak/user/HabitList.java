@@ -2,7 +2,6 @@ package com.cmput301f21t34.habittrak.user;
 
 import android.os.Bundle;
 import android.os.Parcel;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -122,11 +121,6 @@ public class HabitList extends ArrayList<Habit> {
             return true;
         } else {
             // index mismatch //
-            Log.e("Habit_List", "Index Mismatch:" + "\n\t index expected: "
-                    + String.valueOf(index)
-                    + "\n\t index retrieved: "
-                    + String.valueOf(this.get(index).getIndex())
-                    + "\n\t will attempt to continue.");
             success = super.remove(toRemove);
             this.saveOrder();
 

@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
  * Authentication class for interacting with Firebase Auth
  *
  * @author Dakota
- * @version 1.0
+ * @version 2.0
  * @see FirebaseAuth
  * @see FirebaseUser
  * @see 'https://firebase.google.com/docs/auth'
@@ -62,6 +62,7 @@ public class Auth {
 
     /**
      * signs a user out
+     *
      * @author Dakota
      */
     public void signOut(){

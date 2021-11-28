@@ -2,7 +2,7 @@ package com.cmput301f21t34.habittrak;
 
 import android.location.Location;
 import android.net.Uri;
-import android.util.Log;
+import android.util.Log; //TODO: Clean up Logs
 
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitEvent;

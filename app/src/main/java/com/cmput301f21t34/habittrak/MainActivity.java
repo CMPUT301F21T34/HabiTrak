@@ -2,15 +2,9 @@ package com.cmput301f21t34.habittrak;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 
 
-import com.cmput301f21t34.habittrak.auth.LoginFragment;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

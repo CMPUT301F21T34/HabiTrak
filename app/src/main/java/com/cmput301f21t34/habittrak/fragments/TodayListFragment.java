@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +40,6 @@ import java.util.ArrayList;
 public class TodayListFragment extends Fragment {
 
     // Attributes //
-    public static String TAG = "Today_List";
     // These are for the Recycler view
     private RecyclerView habitRecyclerView;
     private RecyclerView.LayoutManager layoutManager;
@@ -58,7 +56,6 @@ public class TodayListFragment extends Fragment {
         habitsDisplayList = new ArrayList<>();
         this.mainUser = mainUser;
         adapter = new HabitRecyclerAdapter(habitsDisplayList, true);
-        Log.d(TAG, "New Frag Created");
     }
 
     @Override
@@ -67,7 +64,6 @@ public class TodayListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.habi_today_fragment, container, false);
 
-        Log.d(TAG, "New View Created");
         // Sets up views and manager for recycler view
         habitRecyclerView = view.findViewById(R.id.today_recycler_view);
         noDataLayout = view.findViewById(R.id.today_no_data_view);
@@ -174,7 +170,6 @@ public class TodayListFragment extends Fragment {
             Habit habit = habitsDisplayList.get(position);
             mainUser.getHabitList().remove(habit);
             refreshTodayFragment();
-            Log.d(TAG,"Habit Removed");
             dm.updateHabitList(mainUser.getEmail(), mainUser.getHabitList());
             return true;
         });

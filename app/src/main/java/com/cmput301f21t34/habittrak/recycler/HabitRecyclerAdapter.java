@@ -1,6 +1,5 @@
 package com.cmput301f21t34.habittrak.recycler;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +32,7 @@ public class HabitRecyclerAdapter extends RecyclerView.Adapter<HabitRecyclerAdap
 
     private ArrayList<Habit> habits;
     private static HabitClickListener habitClickListener;
-    private boolean viewCheckbox = true;
+    private boolean viewCheckbox;
 
     public interface HabitClickListener{
         void onItemClick(View view, int position);
@@ -42,6 +41,7 @@ public class HabitRecyclerAdapter extends RecyclerView.Adapter<HabitRecyclerAdap
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
         private final TextView habitName;
         private final TextView habitDesc;
         private final MaterialCheckBox checkBox;
@@ -143,7 +143,6 @@ public class HabitRecyclerAdapter extends RecyclerView.Adapter<HabitRecyclerAdap
         public void checkCheckbox() {
             checkBox.setChecked(true);
             checkBox.setEnabled(false);
-            Log.d("Adapter", "check checkbox");
         }
 
     }
@@ -195,7 +194,6 @@ public class HabitRecyclerAdapter extends RecyclerView.Adapter<HabitRecyclerAdap
             Calendar date = Calendar.getInstance();
             ArrayList<HabitEvent> events = habit.getHabitEvents();
             for (int i = 0; i < events.size(); i++) {
-                Log.d("Adapter", Integer.toString(events.size()));
                 if (sameDay(events.get(i).getCompletedDate(), date)) {
                     viewHolder.checkCheckbox();
                     break;

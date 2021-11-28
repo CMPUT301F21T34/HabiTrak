@@ -10,7 +10,6 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -36,7 +35,6 @@ import java.util.TimeZone;
  */
 public class AddHabitActivity extends AppCompatActivity {
 
-    public static final String TAG = "Add_Habit";
     private TextInputEditText habitName;
     private TextInputEditText habitReason;
     private MaterialButton datePickerButton;
@@ -100,7 +98,6 @@ public class AddHabitActivity extends AppCompatActivity {
         // setting date
         calendar = Calendar.getInstance();
         String setDateText = "Selected Date is : " + getDate(calendar);
-        Log.d(TAG, setDateText);
         startDate.setText(setDateText);
 
 

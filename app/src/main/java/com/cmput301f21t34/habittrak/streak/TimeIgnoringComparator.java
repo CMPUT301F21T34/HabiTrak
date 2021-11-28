@@ -3,7 +3,7 @@ package com.cmput301f21t34.habittrak.streak;
 import java.util.Calendar;
 import java.util.Comparator;
 
-//
+
 /**
  * TimeIgnoringComparator
  *
@@ -14,6 +14,9 @@ import java.util.Comparator;
  * @see //https://stackoverflow.com/questions/1439779/how-to-compare-two-dates-without-the-time-portion
  */
 
+/**
+ * Compares two Calendars excluding time
+ */
 public class TimeIgnoringComparator implements Comparator<Calendar> {
     public int compare(Calendar c1, Calendar c2) {
         if (c1.get(Calendar.YEAR) != c2.get(Calendar.YEAR)) // Compares Years

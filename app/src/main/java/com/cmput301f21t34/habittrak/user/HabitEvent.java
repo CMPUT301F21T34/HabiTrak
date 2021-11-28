@@ -5,12 +5,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
+
 
 import com.cmput301f21t34.habittrak.Utilities;
 
 import java.util.Calendar;
-import java.util.TimeZone;
 
 /**
  * HabitEvent
@@ -185,7 +184,6 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable, Utilities
 
         if (photograph != null) {
             String photographpath = photograph;
-            Log.d("EDIT_HAb","the path is "+photographpath);
 
             // Handles photograph
             habitEventBundle.putString("photograph", photographpath);

@@ -1,6 +1,5 @@
 package com.cmput301f21t34.habittrak.recycler;
 
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -23,7 +22,6 @@ import java.util.ArrayList;
  */
 public class HabitRecycler {
 
-    private final String TAG = "HabitRecycler";
 
     private ArrayList<Habit> displayHabits;
     private HabitList habits;
@@ -32,7 +30,6 @@ public class HabitRecycler {
     private ItemTouchHelper.SimpleCallback simpleCallback;
 
     private final RecyclerView recyclerView;
-    private final RecyclerView.LayoutManager layoutManager;
 
     private boolean locked = false;
 
@@ -53,7 +50,6 @@ public class HabitRecycler {
 
         // Sets up recycler view and its layout manger
         this.recyclerView = recyclerView;
-        this.layoutManager = layoutManager;
         recyclerView.setLayoutManager(layoutManager);
 
         // Sets up our adapter with our displayHabits
@@ -80,7 +76,6 @@ public class HabitRecycler {
 
         // Sets up recycler view and its layout manger
         this.recyclerView = recyclerView;
-        this.layoutManager = layoutManager;
         recyclerView.setLayoutManager(layoutManager);
 
         // Sets up our adapter with our displayHabits
@@ -113,15 +108,8 @@ public class HabitRecycler {
 
                 if (fromPosition < toPosition && toPosition < displayHabits.size()) {
                     for (int i = fromPosition; i < toPosition; i++) {
-                        Log.d(TAG, "==swapping==");
                         Habit habit1 = displayHabits.get(i);
                         Habit habit2 = displayHabits.get(i + 1);
-
-                        Log.d(TAG, "habit1 : " + String.valueOf(habit1.getTitle()) + "index in display: " + String.valueOf(i));
-                        Log.d(TAG, "habit2 : " + String.valueOf(habit2.getTitle()) + "index in display: " + String.valueOf(i + 1) );
-
-                        Log.d(TAG, "habit1 index before swap: " + String.valueOf(habit1.getIndex()));
-                        Log.d(TAG, "habit2 index before swap: " + String.valueOf(habit2.getIndex()));
 
                         // We swap the habits in the main list rather then the views particular list
                         habits.swap(habit1.getIndex(), habit2.getIndex());
@@ -130,25 +118,15 @@ public class HabitRecycler {
                         displayHabits.set(i, habit2);
                         displayHabits.set(i + 1, habit1);
 
-                        Log.d(TAG, "habit1 index after swap: " + String.valueOf(habit1.getIndex()));
-                        Log.d(TAG, "habit2 index after swap: " + String.valueOf(habit2.getIndex()));
-
-                        Log.d(TAG, "====end====");
-                        //habitsData.swap(i, i + 1);
                     }
                 } else if (toPosition >= 0) {
                     for (int i = fromPosition; i > toPosition; i--) {
 
-                        Log.d(TAG, "==swapping==");
 
                         Habit habit1 = displayHabits.get(i);
                         Habit habit2 = displayHabits.get(i - 1);
 
-                        Log.d(TAG, "habit1 : " + String.valueOf(habit1.getTitle()) + " index in display: " + String.valueOf(i));
-                        Log.d(TAG, "habit2 : " + String.valueOf(habit2.getTitle()) + " index in display: " + String.valueOf(i - 1) );
 
-                        Log.d(TAG, "habit1 index before swap: " + String.valueOf(habit1.getIndex()));
-                        Log.d(TAG, "habit2 index before swap: " + String.valueOf(habit2.getIndex()));
 
                         // We swap the habits in the main list rather then the views particular list
                         habits.swap(habit1.getIndex(), habit2.getIndex());
@@ -157,15 +135,11 @@ public class HabitRecycler {
                         displayHabits.set(i, habit2);
                         displayHabits.set(i - 1, habit1);
 
-                        Log.d(TAG, "habit1 index after swap: " + String.valueOf(habit1.getIndex()));
-                        Log.d(TAG, "habit2 index after swap: " + String.valueOf(habit2.getIndex()));
-
-                        Log.d(TAG, "====end====");
                     }
                 }
-                Log.d("Habit", "moved");
+
                 recyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
-                Log.d("Position", "From: " + Integer.toString(fromPosition) + " To: " + Integer.toString(toPosition));
+
                 return true;
             }
 

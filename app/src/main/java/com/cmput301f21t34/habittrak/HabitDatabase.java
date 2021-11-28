@@ -14,7 +14,7 @@ import java.util.Calendar;
  * This is what we store for habit on the database
  */
 public class HabitDatabase {
-    private int index = 0;
+    private int index;
     private String title, reason;
     private Calendar startDate;
     private Calendar bestStreakDate;

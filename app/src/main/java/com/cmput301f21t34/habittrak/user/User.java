@@ -3,7 +3,6 @@ package com.cmput301f21t34.habittrak.user;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -419,9 +418,6 @@ public class User implements Parcelable {
         Bundle userBundle = new Bundle(this.getClass().getClassLoader());
 
         userBundle.putString("username", username);
-
-        Log.d("UserParcelable",
-                "Parcel Writer userName:" + userBundle.getString("username"));
 
         userBundle.putString("biography", biography);
 

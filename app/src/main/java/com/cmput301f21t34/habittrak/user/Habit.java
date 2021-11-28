@@ -8,7 +8,7 @@ import com.cmput301f21t34.habittrak.Utilities;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.TimeZone;
+
 
 /**
  * Habit
@@ -17,7 +17,7 @@ import java.util.TimeZone;
  *
  * Habit object that a user wants to track
  *
- * @version 2.0
+ * @version 3.0
  * @since 2021-10-15
  * @see HabitEvent
  */

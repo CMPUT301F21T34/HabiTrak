@@ -140,13 +140,11 @@ public class AddHabitActivity extends AppCompatActivity {
                 String name = habitName.getText().toString();
                 if(!checkField(habitName.getText())){
                     habitName.setError("Input Required");
-                } else if (!checkField(habitReason.getText())){
-                    habitReason.setError("Input Required");
-                } else{
+                } else {
+
                     finishActivityWithResult();
                 }
 
-                //TODO: make reason field optional
             }
         });
 

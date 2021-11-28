@@ -1,4 +1,4 @@
-package com.cmput301f21t34.habittrak;
+package com.cmput301f21t34.habittrak.HabitActivity;
 
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +15,8 @@ import android.view.View;
 import android.widget.TextView;
 
 
+import com.cmput301f21t34.habittrak.BaseActivity;
+import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;

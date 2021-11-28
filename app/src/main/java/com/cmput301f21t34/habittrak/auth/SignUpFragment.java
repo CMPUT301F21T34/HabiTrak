@@ -123,7 +123,7 @@ public class SignUpFragment extends Fragment {
                             FirebaseUser authUser = fAuth.getCurrentUser();
 
                             //TODO: Remove password section in db
-                            db.createNewUser(authUser.getEmail(), username, "Redundant");
+                            db.createNewUser(authUser.getEmail(), username);
                             fAuth.getCurrentUser().sendEmailVerification();
 
                             Toast.makeText(getActivity(), "Success",

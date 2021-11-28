@@ -36,27 +36,22 @@ public class User implements Parcelable {
         }
     };
 
-    // Password does not need to be parse and may be eventually removed
-    // TODO: Make password final in version after merge with Database
     private final String email;
-    // TODO: Make username final in version after merge with Database
     private String username;
-    private String password;
     private HabitList habitList; // Habit_List extends ArrayList<Habit>
     // Lists of users' UUIDS (emails)
-    private ArrayList<String> followerList;     // Users that follow this user
-    private ArrayList<String> followingList;    // Users this user follows
-    private ArrayList<String> followingReqList; // Users that this user requested to follow
-    private ArrayList<String> followerReqList;  // Users that requested to follow this user
-    private ArrayList<String> blockList;        // Users that this user blocked
-    private ArrayList<String> blockedByList;    // Users that blocked this user
+    private final ArrayList<String> followerList;     // Users that follow this user
+    private final ArrayList<String> followingList;    // Users this user follows
+    private final ArrayList<String> followingReqList; // Users that this user requested to follow
+    private final ArrayList<String> followerReqList;  // Users that requested to follow this user
+    private final ArrayList<String> blockList;        // Users that this user blocked
+    private final ArrayList<String> blockedByList;    // Users that blocked this user
     private String biography;
-    // Attributes ----------------------------------------------------------------------------------
+    // End Attributes ------------------------------------------------------------------------------
 
     // Constructors --------------------------------------------------------------------------------
     public User(
             String username,
-            String password,
             String email,
             String biography,
             HabitList habitList,
@@ -68,7 +63,6 @@ public class User implements Parcelable {
             ArrayList<String> blockedByList) {
         this.email = email;
         this.username = username;
-        this.password = password;
         this.biography = biography;
         this.habitList = habitList;
         this.followerList = followerList;
@@ -83,12 +77,10 @@ public class User implements Parcelable {
      * basic constructor with bare minimum info
      *
      * @param username String the Users username
-     * @param password String the Users password (for auth)
      * @param email    String the Users email (for identification)
      */
-    public User(String username, String password, String email) {
+    public User(String username, String email) {
         this.username = username;
-        this.password = password;
         this.email = email;
         this.biography = "";
         this.habitList = new HabitList();
@@ -116,7 +108,6 @@ public class User implements Parcelable {
 
         // Strings
         this.username = userBundle.getString("username");
-        this.password = userBundle.getString("password");
         this.email = userBundle.getString("email");
         this.biography = userBundle.getString("biography");
 
@@ -142,7 +133,6 @@ public class User implements Parcelable {
     public User() {
         this.email = "dummyEmail";
         this.username = "dummyUser";
-        this.password = "12345";
         this.habitList = new HabitList();
         this.followerList = new ArrayList<>();
         this.followingList = new ArrayList<>();
@@ -162,7 +152,6 @@ public class User implements Parcelable {
     public User(String email) {
         this.email = email;
         this.username = "dummyUser";
-        this.password = "12345";
         this.habitList = new HabitList();
         this.followerList = new ArrayList<>();
         this.followingList = new ArrayList<>();
@@ -172,30 +161,15 @@ public class User implements Parcelable {
         this.blockedByList = new ArrayList<>();
         this.biography = "";
     }
-    // Constructors --------------------------------------------------------------------------------
+    // End Constructors ----------------------------------------------------------------------------
 
     // Getters and Setters -------------------------------------------------------------------------
-    // User details
     public String getBiography() {
         return biography;
     }
 
     public void setBiography(String biography) {
         this.biography = biography;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    /**
-     * @param password String The Users password
-     * @author Dakota
-     * @author Henry
-     * @deprecated assign password in constructor
-     */
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     /**
@@ -218,55 +192,29 @@ public class User implements Parcelable {
         this.username = username;
     }
 
-    // Social Lists
     public ArrayList<String> getBlockList() {
         return (ArrayList<String>) blockList.clone();
-    }
-
-    public void setBlockList(ArrayList<String> blockList) {
-        this.blockList = (ArrayList<String>) blockList.clone();
     }
 
     public ArrayList<String> getBlockedByList() {
         return (ArrayList<String>) blockedByList.clone();
     }
 
-    public void setBlockedByList(ArrayList<String> blockedByList) {
-        this.blockedByList = blockedByList;
-    }
-
     public ArrayList<String> getFollowerList() {
         return (ArrayList<String>) followerList.clone();
-    }
-
-    public void setFollowerList(ArrayList<String> followerList) {
-        this.followerList = followerList;
     }
 
     public ArrayList<String> getFollowingList() {
         return (ArrayList<String>) followingList.clone();
     }
 
-    public void setFollowingList(ArrayList<String> followingList) {
-        this.followingList = followingList;
-    }
-
     public ArrayList<String> getFollowerReqList() {
         return (ArrayList<String>) followerReqList.clone();
-    }
-
-    public void setFollowerReqList(ArrayList<String> followerReqList) {
-        this.followerReqList = followerReqList;
     }
 
     public ArrayList<String> getFollowingReqList() {
         return (ArrayList<String>) followingReqList.clone();
     }
-
-    public void setFollowingReqList(ArrayList<String> followingReqList) {
-        this.followingReqList = followingReqList;
-    }
-    // Habits
 
     public Habit getHabit(int index) {
         return this.habitList.get(index);
@@ -279,11 +227,10 @@ public class User implements Parcelable {
     public void setHabitList(HabitList habitList) {
         this.habitList = habitList;
     }
-    // Getters and Setters -------------------------------------------------------------------------
+    // End Getters and Setters ---------------------------------------------------------------------
 
     // Adders and Removers -------------------------------------------------------------------------
     // Social
-
     /**
      * addBlock
      * adds a blockee to this user's blockList if not already present
@@ -306,30 +253,6 @@ public class User implements Parcelable {
      */
     public boolean removeBlock(String UUID) {
         return blockList.removeIf(blockee -> blockee.equals(UUID));
-    }
-
-    /**
-     * addBlockedBy
-     * adds a blocker to this user's blockedByList if not already present
-     *
-     * @param UUID String, the UUID of the user to add
-     * @author Kaaden
-     */
-    public void addBlockedBy(String UUID) {
-        if (!blockedByList.contains(UUID)) {
-            blockedByList.add(UUID);
-        }
-    }
-
-    /**
-     * removeBlockedBy
-     * Remove all occurrences of a blocker in this user's blockedByList
-     *
-     * @param UUID String, the UUID of the user(s) to remove
-     * @return boolean, true if any removals occurred, false otherwise
-     */
-    public boolean removeBlockedBy(String UUID) {
-        return blockedByList.removeIf(blocker -> blocker.equals(UUID));
     }
 
     /**
@@ -428,7 +351,6 @@ public class User implements Parcelable {
         return followingReqList.removeIf(followRequestee -> followRequestee.equals(UUID));
     }
 
-    // Habits
     public void addHabit(Habit habit) {
         this.habitList.add(habit);
     }
@@ -444,6 +366,8 @@ public class User implements Parcelable {
     public boolean removeHabit(Habit habit) {
         return this.habitList.remove(habit);
     }
+    // End Adders and Removers ---------------------------------------------------------------------
+
 
     // Parcelable Implementation -------------------------------------------------------------------
     /**
@@ -468,13 +392,9 @@ public class User implements Parcelable {
         Log.d("UserParcelable",
                 "Parcel Writer userName:" + userBundle.getString("username"));
 
-        userBundle.putString("password", password);
-
         userBundle.putString("biography", biography);
 
         userBundle.putString("email", this.getEmail());
-
-        userBundle.putString("password", password);
 
         userBundle.putString("biography", biography);
 

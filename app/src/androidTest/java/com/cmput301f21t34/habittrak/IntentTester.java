@@ -1,30 +1,24 @@
 package com.cmput301f21t34.habittrak;
 
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.toPackage;
-import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.anything;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.*;
 
 import android.app.Instrumentation.ActivityResult;
 import android.content.Intent;
@@ -34,6 +28,7 @@ import androidx.test.espresso.Espresso;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
+import com.cmput301f21t34.habittrak.HabitActivity.AddHabitActivity;
 import com.cmput301f21t34.habittrak.user.Habit;
 
 import java.util.Calendar;
@@ -145,7 +140,7 @@ public class IntentTester {
         resultData.putExtra("newHabit", testHabit);
         ActivityResult result = new ActivityResult(BaseActivity.RESULT_NEW_HABIT, resultData);
         //Call the AddHabitActivity to return the stub
-        intending(toPackage("com.cmput301f21t34.habittrak.AddHabitActivity"))
+        intending(toPackage("com.cmput301f21t34.habittrak.HabitActivity.AddHabitActivity"))
                 .respondWith(result);
         //Check to see if the new habit was added
         onView(withId(R.id.navbar_menu_habits))

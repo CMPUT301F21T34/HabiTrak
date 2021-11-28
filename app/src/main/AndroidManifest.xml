@@ -38,13 +38,13 @@
             android:name=".social.SocialViewProfile"
             android:exported="true" />
         <activity
-            android:name=".ViewEditHabitActivity"
+            android:name=".HabitActivity.ViewEditHabitActivity"
             android:exported="true" />
         <activity
             android:name=".event.AddHabitEventActivity"
             android:exported="true" />
         <activity
-            android:name=".AddHabitActivity"
+            android:name=".HabitActivity.AddHabitActivity"
             android:exported="true" />
         <activity
             android:name=".BaseActivity"

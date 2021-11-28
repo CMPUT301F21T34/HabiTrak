@@ -52,36 +52,6 @@ public class DatabaseManager {
     }
 
     /**
-     * validCredentials
-     * <p>
-     * checks if given password matches the actual password of an email
-     *
-     * @param email    - Type String; the email of the user who's validity is being checked
-     * @param password - Type password; The password of the user who's validity is being checked
-     * @return Boolean; returns true if credentials match, false otherwise
-     * @author Henry
-     */
-    public boolean validCredentials(String email, String password) {
-
-        boolean validCredentials = false;
-
-        final CollectionReference collectionReference = database.collection("users");
-
-        try {
-            DocumentReference docref = collectionReference.document(email);
-            Task<DocumentSnapshot> task = docref.get();
-            while (!task.isComplete()) ;
-            DocumentSnapshot document = task.getResult();
-            if (document.getData() != null) {
-                if (document.get("Password").equals(password)) {
-                    validCredentials = true;
-                }
-            }
-        } catch (Exception ignored) { }
-        return validCredentials;
-    }
-
-    /**
      * getAllUsers()
      * Gets a list of the UUIDs of all users in the database
      *
@@ -152,21 +122,20 @@ public class DatabaseManager {
      * Creates a new user from the data passed into it, and puts it into the database
      *
      * @param email    -Type String the email of the user to be created
-     * @param password -Type String the password of the user to be created
      * @param username -Type String the username of the user to be created
      * @return true if it is successful or false if it is not
      * @author Henry
      */
-    public boolean createNewUser(String email, String username, String password) {
+    public boolean createNewUser(String email, String username) {
 
         String TAG = "Unique";
 
         if (isUniqueEmail(email)) {
             Log.d(TAG, "Unique");
-            final CollectionReference collectionReference = database.collection("users");
+            final CollectionReference collectionReference =
+                    database.collection("users");
 
             HashMap<String, Object> data = new HashMap<>();
-            data.put("Password", password);
             data.put("Username", username);
             data.put("Biography", "");
             data.put("habitList", new ArrayList<HabitDatabase>());
@@ -232,7 +201,6 @@ public class DatabaseManager {
         User user;
 
         String name = "";
-        String password = "";
         String bio = "";
 
         HabitList habitList = new HabitList();
@@ -251,9 +219,11 @@ public class DatabaseManager {
 
             if (document.getData() != null) {
                 Log.d("getData", "not null");
-                ArrayList<HashMap<String, Object>> requestedHabitList = (ArrayList<HashMap<String, Object>>) document.get("habitList");
+                ArrayList<HashMap<String, Object>> requestedHabitList =
+                        (ArrayList<HashMap<String, Object>>) document.get("habitList");
 
-                ArrayList<HabitDatabase> requestedHabitDatabases = toHabitDatabaseList(requestedHabitList);
+                ArrayList<HabitDatabase> requestedHabitDatabases =
+                        toHabitDatabaseList(requestedHabitList);
                 habitList = databaseToHabit(requestedHabitDatabases);
                 followerList = (ArrayList<String>) document.get("followerList");
 
@@ -263,31 +233,15 @@ public class DatabaseManager {
                 blockList = (ArrayList<String>) document.get("blockList");
                 blockedByList = (ArrayList<String>) document.get("blockedByList");
                 name = (String) document.get("Username");
-                password = (String) document.get("Password");
                 bio = (String) document.get("Biography");
             }
 
-            user = new User(
-                    name,
-                    password,
-                    email,
-                    bio,
-                    habitList,
-                    followerList,
-                    followingList,
-                    followReqList,
-                    followRequestedList,
-                    blockList,
-                    blockedByList
-            );
+            user = new User(name, email, bio, habitList, followerList, followingList, followReqList,
+                    followRequestedList, blockList, blockedByList);
             return user;
-        } catch (Exception ignored) {
-
-            Log.d("GETMAINUSER","the exceptions is "+ ignored.getLocalizedMessage());
-
+        } catch (Exception e) {
+            throw new RuntimeException(e.getLocalizedMessage());
         }
-
-        return new User(email);
     }
 
     /**
@@ -642,37 +596,6 @@ public class DatabaseManager {
         return getUUIDList("blockedByList", UUID);
     }
 
-    // TODO no one should be updating everything at once, its just inefficient, we should break this down into more precise functions
-
-    /**
-     * updateHabitNamePassword
-     * <p>
-     * updates the habit, name and password of the user
-     *
-     * @param user Type- User, the user who's habit/password/name is to be updated
-     * @author Tauseef
-     */
-    public void updateHabitNamePassword(User user) {
-        final CollectionReference collectionReference = database.collection("users");
-
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("Password", user.getPassword());
-        data.put("Username", user.getUsername());
-        data.put("Biography", user.getBiography());
-        data.put("habitList", habitToDatabase(user.getHabitList()));
-        data.put("followerList", user.getFollowerList());
-        data.put("followingList", user.getFollowingList());
-        data.put("followReqList", user.getFollowingReqList());
-        data.put("followRequestedList", user.getFollowerReqList());
-        data.put("blockList", user.getBlockList());
-        data.put("blockedByList", user.getBlockedByList());
-
-        collectionReference
-                .document(user.getEmail())
-                .set(data);
-    }
-
-
     /**
      * Updates the username of the user with the given UUID
      *
@@ -686,7 +609,8 @@ public class DatabaseManager {
         data.put("Username", newUserName);
         List<String> fieldsToUpdate = new ArrayList<>();
         fieldsToUpdate.add("Username");
-        database.collection("users").document(UUID).set(data, SetOptions.mergeFields(fieldsToUpdate));
+        database.collection("users").document(UUID).set(data,
+                SetOptions.mergeFields(fieldsToUpdate));
     }
 
     /**

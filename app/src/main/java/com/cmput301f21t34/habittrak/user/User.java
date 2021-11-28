@@ -36,12 +36,8 @@ public class User implements Parcelable {
         }
     };
 
-    // Password does not need to be parse and may be eventually removed
-    // TODO: Make password final in version after merge with Database
     private final String email;
-    // TODO: Make username final in version after merge with Database
     private String username;
-    private String password;
     private HabitList habitList; // Habit_List extends ArrayList<Habit>
     // Lists of users' UUIDS (emails)
     private final ArrayList<String> followerList;     // Users that follow this user
@@ -51,12 +47,11 @@ public class User implements Parcelable {
     private final ArrayList<String> blockList;        // Users that this user blocked
     private final ArrayList<String> blockedByList;    // Users that blocked this user
     private String biography;
-    // Attributes ----------------------------------------------------------------------------------
+    // End Attributes ------------------------------------------------------------------------------
 
     // Constructors --------------------------------------------------------------------------------
     public User(
             String username,
-            String password,
             String email,
             String biography,
             HabitList habitList,
@@ -68,7 +63,6 @@ public class User implements Parcelable {
             ArrayList<String> blockedByList) {
         this.email = email;
         this.username = username;
-        this.password = password;
         this.biography = biography;
         this.habitList = habitList;
         this.followerList = followerList;
@@ -83,12 +77,10 @@ public class User implements Parcelable {
      * basic constructor with bare minimum info
      *
      * @param username String the Users username
-     * @param password String the Users password (for auth)
      * @param email    String the Users email (for identification)
      */
-    public User(String username, String password, String email) {
+    public User(String username, String email) {
         this.username = username;
-        this.password = password;
         this.email = email;
         this.biography = "";
         this.habitList = new HabitList();
@@ -116,7 +108,6 @@ public class User implements Parcelable {
 
         // Strings
         this.username = userBundle.getString("username");
-        this.password = userBundle.getString("password");
         this.email = userBundle.getString("email");
         this.biography = userBundle.getString("biography");
 
@@ -142,7 +133,6 @@ public class User implements Parcelable {
     public User() {
         this.email = "dummyEmail";
         this.username = "dummyUser";
-        this.password = "12345";
         this.habitList = new HabitList();
         this.followerList = new ArrayList<>();
         this.followingList = new ArrayList<>();
@@ -162,7 +152,6 @@ public class User implements Parcelable {
     public User(String email) {
         this.email = email;
         this.username = "dummyUser";
-        this.password = "12345";
         this.habitList = new HabitList();
         this.followerList = new ArrayList<>();
         this.followingList = new ArrayList<>();
@@ -172,30 +161,15 @@ public class User implements Parcelable {
         this.blockedByList = new ArrayList<>();
         this.biography = "";
     }
-    // Constructors --------------------------------------------------------------------------------
+    // End Constructors ----------------------------------------------------------------------------
 
     // Getters and Setters -------------------------------------------------------------------------
-    // User details
     public String getBiography() {
         return biography;
     }
 
     public void setBiography(String biography) {
         this.biography = biography;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    /**
-     * @param password String The Users password
-     * @author Dakota
-     * @author Henry
-     * @deprecated assign password in constructor
-     */
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     /**
@@ -218,7 +192,6 @@ public class User implements Parcelable {
         this.username = username;
     }
 
-    // Social Lists
     public ArrayList<String> getBlockList() {
         return (ArrayList<String>) blockList.clone();
     }
@@ -243,7 +216,6 @@ public class User implements Parcelable {
         return (ArrayList<String>) followingReqList.clone();
     }
 
-    // Habits
     public Habit getHabit(int index) {
         return this.habitList.get(index);
     }
@@ -255,7 +227,7 @@ public class User implements Parcelable {
     public void setHabitList(HabitList habitList) {
         this.habitList = habitList;
     }
-    // Getters and Setters -------------------------------------------------------------------------
+    // End Getters and Setters ---------------------------------------------------------------------
 
     // Adders and Removers -------------------------------------------------------------------------
     // Social
@@ -379,7 +351,6 @@ public class User implements Parcelable {
         return followingReqList.removeIf(followRequestee -> followRequestee.equals(UUID));
     }
 
-    // Habits
     public void addHabit(Habit habit) {
         this.habitList.add(habit);
     }
@@ -395,6 +366,8 @@ public class User implements Parcelable {
     public boolean removeHabit(Habit habit) {
         return this.habitList.remove(habit);
     }
+    // End Adders and Removers ---------------------------------------------------------------------
+
 
     // Parcelable Implementation -------------------------------------------------------------------
     /**
@@ -419,13 +392,9 @@ public class User implements Parcelable {
         Log.d("UserParcelable",
                 "Parcel Writer userName:" + userBundle.getString("username"));
 
-        userBundle.putString("password", password);
-
         userBundle.putString("biography", biography);
 
         userBundle.putString("email", this.getEmail());
-
-        userBundle.putString("password", password);
 
         userBundle.putString("biography", biography);
 

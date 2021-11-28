@@ -128,7 +128,7 @@ public class DatabaseManagerTest {
     /**
      * updateBlockTest
      *
-     * Tests of updateBlock properly propagates the changes in block relation to the database
+     * Tests if updateBlock properly propagates the changes in block relation to the database
      */
     @Test
     public void updateBlockTest() {
@@ -151,6 +151,24 @@ public class DatabaseManagerTest {
         // Delete test user after test is done
         dm.deleteUser(email1);
         dm.deleteUser(email2);
+    }
+
+    /**
+     * updateBioTest
+     * Tests if updateBio properly propagates the changes in biography to the database
+     */
+    @Test
+    public void updateBioTest() {
+        String email = "test@gmail.com";
+        String username = "testUser";
+        dm.createNewUser(email, username);
+
+        String bio = "bing chilling";
+        dm.updateBio(email, bio);
+
+        User user = dm.getUser(email);
+        assertEquals(bio, user.getBiography());
+        dm.deleteUser(email);
     }
 }
 

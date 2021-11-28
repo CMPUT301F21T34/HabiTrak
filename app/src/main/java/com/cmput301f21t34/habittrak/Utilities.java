@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 
 import com.cmput301f21t34.habittrak.auth.LoginFragment;
 import com.cmput301f21t34.habittrak.streak.Streak;
@@ -46,7 +47,7 @@ public interface Utilities {
     }
 
     /**
-     * Go to login page
+     * Go to login page from an activity
      *
      * @author Dakota
      * @param activity Activity context to execute from (usually 'this')
@@ -55,6 +56,19 @@ public interface Utilities {
         activity.getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.login_fragment_container, new LoginFragment(null))
+                .commit();
+    }
+
+    /**
+     * Go to login page from a fragment
+     *
+     * @author Dakota
+     * @param activity Activity context to execute from (usually 'this')
+     */
+    default void goToLogin(FragmentActivity activity) {
+        LoginFragment loginFragment = new LoginFragment(null);
+        activity.getSupportFragmentManager().beginTransaction()
+                .replace(R.id.login_fragment_container, loginFragment, "loginFrag")
                 .commit();
     }
 

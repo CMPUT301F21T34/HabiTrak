@@ -267,7 +267,12 @@ public class Habit implements Comparable<Habit>, Parcelable, Utilities {
         return this.onDaysObj;
     }
 
-    @Deprecated
+    /**
+     * Sets the entire on Days object
+     *
+     * @author Dakota
+     * @param onDaysObj to set
+     */
     public void setOnDaysObj(OnDays onDaysObj) { this.onDaysObj = onDaysObj; }
 
     /**

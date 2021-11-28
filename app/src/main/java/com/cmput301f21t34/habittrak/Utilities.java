@@ -69,7 +69,7 @@ public interface Utilities {
     default void goToLogin(AppCompatActivity activity) {
         activity.getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.login_fragment_container, new LoginFragment(null))
+                .add(R.id.login_fragment_container, new LoginFragment())
                 .commit();
     }
 
@@ -80,7 +80,7 @@ public interface Utilities {
      * @param activity Activity context to execute from (usually 'this')
      */
     default void goToLogin(FragmentActivity activity) {
-        LoginFragment loginFragment = new LoginFragment(null);
+        LoginFragment loginFragment = new LoginFragment();
         activity.getSupportFragmentManager().beginTransaction()
                 .replace(R.id.login_fragment_container, loginFragment, "loginFrag")
                 .commit();

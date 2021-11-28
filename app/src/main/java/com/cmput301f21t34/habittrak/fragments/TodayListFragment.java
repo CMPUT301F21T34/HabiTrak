@@ -1,5 +1,6 @@
 package com.cmput301f21t34.habittrak.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -39,15 +40,11 @@ import java.util.ArrayList;
  */
 public class TodayListFragment extends Fragment {
 
-    // Attributes //
-    // These are for the Recycler view
-    private RecyclerView habitRecyclerView;
-    private RecyclerView.LayoutManager layoutManager;
     private HabitRecycler habitRecycler;
-    private ArrayList<Habit> habitsDisplayList;
-    private HabitRecyclerAdapter adapter;
+    private final ArrayList<Habit> habitsDisplayList;
+    private final HabitRecyclerAdapter adapter;
     private LinearLayout noDataLayout;
-    private User mainUser;
+    private final User mainUser;
     // Database Manager
     private final DatabaseManager dm = new DatabaseManager();
 
@@ -65,9 +62,11 @@ public class TodayListFragment extends Fragment {
         View view = inflater.inflate(R.layout.habi_today_fragment, container, false);
 
         // Sets up views and manager for recycler view
-        habitRecyclerView = view.findViewById(R.id.today_recycler_view);
+        // Attributes //
+        // These are for the Recycler view
+        RecyclerView habitRecyclerView = view.findViewById(R.id.today_recycler_view);
         noDataLayout = view.findViewById(R.id.today_no_data_view);
-        layoutManager = new LinearLayoutManager(getContext());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
 
         // set the click listener interface for the adapter
         adapter.setHabitClickListener(new HabitRecyclerAdapter.HabitClickListener() {
@@ -125,6 +124,7 @@ public class TodayListFragment extends Fragment {
      *
      * @author Dakota
      */
+    @SuppressLint("NotifyDataSetChanged")
     public void refreshTodayFragment() {
         // Populate today view with Today's habits.
         habitsDisplayList.clear();// Make sure is clear

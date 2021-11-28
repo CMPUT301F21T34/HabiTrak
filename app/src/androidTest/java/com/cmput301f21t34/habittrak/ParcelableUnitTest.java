@@ -82,7 +82,6 @@ public class ParcelableUnitTest {
      * @return ArrayList\<Habit\> for testing
      */
     private HabitList getTestHabitList(){
-        boolean[] onDays = new boolean[]{false, false, false, false, false, false, false};
         HabitList habitList = new HabitList();
         habitList.add(new Habit("hab1"));
         habitList.add(new Habit("hab2","res2",Calendar.getInstance()));
@@ -99,7 +98,6 @@ public class ParcelableUnitTest {
     @Test
     public void testParcelableHabit(){
 
-        boolean[] onDays = new boolean[]{true, false, false, false, false, false, false};
         Habit testHabit = new Habit("tit", "res", Calendar.getInstance());
         HabitEvent testEvent = new HabitEvent();
         testHabit.addHabitEvent(testEvent);

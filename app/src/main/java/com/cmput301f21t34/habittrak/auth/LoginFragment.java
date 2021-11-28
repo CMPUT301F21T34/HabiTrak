@@ -12,16 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.Utilities;
-import com.cmput301f21t34.habittrak.user.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -37,12 +32,8 @@ import com.google.firebase.auth.FirebaseUser;
  */
 public class LoginFragment extends Fragment implements Utilities {
 
-    private User mainUser;
-    private DatabaseManager db;
     private Auth mAuth;  // This is our Auth Helper Class
     private FirebaseUser authUser;
-
-    private View view;
 
     TextInputLayout usernameLayout;
     TextInputEditText usernameEditText;
@@ -54,8 +45,7 @@ public class LoginFragment extends Fragment implements Utilities {
 
 
 
-    public LoginFragment(User mainUser){
-        this.mainUser = mainUser; // Passes User object
+    public LoginFragment(){
 
     }
 
@@ -63,7 +53,7 @@ public class LoginFragment extends Fragment implements Utilities {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.habi_login_fragment, container, false);
+        View view = inflater.inflate(R.layout.habi_login_fragment, container, false);
 
         // Variables of the UI elements
 
@@ -76,8 +66,6 @@ public class LoginFragment extends Fragment implements Utilities {
         signupButton = view.findViewById(R.id.signup_button);
         forgotButton = view.findViewById(R.id.forgot_button);
 
-        db = new DatabaseManager();
-
         mAuth = new Auth(getActivity());
 
         return view;
@@ -87,39 +75,40 @@ public class LoginFragment extends Fragment implements Utilities {
     public void onStart(){
         super.onStart();
 
-        signupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toSignUp();
-            }
-        });
+        signupButton.setOnClickListener(view -> toSignUp());
 
-        forgotButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) { toForgot(); }
-        });
+        forgotButton.setOnClickListener(view -> toForgot());
 
         // Password validator
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                passwordLayout.setError(null);
-                usernameLayout.setError(null);
+        loginButton.setOnClickListener(view -> {
 
-                String email = usernameEditText.getText().toString();
-                String password = passwordEditText.getText().toString();
+            passwordLayout.setError(null);
+            usernameLayout.setError(null);
 
-                try {
-                    runLogin(email, password);
-                } catch (Exception e) {
-                    if (e instanceof IllegalArgumentException) {
-                        // Invalid entry
-                        usernameLayout.setError("Invalid Entry");
-                        passwordLayout.setError("Invalid Entry");
-                    } else {
-                        // Displays any other exceptions
-                        Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG);
-                    }
+            String email;
+            if (usernameEditText.getText() == null){
+                email = "";
+            } else {
+                email = usernameEditText.getText().toString();
+            }
+
+            String password;
+            if (passwordEditText.getText() == null){
+                password = "";
+            } else {
+                password = passwordEditText.getText().toString();
+            }
+
+            try {
+                runLogin(email, password);
+            } catch (Exception e) {
+                if (e instanceof IllegalArgumentException) {
+                    // Invalid entry
+                    usernameLayout.setError("Invalid Entry");
+                    passwordLayout.setError("Invalid Entry");
+                } else {
+                    // Displays any other exceptions
+                    Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -131,39 +120,39 @@ public class LoginFragment extends Fragment implements Utilities {
         FirebaseAuth fAuth = mAuth.getAuth();
 
         fAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            authUser = fAuth.getCurrentUser();
-                            if (authUser.isEmailVerified()) {
-                                goToBaseActivity(getActivity(), null);
-                            } else {
-                                // Email not Verified //
-                                usernameLayout.setError("Email not Verified");
-                                passwordLayout.setError(null);
-                                mAuth.alertNotVerified(authUser).show();
-                            }
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        authUser = fAuth.getCurrentUser();
+                        assert authUser != null; // should never fail
+
+                        if (authUser.isEmailVerified()) {
+                            goToBaseActivity(getActivity(), null);
                         } else {
-                            // Login Failed
-                            usernameLayout.setError(null);
-                            passwordLayout.setError("Incorrect Password");
+                            // Email not Verified //
+                            usernameLayout.setError("Email not Verified");
+                            passwordLayout.setError(null);
+                            mAuth.alertNotVerified(authUser).show();
                         }
+                    } else {
+                        // Login Failed
+                        usernameLayout.setError(null);
+                        passwordLayout.setError("Incorrect Password");
                     }
                 });
     }
 
     private void toSignUp() {
         SignUpFragment signUpFragment = new SignUpFragment(mAuth);
-        getActivity().getSupportFragmentManager().beginTransaction()
+
+        requireActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.login_fragment_container, signUpFragment, "signupFrag")
                 .addToBackStack(null)
                 .commit();
     }
 
     private void toForgot() {
-        ForgotFragment forgotFragment = new ForgotFragment(null);
-        getActivity().getSupportFragmentManager().beginTransaction()
+        ForgotFragment forgotFragment = new ForgotFragment();
+        requireActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.login_fragment_container, forgotFragment, "forgotFrag")
                 .addToBackStack(null)
                 .commit();

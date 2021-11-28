@@ -1,36 +1,28 @@
 package com.cmput301f21t34.habittrak.auth;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import android.text.Editable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.Toast;
 
-import com.cmput301f21t34.habittrak.BaseActivity;
 import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.Utilities;
 import com.cmput301f21t34.habittrak.user.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthEmailException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Objects;
 
 /**
  * SignUpFragment
@@ -46,8 +38,6 @@ import com.google.firebase.auth.FirebaseUser;
  */
 public class SignUpFragment extends Fragment implements Utilities {
 
-    private final String TAG = "SignUpFragment";
-
     Auth mAuth;
 
     TextInputLayout emailLayout;
@@ -58,7 +48,6 @@ public class SignUpFragment extends Fragment implements Utilities {
     TextInputEditText passwordEditText;
     MaterialButton signupButton;
     DatabaseManager db = new DatabaseManager();
-    User currentUser;
 
     public SignUpFragment(Auth auth) {
         /* Required empty public constructor */
@@ -92,18 +81,13 @@ public class SignUpFragment extends Fragment implements Utilities {
             // check if fields are full
             if (fieldsFull()) {
                 // Gets values of edit texts
-                String email = emailEditText.getText().toString();
-                Log.d("SignUp", "email: " + email);
-                String username = usernameEditText.getText().toString();
-                String password = passwordEditText.getText().toString();
+                String email = Objects.requireNonNull(emailEditText.getText()).toString();
+                String username = Objects.requireNonNull(usernameEditText.getText()).toString();
+                String password = Objects.requireNonNull(passwordEditText.getText()).toString();
 
-                // Check that email is unique
-                if (false) {//!db.isUniqueEmail(email)) { db.isUnique is always false
-                    emailLayout.setError("Email Already in Use");
-                } else {
-                    // This signs up the user and returns the email signed up with
-                    runSignUp(email, username, password);
-                    }
+                // This signs up the user and returns the email signed up with
+                runSignUp(email, username, password);
+
                 }
             });
             // if everything correct then start base activity
@@ -113,41 +97,36 @@ public class SignUpFragment extends Fragment implements Utilities {
     private void runSignUp(String email, String username, String password) {
         FirebaseAuth fAuth = mAuth.getAuth();
         fAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener((Activity) getActivity(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign Up was successful
-                            FirebaseUser authUser = fAuth.getCurrentUser();
+                .addOnCompleteListener((Activity) requireActivity(), task -> {
+                    if (task.isSuccessful()) {
+                        // Sign Up was successful
+                        FirebaseUser authUser = fAuth.getCurrentUser();
 
-                            db.createNewUser(authUser.getEmail(), username);
-                            fAuth.getCurrentUser().sendEmailVerification();
+                        assert authUser != null; // Should never fail
 
-                            Toast.makeText(getActivity(), "Success",
-                                    Toast.LENGTH_SHORT).show();
+                        db.createNewUser(authUser.getEmail(), username);
+                        fAuth.getCurrentUser().sendEmailVerification();
 
-                            goToLogin(getActivity());
+                        Toast.makeText(getActivity(), "Success",
+                                Toast.LENGTH_SHORT).show();
 
-                        } else {
-                            // Sign Up failed
-                            Toast.makeText(getActivity(), "Authentication failed",
-                                    Toast.LENGTH_SHORT).show();
-                        }
+                        goToLogin(requireActivity());
+
+                    } else {
+                        // Sign Up failed
+                        Toast.makeText(getActivity(), "Authentication failed",
+                                Toast.LENGTH_SHORT).show();
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e("SignUp", "Exception thrown: " + e.toString());
-                if (e instanceof FirebaseAuthWeakPasswordException) {
-                    passwordLayout.setError("Must be greater than 6");
-                } else if (e instanceof FirebaseAuthEmailException) {
-                    emailLayout.setError("Invalid Email Format");
-                } else {
-                    emailLayout.setError(e.toString());
-                    passwordLayout.setError(e.toString());
-                }
-            }
-        });
+                }).addOnFailureListener(e -> {
+                    if (e instanceof FirebaseAuthWeakPasswordException) {
+                        passwordLayout.setError("Must be greater than 6");
+                    } else if (e instanceof FirebaseAuthEmailException) {
+                        emailLayout.setError("Invalid Email Format");
+                    } else {
+                        emailLayout.setError(e.toString());
+                        passwordLayout.setError(e.toString());
+                    }
+                });
     }
 
     /**
@@ -183,6 +162,6 @@ public class SignUpFragment extends Fragment implements Utilities {
      * check to see if a EditText is empty
      */
     private boolean isEmpty(TextInputEditText text) {
-        return text.getText().toString().equals("");
+        return Objects.requireNonNull(text.getText()).toString().equals("");
     }
 }

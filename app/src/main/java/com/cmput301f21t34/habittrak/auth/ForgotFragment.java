@@ -28,7 +28,7 @@ public class ForgotFragment extends Fragment {
     MaterialButton sendButton;
     Auth mAuth;
 
-    public ForgotFragment(Auth auth) {
+    public ForgotFragment() {
 
     }
 
@@ -57,9 +57,14 @@ public class ForgotFragment extends Fragment {
 
         sendButton.setOnClickListener(view1 -> {
 
+            // null check
+            if (emailEditText.getText() == null) {
+                emailEditText.setText("");
+            }
+
             String email = emailEditText.getText().toString();
 
-            if (email == ""){
+            if (email.equals("")){
                 emailEditText.setError("Cannot be empty");
             } else {
                 emailEditText.setError(null);

@@ -1,7 +1,6 @@
 package com.cmput301f21t34.habittrak.fragments;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 
 import android.os.Bundle;
 
@@ -21,8 +20,9 @@ import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Objects;
 
 /**
  * ProfileFragment
@@ -96,8 +96,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, U
             case R.id.confirmer:
                 String oldUsername = mainUser.getUsername();
                 String oldBio = mainUser.getBiography();
-                String newUsername = nameEdit.getText().toString();
-                String newBio = bioEdit.getText().toString();
+                String newUsername = Objects.requireNonNull(nameEdit.getText()).toString();
+                String newBio = Objects.requireNonNull(bioEdit.getText()).toString();
 
                 if (fUser != null) { // Only update if we have a user
 
@@ -140,53 +140,42 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, U
                 .setMessage("This Cannot be undone!")
                 .setTitle("Delete Account?");
 
-        alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int id) {
+        alert.setPositiveButton("Yes", (dialogInterface, id) -> {
 
-                AlertDialog.Builder confirmation = new AlertDialog.Builder(getActivity());
+            AlertDialog.Builder confirmation = new AlertDialog.Builder(getActivity());
 
-                confirmation
-                        .setMessage("Are you sure?")
-                        .setTitle("Confirm");
+            confirmation
+                    .setMessage("Are you sure?")
+                    .setTitle("Confirm");
 
-                confirmation.setPositiveButton("Yes", (dialogInterface1, i) -> {
-                    // Delete
+            confirmation.setPositiveButton("Yes", (dialogInterface1, i) -> {
+                // Delete
 
-                    try {
-                        String email = authUser.getEmail();
-                        authUser.delete();
-                        db.deleteUser(email);
+                try {
+                    String email = authUser.getEmail();
+                    authUser.delete();
+                    db.deleteUser(email);
 
-                        goToMainActivity(getActivity());
-                    } catch (Exception e) {
-                        if (e instanceof FirebaseAuthRecentLoginRequiredException){
-                            // Then need to log in again
-                            mAuth.signOut();
-                            goToMainActivity(getActivity());
-                            Toast.makeText(getActivity(), "Session has Expired", Toast.LENGTH_LONG);
-                        }
-                    }
+                    goToMainActivity(getActivity());
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
+                }
 
-                });
+            });
 
-                confirmation.setNegativeButton("No", (dialogInterface12, i) -> {
-                    // Cancel
-                    dialogInterface12.cancel();
-                });
+            confirmation.setNegativeButton("No", (dialogInterface12, i) -> {
+                // Cancel
+                dialogInterface12.cancel();
+            });
 
-                confirmation.show();
+            confirmation.show();
 
-            }
         });
 
-        alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int id) {
-                // Cancel
-                dialogInterface.cancel();
+        alert.setNegativeButton("No", (dialogInterface, id) -> {
+            // Cancel
+            dialogInterface.cancel();
 
-            }
         });
         alert.show();
     }

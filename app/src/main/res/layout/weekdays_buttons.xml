@@ -8,94 +8,94 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/monday_button"
+        style="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:text=" M"
-        style="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded"
         app:backgroundTint="#03DAC5"
         app:layout_constrainedWidth="true"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/tuesday_button"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/tuesday_button"
+        style="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:text=" T"
-        style="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded"
         app:backgroundTint="#03DAC5"
         app:layout_constrainedWidth="true"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded"
         app:layout_constraintLeft_toRightOf="@id/monday_button"
         app:layout_constraintRight_toLeftOf="@id/wednesday_button"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/wednesday_button"
+        style="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:text=" W"
-        style="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded"
         app:backgroundTint="#03DAC5"
         app:layout_constrainedWidth="true"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/tuesday_button"
         app:layout_constraintRight_toLeftOf="@id/thursday_button"
-        app:layout_constraintLeft_toRightOf="@id/tuesday_button"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/thursday_button"
+        style="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        style="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded"
         android:text="Th"
         android:textSize="13sp"
         app:backgroundTint="#03DAC5"
         app:layout_constrainedWidth="true"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded"
         app:layout_constraintLeft_toRightOf="@id/wednesday_button"
         app:layout_constraintRight_toLeftOf="@id/friday_button"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/friday_button"
+        style="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:text=" F"
-        style="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded"
         app:backgroundTint="#03DAC5"
         app:layout_constrainedWidth="true"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded"
         app:layout_constraintLeft_toRightOf="@id/thursday_button"
         app:layout_constraintRight_toLeftOf="@id/saturday_button"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/saturday_button"
+        style="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:text=" S"
-        style="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded"
         app:backgroundTint="#03DAC5"
         app:layout_constrainedWidth="true"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded"
         app:layout_constraintLeft_toRightOf="@id/friday_button"
         app:layout_constraintRight_toLeftOf="@id/sunday_button"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/sunday_button"
+        style="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:text=" S"
-        style="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded"
         app:backgroundTint="#03DAC5"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded"
         app:layout_constrainedWidth="true"
+        app:layout_constraintLeft_toRightOf="@id/saturday_button"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/saturday_button"
-        />
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 

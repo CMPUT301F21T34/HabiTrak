@@ -21,7 +21,7 @@ import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.ViewEditHabitActivity;
 import com.cmput301f21t34.habittrak.recycler.HabitRecycler;
-import com.cmput301f21t34.habittrak.recycler.TodayHabitRecyclerAdapter;
+import com.cmput301f21t34.habittrak.recycler.HabitRecyclerAdapter;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitList;
 import com.cmput301f21t34.habittrak.user.User;
@@ -40,7 +40,6 @@ import java.util.ArrayList;
  */
 public class AllHabitsFragment extends Fragment {
 
-
     // Attributes //
     public static String TAG = "All_Habits";
     // These are for the Recycler view
@@ -48,26 +47,20 @@ public class AllHabitsFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private HabitRecycler habitRecycler;
     private ArrayList<Habit> habitsDisplayList;
-    private TodayHabitRecyclerAdapter adapter;
+    private HabitRecyclerAdapter adapter;
     private LinearLayout noDataLayout;
     private User mainUser;
-    // Database Manager
     private final DatabaseManager dm = new DatabaseManager();
 
     public AllHabitsFragment(User mainUser) {
-
         habitsDisplayList = new ArrayList<>();
         this.mainUser = mainUser;
-        this.adapter = new TodayHabitRecyclerAdapter(habitsDisplayList, false);
-
-
+        this.adapter = new HabitRecyclerAdapter(habitsDisplayList, false);
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.habi_all_habits_fragment, container, false);
 
         // Sets up views and manager for recycler view
@@ -75,9 +68,8 @@ public class AllHabitsFragment extends Fragment {
         noDataLayout = view.findViewById(R.id.all_habit_no_data_view);
         layoutManager = new LinearLayoutManager(getContext());
 
-
-        // set the click listener interface for the adapter
-        adapter.setHabitClickListener(new TodayHabitRecyclerAdapter.HabitClickListener() {
+        // Set the click listener interface for the adapter
+        adapter.setHabitClickListener(new HabitRecyclerAdapter.HabitClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Habit habit = habitsDisplayList.get(position);
@@ -104,17 +96,15 @@ public class AllHabitsFragment extends Fragment {
         return view;
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
-        // Refreshes Frag
         refreshAllFragment();
     }
 
-    public void setLayoutVisibility(){
-        if (!(noDataLayout == null)){
-            if (habitsDisplayList.isEmpty()){
+    public void setLayoutVisibility() {
+        if (!(noDataLayout == null)) {
+            if (habitsDisplayList.isEmpty()) {
                 noDataLayout.setVisibility(View.VISIBLE);
                 habitRecycler.setRecyclerVisibility(false);
             } else {
@@ -122,9 +112,7 @@ public class AllHabitsFragment extends Fragment {
                 habitRecycler.setRecyclerVisibility(true);
             }
         }
-
     }
-
 
     /**
      * refreshAllFragment
@@ -134,18 +122,15 @@ public class AllHabitsFragment extends Fragment {
      * refresh the habitsdata list to update the data
      */
     public void refreshAllFragment() {
-
         Log.d(TAG, "refreshing habit list");
         // Populate today view with Today's habits.
         habitsDisplayList.clear(); // Make sure is clear
-        HabitList mainUserHabits = mainUser.getHabitList(); // get HabitsList
+        HabitList mainUserHabits = mainUser.getHabitList();
         habitsDisplayList.addAll(mainUserHabits);
-        // tells the adapter in recycler that the dataset has changed
         adapter.notifyDataSetChanged();
         setLayoutVisibility();
     }
 
-    // activity result launcher for view/edit activity
     ActivityResultLauncher<Intent> viewHabitResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {}

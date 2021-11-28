@@ -2,7 +2,6 @@ package com.cmput301f21t34.habittrak.social;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.recycler.HabitRecycler;
 import com.cmput301f21t34.habittrak.recycler.SocialAdapter;
-import com.cmput301f21t34.habittrak.recycler.TodayHabitRecyclerAdapter;
+import com.cmput301f21t34.habittrak.recycler.HabitRecyclerAdapter;
 import com.cmput301f21t34.habittrak.streak.Streak;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitList;
@@ -38,7 +37,7 @@ public class SocialViewProfile extends AppCompatActivity {
     private TextView username;
     private TextView bio;
     private HabitRecycler habitRecycler;
-    private TodayHabitRecyclerAdapter adapter;
+    private HabitRecyclerAdapter adapter;
     private HabitList habitList = new HabitList();
 
     @Override
@@ -62,7 +61,6 @@ public class SocialViewProfile extends AppCompatActivity {
         username = findViewById(R.id.social_profile_username);
         bio = findViewById(R.id.social_profile_bio);
 
-
         // set TextView
         username.setText(user.getUsername());
         if (!user.getBiography().equals("")){
@@ -78,8 +76,8 @@ public class SocialViewProfile extends AppCompatActivity {
         // set recycler view
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new TodayHabitRecyclerAdapter(habitList, false);
-        adapter.setHabitClickListener(new TodayHabitRecyclerAdapter.HabitClickListener() {
+        adapter = new HabitRecyclerAdapter(habitList, false);
+        adapter.setHabitClickListener(new HabitRecyclerAdapter.HabitClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 onHabitClick(view, position);
@@ -97,8 +95,6 @@ public class SocialViewProfile extends AppCompatActivity {
         });
         habitRecycler = new HabitRecycler(recyclerView, layoutManager, user.getHabitList(), user.getHabitList(), true);
         habitRecycler.setAdapter(adapter);
-//        Log.d("Social", user.getHabitList().get(0).getTitle() + ""); was causing crash
-
     }
 
     /**
@@ -118,7 +114,7 @@ public class SocialViewProfile extends AppCompatActivity {
      * gets the public habits of the user
      */
     public void getPublicHabits(){
-        for (int i = 0; i < user.getHabitList().size(); i++){
+        for (int i = 0; i < user.getHabitList().size(); i++) {
             if (user.getHabitList().get(i).isPublic())
                 habitList.add(user.getHabitList().get(i));
         }

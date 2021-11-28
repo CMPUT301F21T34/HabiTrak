@@ -29,7 +29,7 @@ import java.util.Calendar;
  * @version 1.0
  * @since 2020-10-27
  */
-public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRecyclerAdapter.ViewHolder>{
+public class HabitRecyclerAdapter extends RecyclerView.Adapter<HabitRecyclerAdapter.ViewHolder>{
 
     private ArrayList<Habit> habits;
     private static HabitClickListener habitClickListener;
@@ -154,7 +154,7 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
      * @param habitClickListener interface for onItemClick
      */
     public void setHabitClickListener(final HabitClickListener habitClickListener) {
-        TodayHabitRecyclerAdapter.habitClickListener = habitClickListener;
+        HabitRecyclerAdapter.habitClickListener = habitClickListener;
     }
 
     /**
@@ -163,7 +163,7 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
      * @param data ArrayList<Habit> containing the data to populate views
      * @param viewCheckbox to show the checkbox or not
      */
-    public TodayHabitRecyclerAdapter(final ArrayList<Habit> data, final boolean viewCheckbox) {
+    public HabitRecyclerAdapter(final ArrayList<Habit> data, final boolean viewCheckbox) {
         habits = data;
         this.viewCheckbox = viewCheckbox;
     }

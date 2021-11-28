@@ -13,6 +13,14 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
+/**
+ * ForgotFragment
+ *
+ * @author Dakota
+ * @version 1.0
+ *
+ * Forgot Fragment for the app
+ */
 public class ForgotFragment extends Fragment {
 
     TextInputLayout emailLayout;
@@ -38,11 +46,6 @@ public class ForgotFragment extends Fragment {
         emailEditText = view.findViewById(R.id.forgot_email_edit_text);
         sendButton = view.findViewById(R.id.forgot_send_button);
         mAuth = new Auth(getActivity(), null); // no need for db here, potential crash cause though
-
-
-
-
-
         // if everything correct then start base activity
 
         return view;

@@ -239,12 +239,6 @@ public class SocialTabFragment extends Fragment {
         }
     }
 
-    /**
-     * call the setList function of SocialAdapter
-     */
-    public void setList() {
-        socialAdapter.setList(UUIDs, usernames, bios);
-    }
 
     /**
      * Gets the user data for the list entry in the background
@@ -275,7 +269,7 @@ public class SocialTabFragment extends Fragment {
             socialAdapter.setMainUser(mainUser); // Update socialAdapter's version of mainUser
             UUIDs = getUUIDs(type); // Get the entries for the list
             populateList(); // Get the data for the entries
-            setList();
+            socialAdapter.setList(UUIDs, usernames, bios);
             return null;
         }
 

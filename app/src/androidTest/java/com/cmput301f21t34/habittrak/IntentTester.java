@@ -78,8 +78,12 @@ public class IntentTester {
 
     @Test
     public void addHabitTest(){
-        //Click login to login with dummyUser
-        //TODO: On complete implementation, will have to login for real
+        //Enter login information
+        onView(withId(R.id.username_edit_text))
+                .perform(typeText("rajabi@ualberta.ca"), closeSoftKeyboard());
+        onView(withId(R.id.password_edit_text))
+                .perform(typeText("password"), closeSoftKeyboard());
+        //Click login to login
         onView(withId(R.id.login_button))
                 .perform(click());
         //Check to make sure we're on the intended activity, then click the add habit button
@@ -99,7 +103,13 @@ public class IntentTester {
                 .perform(click());
         onView(withId(R.id.thursday_button))
                 .perform(click());
-        onView(withId(R.id.save_habit));
+        onView(withId(R.id.save_habit))
+                .perform((click()));
+        intended(hasComponent(BaseActivity.class.getName()));
+        onView(withId(R.id.navbar_menu_profile))
+                .perform(click());
+        onView(withId(R.id.logout))
+                .perform(click());
     }
 
     @Test
@@ -149,7 +159,7 @@ public class IntentTester {
     }
 
     @Test
-    public void socialActivityTest(){
+    public void socialFragUITest(){
         //Click login to login with dummyUser
         //TODO: On complete implementation, will have to login for real
         onView(withId(R.id.login_button))
@@ -158,8 +168,6 @@ public class IntentTester {
         intended(hasComponent(BaseActivity.class.getName()));
         onView(withId(R.id.navbar_menu_social))
                 .perform(click());
-        //Check to make sure we're in the social activity
-        intended(hasComponent(SocialActivity.class.getName()));
         //Click around to make sure we can navigate through
         onView(withContentDescription("Following"))
                 .perform(click());
@@ -169,11 +177,6 @@ public class IntentTester {
                 .perform(click());
         onView(withContentDescription("Search"))
                 .perform(click());
-        onView(withId(R.id.social_search_box))
-                .perform(typeText("Test search"), closeSoftKeyboard());
-        //Check to make sure pressing back goes back to our base activity
-        Espresso.pressBack();
-        intended(hasComponent(BaseActivity.class.getName()));
-        //TODO: when functionality is added to the buttons and the search, test them
+        //TODO: maybe put in searching? Can the emulator connect to the internet to search?
     }
 }

@@ -299,7 +299,6 @@ public class DatabaseManager {
     public HabitDatabase toHabitDatabase(HashMap<String, Object> hashmap) {
         HabitDatabase habitDatabase = new HabitDatabase();
         habitDatabase.setIndex((int) (long) hashmap.get("index"));
-
         habitDatabase.setReason((String) hashmap.get("reason"));
         habitDatabase.setTitle((String) hashmap.get("title"));
         habitDatabase.setIsPublic((boolean) hashmap.get("isPublic"));
@@ -307,18 +306,17 @@ public class DatabaseManager {
                 (ArrayList<HashMap<String, Object>>) hashmap.get("habitEvents")));
         habitDatabase.setOnDaysObjFromDB((ArrayList<Boolean>) hashmap.get("onDaysObj"));
         habitDatabase.setStartDate(toCalendar((HashMap<String, Object>) hashmap.get("startDate")));
-        if(hashmap.get("currentStreakDate") != null){
+        if (hashmap.get("currentStreakDate") != null) {
             habitDatabase.setCurrentStreakDate(toCalendar(
                     (HashMap<String, Object>) hashmap.get("currentStreakDate")));
         }
-        else{
+        else {
             habitDatabase.setCurrentStreakDate(null);
         }
-        if(hashmap.get("bestStreakDate") != null){
+        if (hashmap.get("bestStreakDate") != null) {
             habitDatabase.setBestStreakDate(toCalendar(
                     (HashMap<String, Object>) hashmap.get("bestStreakDate")));
-        }
-        else{
+        } else {
             habitDatabase.setBestStreakDate(null);
         }
         return habitDatabase;
@@ -359,7 +357,7 @@ public class DatabaseManager {
             event.setComment(null);
         }
 
-        if (hashmap.get("location") != null){
+        if (hashmap.get("location") != null) {
             event.setLocation(toLocation((HashMap<String, Object>) hashmap.get("location")));
         } else {
             event.setLocation(null);
@@ -382,19 +380,16 @@ public class DatabaseManager {
      * @param hashMap HashMap<String, Object> the HashMap to be converted
      * @return Location, the location from the HashMap
      */
-    private Location toLocation(HashMap<String,Object> hashMap){
-
-        if(hashMap != null) {
+    private Location toLocation(HashMap<String,Object> hashMap) {
+        if (hashMap != null) {
             Location loc = new Location((String) hashMap.get("provider"));
             loc.setLatitude((double) (long) hashMap.get("latitude"));
             loc.setLongitude((double) (long) hashMap.get("longitude"));
 
             return loc;
-        }
-        else{
+        } else {
             return null;
         }
-
     }
 
     /**

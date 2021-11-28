@@ -22,19 +22,8 @@ public class User implements Parcelable {
     // Any changes need to be implement in writeToParcel and Parcel constructor - Dakota
 
     // Attributes ----------------------------------------------------------------------------------
-    // Creates User from parcel
-    public static final Parcelable.Creator<User> CREATOR
-            = new Parcelable.Creator<User>() {
-        @Override
-        public User createFromParcel(Parcel in) {
-            return new User(in);
-        }
 
-        @Override
-        public User[] newArray(int size) {
-            return new User[size];
-        }
-    };
+
 
     private final String email;
     private String username;
@@ -412,6 +401,20 @@ public class User implements Parcelable {
 
         parcel.writeBundle(userBundle); // writes bundle to parcel
     }
+
+    // Static attribute used by the system to invoke creating from parcel
+    public static final Parcelable.Creator<User> CREATOR
+            = new Parcelable.Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     /**
      * Apart of Parcelable implementation, does nothing but is required

@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import com.cmput301f21t34.habittrak.BaseActivity;
 import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
+import com.cmput301f21t34.habittrak.Utilities;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -35,7 +36,7 @@ import com.google.firebase.auth.FirebaseUser;
  *
  * Login Fragment for the app
  */
-public class LoginFragment extends Fragment {
+public class LoginFragment extends Fragment implements Utilities {
 
     private User mainUser;
     private DatabaseManager db;
@@ -81,7 +82,6 @@ public class LoginFragment extends Fragment {
         mAuth = new Auth(getActivity(), db);
 
         return view;
-
     }
 
     @Override
@@ -104,7 +104,6 @@ public class LoginFragment extends Fragment {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 passwordLayout.setError(null);
                 usernameLayout.setError(null);
 
@@ -114,7 +113,6 @@ public class LoginFragment extends Fragment {
                 try {
                     runLogin(email, password);
                 } catch (Exception e) {
-
                     if (e instanceof IllegalArgumentException) {
                         // Invalid entry
                         usernameLayout.setError("Invalid Entry");
@@ -126,7 +124,6 @@ public class LoginFragment extends Fragment {
                 }
             }
         });
-
     }
 
     private void runLogin(String email, String password) {
@@ -140,42 +137,21 @@ public class LoginFragment extends Fragment {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             authUser = fAuth.getCurrentUser();
-
                             if (authUser.isEmailVerified()) {
-                                startHomePage(null);
+                                goToBaseActivity(getActivity(), null);
                             } else {
                                 // Email not Verified //
                                 usernameLayout.setError("Email not Verified");
                                 passwordLayout.setError(null);
-
                                 mAuth.alertNotVerified(authUser).show();
                             }
                         } else {
                             // Login Failed
-
                             usernameLayout.setError(null);
                             passwordLayout.setError("Incorrect Password");
                         }
                     }
                 });
-    }
-
-    /**
-     * startHomePage
-     * Start the base activity after logging in
-     * @param
-     */
-    public void startHomePage(User currentUser) {
-
-        Log.d("MERGE", "startHomePage");
-
-        Intent intent = new Intent(getActivity(), BaseActivity.class);
-
-        intent.putExtra("mainUser", currentUser);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        startActivity(intent);
-        getActivity().finish();
     }
 
     private void toSignUp() {

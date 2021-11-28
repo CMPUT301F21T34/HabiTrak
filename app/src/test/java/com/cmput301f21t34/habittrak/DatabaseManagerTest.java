@@ -1,5 +1,9 @@
 package com.cmput301f21t34.habittrak;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+
 import org.junit.jupiter.api.Test;
 
 import com.cmput301f21t34.habittrak.user.User;
@@ -13,7 +17,6 @@ import com.cmput301f21t34.habittrak.user.User;
  * @see DatabaseManager
  */
 public class DatabaseManagerTest {
-
     /**
      * mockUser
      *
@@ -23,7 +26,6 @@ public class DatabaseManagerTest {
     private User mockUser(String email, String username, String password) {
         User mockUser = new User(email);
         mockUser.setUsername(username);
-        mockUser.setPassword(password);
         return mockUser;
     }
 
@@ -32,37 +34,11 @@ public class DatabaseManagerTest {
      *
      * @author Henry
      */
-    // NOT WORKING
     @Test
-    public void createNewUser() {
-        /*
-        User user = mockUser("test1@gmail.com", "test1", "12345");
+    public void getUserTest() {
         DatabaseManager db = new DatabaseManager();
-        db.createNewUser(user.getEmail(), user.getUsername(), user.getPassword(), user.getBiography());
-
-        String TAG = "New User";
-
-        DocumentReference docRef = db.getDatabase().collection("users").document("SF");
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d(TAG, "Found document");
-                        assertEquals(document.get("username").toString(), user.getUsername());
-                        assertEquals(document.get("password").toString(), user.getPassword());
-                        assertEquals(document.getId().toString(), user.getEmail());
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
-
-         */
+        User user = db.getUser("ddvu@ualberta.ca");
+        assertEquals("henry", user.getUsername());
     }
 }
 

@@ -26,6 +26,7 @@ import java.util.HashMap;
  * Class for testing Habit Objects
  *
  * @author Henry
+ * @author Tauseef
  * @version 1.0
  * @since 2021-11-03
  * @see DatabaseManager
@@ -62,6 +63,110 @@ public class DatabaseManagerTest {
         } catch (Exception e) {
             throw new RuntimeException(e.getLocalizedMessage());
         }
+        dm.deleteUser("test@gmail.com");
+    }
+
+    /**
+     * getAllUserTest
+     *
+     * Tests if getAllUsers correctly get all emails from the database
+     */
+    @Test
+    public void getAllUsersTest(){
+        String email = "test2@gmail.com";
+        String username = "testUser2";
+        dm.createNewUser(email, username);
+        ArrayList<String> userNames = dm.getAllUsers();
+        assertEquals(2,userNames.size());
+        assertEquals("testUser",userNames.get(0));
+        assertEquals("testUser2",userNames.get(1));
+        dm.deleteUser("test2@gmail.com");
+        dm.deleteUser("test@gmail.com");
+    }
+
+    /**
+     * getUserNameTest
+     *
+     * Tests if getUserName correctly get the username of the user from the database
+     */
+    @Test
+    public void getUserNameTest(){
+        String email = "test@gmail.com";
+        String username = "testUser";
+        User user = new User(email);
+        user.setUsername(username);
+        dm.createNewUser(email, username);
+        String name = dm.getUserName(user.getEmail());
+        assertEquals(user.getUsername(),name);
+        dm.deleteUser("test@gmail.com");
+    }
+
+    /**
+     * getUserTest
+     *
+     * Tests if getUser correctly get the user from the database
+     */
+    @Test
+    public void getUserTest(){
+        String email = "test@gmail.com";
+        String username = "testUser";
+        String bio = "testing";
+        dm.createNewUser(email, username);
+        User user = dm.getUser("test@gmail.com");
+        dm.updateBio(email,bio);
+        assertEquals("testUser",user.getUsername());
+        assertEquals(email,user.getEmail());
+        assertEquals(bio,user.getBiography());
+        assertEquals(0,user.getFollowerList().size());
+        assertEquals(0,user.getFollowingList().size());
+        assertEquals(0,user.getFollowerReqList().size());
+        assertEquals(0,user.getFollowingReqList().size());
+        assertEquals(0,user.getBlockedByList().size());
+        assertEquals(0,user.getBlockList().size());
+
+        dm.deleteUser("test@gmail.com");
+    }
+
+    /**
+     * getUserBioTest
+     *
+     * Tests if getUserBio correctly get the biography of the user from the database
+     */
+    @Test
+    public void getUserBioTest(){
+        String email = "test@gmail.com";
+        String username = "testUser";
+        String biography = "testing";
+        User user = new User(email);
+        user.setUsername(username);
+        user.setBiography(biography);
+        dm.createNewUser(email, username);  // add user to the db
+        String bio = dm.getUserBio(user.getEmail());  // get bio from the db
+        dm.updateBio(user.getEmail(),user.getBiography());
+        assertEquals(user.getBiography(),bio);
+
+        // Delete test user after test is done
+        dm.deleteUser("test@gmail.com");
+    }
+
+    /**
+     * isUniqueEmailTest
+     *
+     * Tests if isUniqueEmail checks uniqueness of email in the database
+     */
+    @Test
+    public void isUniqueEmailTest() {
+        // Testing an email that's not in the db
+        assertEquals(true, dm.isUniqueEmail("testing@email.com"));
+
+        // Add email to db then test
+        String email = "test@gmail.com";
+        String username = "testUser";
+        User user = new User(email);
+        dm.createNewUser(email, username);
+        assertEquals(false, dm.isUniqueEmail(user.getEmail()));
+
+        // Delete test user after test is done
         dm.deleteUser("test@gmail.com");
     }
 

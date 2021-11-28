@@ -65,6 +65,31 @@
         android:layout_marginTop="10dp"
         android:background="?android:attr/listDivider" />
 
+    <LinearLayout
+        android:id="@+id/social_no_data_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_empty_list_vector"
+            app:tint="#808080" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_black"
+            android:gravity="center"
+            android:text="no public habits found"
+            android:textColor="#808080" />
+
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/social_profile_recycler"
         android:layout_width="match_parent"

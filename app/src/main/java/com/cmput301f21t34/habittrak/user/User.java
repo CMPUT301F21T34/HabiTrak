@@ -257,11 +257,12 @@ public class User implements Parcelable {
         return (ArrayList<String>) followingReqList.clone();
     }
 
-
-    public Habit getHabit(int index) {
-        return this.habitList.get(index);
-    }
-
+    /**
+     * Gets the habit list
+     *
+     * @author Dakota
+     * @return HabitList which extends ArrayList\<Habit\>
+     */
     public HabitList getHabitList() {
         return habitList;
     }
@@ -412,6 +413,9 @@ public class User implements Parcelable {
      */
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
+
+        // Bundle to load attributes into
+            // Class loader tells system which Class to use and is necessary
         Bundle userBundle = new Bundle(this.getClass().getClassLoader());
 
         userBundle.putString("username", username);

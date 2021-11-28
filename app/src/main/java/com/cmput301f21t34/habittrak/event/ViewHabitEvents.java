@@ -90,7 +90,7 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
 
             @Override
             public void itemClick(View view, int position) {
-                Log.d("Event", "Clicked");
+
                 startViewEventActivity(position);
             }
         });

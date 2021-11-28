@@ -97,15 +97,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onLocationResult(@NonNull LocationResult locationResult) {
                 super.onLocationResult(locationResult);
                 if (locationResult == null) {
-                    Log.d("MAP","Location result is null");
+
                     return;
                 }
                 for (Location location:locationResult.getLocations()) {
-                    Log.d("MAP","Location is " + location.toString());
+
                 }
                 lastKnownLocation = locationResult.getLastLocation();
-                Log.d("MAP","The longitude is " + lastKnownLocation.getLongitude()+
-                        " and the latitude is " + lastKnownLocation.getLatitude());
+
                 stopLocationUpdates();
                 updateLocationUI(lastKnownLocation);
             }
@@ -118,7 +117,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Return the chosen location after confirm button has been pressed
         confirmButton.setOnClickListener(view -> {
-            Log.d("MAP","The confirm button has been pressed");
+
             Intent result = new Intent();
             result.putExtra("permission",true);
             result.putExtra("latitude", lastKnownLocation.getLatitude());
@@ -134,13 +133,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (requestCode == REQUEST_CHECK_SETTINGS) {
                 // check if the gps has been turned on
                 if (resultCode == Activity.RESULT_OK) {
-                    Log.d("MAP","The gps has been turned on");
+
                     startLocationUpdates();
                 } else {
-                    Log.d("MAP","The gps has not been turned on");
+
                 }
         } else {
-            Log.d("MAP","different case");
+
         }
     }
 
@@ -160,20 +159,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         task.addOnSuccessListener(this, locationSettingsResponse -> {
             // settings are satisfied the client can initialize location requests here
             startLocationUpdates();
-            Log.d("MAP","it was already turned on");
+
 
         });
         task.addOnFailureListener(this, e -> {
             if (e instanceof ResolvableApiException) {
                 // location settings are not satisfied.
                 try {
-                    Log.d("MAP","Need to turn it on");
+
                     ResolvableApiException resolvable = (ResolvableApiException) e;
                     resolvable.startResolutionForResult(MapsActivity.this,
                             REQUEST_CHECK_SETTINGS);
                 } catch (IntentSender.SendIntentException sendEx) {
                     // ignore it
-                    Log.d("MAP","Error on task on failure");
+
                 }
             }
         });
@@ -216,15 +215,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        Log.d("MAP","outside device location");
+
         mMap.setOnMapClickListener(latLng -> {
-            Log.d("MAP","inside the onclick function");
             lastKnownLocation.setLatitude(latLng.latitude);
             lastKnownLocation.setLongitude(latLng.longitude);
             updateLocationUI(lastKnownLocation);
             String address = getAddress(latLng.latitude, latLng.longitude);
-            Log.d("MAP","Got the location " + lastKnownLocation.getLongitude() + lastKnownLocation.getLatitude());
-            Log.d("Address", address);
+
         });
     }
 
@@ -273,7 +270,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     locationPermissionGranted = true;
                     checkSettingsAndStartLocationUpdates();
                 } else {
-                    Log.d("MAP","Location not granted");
                     Toast.makeText(this, "The app needs the location permission to choose location", Toast.LENGTH_LONG).show();
                     Intent result = new Intent();
                     result.putExtra("permission",false);
@@ -305,13 +301,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * updates the UI of the map and handles myLocationButton
      */
     private void updateLocationUI(Location loc) {
-        Log.d("MAP","Inside the updatedLocation");
         if (mMap == null) {
             return;
         }
         try {
             if (locationPermissionGranted) {
-                Log.d("MAP","Inside location granted updatedLocation");
                 mMap.setMyLocationEnabled(true);
                 mMap.getUiSettings().setMyLocationButtonEnabled(true);
                 mMap.clear();
@@ -346,7 +340,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             addressList = geocoder.getFromLocation(latitude, longitude, 1);
             address = addressList.get(0).getAddressLine(0);
         } catch (Exception e) {
-            Log.d("Address", "address failed");
             e.printStackTrace();
         }
         loading.setVisibility(View.GONE);

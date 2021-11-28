@@ -37,6 +37,7 @@ public class DatabaseManager {
     public static final boolean REMOVE = true;
     private final FirebaseFirestore database;
 
+    // Constructors
     public DatabaseManager() {
         database = FirebaseFirestore.getInstance();
     }
@@ -62,7 +63,7 @@ public class DatabaseManager {
             // Add each the id of each document (UUID of the user) to users
             task.getResult().forEach(document -> users.add(document.getId()));
         } catch (Exception ignored) {
-            Log.d("Getting all users error", "all users", ignored);
+
         }
         return users;
     }
@@ -225,7 +226,7 @@ public class DatabaseManager {
                 name = (String) document.get("Username");
             }
         } catch (Exception ignored) {
-            Log.d("Getting name error", "name", ignored);
+
         }
 
         return name;
@@ -254,7 +255,7 @@ public class DatabaseManager {
                 bio = (String) document.get("Biography");
             }
         } catch (Exception ignored) {
-            Log.d("Getting bio error", "bio", ignored);
+
         }
 
         return bio;
@@ -509,7 +510,7 @@ public class DatabaseManager {
                     }
                 }
             } else {
-                Log.d("Task: " + task, " failed with: ", task.getException());
+
             }
         });
     }
@@ -631,6 +632,13 @@ public class DatabaseManager {
         return habitList;
     }
 
+    /**
+     *
+     * @param name, String, The name of image file
+     * @param contentUri, Uri, the uri of the image
+     * @param mStorageRef, StorageReference, the storage reference of the firebase storage
+     * @return Uri, the downloaded uri of the uploaded image
+     */
     public Uri uploadImageToFirebase(String name, Uri contentUri, StorageReference mStorageRef) {
         Uri returnedUri = null;
         StorageReference picImage = mStorageRef.child("images/" + name);
@@ -642,10 +650,10 @@ public class DatabaseManager {
             if (uriTask.isSuccessful()) {
                 returnedUri = uriTask.getResult();
             } else {
-                Log.d("Uploading image to firebase", "couldn't get download url");
+
             }
         } else {
-            Log.d("Uploading image to firebase", "couldn't upload url");
+
         }
         return returnedUri;
     }

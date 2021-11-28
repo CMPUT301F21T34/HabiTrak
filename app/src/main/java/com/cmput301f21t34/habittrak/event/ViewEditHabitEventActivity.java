@@ -60,9 +60,10 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
     private HabitEvent returnedHabitEvent;
 
     DatabaseManager db;
+    // launcher variables
     ActivityResultLauncher<Intent> cameraActivityResultLauncher;
     ActivityResultLauncher<Intent> galleryActivityResultLauncher;
-    ActivityResultLauncher<Intent> mapActivityResultLauncher;
+
 
     // intent data variables
     private HabitEvent habitEvent;
@@ -136,14 +137,13 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
         if (locationHabitEvent != null) {
             addressLine.setText(getAddress(locationHabitEvent.getLatitude(),locationHabitEvent.getLongitude()));
         } else {
-            Log.d(TAG,"Address is not selected");
+
             addressLine.setText("No location selected");
         }
 
         // set date
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         completionDateCalendar.setText(format.format(completedDate.getTime()));
-        Log.d(TAG,"Set the date");
 
         // setting up activity launchers
         // the activity launcher to get an image from the gallery
@@ -154,7 +154,7 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
                         Uri contentUri = result.getData().getData();
                         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                         String imageFileName = "JPEG_" + timeStamp + "." + getFileExt(contentUri);
-                        Log.d("tag", "onActivityResult: Gallery Image Uri:  " + imageFileName);
+
                         image.setImageURI(contentUri);
                         returnedHabitEvent.setPhotograph(db.uploadImageToFirebase(imageFileName, contentUri, mStorageRef));
                     }
@@ -163,7 +163,7 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
         cameraActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
-                    Log.d("CAMERA", "entered camera on activity result");
+
                     if (result.getResultCode() == Activity.RESULT_OK ) {
                         File f = new File(currentPhotoPath);
                         image.setImageURI(Uri.fromFile(f));
@@ -174,55 +174,25 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
                         //Uri contentUri = Uri.fromFile(f);
                         mediaScanIntent.setData(contentUri);
                         ViewEditHabitEventActivity.this.sendBroadcast(mediaScanIntent);
-                        // to load the image using the uri use Picasso.get().load(he.getUri()).into(image);
-                        Log.d("CAMERA","Exiting gallery stage");
+
                     } else {
-                        Log.d("CAMERA", "Failed onActivityResult if condition");
+
                     }
                 });
-        /*
-        // uncomment if we want allow the user to change address
-        // in this case a map button and uncomment the onClickListener
-        mapActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-            @Override
-            public void onActivityResult(ActivityResult result) {
-                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                    double latitude = result.getData().getDoubleExtra("latitude", 0.000000);
-                    double longitude = result.getData().getDoubleExtra("longitude", 0.000000);
-                    Location eventLocation = new Location("gps");
-                    eventLocation.setLatitude(latitude);
-                    eventLocation.setLongitude(longitude);
-                    returnedHabitEvent.setLocation(eventLocation);
-                    addressLine.setText("");
-                    addressLine.setText(getAddress(eventLocation.getLatitude(),eventLocation.getLongitude()));
-                }
-                else {
-                    Log.d("MAP", "Failed onActivityResult if condition");
-                }
-            }
-        });
-        */
+
         // handling the onclick listener
         cameraBtn.setOnClickListener(view -> askCameraPermission());
         galleryBtn.setOnClickListener(view -> {
             Intent gallery = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             galleryActivityResultLauncher.launch(gallery);
         });
-        /*
-        mapBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent map = new Intent(view.getContext(), MapsActivity.class);
-                mapActivityResultLauncher.launch(map);
-            }
-        });
-        */
+        // handling the save button click
         saveHabitEventBtn.setOnClickListener(view -> {
-            Log.d(TAG,"Save button pressed");
+
             if (!comment.getText().toString().equals(""))
                 returnedHabitEvent.setComment(comment.getText().toString());
             // create the intent to return the habit event
-            Log.d(TAG,"creating intent");
+
             Intent result = new Intent();
             result.putExtra("HABIT_EVENT", returnedHabitEvent);
             result.putExtra("event_position", eventPosition);
@@ -254,18 +224,18 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
      */
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        Log.d("CAMERA","entered here1");
+
         // Create the File where the photo should go
         File photoFile = null;
         try {
             photoFile = createImageFile();
-            Log.d("Camera","Entered the if condition in dispatchtakePictureIntent after createImageFile");
+
         } catch (IOException ex) {
-            Log.d("CAMERA","Dispatch take picture intent exception: " + ex.getLocalizedMessage());
+
         }
         // Continue only if the File was successfully created
         if (photoFile != null) {
-            Log.d("CAMERA","calling here");
+
             Uri photoURI = FileProvider.getUriForFile(this,
                     "com.example.android.fileprovider",
                     photoFile);
@@ -273,7 +243,7 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
             // starts the activity
             cameraActivityResultLauncher.launch(takePictureIntent);
         } else {
-            Log.d("CAMERA","The photo file is null");
+
         }
     }
 
@@ -353,7 +323,6 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
             addressList = geocoder.getFromLocation(latitude, longitude, 1);
             address = addressList.get(0).getAddressLine(0);
         } catch (Exception e) {
-            Log.d("Address", "address failed");
             e.printStackTrace();
         }
         return address;

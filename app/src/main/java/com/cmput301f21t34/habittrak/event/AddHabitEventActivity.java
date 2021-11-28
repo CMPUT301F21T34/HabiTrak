@@ -86,8 +86,10 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        // getting the firebase storage
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
+        // getting the Views
         cameraButton = findViewById(R.id.CameraButton);
         galleryButton = findViewById(R.id.GalleryButton);
         mapButton = findViewById(R.id.mapButton);
@@ -106,7 +108,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
         Intent intent = getIntent();
         this.habit = intent.getParcelableExtra("HABIT");
 
-        Log.d("HABIT IN ADD EVENT", habit.getTitle());
+
 
         // the activity launcher to get an image from the gallery
         galleryActivityResultLauncher = registerForActivityResult(
@@ -116,7 +118,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
                         Uri contentUri = result.getData().getData();
                         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                         String imageFileName = "JPEG_" + timeStamp + "." + getFileExt(contentUri);
-                        Log.d("Gallery", "onActivityResult: Gallery Image Uri:  " + imageFileName);
+
                         image.setImageURI(contentUri);
                         habitEvent.setPhotograph(db.uploadImageToFirebase(imageFileName, contentUri, mStorageRef));
                     }
@@ -126,7 +128,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
         cameraActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
-                    Log.d("CAMERA", "Entered camera on activity result");
+
                     if (result.getResultCode() == Activity.RESULT_OK ) {
                         File f = new File(currentPhotoPath);
                         image.setImageURI(Uri.fromFile(f));
@@ -136,13 +138,13 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
                         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                         mediaScanIntent.setData(contentUri);
                         AddHabitEventActivity.this.sendBroadcast(mediaScanIntent);
-                        // to load the image using the uri use Picasso.get().load(he.getUri()).into(image);
-                        Log.d("CAMERA","Exiting gallery stage");
+
                     } else {
-                        Log.d("CAMERA", "Failed onActivityResult if condition");
+
                     }
                 });
 
+        // the activity launcher for starting map activity
         mapActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                 if (result.getData().getBooleanExtra("permission",false)) {
@@ -157,7 +159,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
                     addressLine.setText(getAddress(eventLocation.getLatitude(), eventLocation.getLongitude()));
                 }
             } else {
-                Log.d("MAP", "Failed onActivityResult if condition");
+
             }
         });
         // setting listeners
@@ -176,7 +178,6 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.addHabitEventButton) {
-            Log.d("CAMERA", "pressed add button in habit event");
             habitEvent.setComment(commentText.getText().toString());
             ArrayList<HabitEvent> currentEventList = habit.getHabitEvents();
             currentEventList.add(habitEvent);
@@ -186,7 +187,6 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
             result.putExtra("HABIT", habit);
             result.putExtra("HABIT_EVENT",habitEvent);
             setResult(RESULT_CODE, result);
-            Log.d("CAMERA", "ready to finish");
             this.finish();
         } else if (view.getId() == R.id.mapButton) {
             addressLine.setText("");
@@ -222,18 +222,17 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
      */
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        Log.d("CAMERA","entered here1");
         // Create the File where the photo should go
         File photoFile = null;
         try {
             photoFile = createImageFile();
-            Log.d("Camera","Entered the if condition in dispatchtakePictureIntent after createImageFile");
+
         } catch (IOException ex) {
-            Log.d("CAMERA","Dispatch take picture intent exception: " + ex.getLocalizedMessage());
+
         }
         // Continue only if the File was successfully created
         if (photoFile != null) {
-            Log.d("CAMERA","calling here");
+
             Uri photoURI = FileProvider.getUriForFile(this,
                     "com.example.android.fileprovider",
                     photoFile);
@@ -241,7 +240,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
             // starts the activity
             cameraActivityResultLauncher.launch(takePictureIntent);
         } else {
-            Log.d("CAMERA","The photo file is null");
+
         }
     }
 
@@ -321,7 +320,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
             addressList = geocoder.getFromLocation(latitude, longitude, 1);
             address = addressList.get(0).getAddressLine(0);
         } catch (Exception e) {
-            Log.d("Address", "address failed");
+
             e.printStackTrace();
         }
         return address;

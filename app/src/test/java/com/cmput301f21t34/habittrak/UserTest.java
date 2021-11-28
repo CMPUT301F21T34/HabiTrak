@@ -76,8 +76,6 @@ public class UserTest {
     @Test
     public void removeHabitTest() {
         User user = mockUser();
-
-
         // Populate habit list of a new user
         Habit habit1 = new Habit("habit1");
         user.getHabitList().add(habit1);
@@ -122,7 +120,6 @@ public class UserTest {
      *
      * @author Henry
      */
-
     @Test
     public void removeFollowerTest() {
         User user = mockUser();
@@ -206,7 +203,6 @@ public class UserTest {
     @Test
     public void addFollowingTest() {
         User user = mockUser();
-
 
         // Add new following then check size
         assertEquals(0, user.getFollowingList().size());

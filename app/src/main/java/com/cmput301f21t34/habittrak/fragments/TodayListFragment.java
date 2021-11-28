@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 
+import com.cmput301f21t34.habittrak.ViewEditHabitActivity;
 import com.cmput301f21t34.habittrak.event.AddHabitEventActivity;
 import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.recycler.HabitRecycler;
@@ -85,7 +86,7 @@ public class TodayListFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 Habit habit = habitsDisplayList.get(position);
-                Intent intent = new Intent(getContext(), ViewEditHabit.class);
+                Intent intent = new Intent(getContext(), ViewEditHabitActivity.class);
                 intent.putExtra("HABIT", habit);
                 intent.putExtra("position", habit.getIndex());
                 viewHabitResultLauncher.launch(intent);

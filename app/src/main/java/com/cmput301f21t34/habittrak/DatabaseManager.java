@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.TimeZone;
 
 /**
@@ -83,7 +82,7 @@ public class DatabaseManager {
         try {
             DocumentReference docref = collectionReference.document(email);
             Task<DocumentSnapshot> task = docref.get();
-            while (!task.isComplete()) ;
+            while (!task.isComplete());
             DocumentSnapshot document = task.getResult();
             return !document.exists(); // document for email doesn't exist means email unique
         } catch (Exception ignored) {

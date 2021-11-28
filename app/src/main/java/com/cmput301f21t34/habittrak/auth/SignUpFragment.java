@@ -117,7 +117,6 @@ public class SignUpFragment extends Fragment implements Utilities {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-
                             // Sign Up was successful
                             FirebaseUser authUser = fAuth.getCurrentUser();
 

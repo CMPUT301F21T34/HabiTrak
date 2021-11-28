@@ -257,6 +257,9 @@ public class SocialTabFragment extends Fragment {
         }
     }
 
+    /**
+     * gets the new data on refresh
+     */
     public class SocialRefreshAsync extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {

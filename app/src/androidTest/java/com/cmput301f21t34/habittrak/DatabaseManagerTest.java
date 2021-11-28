@@ -152,6 +152,11 @@ public class DatabaseManagerTest {
         dm.deleteUser(email1);
         dm.deleteUser(email2);
     }
+
+    /**
+     * getAllUserTest
+     * tests the get all user method of the database
+     */
     @Test
     public void getAllUserTest(){
         // the size has to be known so it doesn't work
@@ -166,6 +171,11 @@ public class DatabaseManagerTest {
         dm.deleteUser("test2@gmail.com");
         dm.deleteUser("test@gmail.com");
     }
+
+    /**
+     * getUserNameTest
+     * tests the getUserName method of the DatabaseManager
+     */
     @Test
     public void getUserNameTest(){
         dm = new DatabaseManager();
@@ -178,6 +188,11 @@ public class DatabaseManagerTest {
         assertEquals(user.getUsername(),name);
         dm.deleteUser("test@gmail.com");
     }
+
+    /**
+     * getUserTest
+     * Tests the getUser method of the DatabaseManager
+      */
     @Test
     public void getUserTest(){
         dm = new DatabaseManager();
@@ -199,6 +214,11 @@ public class DatabaseManagerTest {
 
         dm.deleteUser("test@gmail.com");
     }
+
+    /**
+     * getUserBioTest
+     * tests getUserBio method
+     */
     @Test
     public void getUserBioTest(){
 

@@ -40,7 +40,7 @@ import java.util.ArrayList;
  * @version 1.0
  * @since 2021-10-16
  */
-public class BaseActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
+public class BaseActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener, Utilities {
 
     // Result codes from activity
     public static final int RESULT_NEW_HABIT = 1000;
@@ -79,8 +79,11 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         Intent intent = getIntent();
         mainUser = intent.getParcelableExtra("mainUser"); // Gets mainUser from intent // Dont think this is being used anymore - Dakota
 
-        getMainUser();
-        refreshHabitStreak();
+        if (mainUser == null) {
+            mainUser = getMainUser(this);
+        }
+
+        refreshHabitStreak(mainUser);
 
         addHabitButton = findViewById(R.id.base_add_habit_button);
 
@@ -101,7 +104,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
     public void onResume() {
         super.onResume();
 
-        refreshHabitStreak();
+        refreshHabitStreak(mainUser);
 
         // add habit listener
         addHabitButton.setOnClickListener(new View.OnClickListener() {
@@ -117,38 +120,14 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
     public void onPause(){
         super.onPause();
         // Update before we are ever terminated (or unfocused)
-        // TODO: Change the email to uuid in the next line
-        db.updateHabitList(mainUser.getEmail(),mainUser.getHabitList());
-        // TODO: Update all events list
+
+        updateHabitListDB(mainUser);
+
     }
 
-    /**
-     * gets the main user from database
-     * @author Dakota
-     */
-    private void getMainUser() {
-        // Updates the mainUser, even if they are already logged in
-        FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (fUser == null){
-            //TODO: Send to main
-        }
-        mainUser = db.getUser(fUser.getEmail());
-    }
 
-    /**
-     * refreshes all habit streaks
-     *
-     * @author Dakota
-     */
-    private void refreshHabitStreak() {
-        // Refreshes all habit streaks //
-        ArrayList<Habit> habits = (ArrayList<Habit>) mainUser.getHabitList(); // cast for simple iteration
 
-        for (int index = 0; index < habits.size(); index++){
-            Streak streak = new Streak(habits.get(index)); // set a Streak class to modify each habit
-            streak.refreshStreak(); // refreshes each streak
-        }
-    }
+
 
     /**
      * onBackPressed
@@ -198,9 +177,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
             Log.d(TAG, "size: " + String.valueOf(mainUser.getHabitList().size()));
             todayFrag.refreshTodayFragment(); // refresh view
 
-            // TODO: Change the email to uuid in the next line
-            db.updateHabitList(mainUser.getEmail(),mainUser.getHabitList());
-            // TODO: Update all events list
+
         }
         // result from view/edit habit activity
         else if (resultCode == RESULT_EDIT_HABIT) {
@@ -210,9 +187,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
             todayFrag.refreshTodayFragment();
             allHabitsFrag.refreshAllFragment();
 
-            // TODO: Change the email to uuid in the next line
-            db.updateHabitList(mainUser.getEmail(),mainUser.getHabitList());
-            // TODO: Update all events list
         }
         // result from add habit event activity
         else if (resultCode == RESULT_NEW_HABIT_EVENT) {
@@ -221,21 +195,19 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
             Habit habit = intent.getParcelableExtra("HABIT");
             // habit.incrementStreak();
             mainUser.getHabitList().replace(habit);
-            // Propagate the changes to the database
 
-            // TODO: Change the email to uuid in the next line
-            db.updateHabitList(mainUser.getEmail(),mainUser.getHabitList());
-            // TODO: Update all events list
+
         }
         // result from view habit events activity
         else if (resultCode == RESULT_HABIT_EVENTS){
             Habit habit = intent.getParcelableExtra("HABIT");
             mainUser.getHabitList().replace(habit);
 
-            // TODO: Change the email to uuid in the next line
-            db.updateHabitList(mainUser.getEmail(),mainUser.getHabitList());
-            // TODO: Update all events list
         }
+
+        // Update Database after results
+        updateHabitListDB(mainUser);
+
         super.onActivityResult(requestCode, resultCode, intent);
     }
 }

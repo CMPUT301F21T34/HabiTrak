@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.MainActivity;
 import com.cmput301f21t34.habittrak.R;
+import com.cmput301f21t34.habittrak.Utilities;
 import com.cmput301f21t34.habittrak.auth.Auth;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
@@ -35,7 +36,7 @@ import com.google.firebase.auth.FirebaseUser;
  *
  * Fragment for displaying profile information
  */
-public class ProfileFragment extends Fragment implements View.OnClickListener{
+public class ProfileFragment extends Fragment implements View.OnClickListener, Utilities {
 
     User mainUser;
     MaterialButton confirm;
@@ -127,7 +128,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                 mAuth.signOut();
 
                 // Send user back to main activity
-                startMainActivity();
+                goToMainActivity(getActivity());
 
                 break;
             case R.id.deleter:
@@ -137,21 +138,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                 }
                 break;
         }
-    }
-
-    /**
-     * startMainActivity
-     *
-     * sends the user back to the main activity through an intent
-     *
-     * @author Dakota
-     */
-    private void startMainActivity(){
-        // Send user back to main activity
-        Intent intent = new Intent(getActivity(), MainActivity.class);
-        startActivity(intent);
-        mainUser = null; // Possibly redundant
-        getActivity().finish();
     }
 
     private void delete(FirebaseUser authUser){
@@ -177,7 +163,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                     String email = authUser.getEmail();
                     authUser.delete();
                     db.deleteUser(email);
-                    startMainActivity();
+
+                    goToMainActivity(getActivity());
 
                 });
 

@@ -1,5 +1,6 @@
 package com.cmput301f21t34.habittrak;
 
+import android.app.Activity;
 import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -66,7 +67,7 @@ public interface Utilities {
      * @param activity Activity context to execute from (usually 'this')
      * @param user User to pass into base activity
      */
-    default void goToBaseActivity(AppCompatActivity activity, User user) {
+    default void goToBaseActivity(Activity activity, User user) {
         Intent intent = new Intent(activity, BaseActivity.class);
 
         intent.putExtra("mainUser", user);
@@ -82,7 +83,7 @@ public interface Utilities {
      * @author Dakota
      * @param activity Activity context to execute from (usually 'this')
      */
-    default void goToMainActivity(AppCompatActivity activity){
+    default void goToMainActivity(Activity activity){
         // Send user back to main activity
         Intent intent = new Intent(activity, MainActivity.class);
         activity.startActivity(intent);
@@ -94,15 +95,15 @@ public interface Utilities {
      *
      * @author Dakota
      * @param activity Activity context to execute from (usually 'this')
-     * @param user User object to populate
+     * @return User from database using FirebaseUser
      */
-    default void getMainUser(AppCompatActivity activity, User user) {
+    default User getMainUser(Activity activity) {
         // Updates the mainUser, even if they are already logged in
         FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
         if (fUser == null){
             goToMainActivity(activity);
         }
-        user = db.getUser(fUser.getEmail());
+        return db.getUser(fUser.getEmail());
     }
 
 }

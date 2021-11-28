@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.MainActivity;
@@ -27,6 +28,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
 import com.google.firebase.auth.FirebaseUser;
 
 /**
@@ -77,7 +79,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, U
         emailView.setText(mainUser.getEmail());
         bioEdit.setText(mainUser.getBiography());
 
-        mAuth = new Auth(getActivity(), db);
+        mAuth = new Auth(getActivity());
 
         return view;
     }
@@ -160,11 +162,20 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, U
                 confirmation.setPositiveButton("Yes", (dialogInterface1, i) -> {
                     // Delete
 
-                    String email = authUser.getEmail();
-                    authUser.delete();
-                    db.deleteUser(email);
+                    try {
+                        String email = authUser.getEmail();
+                        authUser.delete();
+                        db.deleteUser(email);
 
-                    goToMainActivity(getActivity());
+                        goToMainActivity(getActivity());
+                    } catch (Exception e) {
+                        if (e instanceof FirebaseAuthRecentLoginRequiredException){
+                            // Then need to log in again
+                            mAuth.signOut();
+                            goToMainActivity(getActivity());
+                            Toast.makeText(getActivity(), "Session has Expired", Toast.LENGTH_LONG);
+                        }
+                    }
 
                 });
 

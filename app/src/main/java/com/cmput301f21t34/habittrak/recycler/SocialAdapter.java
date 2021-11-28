@@ -167,7 +167,11 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
             protected FilterResults performFiltering(CharSequence charSequence) {
                 String charString = charSequence.toString();
                 // If no input in searchView put the original list back
-                if (!charString.isEmpty()) {
+                if (charString.isEmpty()) {
+                    UUIDs = UUIDsCopy;
+                    usernames = usernamesCopy;
+                    bios = biosCopy;
+                } else {
                     // Filter based if username contains the inputted characters
                     ArrayList<String> filteredUUIDs = new ArrayList<>();
                     ArrayList<String> filteredProfiles = new ArrayList<>();

@@ -232,10 +232,6 @@ public class SocialTabFragment extends Fragment {
                     noDataView.setVisibility(View.VISIBLE);
                 }
             } else {
-                if (loading != null) {
-                    loading.stopShimmer();                  // Stop visuals
-                    loading.setVisibility(View.GONE);       // Disappear visuals
-                }
                 if (recyclerView != null) {
                     recyclerView.setVisibility(View.VISIBLE);
                 }
@@ -243,6 +239,10 @@ public class SocialTabFragment extends Fragment {
                     searchBox.setVisibility(View.VISIBLE);  // Allow searches now
                 }
             }
+        if (loading != null) {
+            loading.stopShimmer();                  // Stop visuals
+            loading.setVisibility(View.GONE);       // Disappear visuals
+        }
     }
 
 

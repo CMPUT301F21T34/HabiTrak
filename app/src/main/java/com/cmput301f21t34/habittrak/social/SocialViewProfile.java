@@ -94,7 +94,7 @@ public class SocialViewProfile extends AppCompatActivity {
         });
         habitRecycler = new HabitRecycler(recyclerView, layoutManager, user.getHabitList(), user.getHabitList(), true);
         habitRecycler.setAdapter(adapter);
-        Log.d("Social", user.getHabitList().get(0).getTitle() + "");
+//        Log.d("Social", user.getHabitList().get(0).getTitle() + ""); was causing crash
 
     }
 

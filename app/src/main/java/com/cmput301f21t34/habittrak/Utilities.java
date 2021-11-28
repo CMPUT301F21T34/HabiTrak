@@ -15,6 +15,17 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
+/**
+ * Utilities
+ *
+ * @author Dakota
+ *
+ * General methods used in various locations in the app
+ *
+ * @version 1.0
+ * @since 2021-11-27
+ */
+
 public interface Utilities {
 
     DatabaseManager db = new DatabaseManager();

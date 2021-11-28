@@ -147,7 +147,7 @@ public class EventsFragment extends Fragment {
 
         menu.setOnMenuItemClickListener(menuItem -> {
             Habit habit = habitsDisplayList.get(position);
-            mainUser.removeHabit(habit);
+            mainUser.getHabitList().remove(habit);
             refreshEventFragment();
             Log.d(TAG,"Habit Removed");
             return true;

@@ -18,22 +18,20 @@ import java.util.GregorianCalendar;
  * Class for testing Habit Objects
  *
  * @author Henry
+ * @author Dakota
  * @version 1.0
  * @since 2021-10-22
  * @see Habit
  * @see HabitEvent
  */
 public class HabitTest {
-    // No tests for getters or setters
+
     /**
      * mockHabit
-     *
-     * @author Henry
      *
      * @return Habit
      * Returns a new Habit object to perform tests on
      */
-
     private Habit mockHabit() {
         String title = "Read book";
         String reason = "Book good";
@@ -49,11 +47,8 @@ public class HabitTest {
     /**
      * isOnDayTest
      *
-     * @author Henry
-     *
      * Tests if isOnDay() correctly compares today and the day(s) of the week to complete a habit
      */
-
     @Test
     public void isOnDayTest() {
         Habit habit = mockHabit();
@@ -74,11 +69,8 @@ public class HabitTest {
     /**
      * addHabitEventTest
      *
-     * @author Henry
-     *
      * Tests if habit_event is properly added to habit.habitEvents
      */
-
     @Test
     public void addHabitEventTest() {
         Habit habit = mockHabit();
@@ -105,11 +97,8 @@ public class HabitTest {
     /**
      * addHabitEventTest
      *
-     * @author Henry
-     *
      * Tests if habit_event is properly removed from habit.habitEvents
      */
-
     @Test
     public void removeHabitEventTest() {
         Habit habit = mockHabit();
@@ -119,7 +108,6 @@ public class HabitTest {
         Calendar completeDate = new GregorianCalendar(2021, 6, 1);
         HabitEvent event2 = new HabitEvent("comment",
                 completeDate, loc, photo);
-
 
         // Check size and add habit_event to habit's habit_event list
         assertEquals(0, habit.getHabitEvents().size());
@@ -139,6 +127,11 @@ public class HabitTest {
         assertEquals(0, habit.getHabitEvents().size());
     }
 
+    /**
+     * habitStreakTest
+     *
+     * Tests the streak implementation for habit objects
+     */
     @Test
     public void habitStreakTest() {
         System.out.println("habitStreak");
@@ -159,10 +152,7 @@ public class HabitTest {
         habit.setStartDate(startDay);
 
         // Defaults
-
         Location loc = new Location("");
-
-
         System.out.println(":Creating Events");
         // Create some events
 
@@ -204,7 +194,6 @@ public class HabitTest {
         Streak streak = new Streak(habit);
         streak.refreshStreak();
 
-
         // Asserts //
         assertEquals(4, habit.getCurrentStreak());
         assertEquals(4, habit.getBestStreak());
@@ -214,7 +203,6 @@ public class HabitTest {
         habit.removeHabitEvent(event2);
 
         // Asserts //
-
         streak.refreshStreak();
         assertEquals(1, habit.getCurrentStreak());
         assertEquals(4, habit.getBestStreak());
@@ -228,10 +216,5 @@ public class HabitTest {
 
         // Asserts //
         assertEquals(0, habit.getCurrentStreak());
-
-
-
-
     }
-
 }

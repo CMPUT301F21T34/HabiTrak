@@ -34,7 +34,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
     // To Be Added To DB
     private int index = 0;
     private Calendar bestStreakDate;
-    private Calendar currentStreakDate; // We could also just figure this out without db.
+    private Calendar currentStreakDate;
 
     private String title;
     private String reason;
@@ -44,8 +44,6 @@ public class Habit implements Comparable<Habit>, Parcelable {
     private boolean isPublic = false; // If other users can see this habit
 
     private OnDays onDaysObj = new OnDays();
-
-    // Enum //
 
     // Constructors //
 
@@ -110,7 +108,6 @@ public class Habit implements Comparable<Habit>, Parcelable {
             this.startDate = null;
         }
 
-
         // Handles Best Streak Calendar //
         String bestStreakDateTimeZone = habitBundle.getString("bestStreakDateTimeZone");
         if (bestStreakDateTimeZone != null) {
@@ -164,7 +161,6 @@ public class Habit implements Comparable<Habit>, Parcelable {
         }
 
         // streak ints
-
         this.currentStreak = habitBundle.getInt("currentStreak");
         this.bestStreak = habitBundle.getInt("bestStreak");
         this.isPublic = habitBundle.getBoolean("isPublic");
@@ -204,7 +200,6 @@ public class Habit implements Comparable<Habit>, Parcelable {
     public void setCurrentStreakDateEnd(Calendar calendar){
         this.currentStreakDateEnd = calendar;
     }
-
 
     public static final Parcelable.Creator<Habit> CREATOR = new Parcelable.Creator<Habit>() {
         @Override
@@ -297,7 +292,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
      * @author Dakota
      * @return int
      */
-    public int getIndex(){ return this.index; }
+    public int getIndex() { return this.index; }
 
     /**
      * setIndex
@@ -335,14 +330,13 @@ public class Habit implements Comparable<Habit>, Parcelable {
      * @author Pranav
      * @return boolean is habit starts today
      */
-    public boolean isHabitStart(){
+    public boolean isHabitStart() {
         Calendar today = Calendar.getInstance();
         today.setFirstDayOfWeek(Calendar.MONDAY);
         boolean isStart = false;
-
         // compareTo returns 0 if time is equal
         // returns less than 0 if time but the calendar is less than the argument
-        if (startDate.compareTo(today) <= 0){
+        if (startDate.compareTo(today) <= 0) {
             isStart = true;
         }
         return  isStart;
@@ -402,7 +396,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
      *
      * @author Dakota
      */
-    public void sortHabitEvents(){
+    public void sortHabitEvents() {
         // Sorts with HabitEvent's compareTo method
         // Sorts by date
         habitEvents.sort(HabitEvent::compareTo);
@@ -439,7 +433,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
      *
      * @return true if the habit is public, false if not
      */
-    public boolean isPublic(){
+    public boolean isPublic() {
         return this.isPublic;
     }
 
@@ -451,7 +445,7 @@ public class Habit implements Comparable<Habit>, Parcelable {
      *
      * @return true if the habit is private, false if not
      */
-    public boolean isPrivate(){
+    public boolean isPrivate() {
         return !this.isPublic;
     }
 
@@ -501,10 +495,10 @@ public class Habit implements Comparable<Habit>, Parcelable {
      */
     @Override
     public boolean equals(Object object) {
-        if (object.getClass() == Habit.class){
+        if (object.getClass() == Habit.class) {
 
-            if((((Habit) object).getTitle() == this.getTitle())
-                    && (((Habit) object).getReason() == this.getReason())){
+            if ((((Habit) object).getTitle() == this.getTitle())
+                    && (((Habit) object).getReason() == this.getReason())) {
                 return true;
             }
         }
@@ -613,7 +607,6 @@ public class Habit implements Comparable<Habit>, Parcelable {
         public Habit createFromParcel(Parcel in) {
             return new Habit(in);
         }
-
         public Habit[] newArray(int size) {
             return new Habit[size];
         }

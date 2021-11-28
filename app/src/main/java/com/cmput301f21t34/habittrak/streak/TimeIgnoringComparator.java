@@ -1,7 +1,5 @@
 package com.cmput301f21t34.habittrak.streak;
 
-import com.cmput301f21t34.habittrak.user.Habit;
-
 import java.util.Calendar;
 import java.util.Comparator;
 

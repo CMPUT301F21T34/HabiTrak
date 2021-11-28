@@ -31,7 +31,6 @@ public class SocialViewHabit extends AppCompatActivity {
     private MaterialButton sundayButton;
     private int tealColor;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +78,7 @@ public class SocialViewHabit extends AppCompatActivity {
 
         SimpleDateFormat streakDateFormat = new SimpleDateFormat("MMM dd, yyyy");
 
-        if (habit.getBestStreakDate() == null || habit.getBestStreakDateEnd() == null){
+        if (habit.getBestStreakDate() == null || habit.getBestStreakDateEnd() == null) {
             bestStreakStart.setText("N/A");
             bestStreakEnd.setText("N/A");
         } else {
@@ -96,10 +95,7 @@ public class SocialViewHabit extends AppCompatActivity {
         fridayButton.setOnClickListener(null);
         saturdayButton.setOnClickListener(null);
         sundayButton.setOnClickListener(null);
-
-
     }
-
 
     /**
      * get the String value from calendar

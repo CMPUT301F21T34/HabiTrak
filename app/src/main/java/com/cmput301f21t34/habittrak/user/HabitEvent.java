@@ -40,9 +40,7 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
         this.photograph = null;
     }
 
-
     public HabitEvent(String comment, Calendar date, Location loc, Uri photo){
-
         // Null check on photo (allows it to be null for testing purposes)
         if (photo == null){
             this.photograph = null;
@@ -111,15 +109,7 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
             return new HabitEvent[size];
         }
     };
-    /*
-    public String getHabitEventId() {
-        return habitEventId;
-    }
 
-    public Habit getHabit() {
-        return habit;
-    }
-    */
     public Calendar getCompletedDate() {
         return completedDate;
     }
@@ -135,16 +125,6 @@ public class HabitEvent implements Comparable<HabitEvent>, Parcelable {
     public String getComment(){
         return comment;
     }
-    //setter methods
-    /*
-    public void setHabitEventId(String habitEventId) {
-        this.habitEventId = habitEventId;
-    }
-
-    public void setHabit(Habit habit) {
-        this.habit = habit;
-    }
-     */
 
     public void setComment(String comment) {
         this.comment = comment;

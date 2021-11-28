@@ -152,5 +152,86 @@ public class DatabaseManagerTest {
         dm.deleteUser(email1);
         dm.deleteUser(email2);
     }
+    @Test
+    public void getAllUserTest(){
+        // the size has to be known so it doesn't work
+        dm = new DatabaseManager();
+        String email = "test2@gmail.com";
+        String username = "testUser2";
+        dm.createNewUser(email, username);
+        ArrayList<String> userNames = dm.getAllUsers();
+        assertEquals(2,userNames.size());
+        assertEquals("testUser",userNames.get(0));
+        assertEquals("testUser2",userNames.get(1));
+        dm.deleteUser("test2@gmail.com");
+        dm.deleteUser("test@gmail.com");
+    }
+    @Test
+    public void getUserNameTest(){
+        dm = new DatabaseManager();
+        String email = "test@gmail.com";
+        String username = "testUser";
+        User user = new User(email);
+        user.setUsername(username);
+        dm.createNewUser(email, username);
+        String name = dm.getUserName(user.getEmail());
+        assertEquals(user.getUsername(),name);
+        dm.deleteUser("test@gmail.com");
+    }
+    @Test
+    public void getUserTest(){
+        dm = new DatabaseManager();
+        String email = "test@gmail.com";
+        String username = "testUser";
+        String bio = "testing";
+        dm.createNewUser(email, username);
+        User user = dm.getUser("test@gmail.com");
+        dm.updateBio(email,bio);
+        assertEquals("testUser",user.getUsername());
+        assertEquals(email,user.getEmail());
+        assertEquals(bio,user.getBiography());
+        assertEquals(0,user.getFollowerList().size());
+        assertEquals(0,user.getFollowingList().size());
+        assertEquals(0,user.getFollowerReqList().size());
+        assertEquals(0,user.getFollowingReqList().size());
+        assertEquals(0,user.getBlockedByList().size());
+        assertEquals(0,user.getBlockList().size());
+
+        dm.deleteUser("test@gmail.com");
+    }
+    @Test
+    public void getUserBioTest(){
+
+        dm = new DatabaseManager();
+        String email = "test@gmail.com";
+        String username = "testUser";
+        String biography = "testing";
+        User user = new User(email);
+        user.setUsername(username);
+        user.setBiography(biography);
+        dm.createNewUser(email, username);
+        String bio = dm.getUserBio(user.getEmail());
+        dm.updateBio(user.getEmail(),user.getBiography());
+        assertEquals(user.getBiography(),bio);
+        dm.deleteUser("test@gmail.com");
+    }
+    @Test
+    public void isUniqueEmailTestSuccess(){
+        dm = new DatabaseManager();
+        assertEquals(true, dm.isUniqueEmail("testing@email.com"));
+    }
+    @Test
+    public void isUniqueEmailTestFailure(){
+        dm = new DatabaseManager();
+        String email = "test@gmail.com";
+        String username = "testUser";
+        User user = new User(email);
+        dm.createNewUser(email, username);
+        assertEquals(false, dm.isUniqueEmail(user.getEmail()));
+        dm.deleteUser("test@gmail.com");
+    }
+
+
+
 }
 

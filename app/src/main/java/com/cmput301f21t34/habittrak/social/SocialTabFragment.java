@@ -111,7 +111,7 @@ public class SocialTabFragment extends Fragment {
             populateList(); // Get the data for the entries
             socialAdapter.notifyDataSetChanged(); // Tell list manager data updated
             displayViews(); // Redo the displays
-            swipeRefresh.setRefreshing(false); // Turn off refershing indicator
+            swipeRefresh.setRefreshing(false); // Turn off loading visual
         });
 
         // Invisible by default
@@ -121,7 +121,7 @@ public class SocialTabFragment extends Fragment {
         searchBox.setVisibility(View.GONE);
 
         // Set display based on if still fetching data or not
-        if (fetchData.getStatus() != AsyncTask.Status.FINISHED) {
+        if (fetchData.getStatus() == AsyncTask.Status.RUNNING) {
             // Loading Visuals
             loading.setVisibility(View.VISIBLE);
             loading.startShimmer();
@@ -130,6 +130,24 @@ public class SocialTabFragment extends Fragment {
         }
 
         return view;
+    }
+
+    /**
+     * Start view profile activity when a row is clicked in the recycler view
+     *
+     * @param view     viewHolder of the recycler
+     * @param position position in the List
+     */
+    public void onRowClick(View view, int position) {
+        Log.d("Social", "Row Clicked " + position);
+        String UUID = UUIDs.get(position);
+        Log.d("Social", UUID);
+        // Display user profile if main user is following a given user
+        if (mainUser.getFollowingList().contains(UUID)) {
+            Intent intent = new Intent(getContext(), SocialViewProfile.class);
+            intent.putExtra("USER", dm.getUser(UUID));
+            startActivity(intent);
+        }
     }
 
     /**
@@ -179,11 +197,9 @@ public class SocialTabFragment extends Fragment {
      * @author Kaaden
      */
     public void startPopulateList() {
-        // Only populate if empty
+        // Don't waste time if empty
         if (UUIDs.size() != 0) {
             fetchData.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR); // run parallel tasks
-        } else {
-            displayViews();
         }
     }
 
@@ -205,24 +221,6 @@ public class SocialTabFragment extends Fragment {
     }
 
     /**
-     * Start view profile activity when a row is clicked in the recycler view
-     *
-     * @param view     viewHolder of the recycler
-     * @param position position in the List
-     */
-    public void onRowClick(View view, int position) {
-        Log.d("Social", "Row Clicked " + position);
-        String UUID = UUIDs.get(position);
-        Log.d("Social", UUID);
-        // Display user profile if main user is following a given user
-        if (mainUser.getFollowingList().contains(UUID)) {
-            Intent intent = new Intent(getContext(), SocialViewProfile.class);
-            intent.putExtra("USER", dm.getUser(UUID));
-            startActivity(intent);
-        }
-    }
-
-    /**
      * UI updates for when the data fetching is done
      */
     public void displayViews() {
@@ -232,6 +230,10 @@ public class SocialTabFragment extends Fragment {
                     noDataView.setVisibility(View.VISIBLE);
                 }
             } else {
+                if (loading != null) {
+                    loading.stopShimmer();                  // Stop visuals
+                    loading.setVisibility(View.GONE);       // Disappear visuals
+                }
                 if (recyclerView != null) {
                     recyclerView.setVisibility(View.VISIBLE);
                 }
@@ -239,12 +241,7 @@ public class SocialTabFragment extends Fragment {
                     searchBox.setVisibility(View.VISIBLE);  // Allow searches now
                 }
             }
-        if (loading != null) {
-            loading.stopShimmer();                  // Stop visuals
-            loading.setVisibility(View.GONE);       // Disappear visuals
-        }
     }
-
 
     /**
      * Gets the user data for the list entry in the background
@@ -260,8 +257,8 @@ public class SocialTabFragment extends Fragment {
         @Override
         protected void onPostExecute(Void unused) {
             super.onPostExecute(unused);
-            socialAdapter.notifyDataSetChanged();   // Tell list manager
-            displayViews();
+            socialAdapter.notifyDataSetChanged(); // Tell list manager
+            displayViews(); // Turn on display items
         }
     }
 }

@@ -31,25 +31,6 @@ public class DatabaseManagerTest {
     private static DatabaseManager dm;
     private static FirebaseFirestore db;
 
-    /*
-    @BeforeClass
-    public static void setUpDatabase() {
-        dm = new DatabaseManager();
-        try {
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            db.useEmulator("10.0.2.2", 8080);
-            FirebaseFirestoreSettings settings =
-                    new FirebaseFirestoreSettings.Builder().setPersistenceEnabled(false).build();
-            db.setFirestoreSettings(settings);
-        } catch (IllegalStateException ignored) {
-        }
-    }
-
-    @Before
-    public void setUp() {
-        this.db = dm.getDatabase();
-    }*/
-
     /**
      * createNewUser
      *

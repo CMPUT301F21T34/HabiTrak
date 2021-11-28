@@ -20,11 +20,7 @@ import java.util.GregorianCalendar;
  * @see Habit
  * @see HabitEvent
  */
-// TODO: Used for future testing if more methods (apart from getters and setters) are added to HabitEvent
-
 public class HabitEventTest {
-    // No tests for getters or setters
-
     /**
      * mockHabitEvent()
      *

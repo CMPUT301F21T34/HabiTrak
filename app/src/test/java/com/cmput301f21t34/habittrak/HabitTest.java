@@ -81,7 +81,6 @@ public class HabitTest {
 
         HabitEvent event2 = new HabitEvent("event2", completeDate, loc, photo);
 
-
         // Check size
         assertEquals(0, habit.getHabitEvents().size());
         habit.addHabitEvent(event1);

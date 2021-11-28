@@ -97,8 +97,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         bottomNav.setSelectedItemId(R.id.navbar_menu_today);    // Sets initial selected item
     }
 
-
-
     @Override
     public void onResume() {
         super.onResume();
@@ -224,7 +222,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
 
             Habit habit = intent.getParcelableExtra("HABIT");
             int position = intent.getIntExtra("position", 0); // useless
-//            habit.incrementStreak();
+            // habit.incrementStreak();
             mainUser.getHabitList().replace(habit);
             // Propagate the changes to the database
 

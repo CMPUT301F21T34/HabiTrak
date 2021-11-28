@@ -3,7 +3,6 @@ package com.cmput301f21t34.habittrak.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
@@ -25,16 +24,12 @@ import com.cmput301f21t34.habittrak.recycler.TodayHabitRecyclerAdapter;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.R;
 
-
-
-
 import com.cmput301f21t34.habittrak.user.HabitList;
 
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.checkbox.MaterialCheckBox;
 
 import java.util.ArrayList;
-
 
 /**
  * TodayListFragment
@@ -44,7 +39,6 @@ import java.util.ArrayList;
  * Fragment for displaying habits for today
  */
 public class TodayListFragment extends Fragment {
-
 
     // Attributes //
     public static String TAG = "Today_List";
@@ -58,8 +52,6 @@ public class TodayListFragment extends Fragment {
     private User mainUser;
     // Database Manager
     private final DatabaseManager dm = new DatabaseManager();
-
-
 
     // constructor
     public TodayListFragment(User mainUser) {
@@ -130,7 +122,6 @@ public class TodayListFragment extends Fragment {
         }
     }
 
-
     /**
      * refreshHabitList
      *
@@ -179,7 +170,6 @@ public class TodayListFragment extends Fragment {
         menu.getMenu().add("Remove");
         menu.show();
 
-
         menu.setOnMenuItemClickListener(menuItem -> {
             Habit habit = habitsDisplayList.get(position);
             mainUser.removeHabit(habit);
@@ -189,7 +179,6 @@ public class TodayListFragment extends Fragment {
             return true;
         });
     }
-
 
     /**
      * onCheckBoxClick.

@@ -219,10 +219,8 @@ public class TodayHabitRecyclerAdapter extends RecyclerView.Adapter<TodayHabitRe
                 && d1.get(Calendar.DAY_OF_MONTH) == d2.get(Calendar.DAY_OF_MONTH);
     }
 
-
     @Override
     public int getItemCount() {
         return habits.size();
     }
-
 }

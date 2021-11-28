@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ViewEditHabitEvents">
+    tools:context=".event.ViewEditHabitEventActivity">
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -69,7 +69,7 @@
         android:layout_marginTop="16dp"
         android:fontFamily="@font/roboto"
         android:textColor="?android:textColorPrimary"
-        android:text="Address of the event" />
+        android:text="Address" />
     <TextView
         android:id="@+id/address_line_edit"
         android:layout_width="wrap_content"

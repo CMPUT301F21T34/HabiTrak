@@ -81,7 +81,7 @@ public class AllHabitsFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 Habit habit = habitsDisplayList.get(position);
-                Intent intent = new Intent(getContext(), ViewEditHabit.class);
+                Intent intent = new Intent(getContext(), ViewEditHabitActivity.class);
                 intent.putExtra("HABIT", habit);
                 intent.putExtra("position", habit.getIndex());
                 viewHabitResultLauncher.launch(intent);

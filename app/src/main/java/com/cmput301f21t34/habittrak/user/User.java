@@ -153,57 +153,110 @@ public class User implements Parcelable {
     // End Constructors ----------------------------------------------------------------------------
 
     // Getters and Setters -------------------------------------------------------------------------
+    /**
+     * Gets Biography
+     *
+     * @author Dakota
+     * @return String
+     */
     public String getBiography() {
         return biography;
     }
 
+    /**
+     * Sets Biography
+     *
+     * @author Dakota
+     * @param biography
+     */
     public void setBiography(String biography) {
         this.biography = biography;
     }
 
     /**
-     * getEmail
-     * <p>
-     * gets Email
+     * Gets Email
      *
-     * @return String email
      * @author Dakota
+     * @return String email
      */
     public String getEmail() {
         return this.email;
     }
 
+    /**
+     * Gets Username
+     *
+     * @author Dakota
+     * @return String username
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Sets Username
+     *
+     * @author Dakota
+     * @param username
+     */
     public void setUsername(String username) {
         this.username = username;
     }
 
+    /**
+     * Gets Block List
+     *
+     * @return ArrayList\<String\>
+     */
     public ArrayList<String> getBlockList() {
         return (ArrayList<String>) blockList.clone();
     }
 
+    /**
+     * Gets Blocked By List
+     *
+     * @return ArrayList\<String\>
+     */
     public ArrayList<String> getBlockedByList() {
         return (ArrayList<String>) blockedByList.clone();
     }
 
+    /**
+     * Gets Follower List
+     *
+     * @return ArrayList\<String\>
+     */
     public ArrayList<String> getFollowerList() {
         return (ArrayList<String>) followerList.clone();
     }
 
+    /**
+     * Gets Following List
+     *
+     * @return ArrayList\<String\>
+     */
     public ArrayList<String> getFollowingList() {
         return (ArrayList<String>) followingList.clone();
     }
 
+    /**
+     * Gets Follower Requests List
+     *
+     * @return ArrayList\<String\>
+     */
     public ArrayList<String> getFollowerReqList() {
         return (ArrayList<String>) followerReqList.clone();
     }
 
+    /**
+     * Gets Following Requests List
+     *
+     * @return ArrayList\<String\>
+     */
     public ArrayList<String> getFollowingReqList() {
         return (ArrayList<String>) followingReqList.clone();
     }
+
 
     public Habit getHabit(int index) {
         return this.habitList.get(index);
@@ -340,21 +393,6 @@ public class User implements Parcelable {
         return followingReqList.removeIf(followRequestee -> followRequestee.equals(UUID));
     }
 
-    public void addHabit(Habit habit) {
-        this.habitList.add(habit);
-    }
-
-    /**
-     * removeHabit
-     * <p>
-     * removes a given habit from the habitList
-     *
-     * @param habit Habit to remove
-     * @return boolean true if succeeded, false else wise
-     */
-    public boolean removeHabit(Habit habit) {
-        return this.habitList.remove(habit);
-    }
     // End Adders and Removers ---------------------------------------------------------------------
 
 

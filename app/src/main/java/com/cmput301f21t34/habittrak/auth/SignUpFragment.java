@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.cmput301f21t34.habittrak.BaseActivity;
 import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
+import com.cmput301f21t34.habittrak.Utilities;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -43,7 +44,7 @@ import com.google.firebase.auth.FirebaseUser;
  * @see User
  * @since 2021-11-03
  */
-public class SignUpFragment extends Fragment {
+public class SignUpFragment extends Fragment implements Utilities {
 
     private final String TAG = "SignUpFragment";
 
@@ -125,7 +126,9 @@ public class SignUpFragment extends Fragment {
 
                             Toast.makeText(getActivity(), "Success",
                                     Toast.LENGTH_SHORT).show();
-                            toLogin();
+
+                            goToLogin(getActivity());
+
                         } else {
                             // Sign Up failed
                             Toast.makeText(getActivity(), "Authentication failed",
@@ -146,13 +149,6 @@ public class SignUpFragment extends Fragment {
                 }
             }
         });
-    }
-
-    private void toLogin() {
-        LoginFragment loginFragment = new LoginFragment(null);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.login_fragment_container, loginFragment, "loginFrag")
-                .commit();
     }
 
     /**
@@ -189,21 +185,5 @@ public class SignUpFragment extends Fragment {
      */
     private boolean isEmpty(TextInputEditText text) {
         return text.getText().toString().equals("");
-    }
-
-    /**
-     * startHomePage
-     *
-     * @param view
-     * @author Pranav
-     * <p>
-     * start the base activity after signing up
-     */
-    public void startHomePage(View view) {
-        Intent intent = new Intent(getActivity(), BaseActivity.class);
-        intent.putExtra("mainUser", currentUser);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-        getActivity().finish();
     }
 }

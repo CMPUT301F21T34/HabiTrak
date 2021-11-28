@@ -81,7 +81,6 @@ public class LoginFragment extends Fragment {
         mAuth = new Auth(getActivity(), db);
 
         return view;
-
     }
 
     @Override
@@ -104,7 +103,6 @@ public class LoginFragment extends Fragment {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 passwordLayout.setError(null);
                 usernameLayout.setError(null);
 
@@ -114,7 +112,6 @@ public class LoginFragment extends Fragment {
                 try {
                     runLogin(email, password);
                 } catch (Exception e) {
-
                     if (e instanceof IllegalArgumentException) {
                         // Invalid entry
                         usernameLayout.setError("Invalid Entry");
@@ -126,7 +123,6 @@ public class LoginFragment extends Fragment {
                 }
             }
         });
-
     }
 
     private void runLogin(String email, String password) {
@@ -140,19 +136,16 @@ public class LoginFragment extends Fragment {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             authUser = fAuth.getCurrentUser();
-
                             if (authUser.isEmailVerified()) {
                                 startHomePage(null);
                             } else {
                                 // Email not Verified //
                                 usernameLayout.setError("Email not Verified");
                                 passwordLayout.setError(null);
-
                                 mAuth.alertNotVerified(authUser).show();
                             }
                         } else {
                             // Login Failed
-
                             usernameLayout.setError(null);
                             passwordLayout.setError("Incorrect Password");
                         }

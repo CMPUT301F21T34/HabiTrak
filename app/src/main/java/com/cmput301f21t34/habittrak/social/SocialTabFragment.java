@@ -140,8 +140,10 @@ public class SocialTabFragment extends Fragment {
      */
     public void populateList() {
         // Only populate if empty
-        if (usernames.isEmpty()) {
+        if (UUIDs.size() != 0) {
             fetchData.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR); // run parallel tasks
+        } else {
+            displayViews();
         }
     }
 

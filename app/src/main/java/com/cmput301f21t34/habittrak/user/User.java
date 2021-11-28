@@ -223,51 +223,27 @@ public class User implements Parcelable {
         return (ArrayList<String>) blockList.clone();
     }
 
-    public void setBlockList(ArrayList<String> blockList) {
-        this.blockList = (ArrayList<String>) blockList.clone();
-    }
-
     public ArrayList<String> getBlockedByList() {
         return (ArrayList<String>) blockedByList.clone();
-    }
-
-    public void setBlockedByList(ArrayList<String> blockedByList) {
-        this.blockedByList = blockedByList;
     }
 
     public ArrayList<String> getFollowerList() {
         return (ArrayList<String>) followerList.clone();
     }
 
-    public void setFollowerList(ArrayList<String> followerList) {
-        this.followerList = followerList;
-    }
-
     public ArrayList<String> getFollowingList() {
         return (ArrayList<String>) followingList.clone();
-    }
-
-    public void setFollowingList(ArrayList<String> followingList) {
-        this.followingList = followingList;
     }
 
     public ArrayList<String> getFollowerReqList() {
         return (ArrayList<String>) followerReqList.clone();
     }
 
-    public void setFollowerReqList(ArrayList<String> followerReqList) {
-        this.followerReqList = followerReqList;
-    }
-
     public ArrayList<String> getFollowingReqList() {
         return (ArrayList<String>) followingReqList.clone();
     }
 
-    public void setFollowingReqList(ArrayList<String> followingReqList) {
-        this.followingReqList = followingReqList;
-    }
     // Habits
-
     public Habit getHabit(int index) {
         return this.habitList.get(index);
     }
@@ -283,7 +259,6 @@ public class User implements Parcelable {
 
     // Adders and Removers -------------------------------------------------------------------------
     // Social
-
     /**
      * addBlock
      * adds a blockee to this user's blockList if not already present
@@ -306,30 +281,6 @@ public class User implements Parcelable {
      */
     public boolean removeBlock(String UUID) {
         return blockList.removeIf(blockee -> blockee.equals(UUID));
-    }
-
-    /**
-     * addBlockedBy
-     * adds a blocker to this user's blockedByList if not already present
-     *
-     * @param UUID String, the UUID of the user to add
-     * @author Kaaden
-     */
-    public void addBlockedBy(String UUID) {
-        if (!blockedByList.contains(UUID)) {
-            blockedByList.add(UUID);
-        }
-    }
-
-    /**
-     * removeBlockedBy
-     * Remove all occurrences of a blocker in this user's blockedByList
-     *
-     * @param UUID String, the UUID of the user(s) to remove
-     * @return boolean, true if any removals occurred, false otherwise
-     */
-    public boolean removeBlockedBy(String UUID) {
-        return blockedByList.removeIf(blocker -> blocker.equals(UUID));
     }
 
     /**

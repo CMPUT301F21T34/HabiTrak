@@ -14,7 +14,6 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.recycler.SocialAdapter;
 import com.cmput301f21t34.habittrak.social.SocialTabFragment;
@@ -40,17 +39,17 @@ public class SocialFragment extends Fragment {
         this.mainUser = mainUser;
         // We do the below ASAP so that we can start database processes ASAP
         this.followersFragment = new SocialTabFragment(this, mainUser,
-                mainUser.getFollowerList(), SocialAdapter.NONE, NOT_SEARCHABLE);
+                SocialTabFragment.FOLLOWERS, SocialAdapter.NONE, NOT_SEARCHABLE);
         this.followingFragment = new SocialTabFragment(this, mainUser,
-                mainUser.getFollowingList(), SocialAdapter.UNFOLLOW, NOT_SEARCHABLE);
+                SocialTabFragment.FOLLOWINGS, SocialAdapter.UNFOLLOW, NOT_SEARCHABLE);
         this.requestsFragment = new SocialTabFragment(this, mainUser,
-                mainUser.getFollowerReqList(), SocialAdapter.ACCEPT, NOT_SEARCHABLE);
+                SocialTabFragment.FOLLOWER_REQUESTS, SocialAdapter.ACCEPT, NOT_SEARCHABLE);
         // Initialise searchFragment on separate thread because need to call slow database method
         new SocialAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         // Start fetching data for the lists
-        followersFragment.populateList();
-        followingFragment.populateList();
-        requestsFragment.populateList();
+        followersFragment.startPopulateList();
+        followingFragment.startPopulateList();
+        requestsFragment.startPopulateList();
     }
 
     @Override
@@ -206,13 +205,13 @@ public class SocialFragment extends Fragment {
         protected Void doInBackground(Void... voids) {
             // Initialise searchFragment here because need to call a database method
             searchFragment = new SocialTabFragment(SocialFragment.this, mainUser,
-                    new DatabaseManager().getAllUsers(), SocialAdapter.NONE, SEARCHABLE);
+                    SocialTabFragment.ALL, SocialAdapter.NONE, SEARCHABLE);
             return null;
         }
         @Override
         protected void onPostExecute(Void unused) {
             super.onPostExecute(unused);
-            searchFragment.populateList(); // Start fetching data for the list
+            searchFragment.startPopulateList(); // Start fetching data for the list
         }
     }
 

@@ -14,6 +14,7 @@ import android.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
@@ -27,15 +28,20 @@ import java.util.ArrayList;
 /**
  * Fragment for displaying a list of users and their info in a tab
  *
- * @see SocialAdapter
- * @see SearchView
  * @author Kaaden
  * @author Pranav
+ * @see SocialAdapter
+ * @see SearchView
  */
 public class SocialTabFragment extends Fragment {
-    // Data
-    private final User mainUser;
-    private final ArrayList<String> UUIDs;
+    public static final String ALL = "all";
+    public static final String FOLLOWER_REQUESTS = "requests";
+    public static final String FOLLOWERS = "followers";
+    public static final String FOLLOWINGS = "followings";
+    private final DatabaseManager dm = new DatabaseManager();
+    // Other
+    private final SocialTabAsyncTask fetchData = new SocialTabAsyncTask();
+    private final String type;
     private final ArrayList<String> usernames = new ArrayList<>();
     private final ArrayList<String> bios = new ArrayList<>();
     // Views
@@ -43,15 +49,18 @@ public class SocialTabFragment extends Fragment {
     private SearchView searchBox;
     private LinearLayout noDataView;
     private RecyclerView recyclerView;
-    // Other
+    // Data
+    private User mainUser;
     private final SocialAdapter socialAdapter;
+    private ArrayList<String> UUIDs;
     private final boolean searchable;
-    private final SocialTabAsyncTask fetchData = new SocialTabAsyncTask();
+    private SwipeRefreshLayout swipeRefresh;
 
-    public SocialTabFragment(SocialFragment socialRef, User mainUser, ArrayList<String> UUIDs,
+    public SocialTabFragment(SocialFragment socialRef, User mainUser, String type,
                              String defaultButtonText, boolean searchable) {
         this.mainUser = mainUser;
-        this.UUIDs = UUIDs;
+        this.type = type;
+        UUIDs = getUUIDs(type);
         this.searchable = searchable;
         socialAdapter = new SocialAdapter(
                 socialRef, mainUser, UUIDs, usernames, bios, defaultButtonText);
@@ -93,6 +102,17 @@ public class SocialTabFragment extends Fragment {
                 return true;
             }
         });
+        // Swipe to refresh
+        swipeRefresh = view.findViewById(R.id.social_swipe_refresh_layout);
+        swipeRefresh.setOnRefreshListener(() -> {
+            mainUser = dm.getUser(mainUser.getEmail()); // Get an up to date version from database
+            socialAdapter.setMainUser(mainUser); // Update socialAdapter's version of mainUser
+            UUIDs = getUUIDs(type); // Get the entries for the list
+            populateList(); // Get the data for the entries
+            socialAdapter.notifyDataSetChanged(); // Tell list manager data updated
+            displayViews(); // Redo the displays
+            swipeRefresh.setRefreshing(false);
+        });
 
         // Invisible by default
         noDataView.setVisibility(View.GONE);
@@ -110,6 +130,26 @@ public class SocialTabFragment extends Fragment {
         }
 
         return view;
+    }
+
+    /**
+     * Gets the entries for a given social tab
+     *
+     * @param type String, specifies which list to get
+     */
+    private ArrayList<String> getUUIDs(String type) {
+        switch (type) {
+            case ALL:
+                return dm.getAllUsers();
+            case FOLLOWER_REQUESTS:
+                return mainUser.getFollowerReqList();
+            case FOLLOWERS:
+                return mainUser.getFollowerList();
+            case FOLLOWINGS:
+                return mainUser.getFollowingList();
+            default:
+                throw new RuntimeException("Type not found");
+        }
     }
 
     /**
@@ -133,12 +173,12 @@ public class SocialTabFragment extends Fragment {
     }
 
     /**
-     * Populates usernames and bios to display, except those that are from users that block or are
-     * blocked by mainUser
+     * Starts the process of collecting the data for the entries in the list from the database; on
+     * different threads for speed.
      *
      * @author Kaaden
      */
-    public void populateList() {
+    public void startPopulateList() {
         // Only populate if empty
         if (UUIDs.size() != 0) {
             fetchData.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR); // run parallel tasks
@@ -148,13 +188,30 @@ public class SocialTabFragment extends Fragment {
     }
 
     /**
+     * Populates usernames and bios to display, except those that are from users that block or are
+     * blocked by mainUser
+     *
+     * @author Kaaden
+     */
+    private void populateList() {
+        // Remove unwanted users that might be present
+        UUIDs.removeAll(mainUser.getBlockedByList());
+        UUIDs.remove(mainUser.getEmail());
+        // Save info
+        UUIDs.forEach(UUID -> {
+            usernames.add(dm.getUserName(UUID));
+            bios.add(dm.getUserBio(UUID));
+        });
+    }
+
+    /**
      * Start view profile activity when a row is clicked in the recycler view
-     * @param view viewHolder of the recycler
+     *
+     * @param view     viewHolder of the recycler
      * @param position position in the List
      */
-    public void onRowClick(View view, int position){
+    public void onRowClick(View view, int position) {
         Log.d("Social", "Row Clicked " + position);
-        DatabaseManager dm = new DatabaseManager();
         String UUID = UUIDs.get(position);
         Log.d("Social", UUID);
         // Display user profile if main user is following a given user
@@ -196,15 +253,7 @@ public class SocialTabFragment extends Fragment {
     public class SocialTabAsyncTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
-            final DatabaseManager dm = new DatabaseManager();
-            // Remove unwanted users that might be present
-            UUIDs.removeAll(mainUser.getBlockedByList());
-            UUIDs.remove(mainUser.getEmail());
-            // Save info
-            UUIDs.forEach(UUID -> {
-                usernames.add(dm.getUserName(UUID));
-                bios.add(dm.getUserBio(UUID));
-            });
+            populateList();
             return null;
         }
 

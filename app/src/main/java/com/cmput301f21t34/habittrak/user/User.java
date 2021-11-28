@@ -1,13 +1,11 @@
 package com.cmput301f21t34.habittrak.user;
 
-
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
 import java.util.ArrayList;
-
 
 /**
  * User
@@ -21,11 +19,9 @@ import java.util.ArrayList;
  * @since 2021-10-16
  */
 public class User implements Parcelable {
+    // Any changes need to be implement in writeToParcel and Parcel constructor - Dakota
 
-    // Attributes //
-    // Any changes need to be implement in writeToParcel and Parcel constructor
-    // - Dakota
-
+    // Attributes ----------------------------------------------------------------------------------
     // Creates User from parcel
     public static final Parcelable.Creator<User> CREATOR
             = new Parcelable.Creator<User>() {
@@ -54,16 +50,15 @@ public class User implements Parcelable {
     private ArrayList<String> followerReqList;  // Users that requested to follow this user
     private ArrayList<String> blockList;        // Users that this user blocked
     private ArrayList<String> blockedByList;    // Users that blocked this user
-
-    // Constructors //
     private String biography;
+    // Attributes ----------------------------------------------------------------------------------
 
+    // Constructors --------------------------------------------------------------------------------
     public User(
             String username,
             String password,
             String email,
             String biography,
-
             HabitList habitList,
             ArrayList<String> followerList,
             ArrayList<String> followingList,
@@ -71,12 +66,10 @@ public class User implements Parcelable {
             ArrayList<String> followerReqList,
             ArrayList<String> blockList,
             ArrayList<String> blockedByList) {
-
         this.email = email;
         this.username = username;
         this.password = password;
         this.biography = biography;
-
         this.habitList = habitList;
         this.followerList = followerList;
         this.followingList = followingList;
@@ -97,9 +90,7 @@ public class User implements Parcelable {
         this.username = username;
         this.password = password;
         this.email = email;
-
         this.biography = "";
-
         this.habitList = new HabitList();
         this.followerList = new ArrayList<>();
         this.followingList = new ArrayList<>();
@@ -107,6 +98,38 @@ public class User implements Parcelable {
         this.followerReqList = new ArrayList<>();
         this.blockList = new ArrayList<>();
         this.blockedByList = new ArrayList<>();
+    }
+
+    /**
+     * Parcel Constructor Class
+     * <p>
+     * Constructs Habit from a parcel
+     * Un-does writeToParcel method
+     *
+     * @param parcel Parcel to construct from
+     * @author Dakota
+     * @see Parcelable
+     */
+    public User(Parcel parcel) {
+        Bundle userBundle;
+        userBundle = parcel.readBundle(User.class.getClassLoader());
+
+        // Strings
+        this.username = userBundle.getString("username");
+        this.password = userBundle.getString("password");
+        this.email = userBundle.getString("email");
+        this.biography = userBundle.getString("biography");
+
+        // HabitList from ArrayList<Habit>
+        this.habitList = new HabitList(userBundle.getParcelableArrayList("habitList"));
+
+        // Lists of UUIDs
+        this.followerList = userBundle.getStringArrayList("followerList");
+        this.followingList = userBundle.getStringArrayList("followingList");
+        this.followingReqList = userBundle.getStringArrayList("followingReqList");
+        this.followerReqList = userBundle.getStringArrayList("followerReqList");
+        this.blockList = userBundle.getStringArrayList("blockList");
+        this.blockedByList = userBundle.getStringArrayList("blockedByList");
     }
 
     /**
@@ -149,49 +172,16 @@ public class User implements Parcelable {
         this.blockedByList = new ArrayList<>();
         this.biography = "";
     }
+    // Constructors --------------------------------------------------------------------------------
 
-    /**
-     * Parcel Constructor Class
-     * <p>
-     * Constructs Habit from a parcel
-     * Un-does writeToParcel method
-     *
-     * @param parcel Parcel to construct from
-     * @author Dakota
-     * @see Parcelable
-     */
-    public User(Parcel parcel) {
-        Bundle userBundle;
-        userBundle = parcel.readBundle(User.class.getClassLoader());
-
-        // Strings //
-        this.username = userBundle.getString("username");
-        this.password = userBundle.getString("password");
-        this.email = userBundle.getString("email");
-        this.biography = userBundle.getString("biography");
-
-        // HabitList from ArrayList<Habit>
-
-        this.habitList = new HabitList(
-                userBundle.getParcelableArrayList("habitList")
-        );
-
-        // Lists of UUIDs
-        this.followerList = userBundle.getStringArrayList("followerList");
-        this.followingList = userBundle.getStringArrayList("followingList");
-        this.followingReqList = userBundle.getStringArrayList("followingReqList");
-        this.followerReqList = userBundle.getStringArrayList("followerReqList");
-        this.blockList = userBundle.getStringArrayList("blockList");
-        this.blockedByList = userBundle.getStringArrayList("blockedByList");
+    // Getters and Setters -------------------------------------------------------------------------
+    // User details
+    public String getBiography() {
+        return biography;
     }
 
-    // getter methods
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
+    public void setBiography(String biography) {
+        this.biography = biography;
     }
 
     public String getPassword() {
@@ -208,6 +198,80 @@ public class User implements Parcelable {
         this.password = password;
     }
 
+    /**
+     * getEmail
+     * <p>
+     * gets Email
+     *
+     * @return String email
+     * @author Dakota
+     */
+    public String getEmail() {
+        return this.email;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    // Social Lists
+    public ArrayList<String> getBlockList() {
+        return (ArrayList<String>) blockList.clone();
+    }
+
+    public void setBlockList(ArrayList<String> blockList) {
+        this.blockList = (ArrayList<String>) blockList.clone();
+    }
+
+    public ArrayList<String> getBlockedByList() {
+        return (ArrayList<String>) blockedByList.clone();
+    }
+
+    public void setBlockedByList(ArrayList<String> blockedByList) {
+        this.blockedByList = blockedByList;
+    }
+
+    public ArrayList<String> getFollowerList() {
+        return (ArrayList<String>) followerList.clone();
+    }
+
+    public void setFollowerList(ArrayList<String> followerList) {
+        this.followerList = followerList;
+    }
+
+    public ArrayList<String> getFollowingList() {
+        return (ArrayList<String>) followingList.clone();
+    }
+
+    public void setFollowingList(ArrayList<String> followingList) {
+        this.followingList = followingList;
+    }
+
+    public ArrayList<String> getFollowerReqList() {
+        return (ArrayList<String>) followerReqList.clone();
+    }
+
+    public void setFollowerReqList(ArrayList<String> followerReqList) {
+        this.followerReqList = followerReqList;
+    }
+
+    public ArrayList<String> getFollowingReqList() {
+        return (ArrayList<String>) followingReqList.clone();
+    }
+
+    public void setFollowingReqList(ArrayList<String> followingReqList) {
+        this.followingReqList = followingReqList;
+    }
+    // Habits
+
+    public Habit getHabit(int index) {
+        return this.habitList.get(index);
+    }
+
     public HabitList getHabitList() {
         return habitList;
     }
@@ -215,66 +279,156 @@ public class User implements Parcelable {
     public void setHabitList(HabitList habitList) {
         this.habitList = habitList;
     }
+    // Getters and Setters -------------------------------------------------------------------------
 
-    public ArrayList<String> getFollowerList() {
-        return (ArrayList<String>) followerList.clone();
+    // Adders and Removers -------------------------------------------------------------------------
+    // Social
+
+    /**
+     * addBlock
+     * adds a blockee to this user's blockList if not already present
+     *
+     * @param UUID String, the UUID of the user to add
+     * @author Kaaden
+     */
+    public void addBlock(String UUID) {
+        if (!blockList.contains(UUID)) {
+            blockList.add(UUID);
+        }
     }
 
-    public ArrayList<String> getFollowingList() {
-        return (ArrayList<String>) followingList.clone();
-    }
-    public ArrayList<String> getFollowerReqList() {
-        return (ArrayList<String>) followerReqList.clone();
-    }
-
-    public ArrayList<String> getFollowingReqList() {
-        return (ArrayList<String>) followingReqList.clone();
-    }
-
-    public ArrayList<String> getBlockList() {
-        return (ArrayList<String>) blockList.clone();
+    /**
+     * removeBlock
+     * Remove all occurrences of a blockee in this user's blockList
+     *
+     * @param UUID String, the UUID of the user(s) to remove
+     * @return boolean, true if any removals occurred, false otherwise
+     */
+    public boolean removeBlock(String UUID) {
+        return blockList.removeIf(blockee -> blockee.equals(UUID));
     }
 
-    public ArrayList<String> getBlockedByList() {
-        return (ArrayList<String>) blockedByList.clone();
+    /**
+     * addBlockedBy
+     * adds a blocker to this user's blockedByList if not already present
+     *
+     * @param UUID String, the UUID of the user to add
+     * @author Kaaden
+     */
+    public void addBlockedBy(String UUID) {
+        if (!blockedByList.contains(UUID)) {
+            blockedByList.add(UUID);
+        }
     }
 
-    // Might not want to allow these //
-
-    public void setFollowerList(ArrayList<String> followerList) {
-        this.followerList = followerList;
+    /**
+     * removeBlockedBy
+     * Remove all occurrences of a blocker in this user's blockedByList
+     *
+     * @param UUID String, the UUID of the user(s) to remove
+     * @return boolean, true if any removals occurred, false otherwise
+     */
+    public boolean removeBlockedBy(String UUID) {
+        return blockedByList.removeIf(blocker -> blocker.equals(UUID));
     }
 
-    // Database can modify these methods below //
-
-    public void setFollowingReqList(ArrayList<String> followingReqList) {
-        this.followingReqList = followingReqList;
+    /**
+     * addFollower
+     * adds a follower to this user's followerList if not already present
+     *
+     * @param UUID String, the UUID of the user to add
+     * @author Kaaden
+     */
+    public void addFollower(String UUID) {
+        if (!followerList.contains(UUID)) {
+            followerList.add(UUID);
+        }
     }
 
-    public void setFollowingList(ArrayList<String> followingList) {
-        this.followingList = followingList;
+    /**
+     * removeFollower
+     * Remove all occurrences of a follower in this user's followerList
+     *
+     * @param UUID String, the UUID of the user(s) to remove
+     * @return boolean, true if any removals occurred, false otherwise
+     */
+    public boolean removeFollower(String UUID) {
+        return followerList.removeIf(follower -> follower.equals(UUID));
     }
 
-    public void setFollowerReqList(ArrayList<String> followerReqList) {
-        this.followerReqList = followerReqList;
+    /**
+     * addFollowing
+     * adds a followee to this user's followingList if not already present
+     *
+     * @param UUID String, UUID of the user to add
+     * @author Kaaden
+     */
+    public void addFollowing(String UUID) {
+        if (!followingList.contains(UUID)) {
+            followingList.add(UUID);
+        }
     }
 
-    public void setBlockList(ArrayList<String> blockList) {
-        this.blockList = (ArrayList<String>) blockList.clone();
+    /**
+     * removeFollowing
+     * Remove all occurrences of a followee in this user's followingList
+     *
+     * @param UUID String, the UUID of the user(s) to remove
+     * @return boolean, true if any removals occurred, false otherwise
+     */
+    public boolean removeFollowing(String UUID) {
+        return followingList.removeIf(followee -> followee.equals(UUID));
     }
 
-    public void setBlockedByList(ArrayList<String> blockedByList) {
-        this.blockedByList = blockedByList;
+    /**
+     * addFollowerReq
+     * adds a follow-requester to this user's followerReqList if not already present
+     *
+     * @param UUID String, the UUID of the user to add
+     * @author Kaaden
+     */
+    public void addFollowerReq(String UUID) {
+        if (!followerReqList.contains(UUID)) {
+            followerReqList.add(UUID);
+        }
     }
 
-    public String getBiography() {
-        return biography;
+    /**
+     * removeFollowerReq
+     * Remove all occurrences of a follow-requester in this user's followerReqList
+     *
+     * @param UUID String, the UUID of the user(s) to remove
+     * @return boolean, true if any removals occurred, false otherwise
+     */
+    public boolean removeFollowerReq(String UUID) {
+        return followerReqList.removeIf(followRequester -> followRequester.equals(UUID));
     }
 
-    public void setBiography(String biography) {
-        this.biography = biography;
+    /**
+     * addFollowingReq
+     * adds a follow-requestee to this user's followingReqList if not already present
+     *
+     * @param UUID String, the UUID of the user to add
+     * @author Kaaden
+     */
+    public void addFollowingReq(String UUID) {
+        if (!followingReqList.contains(UUID)) {
+            followingReqList.add(UUID);
+        }
     }
 
+    /**
+     * removeFollowingReq
+     * Remove all occurrences of a follow-requestee in this user's followingReqList
+     *
+     * @param UUID String, the UUID of the user(s) to remove
+     * @return boolean, true if any removals occurred, false otherwise
+     */
+    public boolean removeFollowingReq(String UUID) {
+        return followingReqList.removeIf(followRequestee -> followRequestee.equals(UUID));
+    }
+
+    // Habits
     public void addHabit(Habit habit) {
         this.habitList.add(habit);
     }
@@ -291,171 +445,7 @@ public class User implements Parcelable {
         return this.habitList.remove(habit);
     }
 
-    public Habit getHabit(int index) {
-        return this.habitList.get(index);
-    }
-
-    /** addFollower
-     * adds a follower to this user's followerList if not already present
-     *
-     * @param UUID String, the UUID of the user to add
-     * @author Kaaden
-     */
-    public void addFollower(String UUID) {
-        if (!followerList.contains(UUID)) {
-            followerList.add(UUID);
-        }
-    }
-
-    /** addFollowing
-     * adds a followee to this user's followingList if not already present
-     *
-     * @param UUID String, UUID of the user to add
-     * @author Kaaden
-     */
-    public void addFollowing(String UUID) {
-        if (!followingList.contains(UUID)) {
-            followingList.add(UUID);
-        }
-    }
-
-    /** addFollowerReq
-     * adds a follow-requester to this user's followerReqList if not already present
-     *
-     * @param UUID String, the UUID of the user to add
-     * @author Kaaden
-     */
-    public void addFollowerReq(String UUID) {
-        if (!followerReqList.contains(UUID)) {
-            followerReqList.add(UUID);
-        }
-    }
-
-    /** addFollowingReq
-     * adds a follow-requestee to this user's followingReqList if not already present
-     *
-     * @param UUID String, the UUID of the user to add
-     * @author Kaaden
-     */
-    public void addFollowingReq(String UUID) {
-        if (!followingReqList.contains(UUID)) {
-            followingReqList.add(UUID);
-        }
-    }
-
-    /** addBlock
-     * adds a blockee to this user's blockList if not already present
-     *
-     * @param UUID String, the UUID of the user to add
-     * @author Kaaden
-     */
-    public void addBlock(String UUID) {
-        if (!blockList.contains(UUID)) {
-            blockList.add(UUID);
-        }
-    }
-
-    /** addBlockedBy
-     * adds a blocker to this user's blockedByList if not already present
-     *
-     * @param UUID String, the UUID of the user to add
-     * @author Kaaden
-     */
-    public void addBlockedBy(String UUID) {
-        if (!blockedByList.contains(UUID)) {
-            blockedByList.add(UUID);
-        }
-    }
-
-    /** removeFollower
-     * Remove all occurrences of a follower in this user's followerList
-     *
-     * @param UUID String, the UUID of the user(s) to remove
-     * @return boolean, true if any removals occurred, false otherwise
-     */
-    public boolean removeFollower(String UUID) {
-        return followerList.removeIf(follower -> follower.equals(UUID));
-    }
-
-    /** removeFollowing
-     * Remove all occurrences of a followee in this user's followingList
-     *
-     * @param UUID String, the UUID of the user(s) to remove
-     * @return boolean, true if any removals occurred, false otherwise
-     */
-    public boolean removeFollowing(String UUID) {
-        return followingList.removeIf(followee -> followee.equals(UUID));
-    }
-
-    /** removeFollowerReq
-     * Remove all occurrences of a follow-requester in this user's followerReqList
-     *
-     * @param UUID String, the UUID of the user(s) to remove
-     * @return boolean, true if any removals occurred, false otherwise
-     */
-    public boolean removeFollowerReq(String UUID) {
-        return followerReqList.removeIf(followRequester -> followRequester.equals(UUID));
-    }
-
-    /** removeFollowingReq
-     * Remove all occurrences of a follow-requestee in this user's followingReqList
-     *
-     * @param UUID String, the UUID of the user(s) to remove
-     * @return boolean, true if any removals occurred, false otherwise
-     */
-    public boolean removeFollowingReq(String UUID) {
-        return followingReqList.removeIf(followRequestee -> followRequestee.equals(UUID));
-    }
-
-    /** removeBlock
-     * Remove all occurrences of a blockee in this user's blockList
-     *
-     * @param UUID String, the UUID of the user(s) to remove
-     * @return boolean, true if any removals occurred, false otherwise
-     */
-    public boolean removeBlock(String UUID) {
-        return blockList.removeIf(blockee -> blockee.equals(UUID));
-    }
-
-    /** removeBlockedBy
-     * Remove all occurrences of a blocker in this user's blockedByList
-     *
-     * @param UUID String, the UUID of the user(s) to remove
-     * @return boolean, true if any removals occurred, false otherwise
-     */
-    public boolean removeBlockedBy(String UUID) {
-        return blockedByList.removeIf(blocker -> blocker.equals(UUID));
-    }
-
-    /**
-     * getEmail
-     * <p>
-     * gets Email
-     *
-     * @return String email
-     * @author Dakota
-     */
-    public String getEmail() {
-        return this.email;
-    }
-
-    // These implement Parcelable for being passed through an intent
-
-    // replace methods not sure if i need it or not
-    public void replaceHabit(Habit habit) {
-    }
-
-    /**
-     * Apart of Parcelable implementation, does nothing but is required
-     *
-     * @return int 0
-     * @author Dakota
-     */
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
+    // Parcelable Implementation -------------------------------------------------------------------
     /**
      * writeToParcel
      * <p>
@@ -475,7 +465,8 @@ public class User implements Parcelable {
 
         userBundle.putString("username", username);
 
-        Log.d("UserParcelable", "Parcel Writer userName:" + userBundle.getString("username"));
+        Log.d("UserParcelable",
+                "Parcel Writer userName:" + userBundle.getString("username"));
 
         userBundle.putString("password", password);
 
@@ -500,5 +491,16 @@ public class User implements Parcelable {
         userBundle.putStringArrayList("blockedByList", blockedByList);
 
         parcel.writeBundle(userBundle); // writes bundle to parcel
+    }
+
+    /**
+     * Apart of Parcelable implementation, does nothing but is required
+     *
+     * @return int 0
+     * @author Dakota
+     */
+    @Override
+    public int describeContents() {
+        return 0;
     }
 }

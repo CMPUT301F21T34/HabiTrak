@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.cmput301f21t34.habittrak.Utilities;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -19,31 +21,31 @@ import java.util.TimeZone;
  * @since 2021-10-15
  * @see HabitEvent
  */
-public class Habit implements Comparable<Habit>, Parcelable {
+public class Habit implements Comparable<Habit>, Parcelable, Utilities {
 
     // Attributes //
 
-    // Any changes need to be implement in writeToParcel and Parcel constructor - Dakota
 
-    // Not to be added to DB
+    // Not in Database
     private int currentStreak = 0; // For display
     private int bestStreak = 0; // For display
     private Calendar bestStreakDateEnd;
     private Calendar currentStreakDateEnd;
 
-    // To Be Added To DB
-    private int index = 0;
-    private Calendar bestStreakDate;
-    private Calendar currentStreakDate;
+    // In Database
+    private int index = 0; // Absolute index that tracks arranged order
+    private Calendar bestStreakDate; // First day of the best streak
+    private Calendar currentStreakDate; // First day of the current streak
 
     private String title;
     private String reason;
-
     private Calendar startDate;
-    private ArrayList<HabitEvent> habitEvents = new ArrayList<HabitEvent>();
-    private boolean isPublic = false; // If other users can see this habit
 
-    private OnDays onDaysObj = new OnDays();
+    private ArrayList<HabitEvent> habitEvents = new ArrayList<>();
+    private boolean isPublic = false; // Visibility in Social
+
+    private OnDays onDaysObj = new OnDays(); // Days of the week habit is active
+
 
     // Constructors //
 
@@ -85,87 +87,33 @@ public class Habit implements Comparable<Habit>, Parcelable {
      * @param parcel Parcel to construct from
      */
     public Habit(Parcel parcel) {
+
+        // Get bundle from parcel containing all habit attributes
         Bundle habitBundle;
         habitBundle = parcel.readBundle(Habit.class.getClassLoader());
 
+        // Basic attributes
         this.index = habitBundle.getInt("index");
         this.title = habitBundle.getString("title");
         this.reason = habitBundle.getString("reason");
         this.habitEvents = habitBundle.getParcelableArrayList("habitEvents");
-
-        this.index = habitBundle.getInt("index");
-
-        // Handles Calendar //
-        // Handles Start Day Calendar //
-        String completedDateTimeZone = habitBundle.getString("startDateTimeZone");
-        if (completedDateTimeZone != null) {
-            Calendar constructionCalendar = Calendar.getInstance();
-            constructionCalendar.setTimeZone(TimeZone.getTimeZone(completedDateTimeZone));
-            constructionCalendar.setTimeInMillis(habitBundle.getLong("startDateTime"));
-
-            this.startDate = constructionCalendar;
-        } else {
-            this.startDate = null;
-        }
-
-        // Handles Best Streak Calendar //
-        String bestStreakDateTimeZone = habitBundle.getString("bestStreakDateTimeZone");
-        if (bestStreakDateTimeZone != null) {
-            Calendar constructionCalendar = Calendar.getInstance();
-            constructionCalendar.setTimeZone(TimeZone.getTimeZone(bestStreakDateTimeZone));
-            constructionCalendar.setTimeInMillis(habitBundle.getLong("bestStreakDateTime"));
-
-            this.bestStreakDate = constructionCalendar;
-        } else {
-            this.bestStreakDate = null;
-        }
-
-        // Handles Current Streak Calendar //
-        String currentStreakDateTimeZone = habitBundle.getString("currentStreakDateTimeZone");
-
-        if (currentStreakDateTimeZone != null) {
-
-            Calendar constructionCalendar = Calendar.getInstance();
-            constructionCalendar.setTimeZone(TimeZone.getTimeZone(currentStreakDateTimeZone));
-            constructionCalendar.setTimeInMillis(habitBundle.getLong("currentStreakDateTime"));
-
-            this.currentStreakDate = constructionCalendar;
-        } else {
-            this.currentStreakDate = null;
-        }
-
-        // Handles Current Streak End Calendar //
-        String currentStreakDateEndTimeZone = habitBundle.getString("currentStreakDateEndTimeZone");
-        if (currentStreakDateEndTimeZone != null) {
-
-            Calendar constructionCalendar = Calendar.getInstance();
-            constructionCalendar.setTimeZone(TimeZone.getTimeZone(currentStreakDateEndTimeZone));
-            constructionCalendar.setTimeInMillis(habitBundle.getLong("currentStreakDateEndTime"));
-
-            this.currentStreakDateEnd = constructionCalendar;
-        } else {
-            this.currentStreakDateEnd = null;
-        }
-
-        // Handles Best Streak End Calendar //
-        String bestStreakDateEndTimeZone = habitBundle.getString("bestStreakDateEndTimeZone");
-        if (bestStreakDateEndTimeZone != null) {
-
-            Calendar constructionCalendar = Calendar.getInstance();
-            constructionCalendar.setTimeZone(TimeZone.getTimeZone(bestStreakDateEndTimeZone));
-            constructionCalendar.setTimeInMillis(habitBundle.getLong("bestStreakDateEndTime"));
-
-            this.bestStreakDateEnd = constructionCalendar;
-        } else {
-            this.bestStreakDateEnd = null;
-        }
-
-        // streak ints
         this.currentStreak = habitBundle.getInt("currentStreak");
         this.bestStreak = habitBundle.getInt("bestStreak");
         this.isPublic = habitBundle.getBoolean("isPublic");
         this.onDaysObj = habitBundle.getParcelable("onDaysObj");
+
+
+        // Calendar Attributes //
+        this.startDate = calendarParcelConstructor(habitBundle, "startDate");
+        this.bestStreakDate = calendarParcelConstructor(habitBundle, "bestStreakDate");
+        this.bestStreakDateEnd = calendarParcelConstructor(habitBundle, "bestStreakDateEnd");
+        this.currentStreakDate = calendarParcelConstructor(habitBundle, "currentStreakDate");
+        this.currentStreakDateEnd = calendarParcelConstructor(habitBundle, "currentStreakDateEnd");
+
     }
+    
+
+
 
     // Methods //
 
@@ -533,43 +481,14 @@ public class Habit implements Comparable<Habit>, Parcelable {
         habitBundle.putParcelableArrayList("habitEvents", habitEvents);
 
         // Handles Calendar
-        if (startDate != null) {
-            habitBundle.putString("startDateTimeZone", startDate.getTimeZone().getID());
-            habitBundle.putLong("startDateTime", startDate.getTimeInMillis());
-        } else {
-            habitBundle.putString("startDateTimeZone", null);
-        }
 
-        // Handles Best Streak Calendar
-        if (bestStreakDate != null) {
-            habitBundle.putString("bestStreakDateTimeZone", bestStreakDate.getTimeZone().getID());
-            habitBundle.putLong("bestStreakDateTime", bestStreakDate.getTimeInMillis());
-        } else {
-            habitBundle.putString("bestStreakDateTimeZone", null);
-        }
-        // Handles Current Streak Calendar
-        if (currentStreakDate != null) {
-            habitBundle.putString("currentStreakDateTimeZone", currentStreakDate.getTimeZone().getID());
-            habitBundle.putLong("currentStreakDateTime", currentStreakDate.getTimeInMillis());
-        } else {
-            habitBundle.putString("currentStreakDateTimeZone", null);
-        }
+        putCalendarInBundle(habitBundle, startDate, "startDate");
+        putCalendarInBundle(habitBundle, bestStreakDate, "bestStreakDate");
+        putCalendarInBundle(habitBundle, currentStreakDate, "currentStreakDate");
+        putCalendarInBundle(habitBundle, currentStreakDateEnd, "currentStreakDateEnd");
+        putCalendarInBundle(habitBundle, bestStreakDateEnd, "bestStreakDateEnd");
 
-        // Handles Current Streak End Calendar
-        if (currentStreakDateEnd != null) {
-            habitBundle.putString("currentStreakDateEndTimeZone", currentStreakDateEnd.getTimeZone().getID());
-            habitBundle.putLong("currentStreakDateEndTime", currentStreakDateEnd.getTimeInMillis());
-        } else {
-            habitBundle.putString("currentStreakDateEndTimeZone", null);
-        }
 
-        // Handles Best Streak End Calendar
-        if (bestStreakDateEnd != null) {
-            habitBundle.putString("bestStreakDateEndTimeZone", bestStreakDateEnd.getTimeZone().getID());
-            habitBundle.putLong("bestStreakDateEndTime", bestStreakDateEnd.getTimeInMillis());
-        } else {
-            habitBundle.putString("bestStreakDateEndTimeZone", null);
-        }
 
         // Streak Ints
         habitBundle.putInt("currentStreak", currentStreak);
@@ -581,6 +500,8 @@ public class Habit implements Comparable<Habit>, Parcelable {
 
         parcel.writeBundle(habitBundle);
     }
+
+
 
     @Override
     public int describeContents() {

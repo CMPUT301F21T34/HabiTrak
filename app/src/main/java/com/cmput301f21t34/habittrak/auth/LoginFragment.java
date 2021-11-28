@@ -82,7 +82,6 @@ public class LoginFragment extends Fragment implements Utilities {
         mAuth = new Auth(getActivity(), db);
 
         return view;
-
     }
 
     @Override
@@ -105,7 +104,6 @@ public class LoginFragment extends Fragment implements Utilities {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 passwordLayout.setError(null);
                 usernameLayout.setError(null);
 
@@ -115,7 +113,6 @@ public class LoginFragment extends Fragment implements Utilities {
                 try {
                     runLogin(email, password);
                 } catch (Exception e) {
-
                     if (e instanceof IllegalArgumentException) {
                         // Invalid entry
                         usernameLayout.setError("Invalid Entry");
@@ -127,7 +124,6 @@ public class LoginFragment extends Fragment implements Utilities {
                 }
             }
         });
-
     }
 
     private void runLogin(String email, String password) {
@@ -141,19 +137,16 @@ public class LoginFragment extends Fragment implements Utilities {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             authUser = fAuth.getCurrentUser();
-
                             if (authUser.isEmailVerified()) {
                                 goToBaseActivity(getActivity(), null);
                             } else {
                                 // Email not Verified //
                                 usernameLayout.setError("Email not Verified");
                                 passwordLayout.setError(null);
-
                                 mAuth.alertNotVerified(authUser).show();
                             }
                         } else {
                             // Login Failed
-
                             usernameLayout.setError(null);
                             passwordLayout.setError("Incorrect Password");
                         }

@@ -106,9 +106,7 @@ public class SignUpFragment extends Fragment implements Utilities {
                     }
                 }
             });
-
             // if everything correct then start base activity
-
         return view;
     }
 
@@ -123,7 +121,6 @@ public class SignUpFragment extends Fragment implements Utilities {
                             // Sign Up was successful
                             FirebaseUser authUser = fAuth.getCurrentUser();
 
-                            //TODO: Remove password section in db
                             db.createNewUser(authUser.getEmail(), username);
                             fAuth.getCurrentUser().sendEmailVerification();
 
@@ -133,7 +130,6 @@ public class SignUpFragment extends Fragment implements Utilities {
                             goToLogin(getActivity());
 
                         } else {
-
                             // Sign Up failed
                             Toast.makeText(getActivity(), "Authentication failed",
                                     Toast.LENGTH_SHORT).show();
@@ -147,8 +143,7 @@ public class SignUpFragment extends Fragment implements Utilities {
                     passwordLayout.setError("Must be greater than 6");
                 } else if (e instanceof FirebaseAuthEmailException) {
                     emailLayout.setError("Invalid Email Format");
-                }
-                else {
+                } else {
                     emailLayout.setError(e.toString());
                     passwordLayout.setError(e.toString());
                 }

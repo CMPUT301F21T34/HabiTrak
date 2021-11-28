@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -206,6 +207,8 @@ public class SocialTabFragment extends Fragment {
         UUIDs.removeAll(mainUser.getBlockedByList());
         UUIDs.remove(mainUser.getEmail());
         // Save info
+        usernames.clear();
+        bios.clear();
         UUIDs.forEach(UUID -> {
             usernames.add(dm.getUserName(UUID));
             bios.add(dm.getUserBio(UUID));
@@ -269,7 +272,6 @@ public class SocialTabFragment extends Fragment {
             socialAdapter.setMainUser(mainUser); // Update socialAdapter's version of mainUser
             UUIDs = getUUIDs(type); // Get the entries for the list
             populateList(); // Get the data for the entries
-            socialAdapter.setList(UUIDs, usernames, bios);
             return null;
         }
 
@@ -277,9 +279,11 @@ public class SocialTabFragment extends Fragment {
         @Override
         protected void onPostExecute(Void unused) {
             super.onPostExecute(unused);
-            socialAdapter.notifyDataSetChanged(); // Tell list manager data updated
+            Log.d("Social", usernames.size() + " After size");
+            socialAdapter.setList(UUIDs, usernames, bios);
             displayViews(); // Redo the displays
             swipeRefresh.setRefreshing(false); // Turn off loading visual
+            socialAdapter.notifyDataSetChanged();
 
         }
     }

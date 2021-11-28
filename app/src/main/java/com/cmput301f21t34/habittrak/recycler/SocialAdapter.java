@@ -1,6 +1,7 @@
 package com.cmput301f21t34.habittrak.recycler;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -118,7 +119,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
 
     public void setList(ArrayList<String> UUIDs, ArrayList<String> usernames, ArrayList<String> bios) {
         this.UUIDs = UUIDs;
-        UUIDsCopy = UUIDs;
+        this.UUIDsCopy = UUIDs;
         this.usernames = usernames;
         usernamesCopy = usernames;
         this.bios = bios;

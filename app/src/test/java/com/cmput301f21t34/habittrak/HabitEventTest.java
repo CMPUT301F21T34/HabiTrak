@@ -30,7 +30,6 @@ public class HabitEventTest {
      * Returns a new Habit object to perform tests on
      */
     private HabitEvent mockHabitEvent() {
-
         String id = "173";
         String comment = "I read book 1";
         Habit habit = new Habit("Read Book");

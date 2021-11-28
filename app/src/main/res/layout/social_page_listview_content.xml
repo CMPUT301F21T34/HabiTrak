@@ -45,6 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="48dp"
+            android:maxLength="30"
             android:text="@string/biography_default"
             android:textColor="?android:textColorPrimary" />
     </RelativeLayout>

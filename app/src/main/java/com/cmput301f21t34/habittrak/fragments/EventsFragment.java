@@ -18,7 +18,7 @@ import android.widget.PopupMenu;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.event.ViewHabitEvents;
 import com.cmput301f21t34.habittrak.recycler.HabitRecycler;
-import com.cmput301f21t34.habittrak.recycler.TodayHabitRecyclerAdapter;
+import com.cmput301f21t34.habittrak.recycler.HabitRecyclerAdapter;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitList;
 import com.cmput301f21t34.habittrak.user.User;
@@ -44,16 +44,15 @@ public class EventsFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private HabitRecycler habitRecycler;
     private ArrayList<Habit> habitsDisplayList;
-    private TodayHabitRecyclerAdapter adapter;
+    private HabitRecyclerAdapter adapter;
 
     private User mainUser;
 
     public EventsFragment(User mainUser) {
         habitsDisplayList = new ArrayList<>();
         this.mainUser = mainUser;
-        this.adapter = new TodayHabitRecyclerAdapter(habitsDisplayList, false);
+        this.adapter = new HabitRecyclerAdapter(habitsDisplayList, false);
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,7 +66,7 @@ public class EventsFragment extends Fragment {
 
 
         // set the click listener interface for the adapter
-        adapter.setHabitClickListener(new TodayHabitRecyclerAdapter.HabitClickListener() {
+        adapter.setHabitClickListener(new HabitRecyclerAdapter.HabitClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Habit habit = habitsDisplayList.get(position);

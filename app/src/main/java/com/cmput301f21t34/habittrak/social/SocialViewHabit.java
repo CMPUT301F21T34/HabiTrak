@@ -18,6 +18,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+/**
+ * SocialViewHabit class for viewing the habit list of the user that the current user clicks on
+ *
+ * @author Pranav
+ */
 public class SocialViewHabit extends AppCompatActivity {
 
     private final int whiteColor = Color.WHITE;
@@ -66,6 +71,7 @@ public class SocialViewHabit extends AppCompatActivity {
         TextView bestStreakStart = findViewById(R.id.social_streak_start);
         TextView bestStreakEnd = findViewById(R.id.social_best_streak_end);
         TextView bestStreakTotal = findViewById(R.id.social_best_streak_count);
+
         // set data for views
         name.setText(habit.getTitle());
         reason.setText(habit.getReason());
@@ -86,7 +92,6 @@ public class SocialViewHabit extends AppCompatActivity {
             bestStreakEnd.setText(streakDateFormat.format(habit.getBestStreakDateEnd().getTime()));
             bestStreakTotal.setText(String.valueOf(habit.getBestStreak()));
         }
-
         // setting listeners to null
         mondayButton.setOnClickListener(null);
         tuesdayButton.setOnClickListener(null);

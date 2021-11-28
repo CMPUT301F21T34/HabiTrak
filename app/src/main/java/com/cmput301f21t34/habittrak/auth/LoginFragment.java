@@ -1,10 +1,7 @@
 package com.cmput301f21t34.habittrak.auth;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,11 +30,10 @@ import com.google.firebase.auth.FirebaseUser;
  * LoginFragment
  *
  * @author Pranav
+ * @author Dakota
  * @author Henry
  *
  * Login Fragment for the app
- *
- * TODO: update the password validation: current username: <any> password: <any>
  */
 public class LoginFragment extends Fragment {
 
@@ -84,7 +80,6 @@ public class LoginFragment extends Fragment {
 
         mAuth = new Auth(getActivity(), db);
 
-
         return view;
 
     }
@@ -105,8 +100,6 @@ public class LoginFragment extends Fragment {
             public void onClick(View view) { toForgot(); }
         });
 
-
-
         // Password validator
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,81 +119,53 @@ public class LoginFragment extends Fragment {
                         // Invalid entry
                         usernameLayout.setError("Invalid Entry");
                         passwordLayout.setError("Invalid Entry");
-                    }
-
-                    else {
+                    } else {
                         // Displays any other exceptions
                         Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG);
                     }
-
-
                 }
-
-
             }
-
-
-
         });
 
     }
 
-
-    ///
-
-
-    private void runLogin(String email, String password){
+    private void runLogin(String email, String password) {
         // This is the firebase auth
         // Must be used as they don't get put on top of the stack but are called later
         FirebaseAuth fAuth = mAuth.getAuth();
-
 
         fAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
-
+                        if (task.isSuccessful()) {
                             authUser = fAuth.getCurrentUser();
 
-                            if (authUser.isEmailVerified()){
-
-
+                            if (authUser.isEmailVerified()) {
                                 startHomePage(null);
-
                             } else {
                                 // Email not Verified //
-
                                 usernameLayout.setError("Email not Verified");
                                 passwordLayout.setError(null);
 
                                 mAuth.alertNotVerified(authUser).show();
-
                             }
-
-
                         } else {
                             // Login Failed
 
                             usernameLayout.setError(null);
                             passwordLayout.setError("Incorrect Password");
-
-
                         }
                     }
                 });
     }
-
-
-
-
 
     /**
      * startHomePage
      * Start the base activity after logging in
      * @param
      */
-    public void startHomePage(User currentUser){
+    public void startHomePage(User currentUser) {
 
         Log.d("MERGE", "startHomePage");
 
@@ -227,7 +192,5 @@ public class LoginFragment extends Fragment {
                 .replace(R.id.login_fragment_container, forgotFragment, "forgotFrag")
                 .addToBackStack(null)
                 .commit();
-
     }
-
 }

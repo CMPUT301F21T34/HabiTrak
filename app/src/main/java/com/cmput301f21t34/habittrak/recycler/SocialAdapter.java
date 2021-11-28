@@ -40,7 +40,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
     public static final String UNFOLLOW = "Unfollow";
 
     private final SocialFragment socialRef;
-    private final User mainUser;
+    private User mainUser;
     private final ArrayList<String> UUIDsCopy;
     private final ArrayList<String> usernamesCopy;
     private final ArrayList<String> biosCopy;
@@ -108,6 +108,15 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         }
     }
 
+    /**
+     * Sets a new mainUser, for updating
+     *
+     * @param mainUser User, the new mainUser
+     */
+    public void setMainUser(User mainUser) {
+        this.mainUser = mainUser;
+    }
+
     @NonNull
     @Override
     public SocialAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -122,7 +131,12 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         // Set up the data for the given entry
         holder.UUID = UUIDs.get(position);
         holder.username = usernames.get(position);
-        holder.bio = bios.get(position);
+        String bio = bios.get(position);
+        if (bio.length() > 30){
+            bio = bio.substring(0, 30);
+            bio = bio + "...";
+        }
+        holder.bio = bio;
         holder.usernameTextView.setText(holder.username);
         holder.bioTextView.setText(holder.bio);
 
@@ -157,7 +171,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        return usernames.size();
+        return UUIDs.size();
     }
 
     @Override
@@ -276,9 +290,13 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
                 case UNFOLLOW:
                     // Update locally
                     mainUser.removeFollowing(UUID);
-                    removeUserEntry(UUID); // Remove entry from Following (this) tab
+                    // Remove entry from Following tab
+                    socialRef.removeUserEntry(SocialFragment.FOLLOWING, UUID);
                     // Update in database
                     dm.updateFollow(UUID, mainUser.getEmail(), DatabaseManager.REMOVE);
+                    // Update display
+                    mainButton.setText(
+                            mainUser.getFollowerList().contains(UUID) ? FOLLOW_BACK : FOLLOW);
                     break;
                 case UNBLOCK:
                     // Update locally

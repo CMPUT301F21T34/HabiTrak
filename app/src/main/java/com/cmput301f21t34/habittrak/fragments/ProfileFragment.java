@@ -52,7 +52,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         this.mainUser = mainUser;
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

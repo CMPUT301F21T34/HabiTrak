@@ -20,17 +20,18 @@
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
             app:title="@string/habi_app_name"
-            app:titleTextColor="@android:color/white" >
-        <Button
-            android:id="@+id/events_confirm_changes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginEnd="16dp"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            app:strokeColor="@color/white"
-            android:textColor="@color/white"
-            android:text="@string/save_changes" />
+            app:titleTextColor="@android:color/white">
+
+            <Button
+                android:id="@+id/events_confirm_changes"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="16dp"
+                android:text="@string/save_changes"
+                android:textColor="@color/white"
+                app:strokeColor="@color/white" />
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -40,8 +41,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:visibility="gone"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="150dp"
@@ -53,10 +54,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="no events for this habit"
             android:fontFamily="@font/roboto_black"
-            android:textColor="#808080"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:text="no events for this habit"
+            android:textColor="#808080" />
 
     </LinearLayout>
 
@@ -64,7 +65,7 @@
         android:id="@+id/events_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/toolbarLayout"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbarLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

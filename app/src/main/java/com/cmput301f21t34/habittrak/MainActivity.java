@@ -23,16 +23,12 @@ import com.google.firebase.auth.FirebaseUser;
  * TODO : Testing that the database returns the correct on days object
  *
  */
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
     // Get shared prefs
     private FirebaseUser fUser;
-
     private User mainUser;
     private DatabaseManager db;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,13 +39,12 @@ public class MainActivity extends AppCompatActivity{
         db = new DatabaseManager();
         fUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (fUser!=null){
+        if (fUser != null) {
             String email = fUser.getEmail();
             mainUser = db.getUser(email);
             startHomePage(mainUser);
 
         }
-
 
         if (savedInstanceState != null) {
             // get users credentials
@@ -63,7 +58,7 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
-    private void goToLogin(){
+    private void goToLogin() {
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.login_fragment_container, new LoginFragment(null))
@@ -74,9 +69,7 @@ public class MainActivity extends AppCompatActivity{
      * startHomePage
      * Start the base activity after logging in
      */
-    private void startHomePage(User currentUser){
-
-
+    private void startHomePage(User currentUser) {
         Intent intent = new Intent(this, BaseActivity.class);
 
         intent.putExtra("mainUser", currentUser);
@@ -85,6 +78,5 @@ public class MainActivity extends AppCompatActivity{
         startActivity(intent);
         this.finish();
     }
-
 }
 

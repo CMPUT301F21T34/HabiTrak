@@ -20,7 +20,7 @@ import com.cmput301f21t34.habittrak.ViewEditHabitActivity;
 import com.cmput301f21t34.habittrak.event.AddHabitEventActivity;
 import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.recycler.HabitRecycler;
-import com.cmput301f21t34.habittrak.recycler.TodayHabitRecyclerAdapter;
+import com.cmput301f21t34.habittrak.recycler.HabitRecyclerAdapter;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.R;
 
@@ -47,7 +47,7 @@ public class TodayListFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private HabitRecycler habitRecycler;
     private ArrayList<Habit> habitsDisplayList;
-    private TodayHabitRecyclerAdapter adapter;
+    private HabitRecyclerAdapter adapter;
     private LinearLayout noDataLayout;
     private User mainUser;
     // Database Manager
@@ -57,7 +57,7 @@ public class TodayListFragment extends Fragment {
     public TodayListFragment(User mainUser) {
         habitsDisplayList = new ArrayList<>();
         this.mainUser = mainUser;
-        adapter = new TodayHabitRecyclerAdapter(habitsDisplayList, true);
+        adapter = new HabitRecyclerAdapter(habitsDisplayList, true);
         Log.d(TAG, "New Frag Created");
     }
 
@@ -74,7 +74,7 @@ public class TodayListFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getContext());
 
         // set the click listener interface for the adapter
-        adapter.setHabitClickListener(new TodayHabitRecyclerAdapter.HabitClickListener() {
+        adapter.setHabitClickListener(new HabitRecyclerAdapter.HabitClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Habit habit = habitsDisplayList.get(position);
@@ -196,8 +196,6 @@ public class TodayListFragment extends Fragment {
         Habit habit = habitsDisplayList.get(position);
         Intent intent = new Intent(getContext(), AddHabitEventActivity.class);
         intent.putExtra("HABIT", habit);
-        intent.putExtra("position", habit.getIndex());
-        intent.putExtra("USER", mainUser.getEmail());
         addHabitEventResultLauncher.launch(intent);
     }
 }

@@ -29,7 +29,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     private ArrayList<HabitEvent> events;
     private final EventClickListener listener;
 
-
     public EventAdapter(ArrayList<HabitEvent> events, EventClickListener listener){
         this.events = events;
         this.listener = listener;
@@ -47,7 +46,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         private final ImageButton menuButton;
         private EventClickListener listenerRef;
 
-        public ViewHolder(View view){
+        public ViewHolder(View view) {
             super(view);
             // set views
             comment = view.findViewById(R.id.event_list_comment);
@@ -76,8 +75,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                 }
             }
         }
-
-
     }
 
     @NonNull
@@ -113,5 +110,4 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         String day = Integer.toString(calendar.get(Calendar.DAY_OF_MONTH));
         return month + ", " + day;
     }
-
 }

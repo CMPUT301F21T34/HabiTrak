@@ -382,8 +382,8 @@ public class DatabaseManager {
     private Location toLocation(HashMap<String,Object> hashMap) {
         if (hashMap != null) {
             Location loc = new Location((String) hashMap.get("provider"));
-            loc.setLatitude((double) (long) hashMap.get("latitude"));
-            loc.setLongitude((double) (long) hashMap.get("longitude"));
+            loc.setLatitude((double) hashMap.get("latitude"));
+            loc.setLongitude((double)  hashMap.get("longitude"));
 
             return loc;
         } else {

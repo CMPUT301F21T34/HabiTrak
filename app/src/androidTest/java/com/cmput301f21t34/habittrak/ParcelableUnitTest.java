@@ -70,7 +70,7 @@ public class ParcelableUnitTest {
 
         HabitList testHabits = getTestHabitList();
         for (int index = 0; index < testHabits.size(); index++){
-            testUser.addHabit(testHabits.get(index));
+            testUser.getHabitList().add(testHabits.get(index));
         }
         return testUser;
     }

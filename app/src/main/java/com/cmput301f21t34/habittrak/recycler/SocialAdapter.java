@@ -262,7 +262,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
                     // Update locally
                     mainUser.addFollower(UUID);
                     mainUser.removeFollowerReq(UUID);
-                    removeUserEntry(UUID); // Remove this entry from Requests (this) tab
+                    socialRef.removeUserEntry(SocialFragment.REQUESTS, UUID); // Remove this entry from Requests (this) tab
                     // Update in database
                     dm.updateFollow(mainUser.getEmail(), UUID, DatabaseManager.ADD);
                     dm.updateFollowRequest(mainUser.getEmail(), UUID, DatabaseManager.REMOVE);

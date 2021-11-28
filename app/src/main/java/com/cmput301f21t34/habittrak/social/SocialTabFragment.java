@@ -105,13 +105,8 @@ public class SocialTabFragment extends Fragment {
         // Swipe to refresh
         swipeRefresh = view.findViewById(R.id.social_swipe_refresh_layout);
         swipeRefresh.setOnRefreshListener(() -> {
-            mainUser = dm.getUser(mainUser.getEmail()); // Get an up to date version from database
-            socialAdapter.setMainUser(mainUser); // Update socialAdapter's version of mainUser
-            UUIDs = getUUIDs(type); // Get the entries for the list
-            populateList(); // Get the data for the entries
-            socialAdapter.notifyDataSetChanged(); // Tell list manager data updated
-            displayViews(); // Redo the displays
-            swipeRefresh.setRefreshing(false); // Turn off loading visual
+            SocialRefreshAsync newTask = new SocialRefreshAsync();
+            newTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         });
 
         // Invisible by default
@@ -259,6 +254,29 @@ public class SocialTabFragment extends Fragment {
             super.onPostExecute(unused);
             socialAdapter.notifyDataSetChanged(); // Tell list manager
             displayViews(); // Turn on display items
+        }
+    }
+
+    /**
+     * gets the new data on refresh
+     */
+    public class SocialRefreshAsync extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            mainUser = dm.getUser(mainUser.getEmail()); // Get an up to date version from database
+            socialAdapter.setMainUser(mainUser); // Update socialAdapter's version of mainUser
+            UUIDs = getUUIDs(type); // Get the entries for the list
+            populateList(); // Get the data for the entries
+            return null;
+        }
+
+        @SuppressLint("NotifyDataSetChanged")
+        @Override
+        protected void onPostExecute(Void unused) {
+            super.onPostExecute(unused);
+            socialAdapter.notifyDataSetChanged(); // Tell list manager data updated
+            displayViews(); // Redo the displays
+            swipeRefresh.setRefreshing(false); // Turn off loading visual
         }
     }
 }

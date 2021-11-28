@@ -151,7 +151,7 @@ public class AllHabitsFragment extends Fragment {
 
         menu.setOnMenuItemClickListener(menuItem -> {
             Habit habit = habitsDisplayList.get(position);
-            mainUser.removeHabit(habit);
+            mainUser.getHabitList().remove(habit);
             refreshAllFragment();
             Log.d(TAG,"Habit Removed");
             dm.updateHabitList(mainUser.getEmail(), mainUser.getHabitList());

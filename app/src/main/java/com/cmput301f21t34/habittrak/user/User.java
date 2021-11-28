@@ -23,7 +23,6 @@ import java.util.ArrayList;
 public class User implements Parcelable {
 
     // Attributes //
-
     // Any changes need to be implement in writeToParcel and Parcel constructor
     // - Dakota
 
@@ -52,7 +51,6 @@ public class User implements Parcelable {
     private ArrayList<String> followerList;     // Users that follow this user
     private ArrayList<String> followingList;    // Users this user follows
     private ArrayList<String> followingReqList; // Users that this user requested to follow
-    //TODO: make these attributes Parcelable
     private ArrayList<String> followerReqList;  // Users that requested to follow this user
     private ArrayList<String> blockList;        // Users that this user blocked
     private ArrayList<String> blockedByList;    // Users that blocked this user

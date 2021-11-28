@@ -49,27 +49,14 @@ public class Auth {
 
 
     public Auth(Activity activity, DatabaseManager db){
-
         this.context = activity;
         this.db = db;
         mAuth = FirebaseAuth.getInstance();
-
-
     }
-
 
     public FirebaseAuth getAuth() {
         return mAuth;
     }
-
-
-
-
-
-
-
-
-
 
     /**
      * Attempts to change current logged in user to a new password
@@ -78,13 +65,9 @@ public class Auth {
      * @param authUser Firebase user to change password
      * @param newPassword String new password to change to
      */
-    public void changePassword(FirebaseUser authUser, String newPassword){
-
-
+    public void changePassword(FirebaseUser authUser, String newPassword) {
 
         if (authUser != null) {
-
-
             // Updates users password
             authUser.updatePassword(newPassword)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -96,7 +79,6 @@ public class Auth {
                             }
                         }
                     }).addOnFailureListener(new OnFailureListener() {
-
                         @Override
                         public void onFailure(@NonNull Exception exception) {
                             // Catches exceptions
@@ -106,11 +88,7 @@ public class Auth {
                                 }
                             }
                         });
-
-
-
         }
-
     }
 
     /**
@@ -121,10 +99,9 @@ public class Auth {
      * @param authUser Firebase User to change
      * @param newEmail String new email
      */
-    public void changeEmail(FirebaseUser authUser, String newEmail){
+    public void changeEmail(FirebaseUser authUser, String newEmail) {
 
-        if (authUser != null){
-
+        if (authUser != null) {
             // Makes the user email verify before email is changed
             authUser.verifyBeforeUpdateEmail(newEmail)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -148,14 +125,8 @@ public class Auth {
                 }
 
             });
-
         }
-
     }
-
-
-
-
 
     /**
      * Re-Auths user with email auth provider
@@ -164,7 +135,7 @@ public class Auth {
      * @author Dakota
      * @return true on success, false on failure
      */
-    private boolean reAuthEmail(FirebaseUser authUser){
+    private boolean reAuthEmail(FirebaseUser authUser) {
 
         // must use final boolean[] as variable is set by inner class
         final boolean[] reAuthed = new boolean[1];
@@ -195,10 +166,7 @@ public class Auth {
                         }
                     }
                 });
-
-        // returns result
         return reAuthed[0];
-
     }
 
     /**
@@ -209,7 +177,6 @@ public class Auth {
         mAuth.signOut();
     }
 
-
     /**
      * Alerts the user that their account email is not verified and asks
      * if they would like a new email to be sent
@@ -217,7 +184,7 @@ public class Auth {
      * @author Dakota
      * @return boolean true if they would like a new email, false else wise
      */
-    public AlertDialog.Builder alertNotVerified(FirebaseUser authUser){
+    public AlertDialog.Builder alertNotVerified(FirebaseUser authUser) {
 
         Log.d("NotVer", "alert called");
 
@@ -225,7 +192,6 @@ public class Auth {
         final boolean[] sendEmail = new boolean[1];
 
         // Builds alert
-
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         builder
@@ -243,16 +209,10 @@ public class Auth {
             @Override
             public void onClick(DialogInterface dialogInterface, int id) {
                 // Don't send new email
-
             }
         });
-
-
         return builder;
-
     }
-
-
 
     /**
      * quickly gets user credentials with an alert dialogue.
@@ -263,7 +223,7 @@ public class Auth {
      * @return String[2] where [0] is the email, and [1] is the password.
      *      both will be null if user cancels.
      */
-    private String[] getCredentials(){
+    private String[] getCredentials() {
 
         final String[] credentials = new String[2];
 
@@ -302,8 +262,5 @@ public class Auth {
         });
 
         return credentials;
-
     }
-
-
 }

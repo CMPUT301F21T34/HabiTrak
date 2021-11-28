@@ -61,9 +61,7 @@ public class SignUpFragment extends Fragment {
 
     public SignUpFragment(Auth auth) {
         /* Required empty public constructor */
-
         this.mAuth = auth;
-
     }
 
     @Override
@@ -92,29 +90,19 @@ public class SignUpFragment extends Fragment {
 
             // check if fields are full
             if (fieldsFull()) {
-
-
                 // Gets values of edit texts
                 String email = emailEditText.getText().toString();
                 Log.d("SignUp", "email: " + email);
                 String username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
 
-
                 // Check that email is unique
-                if (false){//!db.isUniqueEmail(email)) { db.isUnique is always false
+                if (false) {//!db.isUniqueEmail(email)) { db.isUnique is always false
                     emailLayout.setError("Email Already in Use");
                 } else {
-
                     // This signs up the user and returns the email signed up with
                     runSignUp(email, username, password);
-
-
                     }
-
-
-
-
                 }
             });
 
@@ -123,15 +111,13 @@ public class SignUpFragment extends Fragment {
         return view;
     }
 
-    private void runSignUp(String email, String username, String password){
+    private void runSignUp(String email, String username, String password) {
         FirebaseAuth fAuth = mAuth.getAuth();
         fAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener((Activity) getActivity(), new OnCompleteListener<AuthResult>() {
-
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-
-                        if ( task.isSuccessful() ) {
+                        if (task.isSuccessful()) {
 
                             // Sign Up was successful
                             FirebaseUser authUser = fAuth.getCurrentUser();
@@ -142,22 +128,19 @@ public class SignUpFragment extends Fragment {
 
                             Toast.makeText(getActivity(), "Success",
                                     Toast.LENGTH_SHORT).show();
-
                             toLogin();
-
                         } else {
 
                             // Sign Up failed
                             Toast.makeText(getActivity(), "Authentication failed",
                                     Toast.LENGTH_SHORT).show();
-
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.e("SignUp", "Exception thrown: " + e.toString());
-                if (e instanceof FirebaseAuthWeakPasswordException){
+                if (e instanceof FirebaseAuthWeakPasswordException) {
                     passwordLayout.setError("Must be greater than 6");
                 } else if (e instanceof FirebaseAuthEmailException) {
                     emailLayout.setError("Invalid Email Format");
@@ -166,7 +149,6 @@ public class SignUpFragment extends Fragment {
                     emailLayout.setError(e.toString());
                     passwordLayout.setError(e.toString());
                 }
-
             }
         });
     }
@@ -184,9 +166,7 @@ public class SignUpFragment extends Fragment {
      * @author Dakota
      * @return boolean true if they are full, false else wise
      */
-    private boolean fieldsFull(){
-
-
+    private boolean fieldsFull() {
         boolean fieldsFull = true;
         if (isEmpty(emailEditText)) {
             fieldsFull = false;
@@ -200,11 +180,8 @@ public class SignUpFragment extends Fragment {
             fieldsFull = false;
             passwordLayout.setError("Password Required");
         }
-
         return fieldsFull;
     }
-
-
 
     /**
      * isEmpty

@@ -17,8 +17,6 @@ import java.util.Calendar;
  * @version 1
  *
  */
-
-
 public class OnDays implements Parcelable {
 
     private boolean mon, tue, wed, thu, fri, sat, sun; // booleans for each day of the week
@@ -61,7 +59,7 @@ public class OnDays implements Parcelable {
     }
 
     // Constructing from a parcel
-    public OnDays(Parcel parcel){
+    public OnDays(Parcel parcel) {
         Bundle onDaysBundle = parcel.readBundle(this.getClass().getClassLoader()); // get bundle
         boolean[] onDays = onDaysBundle.getBooleanArray("onDays");
 

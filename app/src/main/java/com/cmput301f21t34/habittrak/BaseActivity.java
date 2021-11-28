@@ -49,7 +49,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
     public static final int RESULT_HABIT_EVENTS = 5000;
     DatabaseManager db = new DatabaseManager();
 
-    final String TAG = "Base_Activity";
+    final String TAG = "BASE ACTIVITY";
     //TODO: Explicitly make attributes private
     NavigationBarView bottomNav;
     User mainUser;      // Creates dummy user for testing purposes
@@ -116,7 +116,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
     @Override
     public void onPause(){
         super.onPause();
-
         // Update before we are ever terminated (or unfocused)
         // TODO: Change the email to uuid in the next line
         db.updateHabitList(mainUser.getEmail(),mainUser.getHabitList());
@@ -143,7 +142,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
      */
     private void refreshHabitStreak() {
         // Refreshes all habit streaks //
-
         ArrayList<Habit> habits = (ArrayList<Habit>) mainUser.getHabitList(); // cast for simple iteration
 
         for (int index = 0; index < habits.size(); index++){
@@ -221,7 +219,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
             HabitEvent habitEvent = intent.getParcelableExtra("HABIT_EVENT");
 
             Habit habit = intent.getParcelableExtra("HABIT");
-            int position = intent.getIntExtra("position", 0); // useless
             // habit.incrementStreak();
             mainUser.getHabitList().replace(habit);
             // Propagate the changes to the database
@@ -233,7 +230,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         // result from view habit events activity
         else if (resultCode == RESULT_HABIT_EVENTS){
             Habit habit = intent.getParcelableExtra("HABIT");
-            int position = intent.getIntExtra("position", 0); // useless
             mainUser.getHabitList().replace(habit);
 
             // TODO: Change the email to uuid in the next line

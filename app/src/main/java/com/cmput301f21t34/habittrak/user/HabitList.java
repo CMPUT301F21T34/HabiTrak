@@ -90,7 +90,6 @@ public class HabitList extends ArrayList<Habit> {
         this.saveOrder(index); // Saves order for all index above the inserted element
     }
 
-
     @Override
     public boolean add(Habit habit) {
 
@@ -128,7 +127,6 @@ public class HabitList extends ArrayList<Habit> {
                     + "\n\t index retrieved: "
                     + String.valueOf(this.get(index).getIndex())
                     + "\n\t will attempt to continue.");
-
             success = super.remove(toRemove);
             this.saveOrder();
 

@@ -12,13 +12,22 @@ import com.cmput301f21t34.habittrak.user.HabitList;
 
 import java.util.ArrayList;
 
+/**
+ * HabitRecycler class to handle HabitRecyclerAdapter and implement
+ * ItemTouchHelper.SimpleCallback (for dragging habits) for the recycler
+ *
+ * @author Dakota
+ * @author Pranav
+ *
+ * @see HabitRecyclerAdapter
+ */
 public class HabitRecycler {
 
     private final String TAG = "HabitRecycler";
 
     private ArrayList<Habit> displayHabits;
     private HabitList habits;
-    private TodayHabitRecyclerAdapter adapter;
+    private HabitRecyclerAdapter adapter;
 
     private ItemTouchHelper.SimpleCallback simpleCallback;
 
@@ -26,7 +35,6 @@ public class HabitRecycler {
     private final RecyclerView.LayoutManager layoutManager;
 
     private boolean locked = false;
-
 
     /**
      * Standard Constructor for a recyclable view of habits.
@@ -52,8 +60,6 @@ public class HabitRecycler {
 
         // Sets up our simpleCallBack that manages the moving of objects in
         // the recycler view
-
-
     }
 
     /**
@@ -67,8 +73,7 @@ public class HabitRecycler {
      * @param habits A HabitList for getting the Habits from
      * @param locked A boolean who if is true, locks the recycler view
      */
-    public HabitRecycler(RecyclerView recyclerView, RecyclerView.LayoutManager layoutManager, ArrayList<Habit> displayHabits, HabitList habits, boolean locked){
-
+    public HabitRecycler(RecyclerView recyclerView, RecyclerView.LayoutManager layoutManager, ArrayList<Habit> displayHabits, HabitList habits, boolean locked) {
         // Sets up two list of habits, the ones to display and the HabitList of all habits
         this.displayHabits = displayHabits;
         this.habits = habits;
@@ -79,13 +84,7 @@ public class HabitRecycler {
         recyclerView.setLayoutManager(layoutManager);
 
         // Sets up our adapter with our displayHabits
-
-
-
-
-
     }
-
 
     /**
      * recycler
@@ -94,12 +93,11 @@ public class HabitRecycler {
      * in the view, and the indices of the habits involved,
      *
      * @author Dakota
-     * @author Nav
+     * @author Pranav
      *
      * @param locked boolean If true then locks the recycler view
      */
-    private ItemTouchHelper.SimpleCallback recycler(boolean locked){
-
+    private ItemTouchHelper.SimpleCallback recycler(boolean locked) {
         /**
          * Touch Helper for dragging habits
          *
@@ -115,20 +113,15 @@ public class HabitRecycler {
 
                 if (fromPosition < toPosition && toPosition < displayHabits.size()) {
                     for (int i = fromPosition; i < toPosition; i++) {
-
                         Log.d(TAG, "==swapping==");
-
                         Habit habit1 = displayHabits.get(i);
                         Habit habit2 = displayHabits.get(i + 1);
 
                         Log.d(TAG, "habit1 : " + String.valueOf(habit1.getTitle()) + "index in display: " + String.valueOf(i));
                         Log.d(TAG, "habit2 : " + String.valueOf(habit2.getTitle()) + "index in display: " + String.valueOf(i + 1) );
 
-
                         Log.d(TAG, "habit1 index before swap: " + String.valueOf(habit1.getIndex()));
                         Log.d(TAG, "habit2 index before swap: " + String.valueOf(habit2.getIndex()));
-
-
 
                         // We swap the habits in the main list rather then the views particular list
                         habits.swap(habit1.getIndex(), habit2.getIndex());
@@ -140,11 +133,8 @@ public class HabitRecycler {
                         Log.d(TAG, "habit1 index after swap: " + String.valueOf(habit1.getIndex()));
                         Log.d(TAG, "habit2 index after swap: " + String.valueOf(habit2.getIndex()));
 
-
                         Log.d(TAG, "====end====");
-
                         //habitsData.swap(i, i + 1);
-
                     }
                 } else if (toPosition >= 0) {
                     for (int i = fromPosition; i > toPosition; i--) {
@@ -160,14 +150,12 @@ public class HabitRecycler {
                         Log.d(TAG, "habit1 index before swap: " + String.valueOf(habit1.getIndex()));
                         Log.d(TAG, "habit2 index before swap: " + String.valueOf(habit2.getIndex()));
 
-
                         // We swap the habits in the main list rather then the views particular list
                         habits.swap(habit1.getIndex(), habit2.getIndex());
 
                         // Then we swap them in the display so that the for loop can continue before refreshing displayHabits
                         displayHabits.set(i, habit2);
                         displayHabits.set(i - 1, habit1);
-
 
                         Log.d(TAG, "habit1 index after swap: " + String.valueOf(habit1.getIndex()));
                         Log.d(TAG, "habit2 index after swap: " + String.valueOf(habit2.getIndex()));
@@ -176,11 +164,6 @@ public class HabitRecycler {
                     }
                 }
                 Log.d("Habit", "moved");
-
-
-
-
-
                 recyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
                 Log.d("Position", "From: " + Integer.toString(fromPosition) + " To: " + Integer.toString(toPosition));
                 return true;
@@ -188,7 +171,6 @@ public class HabitRecycler {
 
             @Override
             public boolean isLongPressDragEnabled() {
-
                 // is locked is true, then long press drag is disabled and user
                 // can't use recycler view
                 return !locked;
@@ -199,9 +181,7 @@ public class HabitRecycler {
                 // nothing function function
             }
         };
-
         return simpleCallback;
-
     }
 
     /**
@@ -221,7 +201,7 @@ public class HabitRecycler {
      * @author Dakota
      * @param adapter TodayHabitRecyclerAdapter to set
      */
-    public void setAdapter(TodayHabitRecyclerAdapter adapter) {
+    public void setAdapter(HabitRecyclerAdapter adapter) {
         this.adapter = adapter;
         recyclerView.setAdapter(adapter);
 
@@ -230,9 +210,7 @@ public class HabitRecycler {
         // Sets up touch handling with the recycler view
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
-
     }
-
 
     /**
      * setRecyclerVisibility.
@@ -246,10 +224,4 @@ public class HabitRecycler {
         else
             recyclerView.setVisibility(View.GONE);
     }
-
-
-
-
-
-
 }

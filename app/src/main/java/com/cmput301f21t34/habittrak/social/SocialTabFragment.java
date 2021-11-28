@@ -163,7 +163,6 @@ public class SocialTabFragment extends Fragment {
         }
     }
 
-
     /**
      * UI updates for when the data fetching is done
      */

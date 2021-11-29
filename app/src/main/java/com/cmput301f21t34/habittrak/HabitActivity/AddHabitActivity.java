@@ -10,7 +10,6 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
-import android.view.View;
 import android.widget.TextView;
 
 
@@ -24,6 +23,7 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.TimeZone;
 
 /**
@@ -38,11 +38,9 @@ public class AddHabitActivity extends AppCompatActivity {
     // views
     private TextInputEditText habitName;
     private TextInputEditText habitReason;
-    private MaterialButton datePickerButton;
     private TextView startDate;
     private TextView visibilityText;
     private Calendar calendar;
-    private MaterialButton saveButton;
     private MaterialButton mondayButton;
     private MaterialButton tuesdayButton;
     private MaterialButton wednesdayButton;
@@ -50,10 +48,9 @@ public class AddHabitActivity extends AppCompatActivity {
     private MaterialButton fridayButton;
     private MaterialButton saturdayButton;
     private MaterialButton sundayButton;
-    private SwitchMaterial publicSwitch;
     // data
     private boolean[] daysOfWeek = new boolean[]{true, true, true, true, true, true, true};
-    ;
+
     private boolean isPublic = true;
     private int buttonOffColor = Color.WHITE;
     private int tealColor;
@@ -77,10 +74,10 @@ public class AddHabitActivity extends AppCompatActivity {
 
         // Getting Views //
         startDate = findViewById(R.id.add_habit_selected_date);
-        datePickerButton = findViewById(R.id.star_date_button);
+        MaterialButton datePickerButton = findViewById(R.id.star_date_button);
         habitName = findViewById(R.id.habit_name_edit_text);
         habitReason = findViewById(R.id.habit_reason_edit_text);
-        saveButton = findViewById(R.id.save_habit);
+        MaterialButton saveButton = findViewById(R.id.save_habit);
         mondayButton = findViewById(R.id.monday_button);
         tuesdayButton = findViewById(R.id.tuesday_button);
         wednesdayButton = findViewById(R.id.wednesday_button);
@@ -88,7 +85,7 @@ public class AddHabitActivity extends AppCompatActivity {
         fridayButton = findViewById(R.id.friday_button);
         saturdayButton = findViewById(R.id.saturday_button);
         sundayButton = findViewById(R.id.sunday_button);
-        publicSwitch = findViewById(R.id.add_public_switch);
+        SwitchMaterial publicSwitch = findViewById(R.id.add_public_switch);
         visibilityText = findViewById(R.id.add_habit_visibility_text);
 
         // getting color
@@ -104,12 +101,8 @@ public class AddHabitActivity extends AppCompatActivity {
         materialDateBuilder.setTitleText("SELECT A DATE");
         final MaterialDatePicker materialDatePicker = materialDateBuilder.build();
 
-        datePickerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                materialDatePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
-            }
-        });
+        datePickerButton.setOnClickListener(view ->
+                materialDatePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER"));
 
         materialDatePicker.addOnPositiveButtonClickListener(selection -> {
             calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
@@ -131,7 +124,7 @@ public class AddHabitActivity extends AppCompatActivity {
 
         // get result
         saveButton.setOnClickListener(view -> {
-            if (!checkField(habitName.getText())) {
+            if (!checkField(Objects.requireNonNull(habitName.getText()))) {
                 habitName.setError("Input Required");
             } else {
                 finishActivityWithResult();
@@ -139,65 +132,29 @@ public class AddHabitActivity extends AppCompatActivity {
         });
 
         // button listeners
-        mondayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                changeButtonState(view, mondayButton, 0);
-            }
-        });
+        mondayButton.setOnClickListener(view -> changeButtonState(mondayButton, 0));
 
-        tuesdayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                changeButtonState(view, tuesdayButton, 1);
-            }
-        });
+        tuesdayButton.setOnClickListener(view -> changeButtonState(tuesdayButton, 1));
 
-        wednesdayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                changeButtonState(view, wednesdayButton, 2);
-            }
-        });
+        wednesdayButton.setOnClickListener(view -> changeButtonState(wednesdayButton, 2));
 
-        thursdayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                changeButtonState(view, thursdayButton, 3);
-            }
-        });
+        thursdayButton.setOnClickListener(view -> changeButtonState(thursdayButton, 3));
 
-        fridayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                changeButtonState(view, fridayButton, 4);
-            }
-        });
+        fridayButton.setOnClickListener(view -> changeButtonState(fridayButton, 4));
 
-        saturdayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                changeButtonState(view, saturdayButton, 5);
-            }
-        });
+        saturdayButton.setOnClickListener(view -> changeButtonState(saturdayButton, 5));
 
-        sundayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                changeButtonState(view, sundayButton, 6);
-            }
-        });
+        sundayButton.setOnClickListener(view -> changeButtonState(sundayButton, 6));
     }
 
     /**
      * Change the color of the button and arraylist data for days of week
      *
-     * @param view     Button View
      * @param button   to change the color
      * @param position which day to change
      * @author Pranav
      */
-    public void changeButtonState(View view, MaterialButton button, int position) {
+    public void changeButtonState(MaterialButton button, int position) {
         if (daysOfWeek[position]) {
             button.setBackgroundColor(buttonOffColor);
             daysOfWeek[position] = false;
@@ -236,8 +193,8 @@ public class AddHabitActivity extends AppCompatActivity {
      * @author Dakota
      */
     public void finishActivityWithResult() {
-        String name = habitName.getText().toString();
-        String reason = habitReason.getText().toString();
+        String name = Objects.requireNonNull(habitName.getText()).toString();
+        String reason = Objects.requireNonNull(habitReason.getText()).toString();
 
         Habit newHabit = new Habit(name, reason, calendar);
         newHabit.getOnDaysObj().setAll(daysOfWeek);

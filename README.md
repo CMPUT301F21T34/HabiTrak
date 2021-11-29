@@ -71,5 +71,5 @@ The goal of this project is to create a habit tracking app which also has social
  
 ## Notes
 
-<a name="myfootnote1">1</a>: Footnote content goes here
+#### All test files are included in androidTest because the entity classes implement interface **Utilities** that has an instance of **FirebaseFireStore**, and thus require Android instrumentation.  
 

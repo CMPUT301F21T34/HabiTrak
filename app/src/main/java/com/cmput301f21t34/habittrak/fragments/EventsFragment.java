@@ -37,10 +37,11 @@ import java.util.ArrayList;
  */
 public class EventsFragment extends Fragment {
 
+    // view
     private HabitRecycler habitRecycler;
-    private final ArrayList<Habit> habitsDisplayList;
     private final HabitRecyclerAdapter adapter;
-
+    // data
+    private final ArrayList<Habit> habitsDisplayList;
     private final User mainUser;
 
     public EventsFragment(User mainUser) {
@@ -56,7 +57,6 @@ public class EventsFragment extends Fragment {
         View view = inflater.inflate(R.layout.habi_all_habits_fragment, container, false);
 
         // Sets up views and manager for recycler view
-        // Attributes //
         // These are for the Recycler view
         RecyclerView habitRecyclerView = view.findViewById(R.id.all_recycler_view);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());

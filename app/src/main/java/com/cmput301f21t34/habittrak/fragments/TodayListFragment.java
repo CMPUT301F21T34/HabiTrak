@@ -174,11 +174,12 @@ public class TodayListFragment extends Fragment {
      * @param position position of habit from adapter
      */
     public void showMenu(View view, int position) {
+        // create menu
         PopupMenu menu = new PopupMenu(getContext(), view);
         menu.getMenuInflater().inflate(R.menu.social_popup_menu, menu.getMenu());
         menu.getMenu().add("Remove");
         menu.show();
-
+        // menu listener
         menu.setOnMenuItemClickListener(menuItem -> {
             Habit habit = habitsDisplayList.get(position);
             mainUser.getHabitList().remove(habit);

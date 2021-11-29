@@ -40,10 +40,12 @@ import java.util.ArrayList;
  */
 public class AllHabitsFragment extends Fragment {
 
+    // views
     private HabitRecycler habitRecycler;
     private final ArrayList<Habit> habitsDisplayList;
     private final HabitRecyclerAdapter adapter;
     private LinearLayout noDataLayout;
+    // data
     private final User mainUser;
     private final DatabaseManager dm = new DatabaseManager();
 
@@ -59,16 +61,16 @@ public class AllHabitsFragment extends Fragment {
         View view = inflater.inflate(R.layout.habi_all_habits_fragment, container, false);
 
         // Sets up views and manager for recycler view
-        // Attributes //
+        noDataLayout = view.findViewById(R.id.all_habit_no_data_view);
         // These are for the Recycler view
         RecyclerView habitRecyclerView = view.findViewById(R.id.all_recycler_view);
-        noDataLayout = view.findViewById(R.id.all_habit_no_data_view);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
 
         // Set the click listener interface for the adapter
         adapter.setHabitClickListener(new HabitRecyclerAdapter.HabitClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                // start the view/edit habit activity when recycler view row is clicked
                 Habit habit = habitsDisplayList.get(position);
                 Intent intent = new Intent(getContext(), ViewEditHabitActivity.class);
                 intent.putExtra("HABIT", habit);
@@ -93,13 +95,20 @@ public class AllHabitsFragment extends Fragment {
         return view;
     }
 
+    /**
+     * refresh the data list on fragment resume
+     */
     @Override
     public void onResume() {
         super.onResume();
         refreshAllFragment();
     }
 
+    /**
+     * set the layout visibility depending on the data in the displayList
+     */
     public void setLayoutVisibility() {
+       // if list is empty, then hide the recycler view and show no data text
         if (!(noDataLayout == null)) {
             if (habitsDisplayList.isEmpty()) {
                 noDataLayout.setVisibility(View.VISIBLE);
@@ -116,7 +125,7 @@ public class AllHabitsFragment extends Fragment {
      *
      * @author Dakota
      *
-     * refresh the habitsdata list to update the data
+     * refresh the habits data list to update the recycler view data
      */
     @SuppressLint("NotifyDataSetChanged")
     public void refreshAllFragment() {
@@ -137,15 +146,18 @@ public class AllHabitsFragment extends Fragment {
      * showMenu
      *
      * create a menu when Image Button is clicked
+     * used for removing a habit
      * @param view view from the adapter to create the menu
      * @param position position of habit from adapter
      */
     public void showMenu(View view, int position) {
+        // create menu
         PopupMenu menu = new PopupMenu(getContext(), view);
         menu.getMenuInflater().inflate(R.menu.social_popup_menu, menu.getMenu());
         menu.getMenu().add("Remove");
         menu.show();
 
+        // menu listener
         menu.setOnMenuItemClickListener(menuItem -> {
             Habit habit = habitsDisplayList.get(position);
             mainUser.getHabitList().remove(habit);

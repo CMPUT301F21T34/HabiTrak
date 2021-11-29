@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,6 +31,12 @@ import androidx.core.content.FileProvider;
 import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.user.HabitEvent;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.storage.FirebaseStorage;
@@ -64,6 +71,8 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
     private MaterialButton cameraBtn;
     private MaterialButton saveHabitEventBtn;
     private TextView completionDateCalendar;
+    private MapView mapView;
+    private GoogleMap map;
     // other variables
     private StorageReference mStorageRef;
     String currentPhotoPath;
@@ -113,6 +122,8 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
         cameraBtn = findViewById(R.id.camera_button_edit);
         saveHabitEventBtn = findViewById(R.id.save_habit_event_edit);
         completionDateCalendar = findViewById(R.id.completion_date_calendar);
+        mapView = (MapView) findViewById(R.id.view_event_map_view);
+        mapView.onCreate(Bundle.EMPTY);
 
         //get data from habit event
         String commentHabitEvent = habitEvent.getComment();
@@ -126,6 +137,17 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
         }
 
         Location locationHabitEvent = habitEvent.getLocation();
+        mapView.getMapAsync(googleMap -> {
+            map = googleMap;
+            LatLng latLng = new LatLng(40.7143528, -74.0059731);
+            if (locationHabitEvent != null){
+                latLng = new LatLng(locationHabitEvent.getLatitude(), locationHabitEvent.getLongitude());
+                mapView.setVisibility(View.VISIBLE);
+            }
+            map.addMarker(new MarkerOptions().position(latLng));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+        });
+
         // setting the data to the new habit event
         returnedHabitEvent.setCompletedDate(completedDate);
         returnedHabitEvent.setPhotograph(photoUri);

@@ -116,7 +116,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
             public void onMapReady(@NonNull GoogleMap googleMap) {
                 mMap = googleMap;
                 LatLng ny = new LatLng(40.7143528, -74.0059731);
-                mMap.addMarker(new MarkerOptions().position(ny));
+
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ny, 15));
             }
         });
@@ -178,6 +178,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
                     addressLine.setText(getAddress(eventLocation.getLatitude(), eventLocation.getLongitude()));
                     // set up the map
                     LatLng latLng = new LatLng(latitude, longitude);
+                    mMap.addMarker(new MarkerOptions().position(latLng));
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                     mapView.setVisibility(View.VISIBLE);
                 }

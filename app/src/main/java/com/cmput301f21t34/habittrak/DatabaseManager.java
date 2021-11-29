@@ -137,10 +137,7 @@ public class DatabaseManager {
         String TAG = "Delete";
         if (!isUniqueEmail(email)) {
             database.collection("users").document(email)
-                    .delete()
-                    .addOnSuccessListener(
-                            aVoid -> Log.d(TAG, "DocumentSnapshot successfully deleted!"))
-                    .addOnFailureListener(e -> Log.w(TAG, "Error deleting document", e));
+                    .delete();
             return true;
         }
         return false;
@@ -199,6 +196,7 @@ public class DatabaseManager {
                     followRequestedList, blockList, blockedByList);
             return user;
         } catch (Exception e) {
+            Log.d("PRINCE","in exception");
             throw new RuntimeException(e.getLocalizedMessage());
         }
     }

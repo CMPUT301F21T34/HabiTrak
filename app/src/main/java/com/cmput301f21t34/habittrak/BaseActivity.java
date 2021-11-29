@@ -67,7 +67,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
-
+        db.getUser("fattah@ualberta.ca");
         // Get main User.
         if (mainUser == null) {
             mainUser = getMainUser(this);

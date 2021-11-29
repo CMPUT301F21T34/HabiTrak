@@ -78,7 +78,7 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
 
 
         // set recycler view
-        recyclerView = findViewById(R.id.events_recycler_view);
+        recyclerView = findViewById(R.id.events_recycler_view_event);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         eventAdapter = new EventAdapter(eventDataList, new EventAdapter.EventClickListener() {

@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements Utilities {
         setContentView(R.layout.activity_main);
 
         // Get Log In State
+
         fUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if (fUser != null) {

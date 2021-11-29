@@ -52,11 +52,13 @@ public interface Utilities {
      */
     default void refreshHabitStreak(User user) {
         // Refreshes all habit streaks //
-        ArrayList<Habit> habits = (ArrayList<Habit>) user.getHabitList(); // cast for simple iteration
+        if (user != null) {
+            ArrayList<Habit> habits = (ArrayList<Habit>) user.getHabitList(); // cast for simple iteration
 
-        for (int index = 0; index < habits.size(); index++) {
-            Streak streak = new Streak(habits.get(index)); // set a Streak class to modify each habit
-            streak.refreshStreak(); // refreshes each streak
+            for (int index = 0; index < habits.size(); index++) {
+                Streak streak = new Streak(habits.get(index)); // set a Streak class to modify each habit
+                streak.refreshStreak(); // refreshes each streak
+            }
         }
     }
 

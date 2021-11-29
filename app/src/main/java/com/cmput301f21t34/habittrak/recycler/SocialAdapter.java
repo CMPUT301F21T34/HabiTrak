@@ -39,6 +39,8 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
     public static final String UNBLOCK = "Unblock";
     public static final String UNFOLLOW = "Unfollow";
 
+    // data variables
+    // copies are there for implementing filter
     private final SocialFragment socialRef;
     private User mainUser;
     private ArrayList<String> UUIDsCopy;
@@ -48,8 +50,10 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
     private ArrayList<String> UUIDs;
     private ArrayList<String> usernames;
     private ArrayList<String> bios;
+    // listener
     private SocialListener socialListener;
 
+    // interface for the listener function
     public interface SocialListener {
         void onItemClick(View view, int position);
     }
@@ -73,7 +77,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
      *
      * @param socialListener The described listener
      */
-    public void setSocialListener(final SocialListener socialListener){
+    public void setSocialListener(final SocialListener socialListener) {
         this.socialListener = socialListener;
     }
 
@@ -117,6 +121,14 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         this.mainUser = mainUser;
     }
 
+
+    /**
+     * sets the data list.
+     *
+     * @param UUIDs     UUIDs list
+     * @param usernames usernames list
+     * @param bios      bios list
+     */
     public void setList(ArrayList<String> UUIDs, ArrayList<String> usernames, ArrayList<String> bios) {
         this.UUIDs = UUIDs;
         this.UUIDsCopy = UUIDs;
@@ -178,6 +190,12 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         return UUIDs.size();
     }
 
+    /**
+     * filter for implementing the search bar.
+     * it filters the list based on the input of the searchBox
+     *
+     * @return
+     */
     @Override
     public Filter getFilter() {
         return new Filter() {

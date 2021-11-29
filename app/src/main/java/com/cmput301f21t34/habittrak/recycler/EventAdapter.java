@@ -19,13 +19,16 @@ import java.util.Locale;
 
 /**
  * EventAdapter
- *
+ * <p>
  * recycler view adapter for viewing events
+ *
  * @author Pranav
  * @version 1.0
  * @since Nov 26, 2021
  */
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
+
+    // attributes
     private ArrayList<HabitEvent> events;
     private final EventClickListener listener;
 
@@ -34,16 +37,24 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         this.listener = listener;
     }
 
+    // interface for listener functions
     public interface EventClickListener {
         void menuButtonClick(View view, int position);
+
         void itemClick(View view, int position);
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener {
+    /**
+     * view holder for EventAdapter
+     * holds and connects the views of recycler view
+     */
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        // views
         private final TextView comment;
         private final TextView date;
         private final ImageButton menuButton;
+        // listener reference
         private EventClickListener listenerRef;
 
         public ViewHolder(View view) {
@@ -57,24 +68,37 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             menuButton.setOnClickListener(this);
         }
 
+        /**
+         * getter for comment TextView
+         *
+         * @return textView of comment
+         */
         public TextView getComment() {
             return comment;
         }
 
+        /**
+         * getter for data textView
+         *
+         * @return textView of data
+         */
         public TextView getDate() {
             return date;
         }
 
         @Override
         public void onClick(View view) {
-            if (listenerRef != null){
-                if (view.getId() == R.id.events_menu){
+            if (listenerRef != null) {
+                if (view.getId() == R.id.events_menu) {
+                    // listener for menu button
                     listenerRef.menuButtonClick(view, getAdapterPosition());
                 } else {
+                    // listener for the whole recycler row
                     listenerRef.itemClick(view, getAdapterPosition());
                 }
             }
         }
+
     }
 
     @NonNull
@@ -102,10 +126,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
     /**
      * get the String value from calendar
+     *
      * @param calendar date to convert to string
      * @return string value of type Month, Day
      */
-    public String getDate(Calendar calendar){
+    public String getDate(Calendar calendar) {
         String month = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
         String day = Integer.toString(calendar.get(Calendar.DAY_OF_MONTH));
         return month + ", " + day;

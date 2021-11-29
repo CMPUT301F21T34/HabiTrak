@@ -1,5 +1,6 @@
 package com.cmput301f21t34.habittrak.recycler;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -14,33 +15,33 @@ import java.util.ArrayList;
 /**
  * HabitRecycler class to handle HabitRecyclerAdapter and implement
  * ItemTouchHelper.SimpleCallback (for dragging habits) for the recycler
+ * Used in TodayListFragment, AllHabitsFragment and Events Fragment for display habits
  *
  * @author Dakota
  * @author Pranav
- *
  * @see HabitRecyclerAdapter
  */
 public class HabitRecycler {
 
-
+    // data list
     private ArrayList<Habit> displayHabits;
     private HabitList habits;
+    // recycler data
     private HabitRecyclerAdapter adapter;
-
-    private ItemTouchHelper.SimpleCallback simpleCallback;
-
     private final RecyclerView recyclerView;
-
+    // ItemTouchHelper for dragging rows
+    private ItemTouchHelper.SimpleCallback simpleCallback;
+    // boolean for locking the drag feature
     private boolean locked = false;
 
     /**
      * Standard Constructor for a recyclable view of habits.
      *
-     * @author Dakota
-     * @param recyclerView The RecyclerView to use
+     * @param recyclerView  The RecyclerView to use
      * @param layoutManager The Layout Manger from the activity to use
      * @param displayHabits An ArrayList<Habit> for using as a display list
-     * @param habits A HabitList for getting the Habits from
+     * @param habits        A HabitList for getting the Habits from
+     * @author Dakota
      */
     public HabitRecycler(RecyclerView recyclerView, RecyclerView.LayoutManager layoutManager, ArrayList<Habit> displayHabits, HabitList habits) {
 
@@ -51,23 +52,18 @@ public class HabitRecycler {
         // Sets up recycler view and its layout manger
         this.recyclerView = recyclerView;
         recyclerView.setLayoutManager(layoutManager);
-
-        // Sets up our adapter with our displayHabits
-
-        // Sets up our simpleCallBack that manages the moving of objects in
-        // the recycler view
     }
 
     /**
      * Standard Constructor for a recyclable view of habits with lock boolean
      * to pass
      *
-     * @author Dakota
-     * @param recyclerView The RecyclerView to use
+     * @param recyclerView  The RecyclerView to use
      * @param layoutManager The Layout Manger from the activity to use
      * @param displayHabits An ArrayList<Habit> for using as a display list
-     * @param habits A HabitList for getting the Habits from
-     * @param locked A boolean who if is true, locks the recycler view
+     * @param habits        A HabitList for getting the Habits from
+     * @param locked        A boolean who if is true, locks the recycler view
+     * @author Dakota
      */
     public HabitRecycler(RecyclerView recyclerView, RecyclerView.LayoutManager layoutManager, ArrayList<Habit> displayHabits, HabitList habits, boolean locked) {
         // Sets up two list of habits, the ones to display and the HabitList of all habits
@@ -77,20 +73,17 @@ public class HabitRecycler {
         // Sets up recycler view and its layout manger
         this.recyclerView = recyclerView;
         recyclerView.setLayoutManager(layoutManager);
-
-        // Sets up our adapter with our displayHabits
     }
 
     /**
      * recycler
-     *
+     * <p>
      * Handles the recycler views logic, swapping the indices
      * in the view, and the indices of the habits involved,
      *
+     * @param locked boolean If true then locks the recycler view
      * @author Dakota
      * @author Pranav
-     *
-     * @param locked boolean If true then locks the recycler view
      */
     private ItemTouchHelper.SimpleCallback recycler(boolean locked) {
         /**
@@ -153,11 +146,12 @@ public class HabitRecycler {
 
     /**
      * notifyDataSetChanged
-     *
+     * <p>
      * Allows user to notify the adapter that the data set has changed
      *
      * @author Dakota
      */
+    @SuppressLint("NotifyDataSetChanged")
     public void notifyDataSetChanged() {
         this.adapter.notifyDataSetChanged();
     }
@@ -165,8 +159,8 @@ public class HabitRecycler {
     /**
      * Allows to set adapter.
      *
-     * @author Dakota
      * @param adapter TodayHabitRecyclerAdapter to set
+     * @author Dakota
      */
     public void setAdapter(HabitRecyclerAdapter adapter) {
         this.adapter = adapter;
@@ -181,9 +175,10 @@ public class HabitRecycler {
 
     /**
      * setRecyclerVisibility.
+     * <p>
+     * function to hide the recycler view
      *
-     * to show recycler or not if there is no data
-     * @param view to show the recycler or not
+     * @param view boolean value
      */
     public void setRecyclerVisibility(boolean view) {
         if (view)

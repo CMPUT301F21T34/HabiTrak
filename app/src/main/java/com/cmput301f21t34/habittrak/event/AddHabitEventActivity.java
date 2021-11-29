@@ -52,20 +52,23 @@ import java.util.Locale;
  * Takes a habit and returns the new habit event
  */
 public class AddHabitEventActivity extends AppCompatActivity implements View.OnClickListener {
-
-    Button cameraButton;
-    Button galleryButton;
-    Button mapButton;
-    Button addButton;
-    TextInputEditText commentText;
-    ImageView image;
-    TextView addressLine;
+    // static variables
     public static int RESULT_CODE = 3000;
     public static final int CAMERA_PERMISSION_CODE = 100;
+    // views
+    private Button cameraButton;
+    private Button galleryButton;
+    private Button mapButton;
+    private Button addButton;
+    private TextInputEditText commentText;
+    private ImageView image;
+    private TextView addressLine;
+    // data
     private StorageReference mStorageRef;
-    String currentPhotoPath;
-    HabitEvent habitEvent;
-    DatabaseManager db;
+    private String currentPhotoPath;
+    private HabitEvent habitEvent;
+    private DatabaseManager db;
+    // launchers
     ActivityResultLauncher<Intent> cameraActivityResultLauncher;
     ActivityResultLauncher<Intent> galleryActivityResultLauncher;
     ActivityResultLauncher<Intent> mapActivityResultLauncher;
@@ -124,7 +127,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
         cameraActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK ) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
                         File f = new File(currentPhotoPath);
                         image.setImageURI(Uri.fromFile(f));
                         Uri contentUri = Uri.fromFile(f);
@@ -139,7 +142,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
         // the activity launcher for starting map activity
         mapActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                if (result.getData().getBooleanExtra("permission",false)) {
+                if (result.getData().getBooleanExtra("permission", false)) {
                     double latitude = result.getData().getDoubleExtra("latitude", 0.000000);
                     double longitude = result.getData().getDoubleExtra("longitude", 0.000000);
                     Location eventLocation = new Location("gps");
@@ -160,13 +163,15 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
 
     /**
      * onClick
-     *
+     * <p>
      * Handles behavior of the onClick() method for all buttons in AddHabitEventActivity
+     *
      * @param view current view
      */
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.addHabitEventButton) {
+            // listener for add habit event button
             habitEvent.setComment(commentText.getText().toString());
             ArrayList<HabitEvent> currentEventList = habit.getHabitEvents();
             currentEventList.add(habitEvent);
@@ -174,30 +179,33 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
             // Pass the result back to BaseActivity
             Intent result = new Intent();
             result.putExtra("HABIT", habit);
-            result.putExtra("HABIT_EVENT",habitEvent);
+            result.putExtra("HABIT_EVENT", habitEvent);
             setResult(RESULT_CODE, result);
             this.finish();
         } else if (view.getId() == R.id.mapButton) {
+            // listener for add location button
             addressLine.setText("");
             Intent map = new Intent(view.getContext(), MapsActivity.class);
             mapActivityResultLauncher.launch(map);
         } else if (view.getId() == R.id.GalleryButton) {
-            Intent gallery = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            // listener for add from gallery button
+            Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             galleryActivityResultLauncher.launch(gallery);
         } else if (view.getId() == R.id.CameraButton) {
+            // listener for add from camera button
             askCameraPermission();
         }
     }
 
     /**
      * askCameraPermission
-     *
+     * <p>
      * Asks the user for permission to use the camera
      * and if the permission has already been granted starts the process of taking picture using the camera
      */
     private void askCameraPermission() {
         if (ContextCompat.checkSelfPermission(AddHabitEventActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(AddHabitEventActivity.this, new String[] {
+            ActivityCompat.requestPermissions(AddHabitEventActivity.this, new String[]{
                     Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
         } else {
             dispatchTakePictureIntent();
@@ -206,7 +214,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
 
     /**
      * dispatchTakePictureIntent
-     *
+     * <p>
      * creates the intent for taking picture with the camera and starts the activity
      */
     private void dispatchTakePictureIntent() {
@@ -216,7 +224,8 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
         try {
             photoFile = createImageFile();
 
-        } catch (IOException ex) { }
+        } catch (IOException ex) {
+        }
         // Continue only if the File was successfully created
         if (photoFile != null) {
             Uri photoURI = FileProvider.getUriForFile(this,
@@ -230,8 +239,9 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
 
     /**
      * createImageFile
-     *
+     * <p>
      * creates an image file and returns the file
+     *
      * @return File returns the image file
      * @throws IOException could throw permission denied exception
      */
@@ -253,10 +263,11 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
 
     /**
      * onRequestPermissionsResult
-     *
+     * <p>
      * Processes the permission for the camera and starts the process for taking photos with the camera
-     * @param requestCode int: The request code passed in ActivityCompat.requestPermissions(android.app.Activity, String[], int)
-     * @param permissions String: The requested permissions. Never null.
+     *
+     * @param requestCode  int: The request code passed in ActivityCompat.requestPermissions(android.app.Activity, String[], int)
+     * @param permissions  String: The requested permissions. Never null.
      * @param grantResults int: The grant results for the corresponding permissions which is either
      *                     PackageManager.PERMISSION_GRANTED or PackageManager.PERMISSION_DENIED.
      *                     Never null.
@@ -288,9 +299,10 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
 
     /**
      * getAddress
-     *
+     * <p>
      * returns the street address in the mentioned latitude and longitude
-     * @param latitude double, the latitude of the location
+     *
+     * @param latitude  double, the latitude of the location
      * @param longitude double, the longitude of the location
      * @return String, the address of the location
      */

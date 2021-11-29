@@ -53,28 +53,31 @@ import java.util.Locale;
  */
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    // static variables
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 110;
     private static final int REQUEST_CHECK_SETTINGS = 10001;
+    // result variables
+    private final int UPDATE_INTERVAL = 10000;
+    private final int FASTEST_INTERVAL = 5000;
+    private static final int DEFAULT_ZOOM = 15;
+    // map variables
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
     private FusedLocationProviderClient fusedLocationClient;
     boolean locationPermissionGranted = false;
     private Location lastKnownLocation;
-    private final int UPDATE_INTERVAL = 10000;
-    private final int FASTEST_INTERVAL = 5000;
-    private static final int DEFAULT_ZOOM = 15;
-    private CircularProgressIndicator loading;
-    LocationRequest locationRequest;
-    Button confirmButton;
-    TextView addressTextView;
     private LocationCallback locationCallback;
+    LocationRequest locationRequest;
+    // views
+    private Button confirmButton;
+    private TextView addressTextView;
+    private CircularProgressIndicator loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        loading = findViewById(R.id.map_loading);
 
         // creating a location request object
         locationRequest = LocationRequest.create();
@@ -85,6 +88,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // getting Location Permission from the user
         getLocationPermission();
 
+        // getting views
+        loading = findViewById(R.id.map_loading);
         confirmButton = findViewById(R.id.confirm_button);
         addressTextView = findViewById(R.id.addressText);
 
@@ -99,7 +104,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (locationResult == null) {
                     return;
                 }
-                for (Location location:locationResult.getLocations()) { }
+                for (Location location : locationResult.getLocations()) {
+                }
                 lastKnownLocation = locationResult.getLastLocation();
                 stopLocationUpdates();
                 updateLocationUI(lastKnownLocation);
@@ -114,7 +120,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Return the chosen location after confirm button has been pressed
         confirmButton.setOnClickListener(view -> {
             Intent result = new Intent();
-            result.putExtra("permission",true);
+            result.putExtra("permission", true);
             result.putExtra("latitude", lastKnownLocation.getLatitude());
             result.putExtra("longitude", lastKnownLocation.getLongitude());
             setResult(RESULT_OK, result);
@@ -126,16 +132,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CHECK_SETTINGS) {
-                // check if the gps has been turned on
-                if (resultCode == Activity.RESULT_OK) {
-                    startLocationUpdates();
-                }
+            // check if the gps has been turned on
+            if (resultCode == Activity.RESULT_OK) {
+                startLocationUpdates();
+            }
         }
     }
 
     /**
      * checkSettingsAndStartLocationUpdates
-     *
+     * <p>
      * check whether the location setting has been turned on if it hasn't been turned on then ask
      * permission from the user and turn it on. After turning it on start requesting location updates
      */
@@ -156,14 +162,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     ResolvableApiException resolvable = (ResolvableApiException) e;
                     resolvable.startResolutionForResult(MapsActivity.this,
                             REQUEST_CHECK_SETTINGS);
-                } catch (IntentSender.SendIntentException sendEx) { }
+                } catch (IntentSender.SendIntentException sendEx) {
+                }
             }
         });
     }
 
     /**
      * stopLocationUpdates
-     *
+     * <p>
      * stop the location update requests
      */
     private void stopLocationUpdates() {
@@ -172,20 +179,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * startLocationUpdates
-     *
+     * <p>
      * start the location updates request if the permission for accessing the user's location has
      * been granted
      */
     @SuppressLint("MissingPermission")
     private void startLocationUpdates() {
         if (locationPermissionGranted) {
-            fusedLocationClient.requestLocationUpdates(locationRequest,locationCallback, Looper.getMainLooper());
+            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
         }
     }
 
     /**
      * onMapReady
-     *
+     * <p>
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
      * This is where we can add markers or lines, add listeners or move the camera. In this case,
@@ -209,7 +216,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * getLocationPermission
-     *
+     * <p>
      * Prompts the user for permission to use the device location.
      */
     private void getLocationPermission() {
@@ -232,10 +239,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * onRequestPermissionsResult
-     *
+     * <p>
      * Handles the result of the request for location permissions.
-     * @param requestCode int: The request code passed in ActivityCompat.requestPermissions(android.app.Activity, String[], int)
-     * @param permissions String: The requested permissions. Never null.
+     *
+     * @param requestCode  int: The request code passed in ActivityCompat.requestPermissions(android.app.Activity, String[], int)
+     * @param permissions  String: The requested permissions. Never null.
      * @param grantResults int: The grant results for the corresponding permissions which is either
      *                     PackageManager.PERMISSION_GRANTED or PackageManager.PERMISSION_DENIED.
      *                     Never null.
@@ -254,7 +262,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 } else {
                     Toast.makeText(this, "The app needs the location permission to choose location", Toast.LENGTH_LONG).show();
                     Intent result = new Intent();
-                    result.putExtra("permission",false);
+                    result.putExtra("permission", false);
                     result.putExtra("latitude", 0.0000);
                     result.putExtra("longitude", 0.0000);
                     setResult(RESULT_OK, result);
@@ -266,12 +274,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * setMarker
-     *
+     * <p>
      * sets marker on the appropriate location in the google map
+     *
      * @param lastKnownLocation Location, the location to set the marker on
      */
     private void setMarker(Location lastKnownLocation) {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(lastKnownLocation.getLatitude(),lastKnownLocation.getLongitude())));
+        mMap.addMarker(new MarkerOptions().position(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude())));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                 new LatLng(lastKnownLocation.getLatitude(),
                         lastKnownLocation.getLongitude()), DEFAULT_ZOOM));
@@ -279,7 +288,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * updateLocationUI
-     *
+     * <p>
      * updates the UI of the map and handles myLocationButton
      */
     private void updateLocationUI(Location loc) {
@@ -292,7 +301,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.getUiSettings().setMyLocationButtonEnabled(true);
                 mMap.clear();
                 setMarker(loc);
-                addressTextView.setText(getAddress(loc.getLatitude(),loc.getLongitude()));
+                addressTextView.setText(getAddress(loc.getLatitude(), loc.getLongitude()));
             } else {
                 mMap.setMyLocationEnabled(false);
                 mMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -306,9 +315,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * getAddress
-     *
+     * <p>
      * returns the street address in the mentioned latitude and longitude
-     * @param latitude double, the latitude of the location
+     *
+     * @param latitude  double, the latitude of the location
      * @param longitude double, the longitude of the location
      * @return String, the address of the location
      */

@@ -46,6 +46,10 @@ import java.util.Locale;
 
 public class ViewEditHabitEventActivity extends AppCompatActivity {
 
+    // result variables
+    public static int RESULT_CODE = 4000;
+    public static final int CAMERA_PERMISSION_CODE = 100;
+    // views
     private TextInputEditText comment;
     private TextView addressLine;
     private ImageView image;
@@ -53,13 +57,11 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
     private MaterialButton cameraBtn;
     private MaterialButton saveHabitEventBtn;
     private TextView completionDateCalendar;
-    public static int RESULT_CODE = 4000;
-    public static final int CAMERA_PERMISSION_CODE = 100;
+    // other variables
     private StorageReference mStorageRef;
     String currentPhotoPath;
     private HabitEvent returnedHabitEvent;
-
-    DatabaseManager db;
+    private DatabaseManager db;
     // launcher variables
     ActivityResultLauncher<Intent> cameraActivityResultLauncher;
     ActivityResultLauncher<Intent> galleryActivityResultLauncher;
@@ -135,7 +137,7 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
 
         // set address
         if (locationHabitEvent != null) {
-            addressLine.setText(getAddress(locationHabitEvent.getLatitude(),locationHabitEvent.getLongitude()));
+            addressLine.setText(getAddress(locationHabitEvent.getLatitude(), locationHabitEvent.getLongitude()));
         } else {
 
             addressLine.setText("No location selected");
@@ -164,7 +166,7 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
 
-                    if (result.getResultCode() == Activity.RESULT_OK ) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
                         File f = new File(currentPhotoPath);
                         image.setImageURI(Uri.fromFile(f));
                         Uri contentUri = Uri.fromFile(f);
@@ -183,7 +185,7 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
         // handling the onclick listener
         cameraBtn.setOnClickListener(view -> askCameraPermission());
         galleryBtn.setOnClickListener(view -> {
-            Intent gallery = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             galleryActivityResultLauncher.launch(gallery);
         });
         // handling the save button click
@@ -204,7 +206,7 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
 
     /**
      * askCameraPermission
-     *
+     * <p>
      * Asks the user for permission to use the camera
      * and if the permission has already been granted starts the process of taking picture using the camera
      */
@@ -219,7 +221,7 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
 
     /**
      * dispatchTakePictureIntent
-     *
+     * <p>
      * creates the intent for taking picture with the camera and starts the activity
      */
     private void dispatchTakePictureIntent() {
@@ -249,8 +251,9 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
 
     /**
      * createImageFile
-     *
+     * <p>
      * creates an image file and returns the file
+     *
      * @return File returns the image file
      * @throws IOException could throw permission denied exception
      */
@@ -272,10 +275,11 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
 
     /**
      * onRequestPermissionsResult
-     *
+     * <p>
      * Processes the permission for the camera and starts the process for taking photos with the camera
-     * @param requestCode int: The request code passed in ActivityCompat.requestPermissions(android.app.Activity, String[], int)
-     * @param permissions String: The requested permissions. Never null.
+     *
+     * @param requestCode  int: The request code passed in ActivityCompat.requestPermissions(android.app.Activity, String[], int)
+     * @param permissions  String: The requested permissions. Never null.
      * @param grantResults int: The grant results for the corresponding permissions which is either
      *                     PackageManager.PERMISSION_GRANTED or PackageManager.PERMISSION_DENIED.
      *                     Never null.
@@ -307,9 +311,10 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
 
     /**
      * getAddress
-     *
+     * <p>
      * returns the street address in the mentioned latitude and longitude
-     * @param latitude double, the latitude of the location
+     *
+     * @param latitude  double, the latitude of the location
      * @param longitude double, the longitude of the location
      * @return String, the address of the location
      */

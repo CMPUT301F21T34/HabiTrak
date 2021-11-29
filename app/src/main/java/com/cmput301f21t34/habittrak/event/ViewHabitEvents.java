@@ -89,7 +89,6 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
 
             @Override
             public void itemClick(View view, int position) {
-
                 startViewEventActivity(position);
             }
         });
@@ -183,6 +182,7 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.events_confirm_changes:
+                // listener for confirm changes button
                 Intent result = new Intent();
                 habit.setHabitEvents(eventDataList);
                 result.putExtra("HABIT", habit);
@@ -197,4 +197,6 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
         onBackPressed();
         return true;
     }
+
 }
+

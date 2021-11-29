@@ -149,7 +149,7 @@ public class Streak {
         Calendar testDate = Calendar.getInstance();
         testDate.set(2021, 02, 28);
 
-        if (comparator.compare(currentStreakDateEnd, testDate) == -1) {
+        if (comparator.compare(currentStreakDateEnd, testDate) < 0 ) {
             // We are testing, don't update DateEnd
         } else {
             currentStreakDateEnd = Calendar.getInstance(); // set to today

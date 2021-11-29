@@ -31,8 +31,6 @@ import java.util.TimeZone;
 
 public interface Utilities {
 
-    DatabaseManager db = new DatabaseManager();
-
     /**
      * updates the database with a user's habit list
      *
@@ -40,6 +38,7 @@ public interface Utilities {
      * @param user User to update in database
      */
     default void updateHabitListDB(User user) {
+        DatabaseManager db = new DatabaseManager();
 
         if (user != null) {
             db.updateHabitList(user.getEmail(), user.getHabitList());
@@ -127,6 +126,8 @@ public interface Utilities {
      * @return User from database using FirebaseUser
      */
     default User getMainUser(Activity activity) {
+        DatabaseManager db = new DatabaseManager();
+
         // Updates the mainUser, even if they are already logged in
         FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
         if (fUser == null) {

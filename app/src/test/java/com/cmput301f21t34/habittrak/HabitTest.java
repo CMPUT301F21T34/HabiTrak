@@ -156,22 +156,22 @@ public class HabitTest {
         // Create some events
 
         Calendar event0Day = Calendar.getInstance();
-        event0Day.set(2020, 12, 29);
+        event0Day.set(2020, Calendar.DECEMBER, 29);
 
         HabitEvent event0 = new HabitEvent("event0", event0Day, loc, null); // null photo since URI is not mocked
 
         Calendar event1Day = Calendar.getInstance();
-        event1Day.set(2021, 1, 1);
+        event1Day.set(2021, Calendar.JANUARY, 1);
 
         HabitEvent event1 = new HabitEvent("event1", event1Day, loc, null);
 
         Calendar event2Day = Calendar.getInstance();
-        event2Day.set(2021, 1, 5);
+        event2Day.set(2021, Calendar.JANUARY, 5);
 
         HabitEvent event2 = new HabitEvent("event2", event2Day, loc, null);
 
         Calendar event3Day = Calendar.getInstance();
-        event3Day.set(2021, 1, 8);
+        event3Day.set(2021, Calendar.JANUARY, 8);
 
         HabitEvent event3 = new HabitEvent("event3", event3Day, loc, null);
 
@@ -187,7 +187,7 @@ public class HabitTest {
 
         // Refresh streak //
         Calendar testDay = Calendar.getInstance();
-        testDay.set(2021, 1, 10);
+        testDay.set(2021, Calendar.JANUARY, 9);
         habit.setCurrentStreakDateEnd(testDay);
 
         Streak streak = new Streak(habit);

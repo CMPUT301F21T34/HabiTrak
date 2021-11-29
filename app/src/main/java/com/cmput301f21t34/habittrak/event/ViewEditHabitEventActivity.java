@@ -68,6 +68,7 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
     // views
     private TextInputEditText comment;
     private TextView addressLine;
+    private TextView noPhotoText;
     private ImageView image;
     private MaterialButton galleryBtn;
     private MaterialButton cameraBtn;
@@ -119,6 +120,7 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
         // get views
         comment = findViewById(R.id.comment_edit_text);
         addressLine = findViewById(R.id.address_line_edit);
+        noPhotoText = findViewById(R.id.view_no_photo_text);
         image = findViewById(R.id.photo_edit);
         galleryBtn = findViewById(R.id.gallery_button_edit);
         cameraBtn = findViewById(R.id.camera_button_edit);
@@ -136,6 +138,9 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
             photoUri = Uri.parse(habitEvent.getPhotograph());
         } else {
             photoUri = null;
+            noPhotoText.setVisibility(View.VISIBLE);
+            image.setVisibility(View.GONE);
+
         }
 
         Location locationHabitEvent = habitEvent.getLocation();
@@ -188,7 +193,8 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
                         Uri contentUri = result.getData().getData();
                         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                         String imageFileName = "JPEG_" + timeStamp + "." + getFileExt(contentUri);
-
+                        noPhotoText.setVisibility(View.GONE);
+                        image.setVisibility(View.VISIBLE);
                         image.setImageURI(contentUri);
                         returnedHabitEvent.setPhotograph(db.uploadImageToFirebase(imageFileName, contentUri, mStorageRef));
                     }
@@ -200,6 +206,8 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
 
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         File f = new File(currentPhotoPath);
+                        noPhotoText.setVisibility(View.GONE);
+                        image.setVisibility(View.VISIBLE);
                         image.setImageURI(Uri.fromFile(f));
                         Uri contentUri = Uri.fromFile(f);
                         returnedHabitEvent.setPhotograph(db.uploadImageToFirebase(f.getName(), contentUri, mStorageRef));
@@ -207,6 +215,7 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
                         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                         //Uri contentUri = Uri.fromFile(f);
                         mediaScanIntent.setData(contentUri);
+
                         ViewEditHabitEventActivity.this.sendBroadcast(mediaScanIntent);
 
                     } else {

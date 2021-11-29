@@ -114,6 +114,16 @@
             android:text="Gallery" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/view_no_photo_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No Photo Added"
+        android:textColor="?android:textColorPrimary"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/roboto_black"
+        android:visibility="gone"/>
 
     <ImageView
         android:id="@+id/photo_edit"

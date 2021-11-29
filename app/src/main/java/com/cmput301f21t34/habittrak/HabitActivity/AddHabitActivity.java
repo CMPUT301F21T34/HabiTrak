@@ -28,13 +28,14 @@ import java.util.TimeZone;
 
 /**
  * AddHabitActivity
- *
+ * <p>
  * activity for adding new habit
  *
  * @author Pranav
  */
 public class AddHabitActivity extends AppCompatActivity {
 
+    // views
     private TextInputEditText habitName;
     private TextInputEditText habitReason;
     private MaterialButton datePickerButton;
@@ -50,7 +51,9 @@ public class AddHabitActivity extends AppCompatActivity {
     private MaterialButton saturdayButton;
     private MaterialButton sundayButton;
     private SwitchMaterial publicSwitch;
-    private boolean[] daysOfWeek = new boolean[]{true, true, true, true, true, true, true};;
+    // data
+    private boolean[] daysOfWeek = new boolean[]{true, true, true, true, true, true, true};
+    ;
     private boolean isPublic = true;
     private int buttonOffColor = Color.WHITE;
     private int tealColor;
@@ -60,7 +63,7 @@ public class AddHabitActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_habit);
 
-        // check if dark mode
+        // change the button of color of weekdays selector in dark mode
         int nightModeCheck = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
         if (nightModeCheck == Configuration.UI_MODE_NIGHT_YES) {
             buttonOffColor = Color.BLACK;
@@ -115,7 +118,7 @@ public class AddHabitActivity extends AppCompatActivity {
             startDate.setText(date);
         });
 
-        // switcher listener
+        // switcher listener for selecting if the habit is public or private
         publicSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b) {
                 isPublic = true;
@@ -127,15 +130,11 @@ public class AddHabitActivity extends AppCompatActivity {
         });
 
         // get result
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String name = habitName.getText().toString();
-                if(!checkField(habitName.getText())){
-                    habitName.setError("Input Required");
-                } else {
-                    finishActivityWithResult();
-                }
+        saveButton.setOnClickListener(view -> {
+            if (!checkField(habitName.getText())) {
+                habitName.setError("Input Required");
+            } else {
+                finishActivityWithResult();
             }
         });
 
@@ -191,15 +190,15 @@ public class AddHabitActivity extends AppCompatActivity {
     }
 
     /**
-     * Change the color of the button and the arraylist for days of week
-     * @param view Button View
-     * @param button to change the color
+     * Change the color of the button and arraylist data for days of week
+     *
+     * @param view     Button View
+     * @param button   to change the color
      * @param position which day to change
      * @author Pranav
      */
-
     public void changeButtonState(View view, MaterialButton button, int position) {
-        if(daysOfWeek[position]) {
+        if (daysOfWeek[position]) {
             button.setBackgroundColor(buttonOffColor);
             daysOfWeek[position] = false;
         } else {
@@ -210,6 +209,7 @@ public class AddHabitActivity extends AppCompatActivity {
 
     /**
      * get the String value from calendar
+     *
      * @param calendar date to convert to string
      * @return string value of type Month, Day
      */
@@ -221,6 +221,7 @@ public class AddHabitActivity extends AppCompatActivity {
 
     /**
      * Check if the fields are  filled or not
+     *
      * @param name Editable name to check if empty
      * @return boolean whether filled or not
      */

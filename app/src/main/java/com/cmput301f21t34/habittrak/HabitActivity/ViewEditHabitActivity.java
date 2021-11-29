@@ -77,7 +77,7 @@ public class ViewEditHabitActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_edit_habit);
 
-        // check if dark mode
+        // check if dark mode and change the button off color
         int nightModeCheck = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
         if (nightModeCheck == Configuration.UI_MODE_NIGHT_YES) {
             buttonOffColor = Color.BLACK;
@@ -148,7 +148,6 @@ public class ViewEditHabitActivity extends AppCompatActivity implements View.OnC
             bestStreakEnd.setText(streakDateFormat.format(habit.getBestStreakDateEnd().getTime()));
             bestStreakTotal.setText(String.valueOf(habit.getBestStreak()));
         }
-
         totalEventCompleted.setText(String.valueOf(habit.getHabitEvents().size()));
 
         // setting date
@@ -181,7 +180,7 @@ public class ViewEditHabitActivity extends AppCompatActivity implements View.OnC
             startDate.setText(date);
         });
 
-        // switch listener
+        // switch listener to make habit public or private
         publicSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b) {
                 habit.makePublic();

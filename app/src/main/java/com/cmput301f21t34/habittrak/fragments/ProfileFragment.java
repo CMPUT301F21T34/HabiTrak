@@ -28,21 +28,23 @@ import java.util.Objects;
  * ProfileFragment
  *
  * @author Aron Rajabi
- *
- * Fragment for displaying profile information
+ * <p>
+ * Fragment for displaying user information like email, bio and username
  */
 public class ProfileFragment extends Fragment implements View.OnClickListener, Utilities {
 
-    User mainUser;
-    MaterialButton confirm;
-    MaterialButton logOut;
-    MaterialButton delete;
-    TextInputEditText nameEdit;
-    TextInputEditText bioEdit;
-    TextView emailView;
+    private User mainUser;
+    // views
+    private MaterialButton confirm;
+    private MaterialButton logOut;
+    private MaterialButton delete;
+    private TextInputEditText nameEdit;
+    private TextInputEditText bioEdit;
+    private TextView emailView;
 
-    Auth mAuth;
-    DatabaseManager db = new DatabaseManager();
+    // database and auth
+    private Auth mAuth;
+    private DatabaseManager db = new DatabaseManager();
 
     public ProfileFragment(User mainUser) {
         this.mainUser = mainUser;
@@ -77,13 +79,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, U
 
     /**
      * onClick
-     *
+     * <p>
      * Profile Fragment onClickListener
      * Handle the buttons of the profile UI
      * For confirm, change the variables if they have been changed in the edittexts
      *
-     * @author Aron Rajabi
      * @param view the view we are currently on
+     * @author Aron Rajabi
      */
     @Override
     public void onClick(View view) {
@@ -122,13 +124,19 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, U
                 break;
             case R.id.deleter:
                 // run alert to delete
-                if (fUser != null){
+                if (fUser != null) {
                     delete(fUser);
                 }
                 break;
         }
     }
 
+    /**
+     * function to delete the user from the database.
+     * It sets up a dialog builder to ask for deletion conformation
+     *
+     * @param authUser firebase User to delete
+     */
     private void delete(FirebaseUser authUser) {
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 

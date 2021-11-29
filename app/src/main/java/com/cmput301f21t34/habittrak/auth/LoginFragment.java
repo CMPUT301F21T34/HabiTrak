@@ -27,7 +27,7 @@ import com.google.firebase.auth.FirebaseUser;
  * @author Pranav
  * @author Dakota
  * @author Henry
- *
+ * <p>
  * Login Fragment for the app
  */
 public class LoginFragment extends Fragment implements Utilities {
@@ -35,17 +35,18 @@ public class LoginFragment extends Fragment implements Utilities {
     private Auth mAuth;  // This is our Auth Helper Class
     private FirebaseUser authUser;
 
-    TextInputLayout usernameLayout;
-    TextInputEditText usernameEditText;
-    TextInputLayout passwordLayout;
-    TextInputEditText passwordEditText;
-    MaterialButton loginButton;
-    MaterialButton signupButton;
-    MaterialButton forgotButton;
+    // views
+    private TextInputLayout usernameLayout;
+    private TextInputEditText usernameEditText;
+    private TextInputLayout passwordLayout;
+    private TextInputEditText passwordEditText;
+    private MaterialButton loginButton;
+    private MaterialButton signupButton;
+    private MaterialButton forgotButton;
 
 
-
-    public LoginFragment(){
+    // empty fragment constructor
+    public LoginFragment() {
 
     }
 
@@ -56,8 +57,6 @@ public class LoginFragment extends Fragment implements Utilities {
         View view = inflater.inflate(R.layout.habi_login_fragment, container, false);
 
         // Variables of the UI elements
-
-        // UI
         usernameLayout = view.findViewById(R.id.username_text_input);
         usernameEditText = view.findViewById(R.id.username_edit_text);
         passwordLayout = view.findViewById(R.id.password_text_input);
@@ -72,7 +71,7 @@ public class LoginFragment extends Fragment implements Utilities {
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
 
         signupButton.setOnClickListener(view -> toSignUp());
@@ -86,14 +85,14 @@ public class LoginFragment extends Fragment implements Utilities {
             usernameLayout.setError(null);
 
             String email;
-            if (usernameEditText.getText() == null){
+            if (usernameEditText.getText() == null) {
                 email = "";
             } else {
                 email = usernameEditText.getText().toString();
             }
 
             String password;
-            if (passwordEditText.getText() == null){
+            if (passwordEditText.getText() == null) {
                 password = "";
             } else {
                 password = passwordEditText.getText().toString();
@@ -114,6 +113,12 @@ public class LoginFragment extends Fragment implements Utilities {
         });
     }
 
+    /**
+     * run the firebase login setup
+     *
+     * @param email    user email
+     * @param password user password
+     */
     private void runLogin(String email, String password) {
         // This is the firebase auth
         // Must be used as they don't get put on top of the stack but are called later
@@ -141,6 +146,9 @@ public class LoginFragment extends Fragment implements Utilities {
                 });
     }
 
+    /**
+     * function to goto signUp fragment
+     */
     private void toSignUp() {
         SignUpFragment signUpFragment = new SignUpFragment(mAuth);
 
@@ -150,6 +158,9 @@ public class LoginFragment extends Fragment implements Utilities {
                 .commit();
     }
 
+    /**
+     * function to goto forgot Fragment
+     */
     private void toForgot() {
         ForgotFragment forgotFragment = new ForgotFragment();
         requireActivity().getSupportFragmentManager().beginTransaction()

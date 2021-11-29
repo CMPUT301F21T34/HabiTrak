@@ -39,18 +39,17 @@ import java.util.Objects;
 public class SignUpFragment extends Fragment implements Utilities {
 
     Auth mAuth;
-
-    TextInputLayout emailLayout;
-    TextInputEditText emailEditText;
-    TextInputLayout usernameLayout;
-    TextInputEditText usernameEditText;
-    TextInputLayout passwordLayout;
-    TextInputEditText passwordEditText;
-    MaterialButton signupButton;
+    // views
+    private TextInputLayout emailLayout;
+    private TextInputEditText emailEditText;
+    private TextInputLayout usernameLayout;
+    private TextInputEditText usernameEditText;
+    private TextInputLayout passwordLayout;
+    private TextInputEditText passwordEditText;
+    private MaterialButton signupButton;
     DatabaseManager db = new DatabaseManager();
 
     public SignUpFragment(Auth auth) {
-        /* Required empty public constructor */
         this.mAuth = auth;
     }
 
@@ -63,7 +62,7 @@ public class SignUpFragment extends Fragment implements Utilities {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.habi_signup_fragment, container, false);
-
+        // setting up layout
         emailLayout = view.findViewById(R.id.signup_email_text_input);
         emailEditText = view.findViewById(R.id.signup_email_edit_text);
         usernameLayout = view.findViewById(R.id.signup_username_text_input);
@@ -88,12 +87,19 @@ public class SignUpFragment extends Fragment implements Utilities {
                 // This signs up the user and returns the email signed up with
                 runSignUp(email, username, password);
 
-                }
-            });
-            // if everything correct then start base activity
+            }
+        });
+        // if everything correct then start base activity
         return view;
     }
 
+    /**
+     * function to run the firebase sign using firebase auth
+     *
+     * @param email    user email
+     * @param username user username
+     * @param password user password
+     */
     private void runSignUp(String email, String username, String password) {
         FirebaseAuth fAuth = mAuth.getAuth();
         fAuth.createUserWithEmailAndPassword(email, password)
@@ -118,22 +124,22 @@ public class SignUpFragment extends Fragment implements Utilities {
                                 Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(e -> {
-                    if (e instanceof FirebaseAuthWeakPasswordException) {
-                        passwordLayout.setError("Must be greater than 6");
-                    } else if (e instanceof FirebaseAuthEmailException) {
-                        emailLayout.setError("Invalid Email Format");
-                    } else {
-                        emailLayout.setError(e.toString());
-                        passwordLayout.setError(e.toString());
-                    }
-                });
+            if (e instanceof FirebaseAuthWeakPasswordException) {
+                passwordLayout.setError("Must be greater than 6");
+            } else if (e instanceof FirebaseAuthEmailException) {
+                emailLayout.setError("Invalid Email Format");
+            } else {
+                emailLayout.setError(e.toString());
+                passwordLayout.setError(e.toString());
+            }
+        });
     }
 
     /**
      * checks if the fields are full or not
      *
-     * @author Dakota
      * @return boolean true if they are full, false else wise
+     * @author Dakota
      */
     private boolean fieldsFull() {
         boolean fieldsFull = true;

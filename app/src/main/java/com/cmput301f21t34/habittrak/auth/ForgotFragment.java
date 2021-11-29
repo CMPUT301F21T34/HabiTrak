@@ -18,18 +18,18 @@ import com.google.firebase.auth.FirebaseAuth;
  *
  * @author Dakota
  * @version 1.0
- *
+ * <p>
  * Forgot Fragment for the app
  */
 public class ForgotFragment extends Fragment {
 
-    TextInputLayout emailLayout;
-    TextInputEditText emailEditText;
-    MaterialButton sendButton;
+    private TextInputLayout emailLayout;
+    private TextInputEditText emailEditText;
+    private MaterialButton sendButton;
     Auth mAuth;
 
+    // empty fragment constructor
     public ForgotFragment() {
-
     }
 
     @Override
@@ -45,14 +45,13 @@ public class ForgotFragment extends Fragment {
         emailLayout = view.findViewById(R.id.forgot_email_text_input);
         emailEditText = view.findViewById(R.id.forgot_email_edit_text);
         sendButton = view.findViewById(R.id.forgot_send_button);
-        mAuth = new Auth(getActivity()); // no need for db here, potential crash cause though
-        // if everything correct then start base activity
+        mAuth = new Auth(getActivity());
 
         return view;
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
 
         sendButton.setOnClickListener(view1 -> {
@@ -64,14 +63,14 @@ public class ForgotFragment extends Fragment {
 
             String email = emailEditText.getText().toString();
 
-            if (email.equals("")){
+            if (email.equals("")) {
                 emailEditText.setError("Cannot be empty");
             } else {
                 emailEditText.setError(null);
                 FirebaseAuth fAuth = mAuth.getAuth();
                 try {
                     fAuth.sendPasswordResetEmail(email);
-                } catch (Exception e){
+                } catch (Exception e) {
                     emailEditText.setError(e.toString());
                 }
 

@@ -26,7 +26,7 @@ public class Auth {
     private final Context context;
 
 
-    public Auth(Activity activity){
+    public Auth(Activity activity) {
         this.context = activity;
         mAuth = FirebaseAuth.getInstance();
     }
@@ -36,15 +36,12 @@ public class Auth {
     }
 
 
-
-
-
     /**
      * signs a user out
      *
      * @author Dakota
      */
-    public void signOut(){
+    public void signOut() {
         mAuth.signOut();
     }
 
@@ -52,8 +49,8 @@ public class Auth {
      * Alerts the user that their account email is not verified and asks
      * if they would like a new email to be sent
      *
-     * @author Dakota
      * @return boolean true if they would like a new email, false else wise
+     * @author Dakota
      */
     public AlertDialog.Builder alertNotVerified(FirebaseUser authUser) {
 

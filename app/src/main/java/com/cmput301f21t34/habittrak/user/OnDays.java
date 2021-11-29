@@ -240,13 +240,13 @@ public class OnDays implements Parcelable {
         System.out.println(String.valueOf(currentDayOfWeek) + " mon: " + String.valueOf(MON - 1));
 
         switch (currentDayOfWeek){
-            case MON + 3: return get(MON);
-            case TUE + 3: return get(TUE);
-            case WED + 3: return get(WED);
-            case THU - 4: return get(THU);
-            case FRI - 4: return get(FRI);
-            case SAT - 4: return get(SAT);
-            case SUN + 3: return get(SUN);
+            case MON : return get(MON);
+            case TUE : return get(TUE);
+            case WED : return get(WED);
+            case THU : return get(THU);
+            case FRI : return get(FRI);
+            case SAT : return get(SAT);
+            case SUN : return get(SUN);
             default: throw new IllegalStateException("Current day does not exist!?!");
 
         }

@@ -2,10 +2,8 @@ package com.cmput301f21t34.habittrak;
 
 import static org.junit.Assert.*;
 
-import android.util.Log;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.cmput301f21t34.habittrak.user.Habit;
@@ -13,14 +11,12 @@ import com.cmput301f21t34.habittrak.user.HabitEvent;
 import com.cmput301f21t34.habittrak.user.HabitList;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Class for testing Habit Objects
@@ -65,7 +61,7 @@ public class DatabaseManagerTest {
         }
 
         // Delete test user after test is done
-        dm.deleteUser("test@gmail.com");
+        dm.deleteUser(email);
     }
 
     /**
@@ -123,20 +119,64 @@ public class DatabaseManagerTest {
         dm.createNewUser(email, username);
         dm.updateBio(email, bio);
 
+        // Populate habit list
+        Habit habit1 = new Habit("walk dog");
+        Habit habit2 = new Habit("read book");
+
+        HabitList habitList = new HabitList();
+        habitList.add(habit1);
+        habitList.add(habit2);
+        dm.updateHabitList(email, habitList);
+
+        HabitEvent event = new HabitEvent();
+        event.setComment("test event");
+        ArrayList<HabitEvent> eventList = new ArrayList<>();
+        eventList.add(event);
+        habit1.setHabitEvents(eventList);
+        habitList.replace(habit1);
+        dm.updateHabitList(email, habitList);
+
+        // Populate social lists
+        String email2 = "test2@gmail.com";
+        String username2 = "testUser2";
+        dm.createNewUser(email2, username2);
+
+        // User 1 is blocking user 2
+        dm.updateBlock(email2, email, false);
+        // User 1 is sending a follow request to user 2
+        dm.updateFollowRequest(email2, email, false);
+        // User 1 is following user 2
+        dm.updateFollow(email2, email, false);
+
         // Get user from the db then test
+        // Wait for a few seconds to ensure data is updated to firestore
+        try {
+            TimeUnit.SECONDS.sleep(4);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getLocalizedMessage());
+        }
+
         User user = dm.getUser(email);
         assertEquals(username, user.getUsername());
         assertEquals(email, user.getEmail());
         assertEquals(bio, user.getBiography());
         assertEquals(0, user.getFollowerList().size());
-        assertEquals(0, user.getFollowingList().size());
+        assertEquals(1, user.getFollowingList().size());
         assertEquals(0, user.getFollowerReqList().size());
-        assertEquals(0, user.getFollowingReqList().size());
+        assertEquals(1, user.getFollowingReqList().size());
         assertEquals(0, user.getBlockedByList().size());
-        assertEquals(0, user.getBlockList().size());
+        assertEquals(1, user.getBlockList().size());
+
+        HabitList habitListFromDB = user.getHabitList();
+        assertEquals(2, habitListFromDB.size());
+        assertEquals(habit1.getTitle(), habitListFromDB.get(0).getTitle());
+        assertEquals(habit2.getTitle(), habitListFromDB.get(1).getTitle());
+
+        assertEquals(event.getComment(), habitListFromDB.get(0).getHabitEvents().get(0).getComment());
 
         // Delete test user after test is done
-        dm.deleteUser("test@gmail.com");
+        dm.deleteUser(email);
+        dm.deleteUser(email2);
     }
 
     /**
@@ -201,6 +241,13 @@ public class DatabaseManagerTest {
         habitList.add(habit2);
         dm.updateHabitList(email, habitList);
 
+        // Wait for a few seconds to ensure data is updated to firestore
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getLocalizedMessage());
+        }
+
         User user = dm.getUser(email);
         Habit habitFromDB = user.getHabitList().get(0);
 
@@ -212,12 +259,24 @@ public class DatabaseManagerTest {
         habitList.add(0, habit3);
         dm.updateHabitList(email, habitList);
 
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getLocalizedMessage());
+        }
+
         user = dm.getUser(email);
         habitFromDB = user.getHabitList().get(0);
         assertEquals(3, user.getHabitList().size());
         assertEquals(habit3.getTitle(), habitFromDB.getTitle());
 
         // Add event to habit3 and perform test
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getLocalizedMessage());
+        }
+
         HabitEvent event = new HabitEvent();
         event.setComment("test event");
         ArrayList<HabitEvent> eventList = new ArrayList<>();
@@ -260,6 +319,14 @@ public class DatabaseManagerTest {
 
         // User 1 is blocking user 2
         dm.updateBlock(email2, email1, false);
+
+        // Wait for a few seconds to ensure data is updated to firestore
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getLocalizedMessage());
+        }
+
         User user1 = dm.getUser(email1);
         User user2 = dm.getUser(email2);
 
@@ -288,6 +355,14 @@ public class DatabaseManagerTest {
 
         // User 1 is following user 2
         dm.updateFollow(email2, email1, false);
+
+        // Wait for a few seconds to ensure data is updated to firestore
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getLocalizedMessage());
+        }
+
         User user1 = dm.getUser(email1);
         User user2 = dm.getUser(email2);
 
@@ -315,7 +390,15 @@ public class DatabaseManagerTest {
         dm.createNewUser(email2, username2);
 
         // User 1 is sending follow request to user 2
-        // dm.updateFollowRequest(email2, email1, false);
+        dm.updateFollowRequest(email2, email1, false);
+
+        // Wait for a few seconds to ensure data is updated to firestore
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getLocalizedMessage());
+        }
+
         User user1 = dm.getUser(email1);
         User user2 = dm.getUser(email2);
 
@@ -341,6 +424,13 @@ public class DatabaseManagerTest {
         String bio = "bing chilling";
         dm.updateBio(email, bio);
 
+        // Wait for a few seconds to ensure data is updated to firestore
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getLocalizedMessage());
+        }
+
         User user = dm.getUser(email);
         assertEquals(bio, user.getBiography());
 
@@ -361,6 +451,13 @@ public class DatabaseManagerTest {
 
         String name = "bing chilling";
         dm.updateUsername(email, name);
+
+        // Wait for a few seconds to ensure data is updated to firestore
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getLocalizedMessage());
+        }
 
         User user = dm.getUser(email);
         assertEquals(name, user.getUsername());

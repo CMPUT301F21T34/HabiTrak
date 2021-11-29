@@ -32,7 +32,7 @@ public class HabitRecycler {
     // ItemTouchHelper for dragging rows
     private ItemTouchHelper.SimpleCallback simpleCallback;
     // boolean for locking the drag feature
-    private boolean locked = false;
+    private final boolean locked = false;
 
     /**
      * Standard Constructor for a recyclable view of habits.

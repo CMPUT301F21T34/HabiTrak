@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,10 +27,18 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
+import com.cmput301f21t34.habittrak.fragments.ImageViewFragment;
 import com.cmput301f21t34.habittrak.user.HabitEvent;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.storage.FirebaseStorage;
@@ -59,11 +68,14 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
     // views
     private TextInputEditText comment;
     private TextView addressLine;
+    private TextView noPhotoText;
     private ImageView image;
     private MaterialButton galleryBtn;
     private MaterialButton cameraBtn;
     private MaterialButton saveHabitEventBtn;
     private TextView completionDateCalendar;
+    private MapView mapView;
+    private GoogleMap map;
     // other variables
     private StorageReference mStorageRef;
     String currentPhotoPath;
@@ -108,11 +120,14 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
         // get views
         comment = findViewById(R.id.comment_edit_text);
         addressLine = findViewById(R.id.address_line_edit);
+        noPhotoText = findViewById(R.id.view_no_photo_text);
         image = findViewById(R.id.photo_edit);
         galleryBtn = findViewById(R.id.gallery_button_edit);
         cameraBtn = findViewById(R.id.camera_button_edit);
         saveHabitEventBtn = findViewById(R.id.save_habit_event_edit);
         completionDateCalendar = findViewById(R.id.completion_date_calendar);
+        mapView = (MapView) findViewById(R.id.view_event_map_view);
+        mapView.onCreate(Bundle.EMPTY);
 
         //get data from habit event
         String commentHabitEvent = habitEvent.getComment();
@@ -123,9 +138,24 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
             photoUri = Uri.parse(habitEvent.getPhotograph());
         } else {
             photoUri = null;
+            noPhotoText.setVisibility(View.VISIBLE);
+            image.setVisibility(View.GONE);
+
         }
 
         Location locationHabitEvent = habitEvent.getLocation();
+        // set map view if available else set default location
+        mapView.getMapAsync(googleMap -> {
+            map = googleMap;
+            LatLng latLng = new LatLng(40.7143528, -74.0059731);
+            if (locationHabitEvent != null){
+                latLng = new LatLng(locationHabitEvent.getLatitude(), locationHabitEvent.getLongitude());
+                mapView.setVisibility(View.VISIBLE);
+            }
+            map.addMarker(new MarkerOptions().position(latLng));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+        });
+
         // setting the data to the new habit event
         returnedHabitEvent.setCompletedDate(completedDate);
         returnedHabitEvent.setPhotograph(photoUri);
@@ -163,7 +193,8 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
                         Uri contentUri = result.getData().getData();
                         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                         String imageFileName = "JPEG_" + timeStamp + "." + getFileExt(contentUri);
-
+                        noPhotoText.setVisibility(View.GONE);
+                        image.setVisibility(View.VISIBLE);
                         image.setImageURI(contentUri);
                         returnedHabitEvent.setPhotograph(db.uploadImageToFirebase(imageFileName, contentUri, mStorageRef));
                     }
@@ -175,6 +206,8 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
 
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         File f = new File(currentPhotoPath);
+                        noPhotoText.setVisibility(View.GONE);
+                        image.setVisibility(View.VISIBLE);
                         image.setImageURI(Uri.fromFile(f));
                         Uri contentUri = Uri.fromFile(f);
                         returnedHabitEvent.setPhotograph(db.uploadImageToFirebase(f.getName(), contentUri, mStorageRef));
@@ -182,6 +215,7 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
                         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                         //Uri contentUri = Uri.fromFile(f);
                         mediaScanIntent.setData(contentUri);
+
                         ViewEditHabitEventActivity.this.sendBroadcast(mediaScanIntent);
 
                     } else {
@@ -195,6 +229,18 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
             Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             galleryActivityResultLauncher.launch(gallery);
         });
+
+        // When the user clicks on the image, show a larger view
+        image.setOnClickListener(view -> {
+
+            if (photoUri != null) {
+                getSupportFragmentManager().beginTransaction().addToBackStack("").add(android.R.id.content, new ImageViewFragment(photoUri)).commit();
+            }
+
+
+        });
+
+
         // handling the save button click
         saveHabitEventBtn.setOnClickListener(view -> {
 

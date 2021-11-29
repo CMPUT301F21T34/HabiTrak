@@ -142,6 +142,16 @@
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/add_no_photo_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="16dp"
+                android:textColor="?android:textColorPrimary"
+                android:text="No Photo Added"
+                android:fontFamily="@font/roboto_black"
+                android:visibility="gone"/>
 
             <ImageView
                 android:id="@+id/photo"

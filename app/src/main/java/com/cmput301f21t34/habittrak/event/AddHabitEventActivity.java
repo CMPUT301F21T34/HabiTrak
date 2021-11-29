@@ -70,6 +70,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
     private ImageView image;
     private MapView mapView;
     private GoogleMap mMap;
+    private TextView noPhotoText;
     private TextView addressLine;
 
     // Data Variables //
@@ -109,6 +110,11 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
         commentText = findViewById(R.id.Comment);
         image = findViewById(R.id.photo);
         addressLine = findViewById(R.id.addressLineText);
+        noPhotoText = findViewById(R.id.add_no_photo_text);
+
+        // set visibility
+        image.setVisibility(View.GONE);
+        noPhotoText.setVisibility(View.VISIBLE);
 
         // setting up map view
         mapView = (MapView) findViewById(R.id.add_event_map_view);
@@ -144,7 +150,8 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
                         Uri contentUri = result.getData().getData();
                         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                         String imageFileName = "JPEG_" + timeStamp + "." + getFileExt(contentUri);
-
+                        noPhotoText.setVisibility(View.GONE);
+                        image.setVisibility(View.VISIBLE);
                         image.setImageURI(contentUri);
                         habitEvent.setPhotograph(db.uploadImageToFirebase(imageFileName, contentUri, mStorageRef));
                     }
@@ -156,6 +163,8 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         File f = new File(currentPhotoPath);
+                        noPhotoText.setVisibility(View.GONE);
+                        image.setVisibility(View.VISIBLE);
                         image.setImageURI(Uri.fromFile(f));
                         Uri contentUri = Uri.fromFile(f);
                         habitEvent.setPhotograph(db.uploadImageToFirebase(f.getName(), contentUri, mStorageRef));

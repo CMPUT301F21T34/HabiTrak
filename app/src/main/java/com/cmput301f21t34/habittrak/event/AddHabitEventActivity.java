@@ -32,7 +32,14 @@ import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitEvent;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.gms.maps.MapView;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -62,6 +69,8 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
     private Button addButton;
     private TextInputEditText commentText;
     private ImageView image;
+    private MapView mapView;
+    private GoogleMap mMap;
     private TextView addressLine;
     // data
     private StorageReference mStorageRef;
@@ -99,6 +108,22 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
         image = findViewById(R.id.photo);
         addressLine = findViewById(R.id.addressLineText);
 
+        // setting up map view
+        mapView = (MapView) findViewById(R.id.add_event_map_view);
+        mapView.onCreate(Bundle.EMPTY);
+        mapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(@NonNull GoogleMap googleMap) {
+                mMap = googleMap;
+                LatLng ny = new LatLng(40.7143528, -74.0059731);
+                mMap.addMarker(new MarkerOptions().position(ny));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ny, 15));
+            }
+        });
+        MapsInitializer.initialize(this);
+        mapView.setClickable(false);
+
+        // events data
         habitEvent = new HabitEvent();
         db = new DatabaseManager();
 
@@ -151,6 +176,10 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
                     habitEvent.setLocation(eventLocation);
                     addressLine.setText("");
                     addressLine.setText(getAddress(eventLocation.getLatitude(), eventLocation.getLongitude()));
+                    // set up the map
+                    LatLng latLng = new LatLng(latitude, longitude);
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                    mapView.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -319,6 +348,39 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
             e.printStackTrace();
         }
         return address;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mapView.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mapView.onStop();
+    }
+    @Override
+    protected void onPause() {
+        mapView.onPause();
+        super.onPause();
+    }
+    @Override
+    protected void onDestroy() {
+        mapView.onDestroy();
+        super.onDestroy();
+    }
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
     }
 
     @Override

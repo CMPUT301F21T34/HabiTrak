@@ -1,13 +1,12 @@
 package com.cmput301f21t34.habittrak;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitEvent;
 import com.cmput301f21t34.habittrak.user.User;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * Class for testing User Objects
@@ -243,13 +242,5 @@ public class UserTest {
         // Remove following2, size should be 0
         assertTrue(user.removeFollowing(follower2));
         assertEquals(0, user.getFollowingList().size());
-    }
-
-    /**
-     * replaceHabitTest() for potential replaceHabitTest() method
-     */
-    @Test
-    public void replaceHabitTest() {
-
     }
 }

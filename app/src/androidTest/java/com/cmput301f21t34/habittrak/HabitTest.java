@@ -1,7 +1,5 @@
 package com.cmput301f21t34.habittrak;
 
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 import android.location.Location;
 import android.net.Uri;
@@ -10,9 +8,12 @@ import com.cmput301f21t34.habittrak.streak.Streak;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitEvent;
 
-import java.io.File;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * Class for testing Habit Objects

@@ -1,20 +1,12 @@
 package com.cmput301f21t34.habittrak;
 
-import android.location.Location;
-import android.util.Log;
-
 import com.cmput301f21t34.habittrak.user.Habit;
-import com.cmput301f21t34.habittrak.user.HabitEvent;
 import com.cmput301f21t34.habittrak.user.HabitList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.Test;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
-import java.io.File;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
+import static org.junit.Assert.*;
 
 /**
  * Class for testing HabitList

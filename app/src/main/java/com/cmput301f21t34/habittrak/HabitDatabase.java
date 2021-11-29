@@ -30,9 +30,9 @@ public class HabitDatabase {
         this.title = "";
         this.reason = "";
         this.startDate = Calendar.getInstance();
-        this.habitEvents = new ArrayList<HabitEvent>();
+        this.habitEvents = new ArrayList<>();
         this.isPublic = false;
-        this.onDaysObj = new ArrayList<Boolean>();
+        this.onDaysObj = new ArrayList<>();
     }
 
     public void setIsPublic(boolean isPublic) {

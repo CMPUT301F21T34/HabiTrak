@@ -46,7 +46,6 @@ public class SignUpFragment extends Fragment implements Utilities {
     private TextInputEditText usernameEditText;
     private TextInputLayout passwordLayout;
     private TextInputEditText passwordEditText;
-    private MaterialButton signupButton;
     DatabaseManager db = new DatabaseManager();
 
     public SignUpFragment(Auth auth) {
@@ -69,7 +68,7 @@ public class SignUpFragment extends Fragment implements Utilities {
         usernameEditText = view.findViewById(R.id.signup_username_edit_text);
         passwordLayout = view.findViewById(R.id.signup_password_text_input);
         passwordEditText = view.findViewById(R.id.signup_password_edit_text);
-        signupButton = view.findViewById(R.id.signup_signup_button);
+        MaterialButton signupButton = view.findViewById(R.id.signup_signup_button);
 
         signupButton.setOnClickListener(view1 -> {
             // Check if all the fields have input and notify the user if they do not.

@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,9 +27,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
+import com.cmput301f21t34.habittrak.fragments.ImageViewFragment;
 import com.cmput301f21t34.habittrak.user.HabitEvent;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -195,6 +198,21 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
             Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             galleryActivityResultLauncher.launch(gallery);
         });
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //TODO: Image View Fragment
+
+                if (photoUri != null) {
+                    getSupportFragmentManager().beginTransaction().addToBackStack("").add(android.R.id.content, new ImageViewFragment(photoUri)).commit();
+                }
+
+
+            }
+        });
+
+
         // handling the save button click
         saveHabitEventBtn.setOnClickListener(view -> {
 

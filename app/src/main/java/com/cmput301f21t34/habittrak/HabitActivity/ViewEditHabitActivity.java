@@ -25,6 +25,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.TimeZone;
 
 /**
@@ -40,14 +41,12 @@ public class ViewEditHabitActivity extends AppCompatActivity implements View.OnC
 
     public static int RESULT_CODE = BaseActivity.RESULT_EDIT_HABIT;
 
-    // Views
+    // Views //
     private TextInputEditText habitName;
     private TextInputEditText habitReason;
-    private MaterialButton datePickerButton;
     private TextView startDate;
     private TextView visibilityText;
     private Calendar calendar;
-    private MaterialButton saveButton;
     private MaterialButton mondayButton;
     private MaterialButton tuesdayButton;
     private MaterialButton wednesdayButton;
@@ -56,19 +55,13 @@ public class ViewEditHabitActivity extends AppCompatActivity implements View.OnC
     private MaterialButton saturdayButton;
     private MaterialButton sundayButton;
     private MaterialDatePicker materialDatePicker;
-    private SwitchMaterial publicSwitch;
-    private TextView bestStreakStart;
-    private TextView bestStreakEnd;
-    private TextView totalEventCompleted;
-    private TextView bestStreakTotal;
-    private TextView progressBarText;
-    private LinearProgressIndicator progressBar;
-    // Other Variables
+
+    // Other Variables //
     private boolean[] daysOfWeek;
     private int buttonOffColor = Color.WHITE;
     private int tealColor;
 
-    // data variables
+    // Data Variables //
     private Habit habit;
     private int habitPosition;
 
@@ -86,7 +79,7 @@ public class ViewEditHabitActivity extends AppCompatActivity implements View.OnC
         // add back button to toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.view_habit_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         // get habit data from intent
@@ -97,7 +90,7 @@ public class ViewEditHabitActivity extends AppCompatActivity implements View.OnC
         // getting views
         habitName = findViewById(R.id.view_habit_name_edit_text);
         habitReason = findViewById(R.id.view_habit_reason_edit_text);
-        datePickerButton = findViewById(R.id.view_start_date_button);
+        MaterialButton datePickerButton = findViewById(R.id.view_start_date_button);
         startDate = findViewById(R.id.view_habit_selected_date);
         mondayButton = findViewById(R.id.monday_button);
         tuesdayButton = findViewById(R.id.tuesday_button);
@@ -106,15 +99,15 @@ public class ViewEditHabitActivity extends AppCompatActivity implements View.OnC
         fridayButton = findViewById(R.id.friday_button);
         saturdayButton = findViewById(R.id.saturday_button);
         sundayButton = findViewById(R.id.sunday_button);
-        saveButton = findViewById(R.id.view_save_habit);
-        publicSwitch = findViewById(R.id.view_public_switch);
+        MaterialButton saveButton = findViewById(R.id.view_save_habit);
+        SwitchMaterial publicSwitch = findViewById(R.id.view_public_switch);
         visibilityText = findViewById(R.id.view_habit_visibility_text);
-        bestStreakStart = findViewById(R.id.best_streak_start);
-        bestStreakEnd = findViewById(R.id.best_streak_end);
-        progressBar = findViewById(R.id.view_habit_progress);
-        totalEventCompleted = findViewById(R.id.view_total_events);
-        bestStreakTotal = findViewById(R.id.best_streak_count);
-        progressBarText = findViewById(R.id.view_habit_streak);
+        TextView bestStreakStart = findViewById(R.id.best_streak_start);
+        TextView bestStreakEnd = findViewById(R.id.best_streak_end);
+        LinearProgressIndicator progressBar = findViewById(R.id.view_habit_progress);
+        TextView totalEventCompleted = findViewById(R.id.view_total_events);
+        TextView bestStreakTotal = findViewById(R.id.best_streak_count);
+        TextView progressBarText = findViewById(R.id.view_habit_streak);
         tealColor = ContextCompat.getColor(getBaseContext(), R.color.teal_200); // color for buttons
 
         // get data from habit
@@ -198,21 +191,31 @@ public class ViewEditHabitActivity extends AppCompatActivity implements View.OnC
         if (view.getId() == R.id.view_start_date_button) {
             materialDatePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
         } else if (view.getId() == R.id.monday_button) {
-            changeButtonState(view, mondayButton, 0);
+            changeButtonState(mondayButton, 0);
+
         } else if (view.getId() == R.id.tuesday_button) {
-            changeButtonState(view, tuesdayButton, 1);
+            changeButtonState(tuesdayButton, 1);
+
         } else if (view.getId() == R.id.wednesday_button) {
-            changeButtonState(view, wednesdayButton, 2);
+            changeButtonState(wednesdayButton, 2);
+
         } else if (view.getId() == R.id.thursday_button) {
-            changeButtonState(view, thursdayButton, 3);
+            changeButtonState(thursdayButton, 3);
+
         } else if (view.getId() == R.id.friday_button) {
-            changeButtonState(view, fridayButton, 4);
+            changeButtonState(fridayButton, 4);
+
         } else if (view.getId() == R.id.saturday_button) {
-            changeButtonState(view, saturdayButton, 5);
+            changeButtonState(saturdayButton, 5);
+
         } else if (view.getId() == R.id.sunday_button) {
-            changeButtonState(view, sundayButton, 6);
+            changeButtonState(sundayButton, 6);
+
         } else if (view.getId() == R.id.view_save_habit) {
-            if (checkField(habitName.getText()) && checkField(habitReason.getText())) {
+            if (
+                    checkField(Objects.requireNonNull(habitName.getText()))
+                            &&
+                            checkField(Objects.requireNonNull(habitReason.getText()))) {
 
                 habit.setTitle(habitName.getText().toString());
                 habit.setReason(habitReason.getText().toString());
@@ -226,7 +229,6 @@ public class ViewEditHabitActivity extends AppCompatActivity implements View.OnC
                 this.finish();
 
             } else {
-
                 Toast.makeText(getBaseContext(), "Empty Text Fields", Toast.LENGTH_SHORT).show();
 
             }
@@ -273,12 +275,11 @@ public class ViewEditHabitActivity extends AppCompatActivity implements View.OnC
      * <p>
      * Change the color of the button and the arraylist for days of week.
      *
-     * @param view     Button View
      * @param button   to change the color
      * @param position which day to change
      * @author Pranav
      */
-    public void changeButtonState(View view, MaterialButton button, int position) {
+    public void changeButtonState(MaterialButton button, int position) {
         if (daysOfWeek[position]) {
             button.setBackgroundColor(buttonOffColor);
             daysOfWeek[position] = false;

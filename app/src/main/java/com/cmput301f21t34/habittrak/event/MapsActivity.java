@@ -101,9 +101,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onLocationResult(@NonNull LocationResult locationResult) {
                 super.onLocationResult(locationResult);
-                if (locationResult == null) {
-                    return;
-                }
+
                 for (Location location : locationResult.getLocations()) {
                 }
                 lastKnownLocation = locationResult.getLastLocation();

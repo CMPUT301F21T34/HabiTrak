@@ -27,9 +27,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
+import com.cmput301f21t34.habittrak.fragments.ImageViewFragment;
 import com.cmput301f21t34.habittrak.user.HabitEvent;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -218,6 +220,18 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
             Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             galleryActivityResultLauncher.launch(gallery);
         });
+
+        // When the user clicks on the image, show a larger view
+        image.setOnClickListener(view -> {
+
+            if (photoUri != null) {
+                getSupportFragmentManager().beginTransaction().addToBackStack("").add(android.R.id.content, new ImageViewFragment(photoUri)).commit();
+            }
+
+
+        });
+
+
         // handling the save button click
         saveHabitEventBtn.setOnClickListener(view -> {
 

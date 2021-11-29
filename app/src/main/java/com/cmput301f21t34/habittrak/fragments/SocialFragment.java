@@ -20,7 +20,18 @@ import com.cmput301f21t34.habittrak.social.SocialTabFragment;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.tabs.TabLayout;
 
+
+/**
+ * Social Fragment.
+ *
+ * @author Kaaden
+ * @author Pranav
+ * <p>
+ * holds the social fragments and gets the data from the database
+ * constains a view pager and a tab layout to hold the other social fragments
+ */
 public class SocialFragment extends Fragment {
+    // static variables
     public static final int FOLLOWERS = 0;
     public static final int FOLLOWING = 1;
     public static final int REQUESTS = 2;
@@ -28,9 +39,11 @@ public class SocialFragment extends Fragment {
     private static final boolean SEARCHABLE = true;
     private static final boolean NOT_SEARCHABLE = false;
     private final User mainUser;
+    // fragments
     private final SocialTabFragment followersFragment;
     private final SocialTabFragment followingFragment;
     private final SocialTabFragment requestsFragment;
+    // views
     private SocialTabFragment searchFragment;
     private TabLayout socialTab;
     private ViewPager2 viewPager;
@@ -207,6 +220,7 @@ public class SocialFragment extends Fragment {
                     SocialTabFragment.ALL, SocialAdapter.NONE, SEARCHABLE);
             return null;
         }
+
         @Override
         protected void onPostExecute(Void unused) {
             super.onPostExecute(unused);

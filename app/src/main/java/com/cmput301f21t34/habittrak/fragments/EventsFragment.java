@@ -30,10 +30,9 @@ import java.util.ArrayList;
  * EventsFragment
  *
  * @author Aron Rajabi
- *
+ * <p>
  * Fragment for displaying all habits, viewing its completed events when clicked
  * Recycler view code and onclicklisteners taken from Pranav and Dakotas AllHabitsFragment
- *
  * @version 1.0
  */
 public class EventsFragment extends Fragment {
@@ -93,10 +92,12 @@ public class EventsFragment extends Fragment {
         return view;
     }
 
+    /**
+     * refresh the fragment display data on return
+     */
     @Override
     public void onResume() {
         super.onResume();
-
         // Refreshes Frag
         refreshEventFragment();
     }
@@ -122,18 +123,14 @@ public class EventsFragment extends Fragment {
      * refreshEventFragment
      *
      * @author Dakota
-     *
-     * refresh the habitsdata list to update the data
+     * <p>
+     * refresh the habitsdata list to update the recycler view data
      */
     public void refreshEventFragment() {
-
         // Populate today view with Today's habits.
         habitsDisplayList.clear(); // Make sure is clear
-
         HabitList mainUserHabits = mainUser.getHabitList(); // get HabitsList
-
         habitsDisplayList.addAll(mainUserHabits);
-
         // tells the adapter in recycler that the dataset has changed
         habitRecycler.notifyDataSetChanged();
         setLayoutVisibility();
@@ -142,22 +139,26 @@ public class EventsFragment extends Fragment {
     // activity result launcher for view/edit events activity
     ActivityResultLauncher<Intent> viewEventsResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
-            result -> {}
+            result -> {
+            }
     );
 
     /**
      * showMenu
-     *
+     * <p>
      * create a menu when Image Button is clicked
-     * @param view view from the adapter to create the menu
+     * used for removing habits
+     *
+     * @param view     view from the adapter to create the menu
      * @param position position of habit from adapter
      */
     public void showMenu(View view, int position) {
+        // create menu
         PopupMenu menu = new PopupMenu(getContext(), view);
         menu.getMenuInflater().inflate(R.menu.social_popup_menu, menu.getMenu());
         menu.getMenu().add("Remove");
         menu.show();
-
+        // menu listener
         menu.setOnMenuItemClickListener(menuItem -> {
             Habit habit = habitsDisplayList.get(position);
             mainUser.getHabitList().remove(habit);

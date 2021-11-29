@@ -198,18 +198,15 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
             Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             galleryActivityResultLauncher.launch(gallery);
         });
-        image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                //TODO: Image View Fragment
+        // When the user clicks on the image, show a larger view
+        image.setOnClickListener(view -> {
 
-                if (photoUri != null) {
-                    getSupportFragmentManager().beginTransaction().addToBackStack("").add(android.R.id.content, new ImageViewFragment(photoUri)).commit();
-                }
-
-
+            if (photoUri != null) {
+                getSupportFragmentManager().beginTransaction().addToBackStack("").add(android.R.id.content, new ImageViewFragment(photoUri)).commit();
             }
+
+
         });
 
 

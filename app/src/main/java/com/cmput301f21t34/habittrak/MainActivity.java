@@ -19,8 +19,6 @@ public class MainActivity extends AppCompatActivity implements Utilities {
 
     // Get shared prefs
     private FirebaseUser fUser;
-    private User mainUser;
-    private DatabaseManager db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,15 +26,11 @@ public class MainActivity extends AppCompatActivity implements Utilities {
         setContentView(R.layout.activity_main);
 
         // Get Log In State
-        db = new DatabaseManager();
-
 
         fUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if (fUser != null) {
-            String email = fUser.getEmail();
-            mainUser = db.getUser(email);
-            goToBaseActivity(this, mainUser);
+            goToBaseActivity(this);
 
         } else {
             // get user to login

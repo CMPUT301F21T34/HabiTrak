@@ -84,15 +84,15 @@ public class Streak {
                         break;
 
                     }
-                    // Checks if we are missing a day, excluding the current day
-                    else if (
-                            (comparison < 0) // event we are checking completed before the current day we are checking
-                                    &&
-                                    (new TimeIgnoringComparator().compare(Calendar.getInstance(), day) != 0) // it in not today
-                    ) {
+
+                    // If it is today, we don't count the streak as broken
+                    if ( new TimeIgnoringComparator().compare(Calendar.getInstance(), day) == 0){
+                        break; // move to next day
+
+                    } else if ( comparison < 0 ) { // We are missing a day
                         // We are missing an event aka the streak was broken
                         notCompleted = false;
-                        break;
+                        break; // break entire loop
                     }
                     // else check the next event
                 }
@@ -149,7 +149,7 @@ public class Streak {
         Calendar testDate = Calendar.getInstance();
         testDate.set(2021, 02, 28);
 
-        if (comparator.compare(currentStreakDateEnd, testDate) == -1) {
+        if (comparator.compare(currentStreakDateEnd, testDate) < 0 ) {
             // We are testing, don't update DateEnd
         } else {
             currentStreakDateEnd = Calendar.getInstance(); // set to today

@@ -31,8 +31,6 @@ import java.util.TimeZone;
 
 public interface Utilities {
 
-    DatabaseManager db = new DatabaseManager();
-
     /**
      * updates the database with a user's habit list
      *
@@ -40,8 +38,11 @@ public interface Utilities {
      * @param user User to update in database
      */
     default void updateHabitListDB(User user) {
+        DatabaseManager db = new DatabaseManager();
 
-        db.updateHabitList(user.getEmail(), user.getHabitList());
+        if (user != null) {
+            db.updateHabitList(user.getEmail(), user.getHabitList());
+        }
 
     }
 
@@ -52,11 +53,13 @@ public interface Utilities {
      */
     default void refreshHabitStreak(User user) {
         // Refreshes all habit streaks //
-        ArrayList<Habit> habits = (ArrayList<Habit>) user.getHabitList(); // cast for simple iteration
+        if (user != null) {
+            ArrayList<Habit> habits = (ArrayList<Habit>) user.getHabitList(); // cast for simple iteration
 
-        for (int index = 0; index < habits.size(); index++) {
-            Streak streak = new Streak(habits.get(index)); // set a Streak class to modify each habit
-            streak.refreshStreak(); // refreshes each streak
+            for (int index = 0; index < habits.size(); index++) {
+                Streak streak = new Streak(habits.get(index)); // set a Streak class to modify each habit
+                streak.refreshStreak(); // refreshes each streak
+            }
         }
     }
 
@@ -91,12 +94,11 @@ public interface Utilities {
      *
      * @author Dakota
      * @param activity Activity context to execute from (usually 'this')
-     * @param user User to pass into base activity
      */
-    default void goToBaseActivity(Activity activity, User user) {
+    default void goToBaseActivity(Activity activity) {
         Intent intent = new Intent(activity, BaseActivity.class);
 
-        intent.putExtra("mainUser", user);
+        //intent.putExtra("mainUser", user);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         activity.startActivity(intent);
@@ -124,6 +126,8 @@ public interface Utilities {
      * @return User from database using FirebaseUser
      */
     default User getMainUser(Activity activity) {
+        DatabaseManager db = new DatabaseManager();
+
         // Updates the mainUser, even if they are already logged in
         FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
         if (fUser == null) {

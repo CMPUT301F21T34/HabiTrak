@@ -32,7 +32,14 @@ import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitEvent;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.gms.maps.MapView;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -44,37 +51,41 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * @author Tauseef Nafee Fattah
  * @author Henry
- * Version: 1.0
+ * Version: 2.0
  * Takes a habit and returns the new habit event
  */
 public class AddHabitEventActivity extends AppCompatActivity implements View.OnClickListener {
-    // static variables
+
+    // Static Variables //
     public static int RESULT_CODE = 3000;
     public static final int CAMERA_PERMISSION_CODE = 100;
-    // views
-    private Button cameraButton;
-    private Button galleryButton;
-    private Button mapButton;
-    private Button addButton;
+
+    // View Variables //
     private TextInputEditText commentText;
     private ImageView image;
+    private MapView mapView;
+    private GoogleMap mMap;
+    private TextView noPhotoText;
     private TextView addressLine;
-    // data
+
+    // Data Variables //
     private StorageReference mStorageRef;
     private String currentPhotoPath;
     private HabitEvent habitEvent;
     private DatabaseManager db;
-    // launchers
+    private Habit habit;
+
+    // Launchers //
     ActivityResultLauncher<Intent> cameraActivityResultLauncher;
     ActivityResultLauncher<Intent> galleryActivityResultLauncher;
     ActivityResultLauncher<Intent> mapActivityResultLauncher;
 
-    // intent data variables
-    private Habit habit;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,21 +95,43 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
         // set toolbar
         Toolbar toolbar = findViewById(R.id.add_habit_event_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         // getting the firebase storage
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
         // getting the Views
-        cameraButton = findViewById(R.id.CameraButton);
-        galleryButton = findViewById(R.id.GalleryButton);
-        mapButton = findViewById(R.id.mapButton);
-        addButton = findViewById(R.id.addHabitEventButton);
+        // views
+        Button cameraButton = findViewById(R.id.CameraButton);
+        Button galleryButton = findViewById(R.id.GalleryButton);
+        Button mapButton = findViewById(R.id.mapButton);
+        Button addButton = findViewById(R.id.addHabitEventButton);
         commentText = findViewById(R.id.Comment);
         image = findViewById(R.id.photo);
         addressLine = findViewById(R.id.addressLineText);
+        noPhotoText = findViewById(R.id.add_no_photo_text);
 
+        // set visibility
+        image.setVisibility(View.GONE);
+        noPhotoText.setVisibility(View.VISIBLE);
+
+        // setting up map view
+        mapView = (MapView) findViewById(R.id.add_event_map_view);
+        mapView.onCreate(Bundle.EMPTY);
+        mapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(@NonNull GoogleMap googleMap) {
+                mMap = googleMap;
+                LatLng ny = new LatLng(40.7143528, -74.0059731);
+
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ny, 15));
+            }
+        });
+        MapsInitializer.initialize(this);
+        mapView.setClickable(false);
+
+        // events data
         habitEvent = new HabitEvent();
         db = new DatabaseManager();
 
@@ -117,7 +150,8 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
                         Uri contentUri = result.getData().getData();
                         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                         String imageFileName = "JPEG_" + timeStamp + "." + getFileExt(contentUri);
-
+                        noPhotoText.setVisibility(View.GONE);
+                        image.setVisibility(View.VISIBLE);
                         image.setImageURI(contentUri);
                         habitEvent.setPhotograph(db.uploadImageToFirebase(imageFileName, contentUri, mStorageRef));
                     }
@@ -129,6 +163,8 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         File f = new File(currentPhotoPath);
+                        noPhotoText.setVisibility(View.GONE);
+                        image.setVisibility(View.VISIBLE);
                         image.setImageURI(Uri.fromFile(f));
                         Uri contentUri = Uri.fromFile(f);
                         habitEvent.setPhotograph(db.uploadImageToFirebase(f.getName(), contentUri, mStorageRef));
@@ -151,6 +187,11 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
                     habitEvent.setLocation(eventLocation);
                     addressLine.setText("");
                     addressLine.setText(getAddress(eventLocation.getLatitude(), eventLocation.getLongitude()));
+                    // set up the map
+                    LatLng latLng = new LatLng(latitude, longitude);
+                    mMap.addMarker(new MarkerOptions().position(latLng));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                    mapView.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -171,28 +212,33 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.addHabitEventButton) {
-            // listener for add habit event button
-            habitEvent.setComment(commentText.getText().toString());
+
+            // Listener for add habit event button
+            habitEvent.setComment(Objects.requireNonNull(commentText.getText()).toString());
             ArrayList<HabitEvent> currentEventList = habit.getHabitEvents();
             currentEventList.add(habitEvent);
             habit.setHabitEvents(currentEventList);
+
             // Pass the result back to BaseActivity
             Intent result = new Intent();
             result.putExtra("HABIT", habit);
             result.putExtra("HABIT_EVENT", habitEvent);
             setResult(RESULT_CODE, result);
             this.finish();
+
         } else if (view.getId() == R.id.mapButton) {
-            // listener for add location button
+            // Listener for add location button
             addressLine.setText("");
             Intent map = new Intent(view.getContext(), MapsActivity.class);
             mapActivityResultLauncher.launch(map);
+
         } else if (view.getId() == R.id.GalleryButton) {
-            // listener for add from gallery button
+            // Listener for add from gallery button
             Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             galleryActivityResultLauncher.launch(gallery);
+
         } else if (view.getId() == R.id.CameraButton) {
-            // listener for add from camera button
+            // Listener for add from camera button
             askCameraPermission();
         }
     }
@@ -225,7 +271,9 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
             photoFile = createImageFile();
 
         } catch (IOException ex) {
+            Toast.makeText(this, "Error creating file", Toast.LENGTH_SHORT);
         }
+
         // Continue only if the File was successfully created
         if (photoFile != null) {
             Uri photoURI = FileProvider.getUriForFile(this,
@@ -319,6 +367,39 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
             e.printStackTrace();
         }
         return address;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mapView.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mapView.onStop();
+    }
+    @Override
+    protected void onPause() {
+        mapView.onPause();
+        super.onPause();
+    }
+    @Override
+    protected void onDestroy() {
+        mapView.onDestroy();
+        super.onDestroy();
+    }
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
     }
 
     @Override

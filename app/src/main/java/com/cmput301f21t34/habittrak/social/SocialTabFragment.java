@@ -24,6 +24,7 @@ import com.cmput301f21t34.habittrak.user.User;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Fragment for displaying a list of users and their info in a tab
@@ -209,10 +210,16 @@ public class SocialTabFragment extends Fragment {
         // Save info
         usernames.clear();
         bios.clear();
-        UUIDs.forEach(UUID -> {
-            usernames.add(dm.getUserName(UUID));
-            bios.add(dm.getUserBio(UUID));
-        });
+        for (int i = 0; i < UUIDs.size(); ++i) {
+            String UUID = UUIDs.get(i), username = dm.getUserName(UUID), bio = dm.getUserBio(UUID);
+            if (username == null || bio == null) { // Get rid of null users
+                UUIDs.set(i, null);
+                continue;
+            }
+            usernames.add(username);
+            bios.add(bio);
+        }
+        UUIDs.removeIf(Objects::isNull); // Get rid of null users
     }
 
     /**

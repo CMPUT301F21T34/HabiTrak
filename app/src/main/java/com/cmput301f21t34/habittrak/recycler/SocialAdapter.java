@@ -326,7 +326,6 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
             menu.setOnMenuItemClickListener(menuItem -> {
                 switch (menuItem.getTitle().toString()) {
                     case "Block":
-
                         // Store block relationship
                         mainUser.addBlock(UUID);
                         dm.updateBlock(UUID, mainUser.getEmail(), DatabaseManager.ADD);
@@ -381,7 +380,6 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
                             // Also update relevant possible other tabs
                             socialRef.removeUserEntry(SocialFragment.REQUESTS, UUID);
                         }
-
                         // Remove from this list now
                         removeUserEntry(UUID);
                         break;

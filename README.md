@@ -1,12 +1,33 @@
 # habiTrak
 
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 ![Android CI](https://github.com/CMPUT301F21T34/HabiTrak/workflows/Android%20CI/badge.svg)
+[![Issues](https://img.shields.io/github/contributors/CMPUT301F21T34/HabiTrak)](https://github.com/CMPUT301F21T34/HabiTrak/graphs/contributors)
+[![Issues](https://img.shields.io/github/issues/CMPUT301F21T34/HabiTrak)](https://github.com/CMPUT301F21T34/HabiTrak/issues)
 
 Group Project for Fall 2021 at University of Alberta
 
+# Features of the App
 
+## Add a Habit
 
-## Contributors
+Users can add a habit with a title and a reason. They also have an option to select what day to start that habit and what days it is visible.
+
+<img src="https://github.com/CMPUT301F21T34/HabiTrak/blob/documents/assets/ui/Add_Habit.png" width="360px" height="760px"/>
+
+## Add a Habit Event
+
+Users can add an event for a particular habit. They have the option to write a comment, add a location, and upload a picture for that particular event.
+
+<img src="https://github.com/CMPUT301F21T34/HabiTrak/blob/documents/assets/ui/Add_Event.png" width="360px" height="760px"/>
+
+## Follow other users and view their habits
+
+Users can follow other users can see their public habits and their streak.
+
+<img src="https://github.com/CMPUT301F21T34/HabiTrak/blob/documents/assets/ui/Social_Habit.png" width="360px" height="760px"/> 
+
+# Contributors
 
 <table>
 <tr>

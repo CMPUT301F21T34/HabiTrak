@@ -1,9 +1,8 @@
 package com.cmput301f21t34.habittrak.auth;
 
-import android.content.Intent;
+
 import android.os.Bundle;
-import android.text.Editable;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.cmput301f21t34.habittrak.BaseActivity;
-import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.R;
-import com.cmput301f21t34.habittrak.user.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.cmput301f21t34.habittrak.Utilities;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -31,33 +25,28 @@ import com.google.firebase.auth.FirebaseUser;
  * LoginFragment
  *
  * @author Pranav
+ * @author Dakota
  * @author Henry
- *
+ * <p>
  * Login Fragment for the app
- *
- * TODO: update the password validation: current username: <any> password: <any>
  */
-public class LoginFragment extends Fragment {
+public class LoginFragment extends Fragment implements Utilities {
 
-    private User mainUser;
-    private DatabaseManager db;
     private Auth mAuth;  // This is our Auth Helper Class
     private FirebaseUser authUser;
 
-    private View view;
-
-    TextInputLayout usernameLayout;
-    TextInputEditText usernameEditText;
-    TextInputLayout passwordLayout;
-    TextInputEditText passwordEditText;
-    MaterialButton loginButton;
-    MaterialButton signupButton;
-    MaterialButton forgotButton;
-
+    // views
+    private TextInputLayout usernameLayout;
+    private TextInputEditText usernameEditText;
+    private TextInputLayout passwordLayout;
+    private TextInputEditText passwordEditText;
+    private MaterialButton loginButton;
+    private MaterialButton signupButton;
+    private MaterialButton forgotButton;
 
 
-    public LoginFragment(User mainUser){
-        this.mainUser = mainUser; // Passes User object
+    // empty fragment constructor
+    public LoginFragment() {
 
     }
 
@@ -65,11 +54,9 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.habi_login_fragment, container, false);
+        View view = inflater.inflate(R.layout.habi_login_fragment, container, false);
 
         // Variables of the UI elements
-
-        // UI
         usernameLayout = view.findViewById(R.id.username_text_input);
         usernameEditText = view.findViewById(R.id.username_edit_text);
         passwordLayout = view.findViewById(R.id.password_text_input);
@@ -78,153 +65,107 @@ public class LoginFragment extends Fragment {
         signupButton = view.findViewById(R.id.signup_button);
         forgotButton = view.findViewById(R.id.forgot_button);
 
-        db = new DatabaseManager();
-
-        mAuth = new Auth(getActivity(), db);
-
+        mAuth = new Auth(getActivity());
 
         return view;
-
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
 
-        signupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toSignUp();
-            }
-        });
+        signupButton.setOnClickListener(view -> toSignUp());
 
-        forgotButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) { toForgot(); }
-        });
-
-
+        forgotButton.setOnClickListener(view -> toForgot());
 
         // Password validator
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        loginButton.setOnClickListener(view -> {
 
-                passwordLayout.setError(null);
-                usernameLayout.setError(null);
+            passwordLayout.setError(null);
+            usernameLayout.setError(null);
 
-                String email = usernameEditText.getText().toString();
-                String password = passwordEditText.getText().toString();
-
-                try {
-                    runLogin(email, password);
-                } catch (Exception e) {
-
-                    if (e instanceof IllegalArgumentException) {
-                        // Invalid entry
-                        usernameLayout.setError("Invalid Entry");
-                        passwordLayout.setError("Invalid Entry");
-                    }
-
-                    else {
-                        // Displays any other exceptions
-                        Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG);
-                    }
-
-
-                }
-
-
+            String email;
+            if (usernameEditText.getText() == null) {
+                email = "";
+            } else {
+                email = usernameEditText.getText().toString();
             }
 
+            String password;
+            if (passwordEditText.getText() == null) {
+                password = "";
+            } else {
+                password = passwordEditText.getText().toString();
+            }
 
-
+            try {
+                runLogin(email, password);
+            } catch (Exception e) {
+                if (e instanceof IllegalArgumentException) {
+                    // Invalid entry
+                    usernameLayout.setError("Invalid Entry");
+                    passwordLayout.setError("Invalid Entry");
+                } else {
+                    // Displays any other exceptions
+                    Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG).show();
+                }
+            }
         });
-
     }
 
-
-    ///
-
-
-    private void runLogin(String email, String password){
+    /**
+     * run the firebase login setup
+     *
+     * @param email    user email
+     * @param password user password
+     */
+    private void runLogin(String email, String password) {
         // This is the firebase auth
         // Must be used as they don't get put on top of the stack but are called later
         FirebaseAuth fAuth = mAuth.getAuth();
 
-
         fAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        authUser = fAuth.getCurrentUser();
+                        assert authUser != null; // should never fail
 
-                            authUser = fAuth.getCurrentUser();
-
-                            if (authUser.isEmailVerified()){
-
-
-                                mainUser = db.getUser(authUser.getEmail());
-                                startHomePage(null, mainUser);
-
-                            } else {
-
-                                usernameLayout.setError("Email not Verified");
-                                passwordLayout.setError(null);
-
-                                mAuth.alertNotVerified(authUser).show();
-
-                            }
-
-
+                        if (authUser.isEmailVerified()) {
+                            goToBaseActivity(getActivity(), null);
                         } else {
-
-                            usernameLayout.setError(null);
-                            passwordLayout.setError("Incorrect Password");
-
-
+                            // Email not Verified //
+                            usernameLayout.setError("Email not Verified");
+                            passwordLayout.setError(null);
+                            mAuth.alertNotVerified(authUser).show();
                         }
+                    } else {
+                        // Login Failed
+                        usernameLayout.setError(null);
+                        passwordLayout.setError("Incorrect Password");
                     }
                 });
     }
 
-
-
-
-
     /**
-     * startHomePage
-     * Start the base activity after logging in
-     * @param view
+     * function to goto signUp fragment
      */
-    public void startHomePage(View view, User currentUser){
-
-        Log.d("MERGE", "startHomePage");
-
-        Intent intent = new Intent(getActivity(), BaseActivity.class);
-
-        intent.putExtra("mainUser", currentUser);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        startActivity(intent);
-        getActivity().finish();
-    }
-
     private void toSignUp() {
         SignUpFragment signUpFragment = new SignUpFragment(mAuth);
-        getActivity().getSupportFragmentManager().beginTransaction()
+
+        requireActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.login_fragment_container, signUpFragment, "signupFrag")
                 .addToBackStack(null)
                 .commit();
     }
 
+    /**
+     * function to goto forgot Fragment
+     */
     private void toForgot() {
-        ForgotFragment forgotFragment = new ForgotFragment(null);
-        getActivity().getSupportFragmentManager().beginTransaction()
+        ForgotFragment forgotFragment = new ForgotFragment();
+        requireActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.login_fragment_container, forgotFragment, "forgotFrag")
                 .addToBackStack(null)
                 .commit();
-
     }
-
 }

@@ -34,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
-            android:hint="@string/habi_hint_username">
+            android:hint="@string/prompt_email">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id='@+id/username_edit_text'
@@ -49,17 +49,38 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
-            app:passwordToggleEnabled="true"
             android:hint="@string/habi_hint_password"
+            app:errorEnabled="true"
 
-            app:errorEnabled="true">
+            app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/password_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"/>
+                android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/login_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="@string/habi_button_next" />
+        </RelativeLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:fontFamily="@font/roboto"
+            android:text="@string/need_help"
+            android:textColor="?android:textColorPrimary" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -71,7 +92,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:layout_toStartOf="@id/signup_button"
                 android:text="Forgot" />
 
             <com.google.android.material.button.MaterialButton
@@ -80,15 +100,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:layout_toStartOf="@id/login_button"
+                android:layout_toEndOf="@id/forgot_button"
                 android:text="Sign Up" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/login_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:text="@string/habi_button_next" />
         </RelativeLayout>
 
     </LinearLayout>

@@ -20,9 +20,6 @@ import org.junit.jupiter.api.Test;
  * @since 2021-10-22
  */
 public class UserTest {
-    // No tests for getters or setters
-    // YET! TODO: tests for getters and setters.
-    // TODO finish javadoc if needed in testing files
 
     /**
      * mockUser
@@ -56,10 +53,10 @@ public class UserTest {
         // Add new habit then check size
         assertEquals(0, user.getHabitList().size());
         Habit habit1 = new Habit("habit1");
-        user.addHabit(habit1);
+        user.getHabitList().add(habit1);
         assertEquals(1, user.getHabitList().size());
         Habit habit2 = new Habit("habit2");
-        user.addHabit(habit2);
+        user.getHabitList().add(habit2);
         assertEquals(2, user.getHabitList().size());
 
         // Compare added habit object
@@ -76,20 +73,18 @@ public class UserTest {
     @Test
     public void removeHabitTest() {
         User user = mockUser();
-
-
         // Populate habit list of a new user
         Habit habit1 = new Habit("habit1");
-        user.addHabit(habit1);
+        user.getHabitList().add(habit1);
         Habit habit2 = new Habit("habit2");
-        user.addHabit(habit2);
+        user.getHabitList().add(habit2);
 
         // Remove habit1 then check size
-        assertTrue(user.removeHabit(habit1));
+        assertTrue(user.getHabitList().remove(habit1));
         assertEquals(1, user.getHabitList().size());
         assertEquals(habit2, user.getHabitList().get(0)); // habit at index 0 should now be habit2
         // Remove habit2, size should be 0
-        assertTrue(user.removeHabit(habit2));
+        assertTrue(user.getHabitList().remove(habit2));
         assertEquals(0, user.getHabitList().size());
     }
 
@@ -122,7 +117,6 @@ public class UserTest {
      *
      * @author Henry
      */
-
     @Test
     public void removeFollowerTest() {
         User user = mockUser();
@@ -206,7 +200,6 @@ public class UserTest {
     @Test
     public void addFollowingTest() {
         User user = mockUser();
-
 
         // Add new following then check size
         assertEquals(0, user.getFollowingList().size());

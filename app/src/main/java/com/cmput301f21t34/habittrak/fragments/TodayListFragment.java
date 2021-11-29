@@ -1,8 +1,8 @@
 package com.cmput301f21t34.habittrak.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -10,20 +10,19 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 
-import com.cmput301f21t34.habittrak.ViewEditHabit;
+import com.cmput301f21t34.habittrak.HabitActivity.ViewEditHabitActivity;
+import com.cmput301f21t34.habittrak.event.AddHabitEventActivity;
+import com.cmput301f21t34.habittrak.DatabaseManager;
 import com.cmput301f21t34.habittrak.recycler.HabitRecycler;
-import com.cmput301f21t34.habittrak.recycler.TodayHabitRecyclerAdapter;
+import com.cmput301f21t34.habittrak.recycler.HabitRecyclerAdapter;
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.R;
-
-
-
 
 import com.cmput301f21t34.habittrak.user.HabitList;
 
@@ -32,55 +31,51 @@ import com.google.android.material.checkbox.MaterialCheckBox;
 
 import java.util.ArrayList;
 
-
 /**
  * TodayListFragment
  *
  * @author Pranav
- *
+ * <p>
  * Fragment for displaying habits for today
  */
 public class TodayListFragment extends Fragment {
 
-
-    // Attributes //
-    public static String TAG = "Today_List";
-    // These are for the Recycler view
-    private RecyclerView habitRecyclerView;
-    private RecyclerView.LayoutManager layoutManager;
+    // Data
     private HabitRecycler habitRecycler;
-    private ArrayList<Habit> habitsDisplayList;
-    private TodayHabitRecyclerAdapter adapter;
-    private User mainUser;
-
-
+    private final ArrayList<Habit> habitsDisplayList;
+    private final HabitRecyclerAdapter adapter;
+    private final User mainUser;
+    // Views
+    private LinearLayout noDataLayout;
+    // Database Manager
+    private final DatabaseManager dm = new DatabaseManager();
 
     // constructor
     public TodayListFragment(User mainUser) {
         habitsDisplayList = new ArrayList<>();
         this.mainUser = mainUser;
-        adapter = new TodayHabitRecyclerAdapter(habitsDisplayList, true);
-        Log.d(TAG, "New Frag Created");
+        adapter = new HabitRecyclerAdapter(habitsDisplayList, true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.habi_all_habits_fragment, container, false);
+        View view = inflater.inflate(R.layout.habi_today_fragment, container, false);
 
-        Log.d(TAG, "New View Created");
         // Sets up views and manager for recycler view
-        habitRecyclerView = view.findViewById(R.id.all_recycler_view);
-        layoutManager = new LinearLayoutManager(getActivity());
-
+        noDataLayout = view.findViewById(R.id.today_no_data_view);
+        // These are for the Recycler view
+        RecyclerView habitRecyclerView = view.findViewById(R.id.today_recycler_view);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
 
         // set the click listener interface for the adapter
-        adapter.setHabitClickListener(new TodayHabitRecyclerAdapter.HabitClickListener() {
+        adapter.setHabitClickListener(new HabitRecyclerAdapter.HabitClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                // start view/edit habit activity on click of the recycler
                 Habit habit = habitsDisplayList.get(position);
-                Intent intent = new Intent(getContext(), ViewEditHabit.class);
+                Intent intent = new Intent(getContext(), ViewEditHabitActivity.class);
                 intent.putExtra("HABIT", habit);
                 intent.putExtra("position", habit.getIndex());
                 viewHabitResultLauncher.launch(intent);
@@ -100,9 +95,14 @@ public class TodayListFragment extends Fragment {
         habitRecycler = new HabitRecycler(habitRecyclerView, layoutManager, habitsDisplayList, mainUser.getHabitList(), true);
         habitRecycler.setAdapter(adapter);
 
+        setLayoutVisibility();
+
         return view;
     }
 
+    /**
+     * refresh the recycler view data on resume of the fragment
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -110,75 +110,103 @@ public class TodayListFragment extends Fragment {
         refreshTodayFragment();
     }
 
+    /**
+     * set the layout visibility depending on the data in the displayList
+     */
+    public void setLayoutVisibility() {
+        if (!(noDataLayout == null)) {
+            // if list empty, then hide the recycler view and show the no data text
+            if (habitsDisplayList.isEmpty()) {
+                noDataLayout.setVisibility(View.VISIBLE);
+                habitRecycler.setRecyclerVisibility(false);
+            } else {
+                noDataLayout.setVisibility(View.GONE);
+                habitRecycler.setRecyclerVisibility(true);
+            }
+        }
+    }
 
     /**
      * refreshHabitList
-     *
+     * <p>
      * refreshes the habitListView showing habits for today
      *
      * @author Dakota
      */
+    @SuppressLint("NotifyDataSetChanged")
     public void refreshTodayFragment() {
         // Populate today view with Today's habits.
         habitsDisplayList.clear();// Make sure is clear
         HabitList mainUserHabits = mainUser.getHabitList(); // get HabitsList
 
         // Iterates through all habits
-        for (int index = 0; index < mainUserHabits.size(); index++){
-
+        for (int index = 0; index < mainUserHabits.size(); index++) {
             // Checks to see if they should be displayed
             if (mainUserHabits.get(index).getOnDaysObj().isOnDay()
                     && mainUserHabits.get(index).isHabitStart()) { // If a habit is active today add
                 habitsDisplayList.add(mainUserHabits.get(index));
             }
         }
+        setLayoutVisibility();
         adapter.notifyDataSetChanged();
     }
+
     // activity result launcher for view/edit habit
     ActivityResultLauncher<Intent> viewHabitResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
-            result -> {}
+            result -> {
+            }
+    );
+    // activity result launcher for add habit event
+    ActivityResultLauncher<Intent> addHabitEventResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+            }
     );
 
     /**
      * showMenu.
+     * <p>
+     * create a menu when Image Button is clicked in the recycler view
+     * It gives an option to remove the selected habit
      *
-     * create a menu when Image Button is clicked
-     * @param view view from the adapter to create the menu
+     * @param view     view from the adapter to create the menu
      * @param position position of habit from adapter
      */
     public void showMenu(View view, int position) {
+        // create menu
         PopupMenu menu = new PopupMenu(getContext(), view);
         menu.getMenuInflater().inflate(R.menu.social_popup_menu, menu.getMenu());
         menu.getMenu().add("Remove");
         menu.show();
-
-
+        // menu listener
         menu.setOnMenuItemClickListener(menuItem -> {
             Habit habit = habitsDisplayList.get(position);
-            mainUser.removeHabit(habit);
+            mainUser.getHabitList().remove(habit);
             refreshTodayFragment();
-            Log.d(TAG,"Habit Removed");
+            dm.updateHabitList(mainUser.getEmail(), mainUser.getHabitList());
             return true;
         });
     }
 
-
     /**
      * onCheckBoxClick.
      *
-     * listener function for checkbox clicking. Start a add new habit event activity.
-     * @param view view of the checkbox
+     * @param view     view of the checkbox
      * @param position position of the clicked button in the adapter
+     * @author Pranav
+     * @author Henry
+     * <p>
+     * listener function for checkbox click.
+     * Start a add new habit event activity.
+     * User adds a new event through the checkbos.
      */
     public void onCheckBoxClick(View view, int position) {
         MaterialCheckBox checkBox = (MaterialCheckBox) view;
-        if (checkBox.isChecked()) {
-            //TODO: add logic if habit event is already completed
-            Log.d(TAG, "checkbox checked");
-            checkBox.setEnabled(false);
-        }
-
+        checkBox.setChecked(false);
+        Habit habit = habitsDisplayList.get(position);
+        Intent intent = new Intent(getContext(), AddHabitEventActivity.class);
+        intent.putExtra("HABIT", habit);
+        addHabitEventResultLauncher.launch(intent);
     }
-
 }

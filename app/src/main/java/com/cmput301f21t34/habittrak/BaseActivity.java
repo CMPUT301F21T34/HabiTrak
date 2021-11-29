@@ -2,7 +2,6 @@ package com.cmput301f21t34.habittrak;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -11,44 +10,49 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.cmput301f21t34.habittrak.HabitActivity.AddHabitActivity;
 import com.cmput301f21t34.habittrak.fragments.AllHabitsFragment;
 import com.cmput301f21t34.habittrak.fragments.EventsFragment;
 import com.cmput301f21t34.habittrak.fragments.ProfileFragment;
 import com.cmput301f21t34.habittrak.fragments.SocialFragment;
 import com.cmput301f21t34.habittrak.fragments.TodayListFragment;
 import com.cmput301f21t34.habittrak.user.Habit;
+import com.cmput301f21t34.habittrak.user.HabitEvent;
 import com.cmput301f21t34.habittrak.user.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationBarView;
 
-//TODO: Rename BaseActivity to a more suitable name
 
 /**
  * BaseActivity
  *
  * @author Pranav
  * <p>
- * Base Acitivity after logging in.
+ * Base Activity after logging in.
  * Hold the topbar, bottomnav bar and the base fragments
+ * Also used for updated the user data to firestore
  * @version 1.0
  * @since 2021-10-16
  */
-public class BaseActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
+public class BaseActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener, Utilities {
 
     // Result codes from activity
     public static final int RESULT_NEW_HABIT = 1000;
     public static final int RESULT_EDIT_HABIT = 2000;
-    final String TAG = "Base_Activity";
-    //TODO: Explicitly make attributes private
-    NavigationBarView bottomNav;
-    User mainUser;      // Creates dummy user for testing purposes
-    TodayListFragment todayFrag;
-    ProfileFragment profileFrag;
-    EventsFragment eventsFrag;
-    AllHabitsFragment allHabitsFrag;
-    SocialFragment socialFrag;
-    MaterialButton addHabitButton;
-    ActivityResultLauncher<Intent> addHabitActivityLauncher = registerForActivityResult(
+    public static final int RESULT_NEW_HABIT_EVENT = 3000;
+    public static final int RESULT_HABIT_EVENTS = 5000;
+    DatabaseManager db = new DatabaseManager();
+
+    // views
+    private NavigationBarView bottomNav;
+    private User mainUser;      // Creates dummy user for testing purposes
+    private TodayListFragment todayFrag;
+    private ProfileFragment profileFrag;
+    private EventsFragment eventsFrag;
+    private AllHabitsFragment allHabitsFrag;
+    private SocialFragment socialFrag;
+    private MaterialButton addHabitButton;
+    private ActivityResultLauncher<Intent> addHabitActivityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
             }
@@ -64,10 +68,15 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
 
-        // Gets Intents
-        Intent intent = getIntent();
-        mainUser = intent.getParcelableExtra("mainUser");      // Gets mainUser from intent
+        // Get main User.
+        if (mainUser == null) {
+            mainUser = getMainUser(this);
+        }
 
+        // update the streak variables of the user habits
+        refreshHabitStreak(mainUser);
+
+        // button views
         addHabitButton = findViewById(R.id.base_add_habit_button);
 
         // Initializes Fragments
@@ -81,12 +90,35 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         bottomNav = findViewById(R.id.bottom_nav);              // Sets Nav to bottom nav res
         bottomNav.setOnItemSelectedListener(this);              // Sets listener to this class
         bottomNav.setSelectedItemId(R.id.navbar_menu_today);    // Sets initial selected item
+    }
 
-        addHabitButton.setOnClickListener(view -> {
-            Intent intent1 = new Intent(view.getContext(), AddHabitActivity.class);
-            addHabitActivityLauncher.launch(intent1);
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        refreshHabitStreak(mainUser);
+
+        // add habit listener
+        addHabitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), AddHabitActivity.class);
+                addHabitActivityLauncher.launch(intent);
+            }
         });
     }
+
+    /**
+     * function is ran just before the application is close.
+     * Used to updated the firestore with the latest data
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        // Update before we are ever terminated (or unfocused)
+        updateHabitListDB(mainUser);
+    }
+
 
     /**
      * onBackPressed
@@ -129,21 +161,31 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         // result from add habit activity
         if (resultCode == RESULT_NEW_HABIT) {
             Habit newHabit = intent.getParcelableExtra("newHabit");
-            Log.d(TAG, "adding new habit: " + newHabit.getTitle());
             mainUser.getHabitList().add(newHabit);
-            Log.d(TAG, "!newHabit Absolute Index: " + String.valueOf(newHabit.getIndex()));
-            Log.d(TAG, "new habit: " + mainUser.getHabit(mainUser.getHabitList().size() - 1).getTitle());
-            Log.d(TAG, "size: " + String.valueOf(mainUser.getHabitList().size()));
             todayFrag.refreshTodayFragment(); // refresh view
+            allHabitsFrag.refreshAllFragment();
         }
         // result from view/edit habit activity
         else if (resultCode == RESULT_EDIT_HABIT) {
             Habit habit = intent.getParcelableExtra("HABIT");
-            int position = intent.getIntExtra("position", 0);
-            mainUser.replaceHabit(position, habit);
+            mainUser.getHabitList().replace(habit);
             todayFrag.refreshTodayFragment();
             allHabitsFrag.refreshAllFragment();
         }
+        // result from add habit event activity
+        else if (resultCode == RESULT_NEW_HABIT_EVENT) {
+            Habit habit = intent.getParcelableExtra("HABIT");
+            mainUser.getHabitList().replace(habit);
+        }
+        // result from view habit events activity
+        else if (resultCode == RESULT_HABIT_EVENTS) {
+            Habit habit = intent.getParcelableExtra("HABIT");
+            mainUser.getHabitList().replace(habit);
+        }
+
+        // Update Database after results
+        updateHabitListDB(mainUser);
+
         super.onActivityResult(requestCode, resultCode, intent);
     }
 }

@@ -13,15 +13,23 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
+/**
+ * ForgotFragment
+ *
+ * @author Dakota
+ * @version 1.0
+ * <p>
+ * Forgot Fragment for the app
+ */
 public class ForgotFragment extends Fragment {
 
-    TextInputLayout emailLayout;
-    TextInputEditText emailEditText;
-    MaterialButton sendButton;
+    private TextInputLayout emailLayout;
+    private TextInputEditText emailEditText;
+    private MaterialButton sendButton;
     Auth mAuth;
 
-    public ForgotFragment(Auth auth) {
-
+    // empty fragment constructor
+    public ForgotFragment() {
     }
 
     @Override
@@ -37,33 +45,32 @@ public class ForgotFragment extends Fragment {
         emailLayout = view.findViewById(R.id.forgot_email_text_input);
         emailEditText = view.findViewById(R.id.forgot_email_edit_text);
         sendButton = view.findViewById(R.id.forgot_send_button);
-        mAuth = new Auth(getActivity(), null); // no need for db here, potential crash cause though
-
-
-
-
-
-        // if everything correct then start base activity
+        mAuth = new Auth(getActivity());
 
         return view;
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
 
         sendButton.setOnClickListener(view1 -> {
 
+            // null check
+            if (emailEditText.getText() == null) {
+                emailEditText.setText("");
+            }
+
             String email = emailEditText.getText().toString();
 
-            if (email == ""){
+            if (email.equals("")) {
                 emailEditText.setError("Cannot be empty");
             } else {
                 emailEditText.setError(null);
                 FirebaseAuth fAuth = mAuth.getAuth();
                 try {
                     fAuth.sendPasswordResetEmail(email);
-                } catch (Exception e){
+                } catch (Exception e) {
                     emailEditText.setError(e.toString());
                 }
 

@@ -13,54 +13,42 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
-            android:minHeight="?attr/actionBarSize"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:titleTextColor="@android:color/white"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
             app:title="@string/habi_app_name"
-            android:background="?attr/colorPrimary">
+            app:titleTextColor="@android:color/white">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/base_add_habit_button"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
                 android:layout_alignParentEnd="true"
-                android:text="Add Habit"
+                android:layout_gravity="right"
                 android:layout_marginEnd="16dp"
+                android:text="@string/habit_add_button"
                 android:textColor="@color/white"
-                app:iconTint="@color/white"
                 app:icon="@drawable/ic_baseline_add_24"
-                app:strokeColor="@color/white"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"/>
+                app:iconTint="@color/white"
+                app:strokeColor="@color/white" />
         </androidx.appcompat.widget.Toolbar>
 
 
-
     </com.google.android.material.appbar.AppBarLayout>
-    
+
     <FrameLayout
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        />
+        android:layout_weight="1" />
 
-    <!--
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/nav_host_fragment"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        app:defaultNavHost="true"
-        app:navGraph="@navigation/nav_graph" />
-        -->
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        app:menu="@menu/bottom_nav_menu"/>
+        app:menu="@menu/bottom_nav_menu" />
 </LinearLayout>

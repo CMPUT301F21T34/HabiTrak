@@ -68,3 +68,8 @@ The goal of this project is to create a habit tracking app which also has social
 
 ## License
  Licensed under the Apache License, Version 2.0. Copyright 2021 CMPUT301F21T34. [Copy of the license](LICENSE) 
+ 
+## Notes
+
+All test files are included in /androidTest because the entity classes implement interface **Utilities** that has an instance of **FirebaseFireStore**, which requires Android instrumentation to build properly.  
+

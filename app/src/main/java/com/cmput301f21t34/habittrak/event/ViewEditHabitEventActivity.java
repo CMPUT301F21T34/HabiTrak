@@ -44,6 +44,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * activity for viewing and editing habit event
+ * User can edit the location, picture and the comment of the habit event
+ *
+ * @author Aron
+ * @version 1.0
+ */
 public class ViewEditHabitEventActivity extends AppCompatActivity {
 
     // result variables

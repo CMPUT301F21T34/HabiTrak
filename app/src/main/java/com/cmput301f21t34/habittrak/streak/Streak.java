@@ -8,10 +8,11 @@ import java.util.Calendar;
 
 /**
  * Streak object to manage all streak-related data of a Habit object
- * @version 1.0
- * @since 2021-11-25
+ * Calculates the best streak data and related data
  * @author Dakota
+ * @version 1.0
  * @see Habit
+ * @since 2021-11-25
  */
 public class Streak {
 
@@ -45,9 +46,9 @@ public class Streak {
     /**
      * Checks going backwards from firstDay, the longest streak
      *
-     * @author Dakota
      * @param firstDay Calendar of the first day to check (usually today)
      * @return int streak
+     * @author Dakota
      */
     private int refreshStreak(Calendar firstDay) {
 
@@ -87,7 +88,7 @@ public class Streak {
                     else if (
                             (comparison < 0) // event we are checking completed before the current day we are checking
                                     &&
-                            (new TimeIgnoringComparator().compare(Calendar.getInstance(), day) != 0) // it in not today
+                                    (new TimeIgnoringComparator().compare(Calendar.getInstance(), day) != 0) // it in not today
                     ) {
                         // We are missing an event aka the streak was broken
                         notCompleted = false;
@@ -107,6 +108,11 @@ public class Streak {
         return streak;
     }
 
+    /**
+     * function to find the best streak end data of a given habit
+     *
+     * @return best streak end data
+     */
     private Calendar findBestStreakEnd() {
 
         if (habit.getBestStreakDate() == null) {
@@ -118,7 +124,7 @@ public class Streak {
 
         while (amountOfDaysToFind > 0) {
             // Only count on days
-            if (habit.getOnDaysObj().isOnDay(bestStreakDateEnd)){
+            if (habit.getOnDaysObj().isOnDay(bestStreakDateEnd)) {
                 amountOfDaysToFind--; // This was a valid day, decrement amount to find by 1
             }
 
@@ -143,7 +149,7 @@ public class Streak {
         Calendar testDate = Calendar.getInstance();
         testDate.set(2021, 02, 28);
 
-        if (comparator.compare(currentStreakDateEnd,testDate) == -1) {
+        if (comparator.compare(currentStreakDateEnd, testDate) == -1) {
             // We are testing, don't update DateEnd
         } else {
             currentStreakDateEnd = Calendar.getInstance(); // set to today

@@ -131,7 +131,7 @@ public class LoginFragment extends Fragment implements Utilities {
                         assert authUser != null; // should never fail
 
                         if (authUser.isEmailVerified()) {
-                            goToBaseActivity(getActivity(), null);
+                            goToBaseActivity(getActivity());
                         } else {
                             // Email not Verified //
                             usernameLayout.setError("Email not Verified");

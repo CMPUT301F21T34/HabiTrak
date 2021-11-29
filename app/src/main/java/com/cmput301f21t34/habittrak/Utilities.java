@@ -41,7 +41,9 @@ public interface Utilities {
      */
     default void updateHabitListDB(User user) {
 
-        db.updateHabitList(user.getEmail(), user.getHabitList());
+        if (user != null) {
+            db.updateHabitList(user.getEmail(), user.getHabitList());
+        }
 
     }
 
@@ -93,12 +95,11 @@ public interface Utilities {
      *
      * @author Dakota
      * @param activity Activity context to execute from (usually 'this')
-     * @param user User to pass into base activity
      */
-    default void goToBaseActivity(Activity activity, User user) {
+    default void goToBaseActivity(Activity activity) {
         Intent intent = new Intent(activity, BaseActivity.class);
 
-        intent.putExtra("mainUser", user);
+        //intent.putExtra("mainUser", user);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         activity.startActivity(intent);

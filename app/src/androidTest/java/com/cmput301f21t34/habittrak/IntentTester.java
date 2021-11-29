@@ -396,7 +396,7 @@ public class IntentTester {
 
         // check to see we're in the intended activity
         intended(hasComponent(ViewHabitEvents.class.getName()));
-        onView(withId(R.id.events_recycler_view)).perform(
+        onView(withId(R.id.events_recycler_view_event)).perform(
                 RecyclerViewActions.actionOnItemAtPosition(0, click()));
         // check to see we're in the intended activity
         intended(hasComponent(ViewEditHabitEventActivity.class.getName()));

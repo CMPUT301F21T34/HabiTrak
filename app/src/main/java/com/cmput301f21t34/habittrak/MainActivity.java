@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity implements Utilities {
 
         // Get Log In State
         db = new DatabaseManager();
+
+
         fUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if (fUser != null) {

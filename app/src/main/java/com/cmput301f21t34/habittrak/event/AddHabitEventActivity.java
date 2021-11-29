@@ -50,6 +50,9 @@ import java.util.Locale;
  * @author Henry
  * Version: 1.0
  * Takes a habit and returns the new habit event
+ * @see DatabaseManager
+ * @see Habit
+ *
  */
 public class AddHabitEventActivity extends AppCompatActivity implements View.OnClickListener {
     // static variables

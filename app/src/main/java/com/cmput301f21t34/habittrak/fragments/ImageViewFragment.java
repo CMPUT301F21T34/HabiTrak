@@ -5,17 +5,23 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.fragment.app.Fragment;
 
 import com.cmput301f21t34.habittrak.R;
-import com.google.android.material.button.MaterialButton;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
-import java.util.Objects;
+/**
+ * Image View Fragment
+ *
+ * @author Dakota
+ * <p>
+ * Displays a Uri in a fragment
+ *
+ * @version 1.0
+ * @since 2021-11-29
+ */
 
 public class ImageViewFragment extends Fragment {
 

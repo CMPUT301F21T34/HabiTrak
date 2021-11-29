@@ -27,7 +27,7 @@ import java.util.Calendar;
  * @see Habit
  * @see HabitEvent
  */
-// TODO: Assert similarity for location and file
+
 public class ParcelableUnitTest {
 
     // Testing Parcelability for User

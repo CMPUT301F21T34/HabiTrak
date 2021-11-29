@@ -91,7 +91,6 @@ public class AddHabitActivity extends AppCompatActivity {
         visibilityText = findViewById(R.id.add_habit_visibility_text);
 
         // getting color
-        // TODO: change the setting for dark mode as well
         tealColor = ContextCompat.getColor(getBaseContext(), R.color.teal_200);
 
 

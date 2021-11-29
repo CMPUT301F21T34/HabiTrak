@@ -2,7 +2,7 @@ package com.cmput301f21t34.habittrak;
 
 import android.location.Location;
 import android.net.Uri;
-import android.util.Log; //TODO: Clean up Logs
+import android.util.Log;
 
 import com.cmput301f21t34.habittrak.user.Habit;
 import com.cmput301f21t34.habittrak.user.HabitEvent;
@@ -82,7 +82,7 @@ public class DatabaseManager {
         try {
             DocumentReference docref = collectionReference.document(email);
             Task<DocumentSnapshot> task = docref.get();
-            while (!task.isComplete());
+            while (!task.isComplete()) ;
             DocumentSnapshot document = task.getResult();
             return !document.exists(); // document for email doesn't exist means email unique
         } catch (Exception ignored) {
@@ -302,8 +302,7 @@ public class DatabaseManager {
         if (hashmap.get("currentStreakDate") != null) {
             habitDatabase.setCurrentStreakDate(toCalendar(
                     (HashMap<String, Object>) hashmap.get("currentStreakDate")));
-        }
-        else {
+        } else {
             habitDatabase.setCurrentStreakDate(null);
         }
         if (hashmap.get("bestStreakDate") != null) {
@@ -336,8 +335,9 @@ public class DatabaseManager {
 
     /**
      * toHabitEvent
-     *
+     * <p>
      * Converts HashMap from database to HabitEvent object
+     *
      * @param hashmap -Type HashMap<String, Object> the HashMap to be converted
      * @return HabitEvent
      * @author Tauseef
@@ -368,16 +368,17 @@ public class DatabaseManager {
 
     /**
      * toLocation
-     *
+     * <p>
      * Converts HashMap from database to Location object
+     *
      * @param hashMap HashMap<String, Object> the HashMap to be converted
      * @return Location, the location from the HashMap
      */
-    private Location toLocation(HashMap<String,Object> hashMap) {
+    private Location toLocation(HashMap<String, Object> hashMap) {
         if (hashMap != null) {
             Location loc = new Location((String) hashMap.get("provider"));
             loc.setLatitude((double) hashMap.get("latitude"));
-            loc.setLongitude((double)  hashMap.get("longitude"));
+            loc.setLongitude((double) hashMap.get("longitude"));
 
             return loc;
         } else {
@@ -387,8 +388,9 @@ public class DatabaseManager {
 
     /**
      * toCalendar
-     *
+     * <p>
      * Converts HashMap from database to Calendar object
+     *
      * @param hashmap -Type HashMap<String, Object> the HashMap to be converted
      * @return GregorianCalendar
      * @author Tauseef
@@ -422,7 +424,7 @@ public class DatabaseManager {
     /**
      * Updates the username of the user with the given UUID
      *
-     * @param UUID String, the UUID of the user to update
+     * @param UUID        String, the UUID of the user to update
      * @param newUserName String, the name to update to
      * @author Kaaden
      */
@@ -439,7 +441,7 @@ public class DatabaseManager {
     /**
      * Updates the biography of the user with the given UUID
      *
-     * @param UUID String, the UUID of the user to update
+     * @param UUID   String, the UUID of the user to update
      * @param newBio String, the biography to update to
      * @author Kaaden
      */
@@ -455,16 +457,17 @@ public class DatabaseManager {
     /**
      * Update the habit list of the given user
      * We can add/remove/edit attributes of habitToUpdate
-     * @param UUID String, the uuid of the user who's habit list is to be updated
+     *
+     * @param UUID      String, the uuid of the user who's habit list is to be updated
      * @param habitList HabitList, the habit list that is to be updated
      */
     public void updateHabitList(String UUID, HabitList habitList) {
-            HashMap<String, Object> data = new HashMap<>();
-            data.put("habitList", habitToDatabase(habitList));
-            List<String> fieldsToUpdate = new ArrayList<>();
-            fieldsToUpdate.add("habitList");
-            database.collection("users").document(UUID).set(
-                    data, SetOptions.mergeFields(fieldsToUpdate));
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("habitList", habitToDatabase(habitList));
+        List<String> fieldsToUpdate = new ArrayList<>();
+        fieldsToUpdate.add("habitList");
+        database.collection("users").document(UUID).set(
+                data, SetOptions.mergeFields(fieldsToUpdate));
     }
 
     /**
@@ -633,9 +636,8 @@ public class DatabaseManager {
     }
 
     /**
-     *
-     * @param name, String, The name of image file
-     * @param contentUri, Uri, the uri of the image
+     * @param name,        String, The name of image file
+     * @param contentUri,  Uri, the uri of the image
      * @param mStorageRef, StorageReference, the storage reference of the firebase storage
      * @return Uri, the downloaded uri of the uploaded image
      */

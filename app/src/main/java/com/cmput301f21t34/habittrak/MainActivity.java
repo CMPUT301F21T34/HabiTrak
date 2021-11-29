@@ -11,12 +11,11 @@ import com.google.firebase.auth.FirebaseUser;
 
 /**
  * MainActivity
- *
+ * <p>
  * Starting point of the app
  * TODO : Testing that the database returns the correct on days object
- *
  */
-public class MainActivity extends AppCompatActivity implements Utilities{
+public class MainActivity extends AppCompatActivity implements Utilities {
 
     // Get shared prefs
     private FirebaseUser fUser;

@@ -8,6 +8,7 @@ import java.util.Calendar;
 
 /**
  * HabitDatabase
+ *
  * @author Henry
  * @version 1.0.0
  * Same as Habit but with a different implementation for onDaysObj (On_Days/boolean[] -> ArrayList<Booleam>)
@@ -24,10 +25,10 @@ public class HabitDatabase {
     private boolean isPublic;
     private ArrayList<Boolean> onDaysObj;
 
-    public HabitDatabase(){
+    public HabitDatabase() {
         this.index = 0;
         this.title = "";
-        this.reason= "";
+        this.reason = "";
         this.startDate = Calendar.getInstance();
         this.habitEvents = new ArrayList<HabitEvent>();
         this.isPublic = false;
@@ -42,22 +43,50 @@ public class HabitDatabase {
         return isPublic;
     }
 
-    public String getTitle(){ return this.title; }
-    public void setTitle(String title){ this.title = title; }
+    public String getTitle() {
+        return this.title;
+    }
 
-    public String getReason(){ return this.reason; }
-    public void setReason(String reason){ this.reason = reason; }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-    public Calendar getStartDate(){ return this.startDate; }
-    public void setStartDate(Calendar startDate){ this.startDate = startDate; }
+    public String getReason() {
+        return this.reason;
+    }
 
-    public int getIndex(){ return this.index; }
-    public void setIndex(int index){ this.index = index; }
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
 
-    public ArrayList<HabitEvent> getHabitEvents(){ return this.habitEvents; }
-    public void setHabitEvents(ArrayList<HabitEvent> habitEvents){ this.habitEvents = habitEvents; }
+    public Calendar getStartDate() {
+        return this.startDate;
+    }
 
-    public ArrayList<Boolean> getOnDaysObj(){ return this.onDaysObj; }
+    public void setStartDate(Calendar startDate) {
+        this.startDate = startDate;
+    }
+
+    public int getIndex() {
+        return this.index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public ArrayList<HabitEvent> getHabitEvents() {
+        return this.habitEvents;
+    }
+
+    public void setHabitEvents(ArrayList<HabitEvent> habitEvents) {
+        this.habitEvents = habitEvents;
+    }
+
+    public ArrayList<Boolean> getOnDaysObj() {
+        return this.onDaysObj;
+    }
+
     public void setOnDaysObj(OnDays onDays) {
         ArrayList<Boolean> onDaysToSet = new ArrayList<>();
         boolean[] onDaysArray = onDays.getAll();
@@ -66,7 +95,8 @@ public class HabitDatabase {
         }
         this.onDaysObj = onDaysToSet;
     }
-    public void setOnDaysObjFromDB(ArrayList<Boolean> booleanArrayList){
+
+    public void setOnDaysObjFromDB(ArrayList<Boolean> booleanArrayList) {
         this.onDaysObj = booleanArrayList;
     }
 

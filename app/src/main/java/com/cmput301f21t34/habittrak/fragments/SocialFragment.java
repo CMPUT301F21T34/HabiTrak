@@ -103,7 +103,6 @@ public class SocialFragment extends Fragment {
                 socialTab.selectTab(socialTab.getTabAt(position));
             }
         });
-
         return view;
     }
 
@@ -214,5 +213,4 @@ public class SocialFragment extends Fragment {
             searchFragment.startPopulateList(); // Start fetching data for the list
         }
     }
-
 }

@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -54,7 +53,6 @@ import java.util.Locale;
  */
 public class AddHabitEventActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public static final int GALLERY_REQUEST_CODE = 105;
     Button cameraButton;
     Button galleryButton;
     Button mapButton;
@@ -108,8 +106,6 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
         Intent intent = getIntent();
         this.habit = intent.getParcelableExtra("HABIT");
 
-
-
         // the activity launcher to get an image from the gallery
         galleryActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -128,7 +124,6 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
         cameraActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
-
                     if (result.getResultCode() == Activity.RESULT_OK ) {
                         File f = new File(currentPhotoPath);
                         image.setImageURI(Uri.fromFile(f));
@@ -138,9 +133,6 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
                         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                         mediaScanIntent.setData(contentUri);
                         AddHabitEventActivity.this.sendBroadcast(mediaScanIntent);
-
-                    } else {
-
                     }
                 });
 
@@ -150,7 +142,6 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
                 if (result.getData().getBooleanExtra("permission",false)) {
                     double latitude = result.getData().getDoubleExtra("latitude", 0.000000);
                     double longitude = result.getData().getDoubleExtra("longitude", 0.000000);
-
                     Location eventLocation = new Location("gps");
                     eventLocation.setLatitude(latitude);
                     eventLocation.setLongitude(longitude);
@@ -158,8 +149,6 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
                     addressLine.setText("");
                     addressLine.setText(getAddress(eventLocation.getLatitude(), eventLocation.getLongitude()));
                 }
-            } else {
-
             }
         });
         // setting listeners
@@ -173,7 +162,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
      * onClick
      *
      * Handles behavior of the onClick() method for all buttons in AddHabitEventActivity
-     * @param view
+     * @param view current view
      */
     @Override
     public void onClick(View view) {
@@ -227,20 +216,15 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
         try {
             photoFile = createImageFile();
 
-        } catch (IOException ex) {
-
-        }
+        } catch (IOException ex) { }
         // Continue only if the File was successfully created
         if (photoFile != null) {
-
             Uri photoURI = FileProvider.getUriForFile(this,
                     "com.example.android.fileprovider",
                     photoFile);
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
             // starts the activity
             cameraActivityResultLauncher.launch(takePictureIntent);
-        } else {
-
         }
     }
 
@@ -320,7 +304,6 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
             addressList = geocoder.getFromLocation(latitude, longitude, 1);
             address = addressList.get(0).getAddressLine(0);
         } catch (Exception e) {
-
             e.printStackTrace();
         }
         return address;

@@ -72,8 +72,6 @@ public class AddHabitActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-
-
         // Getting Views //
         startDate = findViewById(R.id.add_habit_selected_date);
         datePickerButton = findViewById(R.id.star_date_button);
@@ -93,13 +91,10 @@ public class AddHabitActivity extends AppCompatActivity {
         // getting color
         tealColor = ContextCompat.getColor(getBaseContext(), R.color.teal_200);
 
-
         // setting date
         calendar = Calendar.getInstance();
         String setDateText = "Selected Date is : " + getDate(calendar);
         startDate.setText(setDateText);
-
-
 
         // setting up date picker
         MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
@@ -132,7 +127,6 @@ public class AddHabitActivity extends AppCompatActivity {
         });
 
         // get result
-
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -140,13 +134,10 @@ public class AddHabitActivity extends AppCompatActivity {
                 if(!checkField(habitName.getText())){
                     habitName.setError("Input Required");
                 } else {
-
                     finishActivityWithResult();
                 }
-
             }
         });
-
 
         // button listeners
         mondayButton.setOnClickListener(new View.OnClickListener() {
@@ -207,7 +198,7 @@ public class AddHabitActivity extends AppCompatActivity {
      * @author Pranav
      */
 
-    public void changeButtonState(View view, MaterialButton button, int position){
+    public void changeButtonState(View view, MaterialButton button, int position) {
         if(daysOfWeek[position]) {
             button.setBackgroundColor(buttonOffColor);
             daysOfWeek[position] = false;
@@ -215,7 +206,6 @@ public class AddHabitActivity extends AppCompatActivity {
             button.setBackgroundColor(tealColor);
             daysOfWeek[position] = true;
         }
-
     }
 
     /**
@@ -223,7 +213,7 @@ public class AddHabitActivity extends AppCompatActivity {
      * @param calendar date to convert to string
      * @return string value of type Month, Day
      */
-    public String getDate(Calendar calendar){
+    public String getDate(Calendar calendar) {
         String month = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
         String day = Integer.toString(calendar.get(Calendar.DAY_OF_MONTH));
         return month + ", " + day;
@@ -234,8 +224,7 @@ public class AddHabitActivity extends AppCompatActivity {
      * @param name Editable name to check if empty
      * @return boolean whether filled or not
      */
-    public boolean checkField(Editable name){
-
+    public boolean checkField(Editable name) {
         return name.toString().trim().length() > 0;
     }
 
@@ -245,7 +234,7 @@ public class AddHabitActivity extends AppCompatActivity {
      * @author Pranav
      * @author Dakota
      */
-    public void finishActivityWithResult(){
+    public void finishActivityWithResult() {
         String name = habitName.getText().toString();
         String reason = habitReason.getText().toString();
 

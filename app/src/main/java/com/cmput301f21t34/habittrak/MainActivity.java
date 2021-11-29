@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements Utilities {
             // get user to login
             goToLogin(this);
         }
-
     }
 }
 

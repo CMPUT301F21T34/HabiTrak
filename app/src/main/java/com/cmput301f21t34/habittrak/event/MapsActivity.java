@@ -97,14 +97,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onLocationResult(@NonNull LocationResult locationResult) {
                 super.onLocationResult(locationResult);
                 if (locationResult == null) {
-
                     return;
                 }
-                for (Location location:locationResult.getLocations()) {
-
-                }
+                for (Location location:locationResult.getLocations()) { }
                 lastKnownLocation = locationResult.getLastLocation();
-
                 stopLocationUpdates();
                 updateLocationUI(lastKnownLocation);
             }
@@ -117,7 +113,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Return the chosen location after confirm button has been pressed
         confirmButton.setOnClickListener(view -> {
-
             Intent result = new Intent();
             result.putExtra("permission",true);
             result.putExtra("latitude", lastKnownLocation.getLatitude());
@@ -133,13 +128,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (requestCode == REQUEST_CHECK_SETTINGS) {
                 // check if the gps has been turned on
                 if (resultCode == Activity.RESULT_OK) {
-
                     startLocationUpdates();
-                } else {
-
                 }
-        } else {
-
         }
     }
 
@@ -149,8 +139,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * check whether the location setting has been turned on if it hasn't been turned on then ask
      * permission from the user and turn it on. After turning it on start requesting location updates
      */
-    private void checkSettingsAndStartLocationUpdates(){
-
+    private void checkSettingsAndStartLocationUpdates() {
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
         SettingsClient client = LocationServices.getSettingsClient(this);
 
@@ -159,21 +148,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         task.addOnSuccessListener(this, locationSettingsResponse -> {
             // settings are satisfied the client can initialize location requests here
             startLocationUpdates();
-
-
         });
         task.addOnFailureListener(this, e -> {
             if (e instanceof ResolvableApiException) {
                 // location settings are not satisfied.
                 try {
-
                     ResolvableApiException resolvable = (ResolvableApiException) e;
                     resolvable.startResolutionForResult(MapsActivity.this,
                             REQUEST_CHECK_SETTINGS);
-                } catch (IntentSender.SendIntentException sendEx) {
-                    // ignore it
-
-                }
+                } catch (IntentSender.SendIntentException sendEx) { }
             }
         });
     }
@@ -214,7 +197,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
 
         mMap.setOnMapClickListener(latLng -> {
             lastKnownLocation.setLatitude(latLng.latitude);

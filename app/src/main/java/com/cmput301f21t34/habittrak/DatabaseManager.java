@@ -59,12 +59,10 @@ public class DatabaseManager {
         ArrayList<String> users = new ArrayList<>();
         try {
             Task<QuerySnapshot> task = database.collection("users").get();
-            while (!task.isComplete()) ; // wait
+            while (!task.isComplete()); // wait
             // Add each the id of each document (UUID of the user) to users
             task.getResult().forEach(document -> users.add(document.getId()));
-        } catch (Exception ignored) {
-
-        }
+        } catch (Exception ignored) { }
         return users;
     }
 
@@ -82,7 +80,7 @@ public class DatabaseManager {
         try {
             DocumentReference docref = collectionReference.document(email);
             Task<DocumentSnapshot> task = docref.get();
-            while (!task.isComplete()) ;
+            while (!task.isComplete());
             DocumentSnapshot document = task.getResult();
             return !document.exists(); // document for email doesn't exist means email unique
         } catch (Exception ignored) {
@@ -179,12 +177,15 @@ public class DatabaseManager {
             DocumentSnapshot document = task.getResult();
 
             if (document.getData() != null) {
+                // Get habit list from database
+                // then convert it to HabitDatabase list
+                // and finally convert it to HabitList
                 ArrayList<HashMap<String, Object>> requestedHabitList =
                         (ArrayList<HashMap<String, Object>>) document.get("habitList");
-
                 ArrayList<HabitDatabase> requestedHabitDatabases =
                         toHabitDatabaseList(requestedHabitList);
                 habitList = databaseToHabit(requestedHabitDatabases);
+
                 followerList = (ArrayList<String>) document.get("followerList");
                 followingList = (ArrayList<String>) document.get("followingList");
                 followReqList = (ArrayList<String>) document.get("followReqList");
@@ -194,7 +195,6 @@ public class DatabaseManager {
                 name = (String) document.get("Username");
                 bio = (String) document.get("Biography");
             }
-
             user = new User(name, email, bio, habitList, followerList, followingList, followReqList,
                     followRequestedList, blockList, blockedByList);
             return user;
@@ -284,6 +284,7 @@ public class DatabaseManager {
     /**
      * toHabitDatabase
      * Converts HashMap from database to HabitDatabase object
+     * Helper method to convert individual list item for toHabitDatabaseList
      *
      * @param hashmap -Type HashMap<String, Object> the HashMap to be converted
      * @return HabitDatabase
@@ -337,6 +338,7 @@ public class DatabaseManager {
      * toHabitEvent
      * <p>
      * Converts HashMap from database to HabitEvent object
+     * Helper method to convert individual list item for toHabitEventList
      *
      * @param hashmap -Type HashMap<String, Object> the HashMap to be converted
      * @return HabitEvent
@@ -496,7 +498,6 @@ public class DatabaseManager {
                     if (list != null) {
                         // Check if the relevant member is already stored
                         boolean contains = list.contains(listMember);
-
                         if (remove) {
                             list.remove(listMember);
                         } else if (!contains) {  // Only add if not already a member
@@ -512,8 +513,6 @@ public class DatabaseManager {
                         }
                     }
                 }
-            } else {
-
             }
         });
     }
@@ -651,11 +650,7 @@ public class DatabaseManager {
             while (!uriTask.isComplete()) ;
             if (uriTask.isSuccessful()) {
                 returnedUri = uriTask.getResult();
-            } else {
-
             }
-        } else {
-
         }
         return returnedUri;
     }

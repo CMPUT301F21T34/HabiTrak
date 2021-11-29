@@ -65,7 +65,6 @@ public class HabitRecyclerAdapter extends RecyclerView.Adapter<HabitRecyclerAdap
             streak = (TextView) view.findViewById(R.id.habit_streak);
             menuButton.setOnClickListener(this);
             checkBox.setOnClickListener(this);
-
         }
 
         /**
@@ -119,7 +118,6 @@ public class HabitRecyclerAdapter extends RecyclerView.Adapter<HabitRecyclerAdap
             } else {
                 checkBox.setVisibility(View.INVISIBLE);
             }
-
         }
 
         /**
@@ -128,7 +126,7 @@ public class HabitRecyclerAdapter extends RecyclerView.Adapter<HabitRecyclerAdap
          * set the progress bar value
          * @param progress int value of the habit streak
          */
-        public void setProgress(int progress){
+        public void setProgress(int progress) {
             progressBar.setProgress((progress * 100)/30);
             String text = Integer.toString(progress) + "/30";
             streak.setText(text);
@@ -144,7 +142,6 @@ public class HabitRecyclerAdapter extends RecyclerView.Adapter<HabitRecyclerAdap
             checkBox.setChecked(true);
             checkBox.setEnabled(false);
         }
-
     }
 
     /**
@@ -173,7 +170,6 @@ public class HabitRecyclerAdapter extends RecyclerView.Adapter<HabitRecyclerAdap
         // Create a new view, which defines the UI of the list item
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.recycler_view_row, viewGroup, false);
-
         return new ViewHolder(view);
     }
 
@@ -200,7 +196,6 @@ public class HabitRecyclerAdapter extends RecyclerView.Adapter<HabitRecyclerAdap
                 }
             }
         }
-
         // set progress bar
         viewHolder.setProgress(habit.getCurrentStreak());
     }

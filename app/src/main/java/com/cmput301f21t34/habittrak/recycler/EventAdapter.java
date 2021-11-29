@@ -29,7 +29,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     private ArrayList<HabitEvent> events;
     private final EventClickListener listener;
 
-    public EventAdapter(ArrayList<HabitEvent> events, EventClickListener listener){
+    public EventAdapter(ArrayList<HabitEvent> events, EventClickListener listener) {
         this.events = events;
         this.listener = listener;
     }

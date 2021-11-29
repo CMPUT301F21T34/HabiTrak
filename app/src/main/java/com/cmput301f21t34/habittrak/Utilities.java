@@ -39,7 +39,7 @@ public interface Utilities {
      * @author Dakota
      * @param user User to update in database
      */
-    default void updateHabitListDB(User user){
+    default void updateHabitListDB(User user) {
 
         db.updateHabitList(user.getEmail(), user.getHabitList());
 
@@ -54,7 +54,7 @@ public interface Utilities {
         // Refreshes all habit streaks //
         ArrayList<Habit> habits = (ArrayList<Habit>) user.getHabitList(); // cast for simple iteration
 
-        for (int index = 0; index < habits.size(); index++){
+        for (int index = 0; index < habits.size(); index++) {
             Streak streak = new Streak(habits.get(index)); // set a Streak class to modify each habit
             streak.refreshStreak(); // refreshes each streak
         }
@@ -86,8 +86,6 @@ public interface Utilities {
                 .commit();
     }
 
-
-
     /**
      * Go to Base Activity
      *
@@ -111,7 +109,7 @@ public interface Utilities {
      * @author Dakota
      * @param activity Activity context to execute from (usually 'this')
      */
-    default void goToMainActivity(Activity activity){
+    default void goToMainActivity(Activity activity) {
         // Send user back to main activity
         Intent intent = new Intent(activity, MainActivity.class);
         activity.startActivity(intent);
@@ -128,7 +126,7 @@ public interface Utilities {
     default User getMainUser(Activity activity) {
         // Updates the mainUser, even if they are already logged in
         FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (fUser == null){
+        if (fUser == null) {
             goToMainActivity(activity);
             return null;
         }
@@ -146,7 +144,7 @@ public interface Utilities {
      *            The TimeZone key used should be: key + "TimeZone" as is assumed
      * @return Calendar which can be null
      */
-    default Calendar calendarParcelConstructor(Bundle bundle, String key){
+    default Calendar calendarParcelConstructor(Bundle bundle, String key) {
         String timeZoneKey = key + "TimeZone";
 
         String timeZone = bundle.getString(timeZoneKey);
@@ -157,9 +155,7 @@ public interface Utilities {
             constructionCalendar.setTimeInMillis(bundle.getLong(key));
             return constructionCalendar;
         }
-
         return null;
-
     }
 
     /**
@@ -170,7 +166,7 @@ public interface Utilities {
      * @param calendar Calendar to put in bundle
      * @param key String key to use (should be exact same as variables name case sensitive)
      */
-    default void putCalendarInBundle(Bundle bundle, Calendar calendar, String key){
+    default void putCalendarInBundle(Bundle bundle, Calendar calendar, String key) {
         if (calendar != null) {
             bundle.putString(key + "TimeZone", calendar.getTimeZone().getID());
             bundle.putLong(key, calendar.getTimeInMillis());
@@ -178,5 +174,4 @@ public interface Utilities {
             bundle.putString(key + "TimeZone", null);
         }
     }
-
 }

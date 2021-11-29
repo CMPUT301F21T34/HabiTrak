@@ -117,16 +117,11 @@ public class HabitRecycler {
                         // Then we swap them in the display so that the for loop can continue before refreshing displayHabits
                         displayHabits.set(i, habit2);
                         displayHabits.set(i + 1, habit1);
-
                     }
                 } else if (toPosition >= 0) {
                     for (int i = fromPosition; i > toPosition; i--) {
-
-
                         Habit habit1 = displayHabits.get(i);
                         Habit habit2 = displayHabits.get(i - 1);
-
-
 
                         // We swap the habits in the main list rather then the views particular list
                         habits.swap(habit1.getIndex(), habit2.getIndex());
@@ -134,10 +129,8 @@ public class HabitRecycler {
                         // Then we swap them in the display so that the for loop can continue before refreshing displayHabits
                         displayHabits.set(i, habit2);
                         displayHabits.set(i - 1, habit1);
-
                     }
                 }
-
                 recyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
 
                 return true;

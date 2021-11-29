@@ -141,7 +141,6 @@ public class TodayListFragment extends Fragment {
 
         // Iterates through all habits
         for (int index = 0; index < mainUserHabits.size(); index++) {
-
             // Checks to see if they should be displayed
             if (mainUserHabits.get(index).getOnDaysObj().isOnDay()
                     && mainUserHabits.get(index).isHabitStart()) { // If a habit is active today add

@@ -21,9 +21,6 @@ public class User implements Parcelable {
     // Any changes need to be implement in writeToParcel and Parcel constructor - Dakota
 
     // Attributes ----------------------------------------------------------------------------------
-
-
-
     private final String email;
     private String username;
     private HabitList habitList; // Habit_List extends ArrayList<Habit>
@@ -392,9 +389,7 @@ public class User implements Parcelable {
     public boolean removeFollowingReq(String UUID) {
         return followingReqList.removeIf(followRequestee -> followRequestee.equals(UUID));
     }
-
     // End Adders and Removers ---------------------------------------------------------------------
-
 
     // Parcelable Implementation -------------------------------------------------------------------
     /**

@@ -498,7 +498,6 @@ public class DatabaseManager {
                     if (list != null) {
                         // Check if the relevant member is already stored
                         boolean contains = list.contains(listMember);
-
                         if (remove) {
                             list.remove(listMember);
                         } else if (!contains) {  // Only add if not already a member
@@ -514,8 +513,6 @@ public class DatabaseManager {
                         }
                     }
                 }
-            } else {
-
             }
         });
     }
@@ -653,11 +650,7 @@ public class DatabaseManager {
             while (!uriTask.isComplete()) ;
             if (uriTask.isSuccessful()) {
                 returnedUri = uriTask.getResult();
-            } else {
-
             }
-        } else {
-
         }
         return returnedUri;
     }

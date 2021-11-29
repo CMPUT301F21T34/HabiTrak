@@ -106,8 +106,8 @@ public class TodayListFragment extends Fragment {
     }
 
     public void setLayoutVisibility(){
-        if(!(noDataLayout == null)){
-            if(habitsDisplayList.isEmpty()){
+        if (!(noDataLayout == null)) {
+            if (habitsDisplayList.isEmpty()) {
                 noDataLayout.setVisibility(View.VISIBLE);
                 habitRecycler.setRecyclerVisibility(false);
             } else {
@@ -132,7 +132,6 @@ public class TodayListFragment extends Fragment {
 
         // Iterates through all habits
         for (int index = 0; index < mainUserHabits.size(); index++){
-
             // Checks to see if they should be displayed
             if (mainUserHabits.get(index).getOnDaysObj().isOnDay()
                     && mainUserHabits.get(index).isHabitStart()) { // If a habit is active today add

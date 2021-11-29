@@ -3,7 +3,6 @@ package com.cmput301f21t34.habittrak.event;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -107,7 +106,7 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
      *
      * sets the visibility to gone of the noDataLayout if habits events list is empty
      */
-    public void setNoDataLayout(){
+    public void setNoDataLayout() {
         if (noDataLayout != null) {
             if (eventDataList.isEmpty())
                 noDataLayout.setVisibility(View.VISIBLE);
@@ -144,7 +143,7 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
      * @author Aron Rajabi
      */
     @SuppressLint("NotifyDataSetChanged")
-    public void updateList(HabitEvent event, int position){
+    public void updateList(HabitEvent event, int position) {
         eventDataList.set(position, event);
         eventAdapter.notifyDataSetChanged();
         setNoDataLayout();
@@ -170,7 +169,7 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
      * start the view event activity when a event is clicked
      * @param position position of the event in the array list
      */
-    public void startViewEventActivity(int position){
+    public void startViewEventActivity(int position) {
         HabitEvent event = habit.getHabitEvents().get(position);
         Intent intent = new Intent(this,ViewEditHabitEventActivity.class);
         intent.putExtra("HABIT_EVENT_VIEW", event);
@@ -198,5 +197,4 @@ public class ViewHabitEvents extends AppCompatActivity implements View.OnClickLi
         onBackPressed();
         return true;
     }
-
 }

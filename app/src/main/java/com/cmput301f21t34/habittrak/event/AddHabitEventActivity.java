@@ -106,8 +106,6 @@ public class AddHabitEventActivity extends AppCompatActivity implements View.OnC
         Intent intent = getIntent();
         this.habit = intent.getParcelableExtra("HABIT");
 
-
-
         // the activity launcher to get an image from the gallery
         galleryActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),

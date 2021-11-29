@@ -91,7 +91,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, U
         FirebaseAuth fAuth = mAuth.getAuth();
         FirebaseUser fUser = fAuth.getCurrentUser();
 
-        switch (view.getId()){
+        switch (view.getId()) {
             //For confirm changes button press
             case R.id.confirmer:
                 String oldUsername = mainUser.getUsername();
@@ -100,15 +100,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, U
                 String newBio = Objects.requireNonNull(bioEdit.getText()).toString();
 
                 if (fUser != null) { // Only update if we have a user
-
                     // If stored and written variables differ, update variables
                     if (!oldUsername.equals(newUsername)) {
-
                         db.updateUsername(fUser.getEmail(), newUsername);
                         mainUser.setUsername(newUsername);
                     }
                     if (!oldBio.equals(newBio)) {
-
                         db.updateBio(fUser.getEmail(), newBio);
                         mainUser.setBiography(newBio);
                     }
@@ -116,7 +113,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, U
                 break;
 
             case R.id.logout:
-
                 // sign out
                 mAuth.signOut();
 
@@ -133,7 +129,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, U
         }
     }
 
-    private void delete(FirebaseUser authUser){
+    private void delete(FirebaseUser authUser) {
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 
         alert
@@ -150,7 +146,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, U
 
             confirmation.setPositiveButton("Yes", (dialogInterface1, i) -> {
                 // Delete
-
                 try {
                     String email = authUser.getEmail();
                     authUser.delete();
@@ -160,7 +155,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, U
                 } catch (Exception e) {
                     Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
                 }
-
             });
 
             confirmation.setNegativeButton("No", (dialogInterface12, i) -> {
@@ -169,7 +163,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, U
             });
 
             confirmation.show();
-
         });
 
         alert.setNegativeButton("No", (dialogInterface, id) -> {

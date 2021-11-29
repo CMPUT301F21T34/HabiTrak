@@ -92,12 +92,10 @@ public class EventsFragment extends Fragment {
 
     @Override
     public void onResume() {
-
         super.onResume();
 
         // Refreshes Frag
         refreshEventFragment();
-
     }
 
     /**
@@ -110,7 +108,6 @@ public class EventsFragment extends Fragment {
     public void refreshEventFragment() {
 
         // Populate today view with Today's habits.
-
         habitsDisplayList.clear(); // Make sure is clear
 
         HabitList mainUserHabits = mainUser.getHabitList(); // get HabitsList
@@ -119,7 +116,6 @@ public class EventsFragment extends Fragment {
 
         // tells the adapter in recycler that the dataset has changed
         habitRecycler.notifyDataSetChanged();
-
     }
 
     // activity result launcher for view/edit events activity

@@ -34,7 +34,6 @@ public class SocialViewProfile extends AppCompatActivity {
     private User user;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-    private SocialAdapter socialAdapter;
     private TextView username;
     private TextView bio;
     private LinearLayout noDataLayout;

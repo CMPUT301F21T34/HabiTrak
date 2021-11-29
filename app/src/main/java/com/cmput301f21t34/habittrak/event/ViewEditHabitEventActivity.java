@@ -137,6 +137,7 @@ public class ViewEditHabitEventActivity extends AppCompatActivity {
         }
 
         Location locationHabitEvent = habitEvent.getLocation();
+        // set map view if available else set default location
         mapView.getMapAsync(googleMap -> {
             map = googleMap;
             LatLng latLng = new LatLng(40.7143528, -74.0059731);

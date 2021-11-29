@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 
 import com.cmput301f21t34.habittrak.R;
@@ -40,6 +41,7 @@ public class EventsFragment extends Fragment {
     // view
     private HabitRecycler habitRecycler;
     private final HabitRecyclerAdapter adapter;
+    private LinearLayout noDataLayout;
     // data
     private final ArrayList<Habit> habitsDisplayList;
     private final User mainUser;
@@ -57,6 +59,7 @@ public class EventsFragment extends Fragment {
         View view = inflater.inflate(R.layout.habi_all_habits_fragment, container, false);
 
         // Sets up views and manager for recycler view
+        noDataLayout = view.findViewById(R.id.all_events_no_data_view);
         // These are for the Recycler view
         RecyclerView habitRecyclerView = view.findViewById(R.id.all_recycler_view);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -86,7 +89,7 @@ public class EventsFragment extends Fragment {
         // creates a new habitRecycler class with the view and data
         habitRecycler = new HabitRecycler(habitRecyclerView, layoutManager, habitsDisplayList, mainUser.getHabitList());
         habitRecycler.setAdapter(adapter);
-
+        setLayoutVisibility();
         return view;
     }
 
@@ -97,6 +100,23 @@ public class EventsFragment extends Fragment {
         // Refreshes Frag
         refreshEventFragment();
     }
+
+    /**
+     * set the layout visibility depending on the data in the displayList
+     */
+    public void setLayoutVisibility() {
+        // if list is empty, then hide the recycler view and show no data text
+        if (!(noDataLayout == null)) {
+            if (habitsDisplayList.isEmpty()) {
+                noDataLayout.setVisibility(View.VISIBLE);
+                habitRecycler.setRecyclerVisibility(false);
+            } else {
+                noDataLayout.setVisibility(View.GONE);
+                habitRecycler.setRecyclerVisibility(true);
+            }
+        }
+    }
+
 
     /**
      * refreshEventFragment
@@ -116,6 +136,7 @@ public class EventsFragment extends Fragment {
 
         // tells the adapter in recycler that the dataset has changed
         habitRecycler.notifyDataSetChanged();
+        setLayoutVisibility();
     }
 
     // activity result launcher for view/edit events activity

@@ -122,14 +122,6 @@ public class IntentTester {
         onView(withId(R.id.signup_signup_button))
                 .perform(click());
 
-        //Logout to standardize the steps for the tests
-        SystemClock.sleep(3000);
-        intended(hasComponent(BaseActivity.class.getName()));
-        onView(withId(R.id.navbar_menu_profile))
-                .perform(click());
-        onView(withId(R.id.logout))
-                .perform(click());
-
         // Delete the test user
         new DatabaseManager().deleteUser("iTestEmail@gmail.com");
     }
@@ -298,8 +290,11 @@ public class IntentTester {
         //Go to all habits menu
         onView(withId(R.id.navbar_menu_habits))
                 .perform(click());
-        //Click on a habit
-        SystemClock.sleep(2000);
+        //Logout to standardize the steps for the tests
+        onView(withId(R.id.navbar_menu_profile))
+                .perform(click());
+        onView(withId(R.id.logout))
+                .perform(click());
     }
 
     /**

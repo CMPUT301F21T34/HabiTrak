@@ -1,5 +1,6 @@
 package com.cmput301f21t34.habittrak;
 
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -150,7 +151,6 @@ public class IntentTester {
                 .perform(click());
         onView(withId(R.id.logout))
                 .perform(click());
-        //TODO: for part 4, make sure we look into the actual list to see if the habit was added
     }
 
     @Test
@@ -201,13 +201,32 @@ public class IntentTester {
                 .perform(click());
         onView(withContentDescription("Requests"))
                 .perform(click());
-        onView(withContentDescription("Search"))
+        onView(withContentDescription("Following"))
                 .perform(click());
         //Logout to standardize the steps for the tests
         onView(withId(R.id.navbar_menu_profile))
                 .perform(click());
         onView(withId(R.id.logout))
                 .perform(click());
-        //TODO: maybe put in searching? Can the emulator connect to the internet to search?
+    }
+
+    @Test
+    public void viewHabitTest(){
+        //Enter login information
+        onView(withId(R.id.username_edit_text))
+                .perform(typeText("rajabi@ualberta.ca"), closeSoftKeyboard());
+        onView(withId(R.id.password_edit_text))
+                .perform(typeText("password"), closeSoftKeyboard());
+        //Click login to login
+        onView(withId(R.id.login_button))
+                .perform(click());
+        SystemClock.sleep(2000);
+        //Check to make sure we're on the intended activity, then click on the social button
+        intended(hasComponent(BaseActivity.class.getName()));
+        //Go to all habits menu
+        onView(withId(R.id.navbar_menu_habits))
+                .perform(click());
+        //Click on a habit
+        SystemClock.sleep(2000);
     }
 }

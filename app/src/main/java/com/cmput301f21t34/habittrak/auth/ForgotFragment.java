@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment;
 import com.cmput301f21t34.habittrak.R;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
 /**
@@ -23,7 +22,6 @@ import com.google.firebase.auth.FirebaseAuth;
  */
 public class ForgotFragment extends Fragment {
 
-    private TextInputLayout emailLayout;
     private TextInputEditText emailEditText;
     private MaterialButton sendButton;
     Auth mAuth;
@@ -42,7 +40,6 @@ public class ForgotFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.habi_forgot_fragment, container, false);
 
-        emailLayout = view.findViewById(R.id.forgot_email_text_input);
         emailEditText = view.findViewById(R.id.forgot_email_edit_text);
         sendButton = view.findViewById(R.id.forgot_send_button);
         mAuth = new Auth(getActivity());
@@ -70,6 +67,7 @@ public class ForgotFragment extends Fragment {
                 FirebaseAuth fAuth = mAuth.getAuth();
                 try {
                     fAuth.sendPasswordResetEmail(email);
+                    emailEditText.setError("Email Sent");
                 } catch (Exception e) {
                     emailEditText.setError(e.toString());
                 }

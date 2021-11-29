@@ -3,7 +3,6 @@ package com.cmput301f21t34.habittrak.auth;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 
 
 import com.google.firebase.auth.FirebaseAuth;

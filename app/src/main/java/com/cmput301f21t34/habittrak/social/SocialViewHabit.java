@@ -1,6 +1,7 @@
 package com.cmput301f21t34.habittrak.social;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -19,14 +20,14 @@ import java.util.Calendar;
 import java.util.Locale;
 
 /**
- * SocialViewHabit class for viewing the habit list of the user that the current user clicks on
+ * SocialViewHabit class for viewing the habit list of the user that the current user clicks on.
  *
  * @author Pranav
  */
 public class SocialViewHabit extends AppCompatActivity {
 
-    private final int whiteColor = Color.WHITE;
     private Habit habit;
+    // Views
     private MaterialButton mondayButton;
     private MaterialButton tuesdayButton;
     private MaterialButton wednesdayButton;
@@ -34,12 +35,19 @@ public class SocialViewHabit extends AppCompatActivity {
     private MaterialButton fridayButton;
     private MaterialButton saturdayButton;
     private MaterialButton sundayButton;
+    // Other Variables
+    private int buttonOffColor = Color.WHITE;
     private int tealColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_social_view_habit);
+
+        int nightModeCheck = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        if (nightModeCheck == Configuration.UI_MODE_NIGHT_YES) {
+            buttonOffColor = Color.BLACK;
+        }
 
         // get data
         Intent intent = getIntent();
@@ -78,7 +86,7 @@ public class SocialViewHabit extends AppCompatActivity {
         date.setText(getDate(habit.getStartDate()));
         setDaysSelector();
         totalEventsCompleted.setText(String.valueOf(habit.getHabitEvents().size()));
-        progressBar.setProgress( (habit.getCurrentStreak()*100)/30 );
+        progressBar.setProgress((habit.getCurrentStreak() * 100) / 30);
         String currentStreakText = habit.getCurrentStreak() + "/30";
         progressBarText.setText(currentStreakText);
 
@@ -145,7 +153,7 @@ public class SocialViewHabit extends AppCompatActivity {
         if (state) {
             button.setBackgroundColor(tealColor);
         } else {
-            button.setBackgroundColor(whiteColor);
+            button.setBackgroundColor(buttonOffColor);
         }
     }
 

@@ -42,6 +42,7 @@
     <string name="habit_title_visability">Public Visibility</string>
     <string name="pick_date_button">PICK DATE</string>
     <string name="habit_title_public">Public</string>
+    <string name="habit_title_private">Private</string>
     <string name="habit_title_frequency">Frequency</string>
     <string name="save_habit_button">Save Habit</string>
     <string name="habit_title_selected_date">Selected Date:</string>

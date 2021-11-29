@@ -31,9 +31,8 @@ import java.util.TimeZone;
  * ViewEditHabit
  *
  * @author Pranav
- *
+ * <p>
  * View and Edit selected habit from Base Fragments.
- *
  * @version 1.0
  * @since 2021-11-08
  */
@@ -41,6 +40,7 @@ public class ViewEditHabitActivity extends AppCompatActivity implements View.OnC
 
     public static int RESULT_CODE = BaseActivity.RESULT_EDIT_HABIT;
 
+    // Views
     private TextInputEditText habitName;
     private TextInputEditText habitReason;
     private MaterialButton datePickerButton;
@@ -63,6 +63,7 @@ public class ViewEditHabitActivity extends AppCompatActivity implements View.OnC
     private TextView bestStreakTotal;
     private TextView progressBarText;
     private LinearProgressIndicator progressBar;
+    // Other Variables
     private boolean[] daysOfWeek;
     private int buttonOffColor = Color.WHITE;
     private int tealColor;
@@ -128,18 +129,18 @@ public class ViewEditHabitActivity extends AppCompatActivity implements View.OnC
         habitReason.setText(reason);
         if (!isPublic) {
             publicSwitch.setChecked(false);
-            visibilityText.setText("Private");
+            visibilityText.setText(getResources().getString((R.string.habit_title_private)));
         }
 
-        progressBar.setProgress( (habit.getCurrentStreak()*100)/30 );
+        // set progress bar
+        progressBar.setProgress((habit.getCurrentStreak() * 100) / 30);
         String currentStreakText = habit.getCurrentStreak() + "/30";
         progressBarText.setText(currentStreakText);
 
         SimpleDateFormat streakDateFormat = new SimpleDateFormat("MMM dd, yyyy");
 
-
-
-        if (habit.getBestStreakDate() == null || habit.getBestStreakDateEnd() == null){
+        // set streak values
+        if (habit.getBestStreakDate() == null || habit.getBestStreakDateEnd() == null) {
             bestStreakStart.setText("N/A");
             bestStreakEnd.setText("N/A");
         } else {
@@ -184,10 +185,10 @@ public class ViewEditHabitActivity extends AppCompatActivity implements View.OnC
         publicSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b) {
                 habit.makePublic();
-                visibilityText.setText("Public");
+                visibilityText.setText(getResources().getString(R.string.habit_title_public));
             } else {
                 habit.makePrivate();
-                visibilityText.setText("Private");
+                visibilityText.setText(getResources().getString(R.string.habit_title_private));
             }
         });
 
@@ -237,7 +238,7 @@ public class ViewEditHabitActivity extends AppCompatActivity implements View.OnC
      * setDaysSelector.
      *
      * @author Pranav
-     *
+     * <p>
      * sets the state of the days of week buttons.
      */
     public void setDaysSelector() {
@@ -254,26 +255,27 @@ public class ViewEditHabitActivity extends AppCompatActivity implements View.OnC
     /**
      * setButtonState.
      *
-     * @author Pranav
-     *
-     * set the button on/off state
      * @param button MaterialButton for setting state
-     * @param state bool value for on/off state
+     * @param state  bool value for on/off state
+     * @author Pranav
+     * <p>
+     * set the button on/off state
      */
     public void setButtonState(MaterialButton button, Boolean state) {
-        if(state){
+        if (state) {
             button.setBackgroundColor(tealColor);
-        } else{
+        } else {
             button.setBackgroundColor(buttonOffColor);
         }
     }
 
     /**
      * changeButtonState
-     *
+     * <p>
      * Change the color of the button and the arraylist for days of week.
-     * @param view Button View
-     * @param button to change the color
+     *
+     * @param view     Button View
+     * @param button   to change the color
      * @param position which day to change
      * @author Pranav
      */
@@ -290,8 +292,9 @@ public class ViewEditHabitActivity extends AppCompatActivity implements View.OnC
 
     /**
      * getDate
-     *
+     * <p>
      * get the String value from calendar
+     *
      * @param calendar
      * @return string value of type Month, Day
      */
@@ -303,8 +306,9 @@ public class ViewEditHabitActivity extends AppCompatActivity implements View.OnC
 
     /**
      * checkField
-     *
+     * <p>
      * Check if the fields are  filled or not.
+     *
      * @param name
      * @return boolean whether filled or not
      */

@@ -391,7 +391,7 @@ public class IntentTester {
         // go to the events fragment
         onView(withId(R.id.navbar_menu_events)).perform(click());
         //TODO:FIX the event recycler view id change it with the appropriate one
-        onView(withId(R.id.events_recycler_view)).perform(
+        onView(withId(R.id.all_recycler_view)).perform(
                 RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
         // check to see we're in the intended activity

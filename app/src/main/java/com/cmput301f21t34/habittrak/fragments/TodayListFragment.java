@@ -35,16 +35,18 @@ import java.util.ArrayList;
  * TodayListFragment
  *
  * @author Pranav
- *
+ * <p>
  * Fragment for displaying habits for today
  */
 public class TodayListFragment extends Fragment {
 
+    // Data
     private HabitRecycler habitRecycler;
     private final ArrayList<Habit> habitsDisplayList;
     private final HabitRecyclerAdapter adapter;
-    private LinearLayout noDataLayout;
     private final User mainUser;
+    // Views
+    private LinearLayout noDataLayout;
     // Database Manager
     private final DatabaseManager dm = new DatabaseManager();
 
@@ -62,16 +64,16 @@ public class TodayListFragment extends Fragment {
         View view = inflater.inflate(R.layout.habi_today_fragment, container, false);
 
         // Sets up views and manager for recycler view
-        // Attributes //
+        noDataLayout = view.findViewById(R.id.today_no_data_view);
         // These are for the Recycler view
         RecyclerView habitRecyclerView = view.findViewById(R.id.today_recycler_view);
-        noDataLayout = view.findViewById(R.id.today_no_data_view);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
 
         // set the click listener interface for the adapter
         adapter.setHabitClickListener(new HabitRecyclerAdapter.HabitClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                // start view/edit habit activity on click of the recycler
                 Habit habit = habitsDisplayList.get(position);
                 Intent intent = new Intent(getContext(), ViewEditHabitActivity.class);
                 intent.putExtra("HABIT", habit);
@@ -98,6 +100,9 @@ public class TodayListFragment extends Fragment {
         return view;
     }
 
+    /**
+     * refresh the recycler view data on resume of the fragment
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -105,9 +110,13 @@ public class TodayListFragment extends Fragment {
         refreshTodayFragment();
     }
 
-    public void setLayoutVisibility(){
-        if(!(noDataLayout == null)){
-            if(habitsDisplayList.isEmpty()){
+    /**
+     * set the layout visibility depending on the data in the displayList
+     */
+    public void setLayoutVisibility() {
+        if (!(noDataLayout == null)) {
+            // if list empty, then hide the recycler view and show the no data text
+            if (habitsDisplayList.isEmpty()) {
                 noDataLayout.setVisibility(View.VISIBLE);
                 habitRecycler.setRecyclerVisibility(false);
             } else {
@@ -119,7 +128,7 @@ public class TodayListFragment extends Fragment {
 
     /**
      * refreshHabitList
-     *
+     * <p>
      * refreshes the habitListView showing habits for today
      *
      * @author Dakota
@@ -131,7 +140,7 @@ public class TodayListFragment extends Fragment {
         HabitList mainUserHabits = mainUser.getHabitList(); // get HabitsList
 
         // Iterates through all habits
-        for (int index = 0; index < mainUserHabits.size(); index++){
+        for (int index = 0; index < mainUserHabits.size(); index++) {
 
             // Checks to see if they should be displayed
             if (mainUserHabits.get(index).getOnDaysObj().isOnDay()
@@ -142,22 +151,27 @@ public class TodayListFragment extends Fragment {
         setLayoutVisibility();
         adapter.notifyDataSetChanged();
     }
+
     // activity result launcher for view/edit habit
     ActivityResultLauncher<Intent> viewHabitResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
-            result -> {}
+            result -> {
+            }
     );
     // activity result launcher for add habit event
     ActivityResultLauncher<Intent> addHabitEventResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
-            result -> {}
+            result -> {
+            }
     );
 
     /**
      * showMenu.
+     * <p>
+     * create a menu when Image Button is clicked in the recycler view
+     * It gives an option to remove the selected habit
      *
-     * create a menu when Image Button is clicked
-     * @param view view from the adapter to create the menu
+     * @param view     view from the adapter to create the menu
      * @param position position of habit from adapter
      */
     public void showMenu(View view, int position) {
@@ -178,12 +192,14 @@ public class TodayListFragment extends Fragment {
     /**
      * onCheckBoxClick.
      *
+     * @param view     view of the checkbox
+     * @param position position of the clicked button in the adapter
      * @author Pranav
      * @author Henry
-     *
-     * listener function for checkbox clicking. Start a add new habit event activity.
-     * @param view view of the checkbox
-     * @param position position of the clicked button in the adapter
+     * <p>
+     * listener function for checkbox click.
+     * Start a add new habit event activity.
+     * User adds a new event through the checkbos.
      */
     public void onCheckBoxClick(View view, int position) {
         MaterialCheckBox checkBox = (MaterialCheckBox) view;

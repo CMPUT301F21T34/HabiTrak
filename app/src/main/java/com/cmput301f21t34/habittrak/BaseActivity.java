@@ -23,15 +23,14 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationBarView;
 
 
-//TODO: Rename BaseActivity to a more suitable name
-
 /**
  * BaseActivity
  *
  * @author Pranav
  * <p>
- * Base Acitivity after logging in.
+ * Base Activity after logging in.
  * Hold the topbar, bottomnav bar and the base fragments
+ * Also used for updated the user data to firestore
  * @version 1.0
  * @since 2021-10-16
  */
@@ -44,7 +43,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
     public static final int RESULT_HABIT_EVENTS = 5000;
     DatabaseManager db = new DatabaseManager();
 
-
+    // views
     private NavigationBarView bottomNav;
     private User mainUser;      // Creates dummy user for testing purposes
     private TodayListFragment todayFrag;
@@ -69,16 +68,15 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
 
-        // Gets Intents
-        Intent intent = getIntent();
-        mainUser = intent.getParcelableExtra("mainUser"); // Gets mainUser from intent // Dont think this is being used anymore - Dakota
-
+        // Get main User.
         if (mainUser == null) {
             mainUser = getMainUser(this);
         }
 
+        // update the streak variables of the user habits
         refreshHabitStreak(mainUser);
 
+        // button views
         addHabitButton = findViewById(R.id.base_add_habit_button);
 
         // Initializes Fragments
@@ -110,17 +108,16 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
         });
     }
 
+    /**
+     * function is ran just before the application is close.
+     * Used to updated the firestore with the latest data
+     */
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
         // Update before we are ever terminated (or unfocused)
-
         updateHabitListDB(mainUser);
-
     }
-
-
-
 
 
     /**
@@ -166,33 +163,24 @@ public class BaseActivity extends AppCompatActivity implements NavigationBarView
             Habit newHabit = intent.getParcelableExtra("newHabit");
             mainUser.getHabitList().add(newHabit);
             todayFrag.refreshTodayFragment(); // refresh view
-
-
+            allHabitsFrag.refreshAllFragment();
         }
         // result from view/edit habit activity
         else if (resultCode == RESULT_EDIT_HABIT) {
             Habit habit = intent.getParcelableExtra("HABIT");
-            int position = intent.getIntExtra("position", 0); // useless
             mainUser.getHabitList().replace(habit);
             todayFrag.refreshTodayFragment();
             allHabitsFrag.refreshAllFragment();
-
         }
         // result from add habit event activity
         else if (resultCode == RESULT_NEW_HABIT_EVENT) {
-            HabitEvent habitEvent = intent.getParcelableExtra("HABIT_EVENT");
-
             Habit habit = intent.getParcelableExtra("HABIT");
-            // habit.incrementStreak();
             mainUser.getHabitList().replace(habit);
-
-
         }
         // result from view habit events activity
-        else if (resultCode == RESULT_HABIT_EVENTS){
+        else if (resultCode == RESULT_HABIT_EVENTS) {
             Habit habit = intent.getParcelableExtra("HABIT");
             mainUser.getHabitList().replace(habit);
-
         }
 
         // Update Database after results

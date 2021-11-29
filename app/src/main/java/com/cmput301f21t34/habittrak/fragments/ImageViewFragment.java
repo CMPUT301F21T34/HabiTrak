@@ -29,7 +29,6 @@ public class ImageViewFragment extends Fragment {
     Uri photoUri;
 
     public ImageViewFragment(Uri photoUri){
-
         this.photoUri = photoUri;
 
     }
@@ -44,7 +43,7 @@ public class ImageViewFragment extends Fragment {
         imageDisplay = view.findViewById(R.id.image_view_display);
 
 
-        Picasso.get().load(photoUri).into(imageDisplay);
+        Picasso.get().load(photoUri).into(imageDisplay); // Using our loading service
 
 
 
